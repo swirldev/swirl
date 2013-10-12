@@ -40,7 +40,8 @@ nxt <- function() {
 auto_advance <- function(expr, val, ok, visible) {
   if (is.null(swirlenv$test)) return(TRUE)
 
-  if (swirlenv$test(expr, val, ok)) {
+  tree <- new_tree(expr, val, ok)
+  if (swirlenv$test(tree)) {
     nxt()
   }
   
@@ -64,15 +65,23 @@ assignment_state_test <- function(expr, val, ok) {
   return(is_assgn)
 }
 
+assignment_state_test <- function(tree) {
+  is_assgn <- treetop(tree) == "<-"
+  swirlenv$usersymbol <- treearg(tree, 1)
+  return(is_assgn)
+}
+
 assignment_state <- new_state("In R, you create variables with the arrow: <-,
   like a <- 1 or b <- 2. To create a vector of numbers, you use the 'c' function,
   like c(1, 2, 3). Create a vector with the numbers 2, 3, 4 and assign it to a
   variable; you can name it anything you'd like.", "sum", assignment_state_test)
 
-sum_state_test <- function(expr, val, ok) {
-  is_sum <- expr[[1]] == "sum"
+sum_state_test <- function(tree) {
+  is_sum <- treetop(tree) == "sum"
   return(is_sum)
 }
 
 sum_state <- new_state("Great, I see you've stored it in some variable.",
-                       NULL, sum_state_test)
+                       "final", sum_state_test)
+
+final_state <- new_state("Congrats! Good work summing.", NULL, NULL)
