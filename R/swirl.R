@@ -39,7 +39,7 @@ nxt <- function() {
 
 auto_advance <- function(expr, val, ok, visible) {
   if (is.null(swirlenv$test)) return(TRUE)
-
+  
   tree <- new_tree(expr, val, ok)
   if (swirlenv$test(tree)) {
     nxt()
@@ -55,18 +55,15 @@ new_state <- function(msg, next_state = NULL, test = NULL) {
 
 is.state <- function(x) inherits(x, "state")
 
-start_state <- new_state("Hi! Welcome to swirl.", "assignment")
+start_state <- new_state("Hi! I'm swirl! I'm
+  going to guide you through a quick introduction to R. You'll know it's me
+  talking whenever you see output that starts with |. Otherwise you'll be
+  interacting with R in exactly the same way you will when I'm not around.
 
-assignment_state_test <- function(expr, val, ok) {
-  if (length(expr) <= 1) return(FALSE)
-  
-  is_assgn <- expr[[1]] == "<-"
-  swirlenv$usersymbol <- expr[[2]]
-  return(is_assgn)
-}
+  Type nxt() now to get started!", "assignment")
 
 assignment_state_test <- function(tree) {
-  is_assgn <- treetop(tree) == "<-"
+  is_assgn <- identical(treetop(tree), "<-")
   swirlenv$usersymbol <- treearg(tree, 1)
   return(is_assgn)
 }
@@ -77,11 +74,14 @@ assignment_state <- new_state("In R, you create variables with the arrow: <-,
   variable; you can name it anything you'd like.", "sum", assignment_state_test)
 
 sum_state_test <- function(tree) {
-  is_sum <- treetop(tree) == "sum"
+  is_sum <- identical(treetop(tree), "sum")
   return(is_sum)
 }
 
-sum_state <- new_state("Great, I see you've stored it in some variable.",
+sum_state <- new_state("Great, I see you've stored it in some variable. To sum 
+                       the elements of a vector, you use the 'sum' function, like
+                       sum(v) if your vector is stored in a variable 'v'. Compute
+                       the sum of the elements of your vector now.",
                        "final", sum_state_test)
 
 final_state <- new_state("Congrats! Good work summing.", NULL, NULL)
