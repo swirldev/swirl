@@ -49,7 +49,7 @@ hi <- function() {
   addTaskCallback(auto_advance, name = "frndly")
   # Set the tutorial state "start" (see jmp below)
   jmp("start")
-  # Don't display a return value upon exit
+  # Return NULL but don't print it
   invisible()
 }
 
@@ -57,12 +57,12 @@ bye <- function() {
   frndly_out("All done! Use jmp('start') to restart.")
   # Unregister function auto_advance()
   removeTaskCallback(which(getTaskCallbackNames() == "frndly"))
-  # Don't display a return value upon exit.
+  # Return NULL but don't print it
   invisible()
 }
 
 jmp <- function(state) {
-  # Exit if the argument is NULL
+  # Jumping to a NULL state means quiting frndly 
   if (is.null(state)) return(bye())
   # Get the global variable whose name is the argument with "_state" 
   # appended. This global variable is a list constructed by new_state()
@@ -93,14 +93,12 @@ nxt <- function() {
 attr(nxt, "source") <- "| Hey you! To evaluate a function in R, you need to put () on the end."
 
 auto_advance <- function(...) {
-  print("auto")
+  print("auto-advancing") # to demonstrate callback operation
   if (is.null(frndly$test)) return(TRUE)
-  
-  # Auto-advance if test is true
+  # Auto-advance using nxt() if test returns TRUE
   if (frndly$test()) {
     nxt()    
   }
-  
   return(TRUE)
 }
 
@@ -111,18 +109,8 @@ new_state <- function(msg, next_state = NULL, test = NULL) {
 
 is.state <- function(x) inherits(x, "state")
 
-start_state <- new_state("Hi! I'm frndly, your friendly introduction to R. I'm
-                         going to guide you through a quick introduction to R. You'll know it's me
-                         talking whenever you see output that starts with |. Otherwise you'll
-                         interacting with R in exactly the same way you will when I'm not around
-                         
-                         Type nxt() to run your first R function and proceed with your introduction
-                         to R", "assignment")
+start_state <- new_state("Hi! I'm frndly, your friendly introduction to R. I'm going to guide you through a quick introduction to R. You'll know it's me talking whenever you see output that starts with |. Otherwise you'll be interacting with R in exactly the same way you will when I'm not around. Type nxt() to run your first R function and proceed with your introduction to R", "assignment")
 
-assignment_state <- new_state("In R, you create variables with the arrow: <-,
-                              like a <- 1 or b <- 2.  To continue, create a new variable called d with the 
-                              value 10, or type nxt()", "arith", function() {
-                                exists("d", globalenv()) && get("d", globalenv()) == 10 
-                                })
+assignment_state <- new_state("In R, you create variables with the arrow: <-, like a <- 1 or b <- 2.  To continue, create a new variable called d with the value 10, or type nxt()", "arith", function() {exists("d", globalenv()) && get("d", globalenv()) == 10 })
 
 arith_state <- new_state("Good work!", NULL)
