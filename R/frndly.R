@@ -93,7 +93,14 @@ nxt <- function() {
 attr(nxt, "source") <- "| Hey you! To evaluate a function in R, you need to put () on the end."
 
 auto_advance <- function(...) {
-  print("auto-advancing") # to demonstrate callback operation
+  # Due to the way it was registered, auto_advance will be called
+  # with 4 arguments.
+  # The first of these, ..1, is the top-level command which the
+  # user just entered. (Actually, it is the associated "call". See ?call.)
+  # The second, ..2, is the result of evaluating that command.
+  print("auto_advancing")
+  print(paste("    ", class(..1), ":", as.expression(..1)))
+  print(paste("    ", class(..2), ":", ..2))
   if (is.null(frndly$test)) return(TRUE)
   # Auto-advance using nxt() if test returns TRUE
   if (frndly$test()) {
