@@ -98,6 +98,9 @@ auto_advance <- function(...) {
   # The first of these, ..1, is the top-level command which the
   # user just entered. (Actually, it is the associated "call". See ?call.)
   # The second, ..2, is the result of evaluating that command.
+  # The third and fourth are logical, indicating whether or not the
+  # command was successful, and whether or not the output was visible,
+  # respectively.
   print("auto_advancing")
   print(paste("    ", class(..1), ":", as.expression(..1)))
   print(paste("    ", class(..2), ":", ..2))
