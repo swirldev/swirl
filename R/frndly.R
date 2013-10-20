@@ -86,24 +86,31 @@ nxt <- function() {
   jmp(frndly$next_state)
 }
 # Store the following message as the "source" attribute of the function 
-# nxt(). Usually the "source" attribute of a function is a listing of its
-# source code. Redefining this attribute as follows has the effect
-# that, if the user types nxt without parens, the message rather than the
-# function's source code will appear.
+# nxt().
 attr(nxt, "source") <- "| Hey you! To evaluate a function in R, you need to put () on the end."
 
 auto_advance <- function(...) {
-  # Due to the way it was registered, auto_advance will be called
-  # with 4 arguments.
+  # Since it was registered without a "data" argument, auto_advance will be
+  # called with 4 arguments.
   # The first of these, ..1, is the top-level command which the
   # user just entered. (Actually, it is the associated "call". See ?call.)
   # The second, ..2, is the result of evaluating that command.
   # The third and fourth are logical, indicating whether or not the
   # command was successful, and whether or not the output was visible,
   # respectively.
+  # Code to indicate how the callback works
   print("auto_advancing")
-  print(paste("    ", class(..1), ":", as.expression(..1)))
-  print(paste("    ", class(..2), ":", ..2))
+  print(paste("  ", class(..1), ": ", as.expression(..1), sep=""))
+  if(class(..1) == "<-"){
+    # Command was an assignment. For a simple assignment, the name of the
+    # variable assigned is the second element of as.list(..1).
+    print(paste("  variable assigned:", as.expression(..1[[2]])))
+    # For an assignment such as cars$speed <- 10, the second element of
+    # ..1 is a call invoking $.
+  }
+  try(print(paste("  value computed:", ..2)), silent=TRUE)
+  #
+  # Hadley's original code
   if (is.null(frndly$test)) return(TRUE)
   # Auto-advance using nxt() if test returns TRUE
   if (frndly$test()) {
