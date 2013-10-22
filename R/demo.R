@@ -18,11 +18,14 @@ hi <- function(){
   # stored in module.
   module$row.nr <- 1
   module$hint <- FALSE
-  # Register function checkCmd() as that to be called
+  # Remove any leftover callbacks from previous runs.
+  removeTaskCallback(which(getTaskCallbackNames() == "mod2"))
+  # Register function answerCmd() as that to be called
   # upon completion of any "top level" task, i.e., a command the
   # user enters from the R prompt.
-  addTaskCallback(checkCmd, name = "mod2")
+  addTaskCallback(answerCmd, name = "mod2")
   runState()
+  invisible()
 }
 
 nxt <- function(override=FALSE){
@@ -33,11 +36,14 @@ nxt <- function(override=FALSE){
     module$hint <- FALSE
   }
   runState()
+  invisible()
 }
 
 bye <- function(){
   # Unregister callback
   removeTaskCallback(which(getTaskCallbackNames() == "mod2"))
+  message("That's all, folks!")
+  invisible()
 }
 
 # Hadley's display function
@@ -60,12 +66,13 @@ runState <- function(){
       runFigureState(content)
     } else if(content[,1]=="video"){
       runVideoState(content)
+    } else if(content[,1]=="question"){
+      runQuestionState(content)
     } else {
       message("Can't do this one; run nxt()")
     }
   } else {
     bye()
-    message("That's all, folks!")
   }
 }
 
@@ -89,6 +96,62 @@ runVideoState <- function(content){
   }
 }
 
-checkCmd <- function(...){
+runQuestionState <- function(content){
+  if(module$hint){
+    frndlyOut(content[,"Hint"])
+  } else {
+    frndlyOut(content[,"Output"])
+  }
+  if(content[,"Answer.Type"] == "text"){
+    answerText(content)
+  } else if (content[,"Answer.Type"] == "multiple"){
+    answerMultiple(content)
+  } else if (content[,"Answer.Type"] == "exact"){
+    answerExact(content)
+  } else if (content[,"Answer.Type"] == "range"){
+    answerRange(content)
+  } else {
+    message("Can't check this one; run nxt()")
+  }
+}
+
+answerText <-function(content){
+  respond(readline("ANSWER: ") == content[,"Correct.Answer"])
+}
+
+answerMultiple <- function(content){
+  choices <- str_trim(unlist(strsplit(content[,"Choices"], ";")))
+  respond(select.list(choices) == content[,"Correct.Answer"])
+}
+
+answerExact <- function(content){
+  suppressWarnings(
+    ans <- try(as.numeric(readline("ANSWER: ")), silent=TRUE)
+  )
+  respond(is.numeric(ans) && ans == as.numeric(content[,"Correct.Answer"]))
+}
+
+answerRange <- function(content){
+  suppressWarnings(
+    ans <- try(as.numeric(readline("ANSWER: ")), silent=TRUE)
+  )
+  # assume the correct answer will convert correctly to numeric
+  temp <- as.numeric(unlist(str_split(content[,"Correct.Answer"],";")))
+  # use is.logical in case the user types a non-digit which converts to NA's
+  respond(is.logical(ans >= temp[1] && ans <= temp[2]))
+}
+
+respond <- function(correct){
+  if(correct){
+    module$hint <- FALSE
+    frndlyOut("That is correct. Brilliant!")
+  } else {
+    module$hint <- TRUE
+    frndlyOut("Sorry. That's not quite what I need. Type nxt() for a hint and another try.")
+  }
+}
+
+answerCmd <- function(...){
   # The callback
+  return(TRUE)
 }
