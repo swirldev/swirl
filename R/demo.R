@@ -176,7 +176,7 @@ answerCmd <- function(...){
   if(!call.is.correct && !ans.is.correct){
     respond(FALSE)
   } else if(!call.is.correct && ans.is.correct){
-    frndlyOut(paste("You got the right value but used a different expression for the purpose. You entered ", as.character(as.expression(..1)),", which was not what I expected. Type nxt() for a hint"))
+    frndlyOut(paste("You got the right value but used a different expression for the purpose. You entered ", as.character(as.expression(..1)),", while I had expected", content[,"Correct.Answer"],". Type nxt() for a hint"))
     module$hint <- TRUE
   } else {
     respond(TRUE)
