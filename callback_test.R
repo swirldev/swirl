@@ -1,6 +1,6 @@
 library(stringr)
 
-frndly_out <- function(...) {
+out <- function(...) {
   # Format the argument for pretty display.
   # getOption("width") gives screen width in characters.
   wrapped <- strwrap(str_c(..., sep = " "), 
@@ -10,7 +10,7 @@ frndly_out <- function(...) {
   message(str_c("| ", wrapped, collapse = "\n"))
 }
 
-# Function that is to be invoked each time a top-level task (command line entry) is successfully completed. Prints (with explanation) the 4 arguments with which it is called.
+# Prints (with explanation) the 4 callback function arguments
 printCallbackArgs <- function(...) {
   message(rep("=", getOption("width")))
   message("CALLBACK IS ACTIVE")
@@ -22,32 +22,33 @@ printCallbackArgs <- function(...) {
   message(paste("Completed successfully?", ..3))
   message(paste("Result printed?", ..4))
   message(rep("=", getOption("width")))
-  
-  if (assignTest()) {
-    message("Great job!")
-    bye()
-  } else {
-    frndly_out("Assign the value 999 to a variable called 'dog'.")
-    return(TRUE)
-  }
 }
 
-assignTest <- function() {
-  exists("dog", globalenv()) && get("dog", globalenv()) == 999
-}
-
+# Prints goodbye message and removes active callbacks
 bye <- function() {
-  frndly_out("Thanks for stopping by!")
+  out("Thanks for stopping by!")
   rmcb()
 }
 
-# Removes leftover callbacks
+# Removes active callbacks
 rmcb <- function() {
   removeTaskCallback(which(getTaskCallbackNames() == "test"))
+  invisible()
 }
 
-# Creates a new callback that invokes printCallbackArgs function above
+# Creates a new callback that invokes primary callback function
 runTest <- function() {
-  addTaskCallback(printCallbackArgs, name="test")
+  addTaskCallback(cbfun, name="test")
   invisible()
+}
+
+# Primary callback function (callback quarterback). Invoked each time a top-level task (command line entry) is successfully completed. 
+cbfun <- function(...) {
+  # Print callback arguments
+  printCallbackArgs(...)
+  
+  ### DO SOME OTHER STUFF HERE
+  
+  # Then return TRUE to keep callback alive
+  TRUE
 }
