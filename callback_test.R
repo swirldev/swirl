@@ -1,4 +1,5 @@
 library(stringr)
+library(pryr)
 
 out <- function(...) {
   # Format the argument for pretty display.
@@ -15,8 +16,8 @@ printCallbackArgs <- function(...) {
   message(rep("=", getOption("width")))
   message("CALLBACK IS ACTIVE")
   message(rep("=", getOption("width")))
-  message("Expression for the top-level task (as list):")
-  print(as.list(..1))
+  message("Parse tree for the top-level task:")
+  call_tree(..1)
   message("Result of the top-level task (as list):")
   print(as.list(..2))
   message(paste("Completed successfully?", ..3))
