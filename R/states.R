@@ -75,7 +75,7 @@ doStage.tmod_video <- function(state, expr, val){
     # Indicate the lesson will be suspended meanwhile.
     prettyOut("Type nxt() to continue.")
     # Direct the default browser to the video.
-    browseURL(state$content[,"Video"])
+    browseURL(state$content[,"VideoLink"])
     # Tell control that this state is finished and lessons are suspended
     return(list(finished=TRUE, prompt=TRUE, suspend=TRUE, state=state))
   } else {
@@ -128,7 +128,7 @@ doStage.tmod_cmd <- function(state, expr, val){
     # a manner similar to that used in doStage.tmod_mult, above.
     results <- sapply(state$tests, function(test,x,y)test(x,y), x=expr, y=val)
     # For now, the user fails unless all tests are passed
-    passed <- as.logical(prod(results))
+    passed <- all(results)
     if(passed){
       prettyOut("Correct!")
       return(list(finished=TRUE, prompt=FALSE, suspend=FALSE, state=state))
