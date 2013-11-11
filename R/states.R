@@ -44,7 +44,7 @@ nextState.tmod <- function(state){
   # TODO: At this point we should add Nick's tests to the state,
   # based on content$AnswerTests. For now we stub in a test which
   # always returns TRUE.
-  tests <- list(function(...)TRUE)
+  tests <- as.list(str_trim(unlist(str_split(content$AnswerTests, ";"))))
   # Return the constructed state, which is just a list of useful things
   # with a class attribute. (Function structure() just adds the attribute
   # to the list.)
