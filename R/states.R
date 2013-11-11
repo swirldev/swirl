@@ -1,4 +1,5 @@
 library(stringr)
+source("R/ansTests.R")
 
 ### STATE CLASSES AND METHODS
 
@@ -27,6 +28,9 @@ nextState.tmod <- function(state){
   # If we've run out of content, return NULL to signal
   # control that we're done.
   if(n > module$rows)return(NULL)
+  # To support tests, make a vector of the names of variables which
+  # currently exist in the global environment.
+  vars <- ls(globalenv())
   # Begin building the class hierarchy for this state
   # starting with a base state called tmod.
   cls <- c("tmod")
@@ -35,21 +39,18 @@ nextState.tmod <- function(state){
   # If this row of content is a video, add tmod_video to the
   # class hierarchy.
   if(content$OutputType == "video")cls <- c("tmod_video", cls)
+  # 
   # If the row is a question, then add the command's AnswerType
   # to the class hierarchy
   if(content$OutputType == "question"){
     if(content$AnswerType == "command") cls <- c("tmod_cmd", cls)
     if(content$AnswerType == "multiple") cls <- c("tmod_mult", cls)
   }
-  # TODO: At this point we should add Nick's tests to the state,
-  # based on content$AnswerTests. For now we stub in a test which
-  # always returns TRUE.
-  tests <- as.list(str_trim(unlist(str_split(content$AnswerTests, ";"))))
   # Return the constructed state, which is just a list of useful things
   # with a class attribute. (Function structure() just adds the attribute
   # to the list.)
   return(
-    structure(list(content=content, tests=tests, row=n, stage=1), class = cls)
+    structure(list(content=content, vars=vars, row=n, stage=1), class = cls)
   )
 }
 
@@ -98,15 +99,17 @@ doStage.tmod_mult <- function(state, expr, val){
   choices <- str_trim(unlist(strsplit(state$content[,"AnswerChoices"], ";")))
   # Get the user's answer
   ans <- select.list(choices, graphics=FALSE)
-  # Apply the tests. Literally, apply to each member of
-  # the list "tests", a function, "function(test,x)", which
-  # just evaluates the test on ans. Return a vector of TRUE
-  # or FALSE values
-  results <- sapply(state$tests, function(test,x)test(x), x=ans)
-  # For now, the user fails unless all tests are passed.
-  # The following line essentially ANDs all the results together.
-  passed <- as.logical(prod(results))
-  if(passed)prettyOut("Correct!")
+  # Apply the muliple choice test. The correct answer should be
+  # specified in the AnswerTests column in the form
+  # "result=<correct answer>".
+  temp <- state$content$AnswerTests
+  correct.ans <- substr(temp, 8, nchar(temp))
+  passed <- ans == correct.ans
+  if(ans == correct.ans){
+    prettyOut("Correct!")
+  } else {
+    prettyOut(paste("Nope.", state$content$Hint))
+  }
   return(list(finished=passed, prompt=FALSE, suspend=FALSE, state=state))
 }
 
@@ -122,13 +125,24 @@ doStage.tmod_cmd <- function(state, expr, val){
     state$stage <- 1 + state$stage
     return(list(finished=FALSE, prompt=TRUE, suspend=FALSE, state=state))
   } else {
-    # The user has responded to the question.
-    # Control has captured the response and passed it along as
-    # parameters expr and val. Apply the tests to the response in
-    # a manner similar to that used in doStage.tmod_mult, above.
-    results <- sapply(state$tests, function(test,x,y)test(x,y), x=expr, y=val)
+    # The user has responded to the question. Control has captured the 
+    # response and passed it along as parameters expr and val. The
+    # response may have resulted in creation of one or more new variables,
+    # however, so we must capture those. The state contains a vector of
+    # variables which existed when the state was entered initially.
+    # Capture the names of variables available globally now
+    current.vars <- ls(globalenv())
+    # Function setdiff finds the names in the first argument which are
+    # not in the second, hence captures names of variables created since
+    # the state was entered initially.
+    new.vars <- setdiff(current.vars, state$vars)
+    # Tests are specified by keyphrases in the AnswerTests column
+    keyphrases <- as.list(str_trim(unlist(str_split(state$content$AnswerTests, ";"))))
+    # Apply the tests to the response.
+    results <- lapply(keyphrases, 
+                      function(x)testByPhrase(x,state,expr,val,new.vars))
     # For now, the user fails unless all tests are passed
-    passed <- all(results)
+    passed <- !(FALSE %in% results) 
     if(passed){
       prettyOut("Correct!")
       return(list(finished=TRUE, prompt=FALSE, suspend=FALSE, state=state))
@@ -156,4 +170,51 @@ suspendQ <- function(){
   suspend <- readline("...") == "play"
   if(suspend)prettyOut("Type nxt() to continue.")
   return(suspend)
+}
+
+# Applies a test specified by a keyphrase
+testByPhrase <- function(keyphrase, state, expr, val, new.vars){
+  # Does the given expression contain `<-` ?
+  if(keyphrase=="assign")return(testAssign(state, expr, val))
+  # Have new variables been created?
+  if(keyphrase=="newVar")return(length(new.vars) > 0)
+  # Has a specificed function been used?
+  if(substr(keyphrase,1,8)=="useFunc="){
+    func <-substr(keyphrase, 9, nchar(keyphrase))
+    return(testFunc(state, expr, val, func))
+  }
+  # Has the user calculated the correct value?
+  if(substr(keyphrase,1,7)=="result="){
+    # This test assumes a new variable should have been created.
+    # If not, the test fails.
+    if(length(new.vars) == 0)return(FALSE)
+    # The correct expression is that appearing after "result="
+    correct.expr <- parse(text=substr(keyphrase, 8, nchar(keyphrase)))
+    # The correct value is that of the correct expression, but to evaluate
+    # the correct expression we need the values of those variables in
+    # the global environment whose names appear in new.vars. (It is
+    # technically possible for the user to have created more than one.)
+    new.var.vals <- lapply(new.vars, function(x)get(x,globalenv()))
+    # We'll try to evaluate the correct expression using each of the
+    # values of the variables created. 
+    possibly.corrrect <- 
+      lapply(new.var.vals, function(x)tryEval(correct.expr, x))
+    # Some of these tries may have returned try errors. We'll remove
+    # them. First find all the entries which are not try errors.
+    idx <- sapply(possibly.correct, function(x)class(x)!="try-error")
+    # Excise them.
+    possibly.correct <- possibly.correct[idx]
+    # See if there are any matches between these and the values calculated
+    # by the user.
+    matches <- intersect(val, possibly.correct)
+    # The test succeeds if there is at least one match
+    return(length(matches) > 0)
+  }
+}
+
+# This function tries to evaluate an expression containing newVal.
+# If it succeeds it will return the value of the expression. If it
+# fails it will return an NA.
+tryEval <- function(expr, newVal){
+  return(try(eval(expr), silent=TRUE))
 }

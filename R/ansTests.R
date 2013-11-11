@@ -45,11 +45,11 @@ testVal(NULL, e, eval(e), 100)  # FALSE
 testAssign(NULL, e, eval(e))  # TRUE
 testFunc(NULL, e, eval(e), "mean")  # TRUE
 testFunc(NULL, e, eval(e), "apply")  # FALSE
-testFunc(NULL, g, eval(e), "sample")  # TRUE
-testFunc(NULL, g, eval(e), "sum")  # FALSE
 
 g <- quote(median(sample(1:20, 5)))
 flatten(g)
+testFunc(NULL, g, eval(e), "sample")  # TRUE
+testFunc(NULL, g, eval(e), "sum")  # FALSE
 testFunc(NULL, g, eval(e), "sample")  # TRUE
 testFunc(NULL, g, eval(e), "sum")  # FALSE
 
