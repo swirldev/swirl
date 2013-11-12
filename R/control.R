@@ -1,5 +1,3 @@
-rm(list=ls()) # to clean environment
-
 source("R/states.R")
 
 hi <- function(){
@@ -67,7 +65,7 @@ cback <- function(expr, val, ok, vis){
     if(response$finished){
       # If the current state is finished, make the next state current
       # by storing it in the global variable, "module."
-      module$state <- nextState(state)
+      module$state <- nextState(response$state)
     } else {
       # Otherwise, continue with the current state
       module$state <- response$state
