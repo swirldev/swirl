@@ -1,3 +1,5 @@
+rm(list=ls()) # to clean environment
+
 source("R/states.R")
 
 hi <- function(){

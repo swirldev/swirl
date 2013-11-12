@@ -28,8 +28,17 @@ nextState.tmod <- function(state){
   # If we've run out of content, return NULL to signal
   # control that we're done.
   if(n > module$rows)return(NULL)
-  # To support tests, make a vector of the names of variables which
-  # currently exist in the global environment.
+  # To support command tests, we want a cumulative list of all variables
+  # which the user has created. To do so we need to know what variables
+  # exist in the initial envionment, which we assume is clean.
+  # TODO: something better. A clean environment is a bad assumption.
+  if(n==1){
+    initial.vars <- ls(globalenv())
+  } else {
+    initial.vars <- state$initial.vars
+  }
+  # We must also support a test which indicates if a new variable has
+  # been successfully created in this particular state.
   vars <- ls(globalenv())
   # Begin building the class hierarchy for this state
   # starting with a base state called tmod.
@@ -50,7 +59,7 @@ nextState.tmod <- function(state){
   # with a class attribute. (Function structure() just adds the attribute
   # to the list.)
   return(
-    structure(list(content=content, vars=vars, row=n, stage=1), class = cls)
+    structure(list(content=content, initial.vars=initial.vars, vars=vars, row=n, stage=1), class = cls)
   )
 }
 
@@ -135,12 +144,16 @@ doStage.tmod_cmd <- function(state, expr, val){
     # Function setdiff finds the names in the first argument which are
     # not in the second, hence captures names of variables created since
     # the state was entered initially.
+    # New variables created in this state
     new.vars <- setdiff(current.vars, state$vars)
+    # Variables accumulated since beginning
+    cum.vars <- setdiff(current.vars, state$initial.vars)
     # Tests are specified by keyphrases in the AnswerTests column
     keyphrases <- as.list(str_trim(unlist(str_split(state$content$AnswerTests, ";"))))
     # Apply the tests to the response.
     results <- lapply(keyphrases, 
-                      function(x)testByPhrase(x,state,expr,val,new.vars))
+                      function(x)testByPhrase(x,state,expr,val,
+                                              new.vars, cum.vars))
     # For now, the user fails unless all tests are passed
     passed <- !(FALSE %in% results) 
     if(passed){
@@ -173,7 +186,7 @@ suspendQ <- function(){
 }
 
 # Applies a test specified by a keyphrase
-testByPhrase <- function(keyphrase, state, expr, val, new.vars){
+testByPhrase <- function(keyphrase, state, expr, val, new.vars, cum.vars){
   # Does the given expression contain `<-` ?
   if(keyphrase=="assign")return(testAssign(state, expr, val))
   # Have new variables been created?
@@ -181,24 +194,25 @@ testByPhrase <- function(keyphrase, state, expr, val, new.vars){
   # Has a specificed function been used?
   if(substr(keyphrase,1,8)=="useFunc="){
     func <-substr(keyphrase, 9, nchar(keyphrase))
-    return(testFunc(state, expr, val, func))
+    passed <- testFunc(state, expr, val, func)
+    return(passed)
   }
   # Has the user calculated the correct value?
   if(substr(keyphrase,1,7)=="result="){
     # This test assumes a new variable should have been created.
-    # If not, the test fails.
-    if(length(new.vars) == 0)return(FALSE)
+    # sometime during the lesson. If not, the test fails.
+    if(length(cum.vars) == 0)return(FALSE)
     # The correct expression is that appearing after "result="
     correct.expr <- parse(text=substr(keyphrase, 8, nchar(keyphrase)))
     # The correct value is that of the correct expression, but to evaluate
     # the correct expression we need the values of those variables in
-    # the global environment whose names appear in new.vars. (It is
+    # the global environment whose names appear in cum.vars. (It is
     # technically possible for the user to have created more than one.)
-    new.var.vals <- lapply(new.vars, function(x)get(x,globalenv()))
+    cum.var.vals <- lapply(cum.vars, function(x)get(x,globalenv()))
     # We'll try to evaluate the correct expression using each of the
-    # values of the variables created. 
-    possibly.corrrect <- 
-      lapply(new.var.vals, function(x)tryEval(correct.expr, x))
+    # values of the variables created.
+    possibly.correct <- 
+      lapply(cum.var.vals, function(x)tryEval(correct.expr, x))
     # Some of these tries may have returned try errors. We'll remove
     # them. First find all the entries which are not try errors.
     idx <- sapply(possibly.correct, function(x)class(x)!="try-error")
@@ -215,6 +229,6 @@ testByPhrase <- function(keyphrase, state, expr, val, new.vars){
 # This function tries to evaluate an expression containing newVal.
 # If it succeeds it will return the value of the expression. If it
 # fails it will return an NA.
-tryEval <- function(expr, newVal){
+tryEval <- function(expr, newVar){
   return(try(eval(expr), silent=TRUE))
 }
