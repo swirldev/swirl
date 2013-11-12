@@ -92,7 +92,6 @@ doStage.tmod_video <- function(state, expr, val){
 doStage.tmod_mult <- function(state, expr, val){
   # If we're at stage 2 or more (retry) give the hint.
   # We could limit the number of tries here as well.
-  if(state$stage > 1) prettyOut(state$content[,"Hint"])
   state$stage <- state$stage + 1
   # Ask the question
   prettyOut(state$content[,"Output"])
