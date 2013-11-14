@@ -12,10 +12,10 @@ Demo integrating two experimental features: answers are tested via a list of key
 
 ### Suggestions:
 
-1. Tracking variables defined by the user via expressions entered by the user seems more robust to me than alternatives. A full implementation of the feature might entail:
-  * two additional methods for states, getVars and putVars,
-  * a solid function to extract assigned variable names from expressions.
+1. Tracking variables defined by the user via expressions entered by the user seems more robust to me than alternatives. However, such functionality probably belongs in "control", as I am calling it, rather than in "content." See 4, below.
 
 2. Lines 199 on, in states.R, should be moved to ansTests.R as a test function, perhaps replacing testVal. The same applies to the multiple choice test, lines 100-107 in states.R.
 
-3. REMARK: Swirl 1.0 stores user progress and allows users to pick up where they left off. This requires swirl to execute all assignments prior to the point of resumption. To support this, states probably need an execute method (which would do nothing except in the case of assignments.)
+3. Swirl 1.0 stores user progress and allows users to pick up where they left off. This requires swirl to execute all assignments prior to the point of resumption. To support this, states probably need an execute method which would do nothing except for figures and, perhaps, assignments in which the variable name is not chosen by the user. (See next.)
+
+4. Some assignments will involve variable names chosen by the user. Hence, not only the user's chosen variable names, but the associated expressions, e.g. `x <- c(1, 2, 3)` will be needed in order to restore user progress. It seems to me that "control," is the natural place for this feature. Of course states would need access for testing answers, e.g., through a standard function or two like getVars() and getNewVars(). The feature *could* be implemented as a default state method, but that seems unnatural unless there's a reason to believe it should be state dependent.
