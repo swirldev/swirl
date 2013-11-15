@@ -5,7 +5,7 @@
 
 saveSession <- function(expr, val, ok, vis, data) {
   # Set up directory in a native platform-compliant manner
-  fileDir <- file.path(path.package("swirl"), "userData")
+  fileDir <- file.path(path.package("swirl"), "user_data")
   # Assuming first three elements of data are username, course, and module...
   fileName <- paste0(paste(data[[1]], data[[2]], data[[3]], sep="_"), ".Rdata")
   # Specify final file path
@@ -13,6 +13,8 @@ saveSession <- function(expr, val, ok, vis, data) {
   
   # Save user data as .Rdata file
   save(data, file=filePath)
+  # Return FALSE to remove callback
+  return(FALSE)
 }
 
 ######## TEST ########
