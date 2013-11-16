@@ -99,13 +99,28 @@ doStage.tmod_mult <- function(state, expr, val){
   choices <- str_trim(unlist(strsplit(state$content[,"AnswerChoices"], ";")))
   # Get the user's answer
   ans <- select.list(choices, graphics=FALSE)
-  # Apply the muliple choice test. The correct answer should be
-  # specified in the AnswerTests column in the form
-  # "result=<correct answer>".
-  temp <- state$content$AnswerTests
-  correct.ans <- substr(temp, 8, nchar(temp))
-  passed <- ans == correct.ans
-  if(ans == correct.ans){
+  
+  # Extract the keyphrases from content's AnswerTests row
+  keyphrases <- as.list(str_trim(unlist(str_split(state$content$AnswerTests, ";"))))
+  # Apply the associated tests to the response.
+  results <- lapply(keyphrases, 
+                    function(x)testByPhrase(x,state,expr,ans, NULL))
+  # For now, the user fails unless all tests are passed
+  passed <- !(FALSE %in% results) 
+  
+  
+#   # Apply the muliple choice test. The correct answer should be
+#   # specified in the AnswerTests column in the form
+#   # "word=<correct answer>".
+#   temp <- state$content$AnswerTests
+#   correct.ans <- substr(temp, 8, nchar(temp))
+#   passed <- ans == correct.ans
+#   if(ans == correct.ans){
+#     prettyOut("Correct!")
+#   } else {
+#     prettyOut(paste("Nope.", state$content$Hint))
+#   }
+  if(passed){
     prettyOut("Correct!")
   } else {
     prettyOut(paste("Nope.", state$content$Hint))
@@ -197,35 +212,13 @@ testByPhrase <- function(keyphrase, state, expr, val, new.vars){
   }
   # Has the user calculated the correct value?
   if(substr(keyphrase,1,7)=="result="){
-    # This test assumes a new variable should have been created.
-    # sometime during the lesson. If not, the test fails.
-    if(length(state$vars) == 0)return(FALSE)
     # The correct expression is that appearing after "result="
     correct.expr <- parse(text=substr(keyphrase, 8, nchar(keyphrase)))
-    # The correct value is that of the correct expression, but to evaluate
-    # the correct expression we need the values of those variables in
-    # the global environment whose names appear in state$vars.
-    var.vals <- lapply(state$vars, function(x)get(x,globalenv()))
-    # We'll try to evaluate the correct expression using each of the
-    # values of the variables created.
-     possibly.correct <- 
-      lapply(var.vals, function(x)tryEval(correct.expr, x))
-    # Some of these tries may have returned try errors. We'll remove
-    # them. First find all the entries which are not try errors.
-    idx <- sapply(possibly.correct, function(x)class(x)!="try-error")
-    # Excise them.
-    possibly.correct <- possibly.correct[idx]
-    # See if there are any matches between these and the values calculated
-    # by the user.
-    matches <- intersect(val, possibly.correct)
-    # The test succeeds if there is at least one match
-    return(length(matches) > 0)
+    return(testResultEquals(state, exp, val, correct.expr))
   }
-}
-
-# This function tries to evaluate an expression containing newVal.
-# If it succeeds it will return the value of the expression. If it
-# fails it will return an NA.
-tryEval <- function(expr, newVar){
-  return(try(eval(expr), silent=TRUE))
+  # Has the user given a correct one-word answer?
+  if(substr(keyphrase,1,5)=="word="){
+    correct.word <- substr(keyphrase,6,nchar(keyphrase))
+    return(testVal(state, expr, val, correct.word))
+  }
 }

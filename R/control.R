@@ -1,6 +1,8 @@
 source("R/states.R")
 
 hi <- function(){
+  removeTaskCallback(id="tmod")
+  if(exists("module"))rm(module, envir=globalenv())
   # Create a new container for global data and state of user's progress
   temp <- new.env(parent = emptyenv())
   # Read the test module into it
