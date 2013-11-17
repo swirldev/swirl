@@ -18,7 +18,7 @@ hi <- function(){
   # an indication that the lesson is in progress
   module$suspended <- FALSE
   # And a list of length 2 to act as mirror
-  module$mirror <- lapply(1:2, function(x)temp[[x]]<-list())
+  module$mirror <- lapply(1:2, function(x)module$mirror[[x]]<-list())
   # Register the function cback(), below, as a callback. This
   # means that R will automatically invoke it whenever the user
   # enters a successful expression at the R prompt.
