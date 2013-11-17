@@ -28,10 +28,10 @@ nextState.tmod <- function(state){
   # If we've run out of content, return NULL to signal
   # control that we're done.
   if(n > module$rows)return(NULL)
-  # To support command tests, we want a cumulative record of all variables
-  # which the user has created. TODO: We should also keep track of those
-  # which the user has removed.
-  vars <- state$vars
+#   # To support command tests, we want a cumulative record of all variables
+#   # which the user has created. TODO: We should also keep track of those
+#   # which the user has removed.
+#   vars <- state$vars
   # Begin building the class hierarchy for this state
   # starting with a base state called tmod.
   cls <- c("tmod")
@@ -51,7 +51,7 @@ nextState.tmod <- function(state){
   # with a class attribute. (Function structure() just adds the attribute
   # to the list.)
   return(
-    structure(list(content=content, vars=vars, row=n, stage=1), class = cls)
+    structure(list(content=content, row=n, stage=1), class = cls)
   )
 }
 
@@ -99,27 +99,13 @@ doStage.tmod_mult <- function(state, expr, val){
   choices <- str_trim(unlist(strsplit(state$content[,"AnswerChoices"], ";")))
   # Get the user's answer
   ans <- select.list(choices, graphics=FALSE)
-  
   # Extract the keyphrases from content's AnswerTests row
   keyphrases <- as.list(str_trim(unlist(str_split(state$content$AnswerTests, ";"))))
   # Apply the associated tests to the response.
   results <- lapply(keyphrases, 
-                    function(x)testByPhrase(x,state,expr,ans, NULL))
+                    function(x)testByPhrase(x,state,expr,ans))
   # For now, the user fails unless all tests are passed
   passed <- !(FALSE %in% results) 
-  
-  
-#   # Apply the muliple choice test. The correct answer should be
-#   # specified in the AnswerTests column in the form
-#   # "word=<correct answer>".
-#   temp <- state$content$AnswerTests
-#   correct.ans <- substr(temp, 8, nchar(temp))
-#   passed <- ans == correct.ans
-#   if(ans == correct.ans){
-#     prettyOut("Correct!")
-#   } else {
-#     prettyOut(paste("Nope.", state$content$Hint))
-#   }
   if(passed){
     prettyOut("Correct!")
   } else {
@@ -140,18 +126,18 @@ doStage.tmod_cmd <- function(state, expr, val){
     state$stage <- 1 + state$stage
     return(list(finished=FALSE, prompt=TRUE, suspend=FALSE, state=state))
   } else {
-    # The user has responded to the question. Control has captured the 
-    # response and passed it along as parameters expr and val. The
-    # response may have resulted in creation of one or more new variables,
-    # however, so we must capture those.
-    new.vars <- findAssignedNames(expr)
-    # Incorporate them in the state
-    state$vars <- union(new.vars, state$vars)
+#     # The user has responded to the question. Control has captured the 
+#     # response and passed it along as parameters expr and val. The
+#     # response may have resulted in creation of one or more new variables,
+#     # however, so we must capture those.
+#     new.vars <- findAssignedNames(expr)
+#     # Incorporate them in the state
+#     state$vars <- union(new.vars, state$vars)
     # Extract the keyphrases from content's AnswerTests row
     keyphrases <- as.list(str_trim(unlist(str_split(state$content$AnswerTests, ";"))))
     # Apply the associated tests to the response.
     results <- lapply(keyphrases, 
-                      function(x)testByPhrase(x,state,expr,val, new.vars))
+                      function(x)testByPhrase(x,state,expr,val))
     # For now, the user fails unless all tests are passed
     passed <- !(FALSE %in% results) 
     if(passed){
@@ -199,11 +185,11 @@ findAssignedNames <- function(expr){
 }
 
 # Applies a test specified by a keyphrase
-testByPhrase <- function(keyphrase, state, expr, val, new.vars){
+testByPhrase <- function(keyphrase, state, expr, val){
   # Does the given expression contain `<-` ?
   if(keyphrase=="assign")return(testAssign(state, expr, val))
   # Have new variables been created?
-  if(keyphrase=="newVar")return(length(new.vars) > 0)
+  if(keyphrase=="newVar")return(testNewVar(state, expr, val))
   # Has a specificed function been used?
   if(substr(keyphrase,1,8)=="useFunc="){
     func <-substr(keyphrase, 9, nchar(keyphrase))

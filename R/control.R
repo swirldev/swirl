@@ -1,19 +1,24 @@
 source("R/states.R")
 
 hi <- function(){
+  # Clean any leftover tmod callback or modules
   removeTaskCallback(id="tmod")
   if(exists("module"))rm(module, envir=globalenv())
-  # Create a new container for global data and state of user's progress
-  temp <- new.env(parent = emptyenv())
+  # Create a new instance of module in the global environment.
+  assign("module", new.env(), envir=globalenv() )
   # Read the test module into it
-  temp$mod <- read.csv("data/testMod.csv", as.is=TRUE)
-  # Store mod's number of rows there too.
-  temp$rows <- nrow(temp$mod)
-  # Assign temp, which is only known inside this function,
-  # to a variable named "module" in the global environment.
-  assign("module", temp, envir=globalenv() )
-  # Store the initial state in the global variable, "module".
+  module$mod <- read.csv("data/testMod.csv", as.is=TRUE)
+  # Store the test module's number of rows there too.
+  module$rows <- nrow(module$mod)
+  # And a vector of names to ignore while tracking user progress.
+  module$ignore <- c("mod", "rows", "state", "ignore", "suspended",
+                     "mirror")
+  # And the initial state,
   module$state <- nextState(structure(list(row=0), class="tmod"))
+  # an indication that the lesson is in progress
+  module$suspended <- FALSE
+  # And a list of length 2 to act as mirror
+  module$mirror <- vector("list", 2)
   # Register the function cback(), below, as a callback. This
   # means that R will automatically invoke it whenever the user
   # enters a successful expression at the R prompt.
@@ -30,7 +35,7 @@ nxt <- function(){
 # Cleans up
 bye <- function(){
   removeTaskCallback(id="tmod")
-  rm(module, envir=globalenv())
+  if(exists("module"))rm(module, envir=globalenv())
   invisible()
 }
 
@@ -51,6 +56,7 @@ cback <- function(expr, val, ok, vis){
   # If instruction is suspended, do nothing.
   if(module$suspended)return(TRUE) 
   # Otherwise, process the current state.
+  updateMirror(expr, ok)
   n <- 1 # to avoid any infinte loop
   while(n < 20){
     n <- n+1
@@ -72,6 +78,7 @@ cback <- function(expr, val, ok, vis){
       # Otherwise, continue with the current state
       module$state <- response$state
     }
+    
     if(response$prompt)break
   } 
   return(TRUE)
@@ -79,9 +86,41 @@ cback <- function(expr, val, ok, vis){
 
 ### UTILITIES
 
+# Returns TRUE if the user has asked for help at the R prompt.
+# Take my word for it.
 askingHelp <- function(expr){
-  # Returns TRUE if the user has asked for help at the R prompt.
-  # Take my word for it.
   if(class(expr)=="expression")expr <- expr[[1]]
   return(expr[[1]] == "?" || expr[[1]] == "help")
+}
+
+# The idea of the mirror is to track what the user has done
+# by reproducing it in a "protected" environment and keeping
+# a history some number of steps back, currently two.
+updateMirror <- function(expr, ok){
+  # Do not update for hi() or nxt()
+  if(identical(expr, parse(text="nxt()")[[1]]) ||
+       identical(expr, parse(text="hi()")[[1]])){
+    return()
+  }
+  # Update only if the expression succeeded. (Currently, only
+  # expressions which succeed will make it to this point, but
+  # that may change in future versions of R.)
+  if(ok){
+    # Move current snapshots to the rear
+    n <- length(module$mirror)
+    while(n > 1){
+      module$mirror[[n]] <- module$mirror[[n-1]]
+      n <- n - 1
+    }
+    # Form a snapshot of the current mirror:
+    # Get all existing variable names, except those ignored
+    vars <- setdiff(ls(module), module$ignore)
+    # Get the associated values
+    module$mirror[[1]] <- lapply(vars, function(x)get(x,module))
+    # Associate the values with their names
+    names(module$mirror[[1]]) <- vars
+    # Eval expr in the protected environment to mirror
+    # what the user has done in the global environment
+    eval(expr, module)
+   }
 }

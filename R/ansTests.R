@@ -21,14 +21,21 @@ testFunc <- function(state, expr, val, func) {
   func %in% flatten(expr)
 }
 
+#' Tests whether a new variable has been created
+testNewVar <- function(state, expr, val, ...){
+  current.vars <- setdiff(ls(module), module$ignore)
+  new.vars <- setdiff(current.vars, module$mirror[[1]])
+}
+
+# TODO: simplify
 testResultEquals <- function(state, expr, val, correct.expr){
   # This test assumes a new variable should have been created.
   # sometime during the lesson. If not, the test fails.
-  if(length(state$vars) == 0)return(FALSE)
-  # The correct value is that of the correct expression, but to evaluate
-  # the correct expression we need the values of those variables in
-  # the global environment whose names appear in state$vars.
-  var.vals <- lapply(state$vars, function(x)get(x,globalenv()))
+  vars <- setdiff(ls(module), module$ignore)
+  if(length(vars) == 0)return(FALSE)
+  # Get the values of the variables currently in the protected
+  # environment
+  var.vals <- lapply(vars, function(x)get(x,module))
   # We'll try to evaluate the correct expression using each of the
   # values of the variables created.
   possibly.correct <- 
@@ -36,7 +43,7 @@ testResultEquals <- function(state, expr, val, correct.expr){
   # Some of these tries may have returned try errors. We'll remove
   # them. First find all the entries which are not try errors.
   idx <- sapply(possibly.correct, function(x)class(x)!="try-error")
-  # Excise them.
+  # Exract them.
   possibly.correct <- possibly.correct[idx]
   # See if there are any matches between these and the values calculated
   # by the user.
