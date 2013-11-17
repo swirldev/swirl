@@ -21,35 +21,26 @@ testFunc <- function(state, expr, val, func) {
   func %in% flatten(expr)
 }
 
-#' Tests whether a new variable has been created
+#' Tests whether precisely one new variable has been created
 testNewVar <- function(state, expr, val, ...){
   current.vars <- setdiff(ls(module), module$ignore)
-  new.vars <- setdiff(current.vars, module$mirror[[1]])
+  new.vars <- setdiff(current.vars, names(module$mirror[[1]]))
+  return(length(new.vars) == 1)
 }
 
-# TODO: simplify
+#' Tests the result of a computation such as mean(newVar) applied
+#' to a new variable created in the previous question. 
 testResultEquals <- function(state, expr, val, correct.expr){
-  # This test assumes a new variable should have been created.
-  # sometime during the lesson. If not, the test fails.
-  vars <- setdiff(ls(module), module$ignore)
-  if(length(vars) == 0)return(FALSE)
-  # Get the values of the variables currently in the protected
-  # environment
-  var.vals <- lapply(vars, function(x)get(x,module))
-  # We'll try to evaluate the correct expression using each of the
-  # values of the variables created.
-  possibly.correct <- 
-    lapply(var.vals, function(x)tryEval(correct.expr, x))
-  # Some of these tries may have returned try errors. We'll remove
-  # them. First find all the entries which are not try errors.
-  idx <- sapply(possibly.correct, function(x)class(x)!="try-error")
-  # Exract them.
-  possibly.correct <- possibly.correct[idx]
-  # See if there are any matches between these and the values calculated
-  # by the user.
-  matches <- intersect(val, possibly.correct)
-  # The test succeeds if there is at least one match
-  return(length(matches) > 0)
+  # Find the names of variables created in the previous question. 
+  new.var <- setdiff(names(module$mirror[[1]]), names(module$mirror[[2]]))
+  # The test fails if there was not precisely one.
+  if(length(new.var) != 1)return(FALSE)
+  # Evaluate the correct expression on the *value* of the new variable
+  newVar <- module$mirror[[1]][[new.var]]
+  correct.val <- tryEval(correct.expr, newVar)
+  # Test succeeds if the correct value matches that which the user
+  # computed in this question.
+  return(identical(val, correct.val))
 }
 
 
