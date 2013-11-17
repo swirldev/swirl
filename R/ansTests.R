@@ -40,7 +40,6 @@ testResultEquals <- function(state, expr, val, correct.expr){
   if(length(vars) == 0)return(FALSE)
   # Evaluate the correct expression on all of them
   possibly.correct <- lapply(vars, function(newVar)tryEval(correct.expr, newVar))
-  print(possibly.correct)
   # Test succeeds if the correct value matches that which the user
   # computed in this question.
   return(val %in% possibly.correct)
