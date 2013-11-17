@@ -3,35 +3,31 @@ source("R/ansTests.R")
 
 ### STATE CLASSES AND METHODS
 
-# Define "signatures" for methods to interface between control
-# and content. These tell R that when it sees, for instance, 
-# nextState(state) it should actually invoke a function of the
-# form nextState.blah(state), where blah is a class of state.
-#
+#' Define "signatures" for methods to interface between control
+#' and content. These tell R that when it sees, for instance, 
+#' nextState(state) it should actually invoke a function of the
+#' form nextState.blah(state), where blah is a class of state.
+#'
 doStage <- function(state, expr, val)UseMethod("doStage")
 nextState <- function(state)UseMethod("nextState")
 
-# Define the nextState method for the base class, tmod. Since
-# nextState should do the same thing for every class we will
-# only need this one. The higher classes will "inherit" it
-# like this: A class actually consists of a class hierarchy.
-# In this case it will be either just the base class, "tmod", or
-# a vector of two classes such as c("tmod_video", "tmod").
-# If, for instance, R cannot find a function of the form
-# nextState.tmod_video(state), it will look for one of
-# the form nextState.tmod(state). This method creates a new state of the
-# appropriate class from the next row of content.
-#
+#' Define the nextState method for the base class, tmod. Since
+#' nextState should do the same thing for every class we will
+#' only need this one. The higher classes will "inherit" it
+#' like this: A class actually consists of a class hierarchy.
+#' In this case it will be either just the base class, "tmod", or
+#' a vector of two classes such as c("tmod_video", "tmod").
+#' If, for instance, R cannot find a function of the form
+#' nextState.tmod_video(state), it will look for one of
+#' the form nextState.tmod(state). This method creates a new state of the
+#' appropriate class from the next row of content.
+#'
 nextState.tmod <- function(state){
   # All we need is the appropriate row of the course module.
   n <- 1 + state$row
   # If we've run out of content, return NULL to signal
   # control that we're done.
   if(n > module$rows)return(NULL)
-#   # To support command tests, we want a cumulative record of all variables
-#   # which the user has created. TODO: We should also keep track of those
-#   # which the user has removed.
-#   vars <- state$vars
   # Begin building the class hierarchy for this state
   # starting with a base state called tmod.
   cls <- c("tmod")
@@ -55,9 +51,9 @@ nextState.tmod <- function(state){
   )
 }
 
-# The doStage methods will be different for different classes.
-# The base method just prints out the state's Output and gives
-# the user a chance to continue or quit.
+#' The doStage methods will be different for different classes.
+#' The base method just prints out the state's Output and gives
+#' the user a chance to continue or quit.
 doStage.tmod <- function(state, expr, val){
   prettyOut(state$content[1,"Output"])
   # Allow the user to suspend instruction
@@ -66,9 +62,9 @@ doStage.tmod <- function(state, expr, val){
   return(list(finished=TRUE, prompt=suspend, suspend=suspend, state=state))
 }
 
-# For video, the doStage method prints the state's output, which asks
-# whether the user would like to watch a video. If yes, a system
-# call opens the appropriate link in a browser.
+#' For video, the doStage method prints the state's output, which asks
+#' whether the user would like to watch a video. If yes, a system
+#' call opens the appropriate link in a browser.
 doStage.tmod_video <- function(state, expr, val){
   prettyOut(state$content[1,"Output"])
   resp <- readline("ANSWER: ")
@@ -86,9 +82,9 @@ doStage.tmod_video <- function(state, expr, val){
   }
 }
 
-# For multiple choice, the doStage method must present the choices
-# and apply tests to the answers. We're finished if all tests
-# return TRUE. Otherwise we type the hint and retry.
+#' For multiple choice, the doStage method must present the choices
+#' and apply tests to the answers. We're finished if all tests
+#' return TRUE. Otherwise we type the hint and retry.
 doStage.tmod_mult <- function(state, expr, val){
   # If we're at stage 2 or more (retry) give the hint.
   # We could limit the number of tries here as well.
@@ -114,11 +110,11 @@ doStage.tmod_mult <- function(state, expr, val){
   return(list(finished=passed, prompt=FALSE, suspend=FALSE, state=state))
 }
 
-# For questions requiring that the user type a command, we must ask
-# the question, return the user to the R prompt, and evaluate his or her
-# response at a subsequent stage of this same state.
+#' For questions requiring that the user type a command, we must ask
+#' the question, return the user to the R prompt, and evaluate his or her
+#' response at a subsequent stage of this same state.
 doStage.tmod_cmd <- function(state, expr, val){
-  if(state$stage == 1){
+   if(state$stage == 1){
     # We are entering the state for the first time. Ask the question,
     # increment the stage and tell control to return the user 
     # to the prompt.
@@ -126,13 +122,6 @@ doStage.tmod_cmd <- function(state, expr, val){
     state$stage <- 1 + state$stage
     return(list(finished=FALSE, prompt=TRUE, suspend=FALSE, state=state))
   } else {
-#     # The user has responded to the question. Control has captured the 
-#     # response and passed it along as parameters expr and val. The
-#     # response may have resulted in creation of one or more new variables,
-#     # however, so we must capture those.
-#     new.vars <- findAssignedNames(expr)
-#     # Incorporate them in the state
-#     state$vars <- union(new.vars, state$vars)
     # Extract the keyphrases from content's AnswerTests row
     keyphrases <- as.list(str_trim(unlist(str_split(state$content$AnswerTests, ";"))))
     # Apply the associated tests to the response.
@@ -161,16 +150,16 @@ prettyOut <- function(...) {
   message(str_c("| ", wrapped, collapse = "\n"))
 }
 
-# Allows the user to suspend instruction by entering "play" (w/o quotes)
-# or to continue by entering anything else, including nothing.
+#' Allows the user to suspend instruction by entering "play" (w/o quotes)
+#' or to continue by entering anything else, including nothing.
 suspendQ <- function(){
   suspend <- readline("...") == "play"
   if(suspend)prettyOut("Type nxt() to continue.")
   return(suspend)
 }
 
-# Finds names of variables assigned in the given expression,
-# returning them in a character vector
+#' Finds names of variables assigned in the given expression,
+#' returning them in a character vector
 findAssignedNames <- function(expr){
   # Convert the expression, a tree, to a flat list 
   f.expr <- flatten(expr)
@@ -184,7 +173,7 @@ findAssignedNames <- function(expr){
   return(as.character(f.expr[idx]))
 }
 
-# Applies a test specified by a keyphrase
+#' Applies a test specified by a keyphrase
 testByPhrase <- function(keyphrase, state, expr, val){
   # Does the given expression contain `<-` ?
   if(keyphrase=="assign")return(testAssign(state, expr, val))

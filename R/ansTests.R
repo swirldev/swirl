@@ -18,29 +18,32 @@ testAssign <- function(state, expr, val) {
 #' function name provided is matched in the expression.
 #' 
 testFunc <- function(state, expr, val, func) {
+  (is.call(expr) || is.expression(expr)) &&
   func %in% flatten(expr)
 }
 
-#' Tests whether precisely one new variable has been created
+#' Tests whether one new variable has been created.
 testNewVar <- function(state, expr, val, ...){
   current.vars <- setdiff(ls(module), module$ignore)
-  new.vars <- setdiff(current.vars, names(module$mirror[[1]]))
-  return(length(new.vars) == 1)
+  past <- module$mirror[[1]]
+  new.vars <- setdiff(current.vars, names(past))
+  if(length(new.vars) == 1)return(TRUE)
+  changes <- sapply(names(past), function(x)past[[x]]!=get(x,module))
 }
 
 #' Tests the result of a computation such as mean(newVar) applied
-#' to a new variable created in the previous question. 
+#' to a variable created in a previous question. 
 testResultEquals <- function(state, expr, val, correct.expr){
-  # Find the names of variables created in the previous question. 
-  new.var <- setdiff(names(module$mirror[[1]]), names(module$mirror[[2]]))
-  # The test fails if there was not precisely one.
-  if(length(new.var) != 1)return(FALSE)
-  # Evaluate the correct expression on the *value* of the new variable
-  newVar <- module$mirror[[1]][[new.var]]
-  correct.val <- tryEval(correct.expr, newVar)
+  # Get the variables created all previous questions.
+  vars <- module$mirror[[1]]
+  # The test fails if there were none.
+  if(length(vars) == 0)return(FALSE)
+  # Evaluate the correct expression on all of them
+  possibly.correct <- lapply(vars, function(newVar)tryEval(correct.expr, newVar))
+  print(possibly.correct)
   # Test succeeds if the correct value matches that which the user
   # computed in this question.
-  return(identical(val, correct.val))
+  return(val %in% possibly.correct)
 }
 
 

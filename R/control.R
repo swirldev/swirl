@@ -27,24 +27,24 @@ hi <- function(){
   invisible()
 }
 
-# Resumes instruction
+#' Resumes instruction
 nxt <- function(){
   invisible()
 }
 
-# Cleans up
+#' Cleans up
 bye <- function(){
   removeTaskCallback(id="tmod")
   if(exists("module"))rm(module, envir=globalenv())
   invisible()
 }
 
-# Once registered by function hi(), this is invoked whenever the
-# user enters a successful command at the R prompt. The first
-# argument, expr, is a parsed expression representing what the
-# user has entered. The second argument, val, is the value
-# returned by that expression. The third and fourth parameters
-# are technically required but useless here.
+#' Once registered by function hi(), this is invoked whenever the
+#' user enters a successful command at the R prompt. The first
+#' argument, expr, is a parsed expression representing what the
+#' user has entered. The second argument, val, is the value
+#' returned by that expression. The third and fourth parameters
+#' are technically required but useless here.
 cback <- function(expr, val, ok, vis){
   # If the user has asked R for help, do nothing in the course.
   if(askingHelp(expr))return(TRUE)
@@ -86,16 +86,17 @@ cback <- function(expr, val, ok, vis){
 
 ### UTILITIES
 
-# Returns TRUE if the user has asked for help at the R prompt.
-# Take my word for it.
+#' Returns TRUE if the user has asked for help at the R prompt.
+#' Take my word for it. OK; maybe not.
 askingHelp <- function(expr){
-  if(class(expr)=="expression")expr <- expr[[1]]
+  if(is.expression(expr))expr <- expr[[1]]
+  if(!is.call(expr))return(FALSE)
   return(expr[[1]] == "?" || expr[[1]] == "help")
 }
 
-# The idea of the mirror is to track what the user has done
-# by reproducing it in a "protected" environment and keeping
-# a history some number of steps back, currently two.
+#' The idea of the mirror is to track what the user has done
+#' by reproducing it in a "protected" environment and keeping
+#' a history some number of steps back, currently two.
 updateMirror <- function(expr, ok){
   # Do not update for hi() or nxt()
   if(identical(expr, parse(text="nxt()")[[1]]) ||
