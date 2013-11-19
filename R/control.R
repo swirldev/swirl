@@ -7,7 +7,7 @@ hi <- function(){
   # Create a new instance of module in the global environment.
   assign("module", new.env(), envir=globalenv() )
   # Read the test module into it
-  module$mod <- read.csv("data/testMod.csv", as.is=TRUE)
+  module$mod <- read.csv("data/testMod4Daphne.csv", as.is=TRUE)
   # Store the test module's number of rows there too.
   module$rows <- nrow(module$mod)
   # And a vector of names to ignore while tracking user progress.
@@ -34,6 +34,7 @@ nxt <- function(){
 
 #' Cleans up
 bye <- function(){
+  prettyOut("Thanks for stopping by!")
   removeTaskCallback(id="tmod")
   if(exists("module"))rm(module, envir=globalenv())
   invisible()
@@ -64,8 +65,11 @@ cback <- function(expr, val, ok, vis){
     state <- module$state
     # If the current state is NULL, we are done. Return FALSE
     # to remove this callback from the task list.
-    if(is.null(state))return(FALSE)
-    # Tell the current state to perform its next stage of operation
+    if(is.null(state)) {
+      bye()
+      return(FALSE)
+    }    
+      # Tell the current state to perform its next stage of operation
     response <- doStage(state, expr, val)
     # During that process, the user may have asked to suspend instruction.
     # Store the associated variable in the global variable, "module"
