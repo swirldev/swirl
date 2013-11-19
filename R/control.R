@@ -1,5 +1,3 @@
-source("R/states.R")
-
 hi <- function(){
   # Clean any leftover tmod callback or modules
   removeTaskCallback(id="tmod")

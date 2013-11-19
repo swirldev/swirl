@@ -1,6 +1,3 @@
-library(stringr)
-source("R/ansTests.R")
-
 ### STATE CLASSES AND METHODS
 
 #' Define "signatures" for methods to interface between control
