@@ -3,7 +3,7 @@
 #' value of the expression matches the correct value and FALSE otherwise.
 #' 
 testVal <- function(state, expr, val, correctVal) {
-  identical(val, correctVal)
+  identical(as.character(val), correctVal)
 }
 
 #' Takes as arguments the current state, expression (as passed to callback function), 
