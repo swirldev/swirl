@@ -153,7 +153,7 @@ prettyOut <- function(...) {
 #' Allows the user to suspend instruction by entering "play" (w/o quotes)
 #' or to continue by entering anything else, including nothing.
 suspendQ <- function(){
-  suspend <- readline("...") == "play"
+  suspend <- readline("Press <enter> to continue...") == "play"
   if(suspend)prettyOut("Type nxt() to continue.")
   return(suspend)
 }
