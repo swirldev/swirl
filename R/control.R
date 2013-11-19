@@ -66,7 +66,7 @@ cback <- function(expr, val, ok, vis){
     # If the current state is NULL, we are done. Return FALSE
     # to remove this callback from the task list.
     if(is.null(state)) {
-      bye()
+      prettyOut("Thanks for stopping by!")
       return(FALSE)
     }    
       # Tell the current state to perform its next stage of operation
