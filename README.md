@@ -9,3 +9,11 @@ Content conists of "states" which are instances of S3 classes supporting nextSta
 States aggregate pre-written tests and apply them to user responses. Tests associated with a particular question are determined by the question's author.
 
 Control also updates a history of user progress. Expressions entered at the command prompt by the user in response to questions are evaluated in a clean environment, thus mirroring what the user has done in the global enviroment. A two-deep history the clean enviroment is saved.
+
+## Critique
+
+A better "user mirror" would save a list of new (or changed) variables in chronological order, i.e., setdiff's, rather than complete ls's.
+
+The user mirror's state should be rolled back after an incorrect response.
+
+Content needs temporary storage, e.g., for names chosen by the user which will be used in future questions.
