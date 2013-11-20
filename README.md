@@ -1,19 +1,35 @@
-# swirlfancy/exp.Modularity
+# swirlfancy/exp.FSM
 
-A piece of experimental (i.e., hastily written, lightly tested) code illustrating how four areas of functionality might be modularized. The four areas are control, presentation of content, tracking user progress, and testing responses.
+A piece of experimental (i.e., hastily written, lightly tested) code implementing a small version of swirl as a Finite State Machine.
 
-Control consists mainly of a callback function which returns the user to an R prompt, or not, depending on feedback from content.
+It might be useful way to view swirl architecture as a loop of three basic functions:
 
-Content conists of "states" which are instances of S3 classes supporting nextState() and a doStage() methods.
+1. presentation & response
+2. evaluation & logging
+3. branching
 
-States aggregate pre-written tests and apply them to user responses. Tests associated with a particular question are determined by the question's author.
+In this view, a unit of content is a little script which runs on a "machine" represented by the above loop whose "instruction set" is loosely illustrated by the following examples. Interpreting a unit of content would be a matter of translating from a course authorship language, say a flavor of markdown, to a language understood by this machine.
 
-Control also updates a history of user progress. Expressions entered at the command prompt by the user in response to questions are evaluated in a clean environment, thus mirroring what the user has done in the global enviroment. A two-deep history the clean enviroment is saved.
+Examples of presentation & response would be:
+* select.list(<choices>), choice
+* readline("Would you like to watch a movie?"), y or n
+* "Find the mean of the variable you defined earlier", prompt> expr
+* browseURL(<movie>), prompt> nxt()
+* "Correct! You are doing so well", response is NA
+* readline("..."), "play" or anything else
 
-## Critique
+Examples of evaluation and logging might be
+* Given expr, val, ok, has the user defined a new variable? If so store its name, newVar : name, for later reference.
+* Given expr, val, ok, has the user found the mean of a variable defined earlier?
+* Given expr, val, ok, has the user done something completely inscrutable? If so, log the response, but erase its effect.
+* Has the multiple choice question been answered correctly?
+* Has the user answered yes to a movie?
+* Response is NA, just continue
 
-A better "user mirror" would save a list of new (or changed) variables in chronological order, i.e., setdiff's, rather than complete ls's.
+Examples of branching
+* Response was correct, branch to next unit of instruction
+* Response was incorrect, go to hint stage of current unit
+* User wants to watch a movie, go to browseURL/nxt()
+* User wants to suspend instruction, go to "Type nxt() to continue."
 
-The user mirror's state should be rolled back after an incorrect response.
 
-Content needs temporary storage, e.g., for names chosen by the user which will be used in future questions.
