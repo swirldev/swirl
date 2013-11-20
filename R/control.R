@@ -5,7 +5,7 @@ hi <- function(){
   # Create a new instance of module in the global environment.
   assign("module", new.env(), envir=globalenv() )
   # Read the test module into it
-  module$mod <- read.csv(file.path(path.package("swirlfancy"), "testMod4Daphne.csv"), as.is=TRUE)
+  module$mod <- read.csv(file.path(path.package("swirlfancy"), "testMod.csv"), as.is=TRUE)
   # Store the test module's number of rows there too.
   module$rows <- nrow(module$mod)
   # And a vector of names to ignore while tracking user progress.
