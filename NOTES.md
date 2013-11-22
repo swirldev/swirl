@@ -1,5 +1,16 @@
 # NOTES
 
+Could instructions be S3 objects with execute methods? If so, what would they look like?
+
+Output instructions could be prettyOut(text), browseURL(url), source(r-file)
+Input instructions include exit/reenter => expr, val, ok, vis
+* which requires a flag to indicate completion
+Combined instructions include 
+* readline(text) => text and 
+* select.list(list) => text 
+
+tests require data but that's no problem since everything in the persistent environment can be named. Moreover, there is no reason 
+
 The 9 testMod4Daphne.csv questions as FSM pseudo-code
 
 1. "Hi, welcome to swirl!"
