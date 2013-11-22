@@ -31,13 +31,11 @@ makeFSM <- function(loadfile=FALSE){
   # on its own. The persistent state, n, is passed from the
   # parent environment.
   function(expr, val, ok, vis, data=n){
-    # If the user has typed brk(), save the state on disk
-    # and return FALSE to unregister.
+    # Save user progress after every top-level task
+    save(n, file="data/saved.RData" )
+    # If the user has typed brk(), then suspend the callback
     if(is.call(expr)){
-      if(expr[[1]] == "brk"){
-        save(n, file="data/saved.RData" )
-        return(FALSE)
-      }
+      if(expr[[1]] == "brk") return(FALSE)
     }
     # Note: the parent environment can be accessed directly
     # from here using parent.env(environment()). Thus the child has
@@ -55,7 +53,18 @@ nxt <- function(){invisible()}
 brk <- function(){invisible()}
   
 hi <- function(loadfile=FALSE){
-  removeTaskCallback(id="simpleFSM")
+  # Remove all active callbacks
+  while(length(getTaskCallbackNames()) > 0) removeTaskCallback(1)
+  if(!loadfile && file.exists("data/saved.RData")) {
+    yn <- readline("Are you sure you want to overwrite your saved progress? ")
+    if(tolower(substring(yn, 1, 1)) == "n") {
+      readline("Okay. I'll start you were you left off. Press <enter> to continue...")
+      return(hi(TRUE))
+    } else {
+      readline("You're the boss! I'll start you from the beginning. Press <enter> to continue...")
+    }
+  }
   # Create and register a callback with persistent parent.
   addTaskCallback(makeFSM(loadfile), name="simpleFSM")
+  invisible()
 }
