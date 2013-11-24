@@ -21,7 +21,6 @@ hi <- function(resume.class="default"){
   e <- new.env(globalenv())
   # This dummy object of class resume.class "tricks" the S3 system
   # into calling the proper resume method.
-  resume.object <- structure(list(), class=resume.class)
   # The callback also lives in the environment created when hi()
   # is run and retains a reference to it. Because of this reference,
   # the environment which contains both e and cb() persists as
@@ -33,7 +32,7 @@ hi <- function(resume.class="default"){
     e$val <- val
     e$ok <- ok
     e$vis <- vis
-    return(resume(resume.object, e))
+    return(resume(structure(e,class=resume.class )))
   }
   bye()
   addTaskCallback(cb, name="mini")
@@ -54,7 +53,7 @@ bye <- function(){
 
 resume <- function(...)UseMethod("resume")
 
-resume.default <- function(state, e){
+resume.default <- function(e){
   if(!exists("cmd.history", e)){
     swirl_out("I'm the default resume method. I merely keep, and print, a cumulative list of exressions entered by the user at the R prompt. When the list reaches 5 items, I return FALSE causing the callback to exit.")
     e$cmd.history <- list()
@@ -65,7 +64,7 @@ resume.default <- function(state, e){
   invisible()
 }
 
-resume.alt <- function(state, e){
+resume.alt <- function(e){
   if(!exists("n", e)){
     swirl_out("I'm an alternate resume method. I ask questions which require 3 types of user input: readline, command, and select.list. Then I quit.")
     e$n <- 1
