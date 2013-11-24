@@ -13,7 +13,7 @@ rdln <- function(x,s){
   }
 }
 
-needPrompt <- function(x,s){
+needPrompt <- function(x){
   return(x[,"AnswerType"]=="command")
 }
 
