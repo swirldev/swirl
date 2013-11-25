@@ -1,8 +1,9 @@
 source("R/utils.R")
+source("R/modConstructor.R")
 
 resume.testMod <- function(e){
   if(!exists("mod", e)){
-    e$mod <- read.csv("data/testMod4Daphne.csv")
+    e$mod <- module(read.csv("data/testMod4Daphne.csv"),"4Daphne", "test", "Nick")
     e$expr <- NULL
     e$val <- NULL
     e$ok <- NULL
