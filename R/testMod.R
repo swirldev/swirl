@@ -12,13 +12,34 @@ resume.testMod <- function(e){
   if(fromhi){
     # Load the course module, using Nick's constructor which 
     # adds attributes identifying the course and indicating dependencies.
-    e$mod <- module(read.csv("data/testMod4Daphne.csv"),"4Daphne", "test", "Nick")
+    e$mod <- module(read.csv("data/testMod4Daphne.csv", as.is=TRUE),"4Daphne", "test", "Nick")
     # expr, val, ok, and vis should have been set by the callback.
- 
+    
     e$row <- 1
     # add new variables here
     e$ignore <- c(ls(e), "ignore")
   }
+  
+  # IF we organized the rest of this method around a list of "instructions",
+  # most of the verbiage below would be irrelevant, since our place in the
+  # list of instructions would tell us what to do. We'd track our place 
+  # in the list of instructions with a pointer, e.g., e$instr.
+  # Our logic would then execute the instruction at e$instr on the 
+  # active row, update both e$instr and (if necessary) the active row,
+  # and either return to the prompt or go on to the next instruction.
+  #
+  # R's copy on modify rules won't allow different rows of mod to have
+  # different classes. (Setting the class attribute of mod[e$row, ]
+  # will actually copy mod[e$row, ] and set the copy's class attribute.)
+  # It seems most natural, then, to explicitly copy the active row 
+  # and give it an appropriate class, more or less as we did with doStage.
+  # Something like with(e, quote(f(active.row))) where f is the current
+  # instruction should work, and the syntax seems reasonably clear.
+  #
+  # The list of instructions should probably live in e and be formed
+  # at initialization. See testModInstr.R.
+  
+  ## verbiage below is likely irrelevant
   
   # At this point we KNOW we have just returned from the R prompt.
   # The only question is whether the user has just entered "hi" or "nxt"
@@ -28,7 +49,7 @@ resume.testMod <- function(e){
   #
   # If we HAVE entered on hi or nxt, we should go on to the next
   # question.
- 
+  
   # we need two routines, one for command questions and one for noncommand
   # questions. Note video questions are treated differently from other noncommand
   # questions - they give the user 
@@ -57,10 +78,10 @@ resume.testMod <- function(e){
   # It's not clear to me at the moment how to organize such steps
   # cogently and extensibly. Possibly nextQuestion() and
   # resumeQuestion() functions?
- 
+  
   
   #start testing here
-
- 
+  
+  
   return(TRUE)
 }
