@@ -8,18 +8,13 @@ resume.testMod <- function(e){
   # We may be entering for the first time, in which case our environment
   # will not be fully initialized. We check for that and initialize if
   # necessary.
-  if(!exists("mod", e)){
+  fromhi <- (!exists("mod",e))
+  if(fromhi){
     # Load the course module, using Nick's constructor which 
     # adds attributes identifying the course and indicating dependencies.
     e$mod <- module(read.csv("data/testMod4Daphne.csv"),"4Daphne", "test", "Nick")
-    # expr, val, ok, and vis should have been set by the callback by
-    # the time we get here, so we should omit the next four lines.
-    e$expr <- NULL
-    e$val <- NULL
-    e$ok <- NULL
-    e$vis <- NULL
-    # We don't need e$prompt. We know we're returning from the prompt.
-    e$prompt <- FALSE
+    # expr, val, ok, and vis should have been set by the callback.
+ 
     e$row <- 1
     # add new variables here
     e$ignore <- c(ls(e), "ignore")
@@ -33,7 +28,14 @@ resume.testMod <- function(e){
   #
   # If we HAVE entered on hi or nxt, we should go on to the next
   # question.
-  #
+ 
+  # we need two routines, one for command questions and one for noncommand
+  # questions. Note video questions are treated differently from other noncommand
+  # questions - they give the user 
+  # a prompt and the user has to type nxt() to continue
+  
+  
+  
   # If we've NOT entered on hi or nxt, the user has answered
   # a command question. We should test the answer. If correct, we
   # should praise and go on to the next row of e$mod. Otherwise, we
@@ -55,16 +57,7 @@ resume.testMod <- function(e){
   # It's not clear to me at the moment how to organize such steps
   # cogently and extensibly. Possibly nextQuestion() and
   # resumeQuestion() functions?
-  if (!e$prompt){
-    present(e$mod[e$row,])
-    resp <- rdln(e$mod[e$row,],"y or n? ")
-    ch <- choice(e$mod[e$row,])
-    e$prompt <- needPrompt(e$mod[e$row,])
-  }
-  else{
-    e$prompt <- FALSE
-  }
-  
+ 
   
   #start testing here
 
