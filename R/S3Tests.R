@@ -1,36 +1,66 @@
+#' If tests are to be identified by keyphrases, then keyphrases must somehow be
+#' converted (i.e., parsed) to function calls. It is reasonable to anticipate
+#' that new tests will arise with broad deployment and new course material. 
+#' Thus it would be convenient if new tests and keyphrases could be added 
+#' without the need to change core swirl source code. 
+#' 
+#' Tests themselves would be new functions or methods, hence are additional code
+#' by nature. The problem is to extensibly parse keyphrases to function calls.
+#' One possibility, illustrated below, is to make the new tests themselves
+#' responsible for parsing their own keyphrases.
+#' 
+#' This would leave the problem of having core swirl code invoke a new test
+#' based on the presence of a new keyphrase in a course Module. In our test
+#' module, the unique keyphrases are:
+#'  "assign"  "newVar"  "word=20" "useFunc=c" "useFunc=mean" 
+#'  "result=mean(newVar)" "word=mean()"
+#' The tests themselves are identified by the substrings before the "=".
+#' Substrings after "=" are essentially arguments. To illustrate a possiblity
+#' we'll have core code base its function call on the string prior to "=",
+#' and leave the rest to tests themselves. It is doubtful this scheme would
+#' be flexible enough in general.
+#' 
+#' There are various ways to do it, but we'll use S3 methods because we're
+#' using them for other things as well. We'll give the keyphrase a class
+#' attribute corresponding to the substring prior to "=", and use the keyphrase
+#' as first argument to the method.
+
 runTest <- function(...)UseMethod("runTest")
 
-
-
-#' Takes as arguments the current state, expression (as passed to callback function), 
-#' value of the expression, and the correct or exprected value. Returns TRUE if the
-#' value of the expression matches the correct value and FALSE otherwise.
-runTest.testVal <- function(e, correctVal) {
-  identical(as.character(e$val), correctVal)
-}
-
-#' Takes as arguments the current state, expression (as passed to callback function), 
-#' and value of the expression. Returns TRUE if the expression is an assignment 
+#' Returns TRUE if e$expr is an assignment 
 #' 
-runTest.testAssign <- function(e, val) {
+runTest.assign <- function(keyphrase, e) {
   identical(class(e$expr), "<-")
 }
 
-#' Takes as arguments the current state, expression (as passed to callback function), 
-#' value of the expression, and a function name (as a string). Returns TRUE if the
-#' function name provided is matched in the expression.
-#' 
-runTest.testFunc <- function(e, func) {
+#' Returns TRUE if the function to the right of = in the keyphrase has
+#' been used in e$expr
+#'  
+runTest.useFunc <- function(keyphrase, e) {
+  func <- strsplit(keyphrase,"=")[[1]][2]
   (is.call(e$expr) || is.expression(e$expr)) &&
-  func %in% flatten(e$expr)
+    func %in% flatten(e$expr)
 }
 
-#' Tests whether one new variable has been created.
-runTest.testNewVar <- function(e){
+#' Returns TRUE if as.character(e$val) matches the string to the right
+#' of "=" in keyphase
+#' 
+runTest.word <- function(keyphrase, e) {
+  correctVal <- strsplit(keyphrase,"=")[[1]][2]
+  identical(as.character(e$val), correctVal)
+}
+
+#' Tests if the user has just created one new variable. If so, assigns 
+#' e$newVar its value, adds newVar to e's ignore list (which could create
+#' a problem if the user happened to call the variable newVar also,) and
+#' returns TRUE.
+runTest.newVar <- function(e){
   eval(e$expr)
   newVars <- setdiff(ls(),c("e"))
   if (length(newVars)==1){
     eval(e$expr,e)
+    e$newVar <- e$val
+    e$ignore <- c("newVar", e$ignore)
     return(TRUE)
   }
   else {
@@ -39,28 +69,15 @@ runTest.testNewVar <- function(e){
 }
 
 #' Tests the result of a computation such as mean(newVar) applied
-#' to a variable created in a previous question. 
-runTest.testResultEquals <- function(e, correct.expr){
-  # Get the variables created all previous questions.
-  vars <- setdiff(ls(e), e$ignore)
-  # The test fails if there were none.
-  if(length(vars) == 0)return(FALSE)
-  # Evaluate the correct expression on all of them
-  possibly.correct <- lapply(vars, function(newVar)tryEval(correct.expr, newVar))
-  # Test succeeds if the correct value matches that which the user
-  # computed in this question.
-  return(val %in% possibly.correct)
+#' to a specific variable created in a previous question. 
+runTest.result <- function(keyphrase, e){
+  correct.expr <- quote(strsplit(keyphrase,"=")[[1]][2])
+  newVar <- e$newVar
+  return(var==eval(correct.expr))
 }
 
 
 ### HELPER FUNCTIONS
-
-#' This function tries to evaluate an expression containing newVal.
-#' If it succeeds it will return the value of the expression. If it
-#' fails it will return an NA.
-tryEval <- function(expr, newVar){
-  return(try(eval(expr), silent=TRUE))
-}
 
 flatten <- function(expr){
   if(is.leaff(expr)){
