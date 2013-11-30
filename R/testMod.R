@@ -2,6 +2,14 @@ source("R/miniMulti.R")
 source("R/modConstructor.R")
 source("R/testModInstr.R")
 
+#' Method resume.testMod implements a finite state (or virtual) machine 
+#' which could be generalized but is specialized here for testMod4Daphne. 
+#' It runs a fixed "program" consisting of three "instructions" which in 
+#' turn present information, capture a user's response, and test and retry 
+#' if necessary. The three instructions are themselves S3 methods which 
+#' depend on the class of the active row of the course module. The 
+#' instruction set is thus extensible. It can be found in R/testModInstr.R. 
+
 resume.testMod <- function(e){
   # This function is entered ONLY when the user has entered a
   # valid expression at the R prompt.
