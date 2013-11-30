@@ -32,7 +32,7 @@ hi <- function(resume.class="default"){
     e$val <- val
     e$ok <- ok
     e$vis <- vis
-    return(resume(structure(e,class=resume.class )))
+    return(resume(structure(e,class=resume.class)))
   }
   bye()
   addTaskCallback(cb, name="mini")
