@@ -1,3 +1,5 @@
+#' One approach to extensible testing
+#' 
 #' If tests are to be identified by keyphrases, then keyphrases must somehow be
 #' converted (i.e., parsed) to function calls. It is reasonable to anticipate
 #' that new tests will arise with broad deployment and new course material. 
@@ -6,8 +8,8 @@
 #' 
 #' Tests themselves would be new functions or methods, hence are additional code
 #' by nature. The problem is to extensibly parse keyphrases to function calls.
-#' One possibility, illustrated below, is to make the new tests themselves
-#' responsible for parsing their own keyphrases.
+#' One possibility, illustrated below, is to give new tests themselves
+#' primary responsibility for parsing their own keyphrases.
 #' 
 #' This would leave the problem of having core swirl code invoke a new test
 #' based on the presence of a new keyphrase in a course Module. In our test
@@ -51,16 +53,13 @@ runTest.word <- function(keyphrase, e) {
 }
 
 #' Tests if the user has just created one new variable. If so, assigns 
-#' e$newVar its value, adds newVar to e's ignore list (which could create
-#' a problem if the user happened to call the variable newVar also,) and
-#' returns TRUE.
-runTest.newVar <- function(e){
+#' e$newVar its value and returns TRUE.
+runTest.newVar <- function(keyphrase, e){
   eval(e$expr)
-  newVars <- setdiff(ls(),c("e"))
+  newVars <- setdiff(ls(),c("keyphrase", "e"))
   if (length(newVars)==1){
     eval(e$expr,e)
     e$newVar <- e$val
-    e$ignore <- c("newVar", e$ignore)
     return(TRUE)
   }
   else {
@@ -71,9 +70,9 @@ runTest.newVar <- function(e){
 #' Tests the result of a computation such as mean(newVar) applied
 #' to a specific variable created in a previous question. 
 runTest.result <- function(keyphrase, e){
-  correct.expr <- quote(strsplit(keyphrase,"=")[[1]][2])
+  correct.expr <- parse(text=strsplit(keyphrase,"=")[[1]][2])
   newVar <- e$newVar
-  return(var==eval(correct.expr))
+  return(identical(e$val, eval(correct.expr)))
 }
 
 

@@ -1,5 +1,6 @@
-source("R/utils.R")
+source("R/miniMulti.R")
 source("R/modConstructor.R")
+source("R/testModInstr.R")
 
 resume.testMod <- function(e){
   # This function is entered ONLY when the user has entered a
@@ -14,74 +15,40 @@ resume.testMod <- function(e){
     # adds attributes identifying the course and indicating dependencies.
     e$mod <- module(read.csv("data/testMod4Daphne.csv", as.is=TRUE),"4Daphne", "test", "Nick")
     # expr, val, ok, and vis should have been set by the callback.
-    
+    # The module's current row
     e$row <- 1
-    # add new variables here
-    e$ignore <- c(ls(e), "ignore")
+    # The current row's instruction pointer
+    e$iptr <- 1
+    # A flag indicating we should return to the prompt
+    e$prompt <- FALSE
+    # A fixed list of instructions for this "virtual machine"
+    e$instr <- list(present, waitUser, testResponse.default)
+    # An identifier for the active row
+    e$current.row <- NULL
   }
-  
-  # IF we organized the rest of this method around a list of "instructions",
-  # most of the verbiage below would be irrelevant, since our place in the
-  # list of instructions would tell us what to do. We'd track our place 
-  # in the list of instructions with a pointer, e.g., e$instr.
-  # Our logic would then execute the instruction at e$instr on the 
-  # active row, update both e$instr and (if necessary) the active row,
-  # and either return to the prompt or go on to the next instruction.
-  #
-  # R's copy on modify rules won't allow different rows of mod to have
-  # different classes. (Setting the class attribute of mod[e$row, ]
-  # will actually copy mod[e$row, ] and set the copy's class attribute.)
-  # It seems most natural, then, to explicitly copy the active row 
-  # and give it an appropriate class, more or less as we did with doStage.
-  # Something like with(e, quote(f(active.row))) where f is the current
-  # instruction should work, and the syntax seems reasonably clear.
-  #
-  # The list of instructions should probably live in e and be formed
-  # at initialization. See testModInstr.R.
-  
-  ## verbiage below is likely irrelevant
-  
-  # At this point we KNOW we have just returned from the R prompt.
-  # The only question is whether the user has just entered "hi" or "nxt"
-  # or is answering a command question. We know from above whether
-  # "hi" was entered so we should just retain that information to use
-  # here. We'll have to check for deparse(e$expr) == "nxt()" or something.
-  #
-  # If we HAVE entered on hi or nxt, we should go on to the next
-  # question.
-  
-  # we need two routines, one for command questions and one for noncommand
-  # questions. Note video questions are treated differently from other noncommand
-  # questions - they give the user 
-  # a prompt and the user has to type nxt() to continue
-  
-  
-  
-  # If we've NOT entered on hi or nxt, the user has answered
-  # a command question. We should test the answer. If correct, we
-  # should praise and go on to the next row of e$mod. Otherwise, we
-  # should give the hint and return(TRUE) to go back to the prompt.
-  #
-  # So there are two circumstances in which we go on to the next row,
-  # 1) hi or nxt, and 2) correct command answer. Perhaps we need a
-  # nextQuestion() function or method?
-  #
-  # In any case, going to the next row of e$mod is a matter of 
-  # incrementing e$row, presenting the Output, getting a user
-  # response of some type, and possibly testing it.
-  # In the case of text OutputType, user response comes from readline("...")
-  # The case of multiple AnswerType is similar, but uses select.list
-  # In the case of video we do readline("y or n: "), and browseURL and
-  # return to the prompt in the case of "y".
-  # In the case of commands, we return to the prompt.
-  #
-  # It's not clear to me at the moment how to organize such steps
-  # cogently and extensibly. Possibly nextQuestion() and
-  # resumeQuestion() functions?
-  
-  
-  #start testing here
-  
-  
+  # Execute instructions until a return to the prompt is necessary
+  while(!e$prompt){
+    # If the module is complete, return FALSE to remove callback
+    if(e$row > nrow(e$mod))return(FALSE)
+    # If we are ready for a new row, prepare it
+    if(e$iptr == 1){
+      e$current.row <- e$mod[e$row,]
+      # Prepend the row's swirl class to its class attribute
+      attr(e$current.row,"class") <- c(classifyRow(e$current.row), 
+                                       attr(e$current.row,"class"))
+    }
+    # Execute the current instruction
+    e$instr[[e$iptr]](e$current.row, e)
+  }
+  e$prompt <- FALSE
   return(TRUE)
+}
+
+# Determines the class of a row
+classifyRow <- function(current.row){
+  if(current.row[,"OutputType"] == "text")return("text")
+  if(current.row[,"OutputType"] == "video")return("video")
+  if(current.row[,"AnswerType"] == "multiple")return("mult_question")
+  return("cmd_question")
+  
 }
