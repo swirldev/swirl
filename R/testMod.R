@@ -1,6 +1,7 @@
 source("R/miniMulti.R")
 source("R/modConstructor.R")
 source("R/testModInstr.R")
+source("R/menu.R")
 
 #' Method resume.testMod implements a finite state (or virtual) machine 
 #' which could be generalized but is specialized here for testMod4Daphne. 
@@ -19,9 +20,10 @@ resume.testMod <- function(e){
   # necessary.
   fromhi <- (!exists("mod",e))
   if(fromhi){
+    modPath <- getModPath()
     # Load the course module, using Nick's constructor which 
     # adds attributes identifying the course and indicating dependencies.
-    e$mod <- module(read.csv("data/testMod4Daphne.csv", as.is=TRUE),"4Daphne", "test", "Nick")
+    e$mod <- module(read.csv(modPath, as.is=TRUE),"4Daphne", "test", "Nick")
     # expr, val, ok, and vis should have been set by the callback.
     # The module's current row
     e$row <- 1
