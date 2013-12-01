@@ -19,8 +19,6 @@
 hi <- function(resume.class="default"){
   # e lives here, in the environment created when hi() is run
   e <- new.env(globalenv())
-  # This dummy object of class resume.class "tricks" the S3 system
-  # into calling the proper resume method.
   # The callback also lives in the environment created when hi()
   # is run and retains a reference to it. Because of this reference,
   # the environment which contains both e and cb() persists as
@@ -32,7 +30,9 @@ hi <- function(resume.class="default"){
     e$val <- val
     e$ok <- ok
     e$vis <- vis
-    return(resume(structure(e,class=resume.class)))
+    # This dummy object of class resume.class "tricks" the S3 system
+    # into calling the proper resume method.
+    return(resume(structure(e,class=resume.class )))
   }
   bye()
   addTaskCallback(cb, name="mini")
