@@ -28,11 +28,12 @@
 
 library(stringr)
 source("R/S3Tests.R")
+source("R/phrases.R")
 
 #' All classes first Output, all in the same way, hence one method
 #' suffices.
 #' 
-present <- function(current.state, e)UseMethod("present")
+present <- function(current.row, e)UseMethod("present")
 
 present.default <- function(current.row, e){
   swirl_out(current.row[, "Output"])
@@ -52,8 +53,8 @@ waitUser.text <- function(current.row, e){
 }
 
 waitUser.video <- function(current.row, e){
-  response <- readline("y or n? ")
-  if(response %in% c("y", "Y", "yes", "Yes")){
+  response <- readline("Yes or No? ")
+  if(tolower(response) %in% c("y", "yes")){
     swirl_out("Type nxt() to continue")
     e$prompt <- TRUE
     browseURL(current.row[,"VideoLink"])
@@ -71,7 +72,7 @@ waitUser.mult_question <- function(current.row, e){
   # leading and trailing white space from the choices.
   choices <- str_trim(choices[[1]])
   # Store the choice in e$val for testing
-  e$val <- select.list(choices)
+  e$val <- select.list(sample(choices))
   e$iptr <- 1 + e$iptr
 }
 
@@ -90,10 +91,11 @@ testResponse.default <- function(current.row, e){
   results <- lapply(tests, function(keyphrase){testMe(keyphrase,e)})
   correct <- !(FALSE %in% results)
   if(correct){
+    swirl_out(praise())
     e$iptr <- 1
     e$row <- 1 + e$row
   } else {
-    swirl_out(current.row[,"Hint"])
+    swirl_out(paste(tryAgain(), current.row[,"Hint"]))
     e$iptr <- e$iptr -1
   }
 }
