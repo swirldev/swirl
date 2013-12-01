@@ -79,7 +79,7 @@ resume.alt <- function(e){
   } else if(e$n==3){
     e$cmd <- deparse(e$expr)
     swirl_out("Which of the following is your least favorite?")
-    e$fav <- select.list(list("C++", "R", "Python"))
+    e$fav <- select.list(list("C++", "R", "Python"), graphics=FALSE)
     swirl_out(paste("Your name is", e$name))
     swirl_out(paste("You entered the command", e$cmd))
     swirl_out(paste("Your least favorite language is", e$fav))
