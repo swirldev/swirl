@@ -2,3 +2,5 @@
 .Rproj.user
 *.Rproj
 .RData
+data/saved.RData
+*.html
