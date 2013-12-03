@@ -55,7 +55,7 @@ classifyRow <- function(current.row){
 initSwirl <- function(e)UseMethod("initSwirl")
 saveProgress <- function(e)UseMethod("saveProgress")
 
-initSwirl.testMod <- function(e){
+initSwirl.default <- function(e){
   modPath <- getModPath()
   # Load the course module, using Nick's constructor which 
   # adds attributes identifying the course and indicating dependencies.
