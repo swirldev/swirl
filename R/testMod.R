@@ -17,31 +17,20 @@ resume.testMod <- function(e){
   #
   # We may be entering for the first time, in which case our environment
   # will not be fully initialized. We check for that and initialize if
-  # necessary.
+  # necessary. We delegate to a method in order to ease integration of
+  # additional functionality as the code base develops.
   fromhi <- (!exists("mod",e))
-  if(fromhi){
-    modPath <- getModPath()
-    # Load the course module, using Nick's constructor which 
-    # adds attributes identifying the course and indicating dependencies.
-    e$mod <- module(read.csv(modPath, as.is=TRUE),"4Daphne", "test", "Nick")
-    # expr, val, ok, and vis should have been set by the callback.
-    # The module's current row
-    e$row <- 1
-    # The current row's instruction pointer
-    e$iptr <- 1
-    # A flag indicating we should return to the prompt
-    e$prompt <- FALSE
-    # A fixed list of instructions for this "virtual machine"
-    e$instr <- list(present, waitUser, testResponse.default)
-    # An identifier for the active row
-    e$current.row <- NULL
-  }
+  if(fromhi)initSwirl(e)
   # Execute instructions until a return to the prompt is necessary
   while(!e$prompt){
     # If the module is complete, return FALSE to remove callback
     if(e$row > nrow(e$mod))return(FALSE)
     # If we are ready for a new row, prepare it
     if(e$iptr == 1){
+      # saveProgress does nothing in the present case. It is a
+      # placeholder for functionality to be added as the code
+      # base develops.
+      saveProgress(e)
       e$current.row <- e$mod[e$row,]
       # Prepend the row's swirl class to its class attribute
       attr(e$current.row,"class") <- c(classifyRow(e$current.row), 
@@ -62,3 +51,26 @@ classifyRow <- function(current.row){
   return("cmd_question")
   
 }
+
+initSwirl <- function(e)UseMethod("initSwirl")
+saveProgress <- function(e)UseMethod("saveProgress")
+
+initSwirl.testMod <- function(e){
+  modPath <- getModPath()
+  # Load the course module, using Nick's constructor which 
+  # adds attributes identifying the course and indicating dependencies.
+  e$mod <- module(read.csv(modPath, as.is=TRUE),"4Daphne", "test", "Nick")
+  # expr, val, ok, and vis should have been set by the callback.
+  # The module's current row
+  e$row <- 1
+  # The current row's instruction pointer
+  e$iptr <- 1
+  # A flag indicating we should return to the prompt
+  e$prompt <- FALSE
+  # A fixed list of instructions for this "virtual machine"
+  e$instr <- list(present, waitUser, testResponse.default)
+  # An identifier for the active row
+  e$current.row <- NULL
+}
+
+saveProgress.default <- function(e){} # do nothing
