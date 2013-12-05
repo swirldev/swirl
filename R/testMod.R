@@ -19,7 +19,7 @@ resume.testMod <- function(e){
   # will not be fully initialized. We check for that and initialize if
   # necessary. We delegate to a method in order to ease integration of
   # additional functionality as the code base develops.
-  fromhi <- (!exists("mod",e))
+  fromhi <- identical(e$expr, quote(hi("testMod")))
   if(fromhi)initSwirl(e)
   # Execute instructions until a return to the prompt is necessary
   while(!e$prompt){

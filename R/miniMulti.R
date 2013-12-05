@@ -17,6 +17,7 @@
 #' as cb remains registered. Thus e can be used to store infomation
 #' between invocations of cb. 
 hi <- function(resume.class="default"){
+  bye()
   # e lives here, in the environment created when hi() is run
   e <- new.env(globalenv())
   # The callback also lives in the environment created when hi()
@@ -34,7 +35,6 @@ hi <- function(resume.class="default"){
     # into calling the proper resume method.
     return(resume(structure(e,class=resume.class )))
   }
-  bye()
   addTaskCallback(cb, name="mini")
   invisible()
 }
