@@ -11,7 +11,7 @@ source("R/menu.R")
 #' depend on the class of the active row of the course module. The 
 #' instruction set is thus extensible. It can be found in R/testModInstr.R. 
 
-resume.testMod <- function(e){
+resume.swirl1 <- function(e){
   # This function is entered ONLY when the user has entered a
   # valid expression at the R prompt.
   #
@@ -19,7 +19,7 @@ resume.testMod <- function(e){
   # will not be fully initialized. We check for that and initialize if
   # necessary. We delegate to a method in order to ease integration of
   # additional functionality as the code base develops.
-  fromhi <- (!exists("mod",e))
+  fromhi <- (!exists("mod",e,inherits = FALSE))
   if(fromhi)initSwirl(e)
   # Execute instructions until a return to the prompt is necessary
   while(!e$prompt){

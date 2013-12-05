@@ -14,3 +14,7 @@ for (n in 1:nr)
     class_type <- mod[n,"Output.Type"]
  mod[n,"Class"] <- class_type
 }
+colheads <- c("OutputType","Output","AnswerType","AnswerChoices","AnswerTests","Hint",
+                 "Figure","FigureType","VideoLink","Tag","Notes","Class")
+
+write.table(mod,file="data/Courses/Open_Intro/module1/mod1_new.csv",col.names  =colheads,sep = ",")
