@@ -8,11 +8,11 @@ initSwirl.userProgress <- function(e){
   # e$usr <- username
   # find stored progress
   # if previous, continue previous?
-  #   => restore progress
+  #   => restore progress including relevant parts of e
   # else choose new module
-  # Partially populate e
-  initSwirl.default(e)
-  # Create a list for expressions entered by user
+  #   => partially populate e
+  initSwirl.default(e) # temporary
+  #      Create a list for expressions entered by user
   e$usrexpr <- list()
 }
 
