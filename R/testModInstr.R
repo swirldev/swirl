@@ -83,6 +83,7 @@ waitUser.video <- function(current.row, e){
 }
 
 waitUser.figure <- function(current.row, e){
+  print("in waitUser.figure")
   response <- readline("Yes or No? ")
   if(tolower(response) %in% c("y", "yes")){
     swirl_out("Type nxt() to continue")

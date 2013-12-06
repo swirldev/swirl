@@ -33,7 +33,7 @@ resume.swirl1 <- function(e){
       saveProgress(e)
       e$current.row <- e$mod[e$row,]
       # Prepend the row's swirl class to its class attribute
-      attr(e$current.row,"class") <- c(classifyRow(e$current.row), 
+      attr(e$current.row,"class") <- c(e$current.row[,"Class"], 
                                        attr(e$current.row,"class"))
     }
     # Execute the current instruction
