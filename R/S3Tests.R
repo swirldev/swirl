@@ -104,12 +104,31 @@ runTest.result <- function(keyphrase, e){
   return(identical(e$val, eval(correct.expr)))
 }
 
-runTest.swirl1cmd <- function(keyphrase,e){
-  
-  
-  
+runTest.exact <- function(keyphrase,e){
+  is.correct <- FALSE
+  if(is.numeric(e$val)){
+    correct.ans <- eval(parse(text=strsplit(keyphrase,"=")[[1]][2]))
+    epsilon <- 0.01*abs(correct.ans)
+    is.correct <- abs(e$val-correct.ans) <= epsilon
+  }
+  return(is.correct)
 }
 
+runTest.range <- function(keyphrase,e){
+  is.correct <- FALSE
+  correct.ans <- eval(parse(text=strsplit(keyphrase,"=")[[1]][2]))
+  if (is.numeric(e$val)){
+     temp <- as.numeric(unlist(str_split(correct.ans,";")))
+     # use is.logical in case the user types a non-digit which converts to NA's
+     is.correct <- is.logical(ans >= temp[1] && ans <= temp[2])
+  }
+
+  return(is.correct)
+}
+runTest.swirl1cmd <- function(keyphrase,e){
+
+ 
+}
 
 
 

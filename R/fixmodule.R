@@ -26,12 +26,13 @@ for (n in 1:nr)
   test_string <- paste(text="word=",mod[n,"Correct.Answer"])
  }
  if (identical(class_type,"text_question")){
-   correct_ans <- str_trim(unlist(strsplit(mod[n,"Correct.Answer"],",")))
+   correct_ans <- mod[n,"Correct.Answer"]
    new_correct <- paste("word=",correct_ans,sep="",collapse=";")
    test_string <- new_correct
  }
  if (identical(class_type,"text_order_question")){
    correct_ans <- mod[n,"Correct.Answer"]
+#   correct_ans <- str_trim(unlist(strsplit(mod[n,"Correct.Answer"],",")))
    test_string <- paste("word_order=",correct_ans,sep="")
  }
  if (identical(class_type,"text_many_question")){
@@ -39,11 +40,19 @@ for (n in 1:nr)
    test_string <- paste("word_many=",correct_ans,sep="")
  }
  if (identical(class_type,"cmd_question")){
-   test_string <- "swirl1cmd"
+   correct_ans <- mod[n,"Correct.Answer"]
+   test_string <- paste("swirl1cmd=",correct_ans,sep="")
  }
  if (identical(class_type,"exact_question")){
-   correct_ans <- str_trim(unlist(strsplit(mod[n,"Correct.Answer"],",")))
+  # correct_ans <- str_trim(unlist(strsplit(mod[n,"Correct.Answer"],",")))
+   correct_ans <- mod[n,"Correct.Answer"]
    new_correct <- paste("exact=",correct_ans,sep="",collapse=";")
+   test_string <- new_correct
+ } 
+ if (identical(class_type,"range_question")){
+   correct_ans <- mod[n,"Correct.Answer"]
+  # correct_ans <- str_trim(unlist(strsplit(mod[n,"Correct.Answer"],";")))
+   new_correct <- paste("range=",correct_ans,sep="",collapse=";")
    test_string <- new_correct
  } 
  mod[n,"AnswerTests"] <- test_string
