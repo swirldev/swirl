@@ -122,11 +122,11 @@ runTest.range <- function(keyphrase,e){
      # use is.logical in case the user types a non-digit which converts to NA's
      is.correct <- is.logical(ans >= temp[1] && ans <= temp[2])
   }
-
   return(is.correct)
 }
-runTest.swirl1cmd <- function(keyphrase,e){
 
+runTest.swirl1cmd <- function(keyphrase,e){
+  correct.expr <- eval(parse(text=strsplit(keyphrase,"=")[[1]][2]))
  
 }
 
