@@ -83,14 +83,10 @@ waitUser.video <- function(current.row, e){
 }
 
 waitUser.figure <- function(current.row, e){
-  print("in waitUser.figure")
-  response <- readline("Yes or No? ")
-  if(tolower(response) %in% c("y", "yes")){
-    swirl_out("Type nxt() to continue")
-    e$prompt <- TRUE
-    file.path <- paste(e$path,current.row[,"Figure"],sep="/")
-    source(file=file.path,local=TRUE)
-  }
+  swirl_out("Type nxt() to continue")
+  e$prompt <- TRUE
+  file.path <- paste(e$path,current.row[,"Figure"],sep="/")
+  source(file=file.path,local=TRUE)
   e$row <- 1 + e$row
   e$iptr <- 1
 } 
