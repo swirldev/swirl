@@ -125,9 +125,24 @@ runTest.range <- function(keyphrase,e){
   return(is.correct)
 }
 
+
 runTest.swirl1cmd <- function(keyphrase,e){
-  correct.expr <- eval(parse(text=strsplit(keyphrase,"=")[[1]][2]))
- 
+  #  correct.expr <- eval(parse(text=strsplit(keyphrase,"=")[[1]][2]))
+  correct.expr <- parse(text=strsplit(keyphrase,"=")[[1]][2])
+  correct.ans  <- eval(parse(text=correct.expr))
+  ans.is.correct <- FALSE
+  if(is.numeric(e$val)){
+    epsilon <- 0.01*abs(correct.ans)
+    ans.is.correct <- abs(e$val-correct.ans) <= epsilon
+  }
+  else {
+    ans.is.correct <- TRUE
+  }
+  call.is.correct <- identical(e$expr, correct.expr[[1]])
+  if(ans.is.correct && call.is.correct){
+    return(TRUE)
+  } else   
+    return(FALSE)
 }
 
 
