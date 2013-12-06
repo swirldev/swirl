@@ -3,7 +3,6 @@
 #' End session with <esc>
 #' 
 #' TODO: somehow mark finished modules by renaming or something
-#' TODO: initSwirl.default names everything 4Daphne; fix it
 
 source("R/testMod.R")
 
@@ -29,12 +28,19 @@ initSwirl.userProgress <- function(e){
     e$progress <- file.path(udat, fname)
     # list to hold expressions entered by the user
     e$usrexpr <- list()
+    # create the file
+    saveRDS(e, e$progress)
   } else {
     # restore contents of e from selected file
     temp <- readRDS(file.path(udat, selection))
     xfer(temp, e)
-    # eval stored user expr's in global env, but don't include hi
-    lapply(e$usrexp[[-1]], function(x)eval(x, globalenv()))
+    # eval retrieved user expr's in global env, but don't include hi
+    if(length(e$usrexpr) > 1){
+      for(n in 2:length(e$usrexpr)){
+        expr <- e$usrexpr[[n]]
+        eval(expr, globalenv())
+      }
+    }
   }
 }
 
@@ -44,10 +50,12 @@ initSwirl.userProgress <- function(e){
 #' value of e$expr should be saved unless seen
 #' the last time.
 saveProgress.userProgress <-  function(e){
-  if(length(e$usrexp)==0 || !identical(e$usrexpr[[1]], e$expr)){
-    e$usrexpr <- c(e$usrexpr, e$expr)
+  n <- length(e$usrexpr)
+  expr <- e$expr
+  if(n==0 || !identical(e$usrexpr[[n]], expr)){
+    e$usrexpr <- c(e$usrexpr, expr)
   }
-  # save e to disk
+  # save progress
   saveRDS(e, e$progress)
 }
 
@@ -59,4 +67,10 @@ xfer <- function(env1, env2){
 
 getAssign <- function(var, env1, env2){
   assign(var, get(var, env1, inherits=FALSE), envir=env2)
+}
+
+cleanAdmin <- function(){
+  udat <- file.path(find.package("swirl"), "user_data", "swirladmin")
+  file.remove(dir(udat, pattern="*[.]rda", full.names=TRUE))
+  invisible()
 }
