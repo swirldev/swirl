@@ -51,6 +51,13 @@ runTest.word <- function(keyphrase, e) {
   correctVal <- strsplit(keyphrase,"=")[[1]][2]
   identical(as.character(e$val), correctVal)
 }
+#' Returns TRUE if as.character(e$val) matches the string to the right
+#' of "=" in keyphase
+#' 
+runTest.word_order <- function(keyphrase, e) {
+  correctVal <- strsplit(keyphrase,"=")[[1]][2]
+  identical(as.character(e$val), correctVal)
+}
 
 #' Tests if the user has just created one new variable. If so, assigns 
 #' e$newVar its value and returns TRUE.
@@ -66,6 +73,20 @@ runTest.newVar <- function(keyphrase, e){
     return(FALSE)
   }
 }
+
+#' Tests if the user has just created one new variable of correct name. If so, 
+#' returns TRUE.
+runTest.correctName <- function(keyphrase, e){
+  correctName <- strsplit(keyphrase,"=")[[1]][2]
+  eval(e$expr)
+  newVars <- setdiff(ls(),c("keyphrase", "e"))
+  if ((length(newVars)==1) && (identical(newVars,correctName))) {
+    return(TRUE)
+  }
+  else {
+    return(FALSE)
+  }
+ }
 
 #' Tests the result of a computation such as mean(newVar) applied
 #' to a specific variable created in a previous question. 
