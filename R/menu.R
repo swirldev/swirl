@@ -18,3 +18,4 @@ getModPath <- function() {
   swirl_out("Please select a module: ")
   modulePath <- chooseFile(courseDir)
 }
+
