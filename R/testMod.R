@@ -57,9 +57,10 @@ saveProgress <- function(e)UseMethod("saveProgress")
 
 initSwirl.default <- function(e){
   modPath <- getModPath()
+  course <- strsplit(basename(modPath),"[.]")[[1]][1]
   # Load the course module, using Nick's constructor which 
   # adds attributes identifying the course and indicating dependencies.
-  e$mod <- module(read.csv(modPath, as.is=TRUE),"4Daphne", "test", "Nick")
+  e$mod <- module(read.csv(modPath, as.is=TRUE), course, "", "Nick")
   # expr, val, ok, and vis should have been set by the callback.
   # The module's current row
   e$row <- 1
