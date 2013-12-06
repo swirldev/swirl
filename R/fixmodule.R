@@ -41,7 +41,11 @@ for (n in 1:nr)
  if (identical(class_type,"cmd_question")){
    test_string <- "swirl1cmd"
  }
- 
+ if (identical(class_type,"exact_question")){
+   correct_ans <- str_trim(unlist(strsplit(mod[n,"Correct.Answer"],",")))
+   new_correct <- paste("exact=",correct_ans,sep="",collapse=";")
+   test_string <- new_correct
+ } 
  mod[n,"AnswerTests"] <- test_string
 }
 

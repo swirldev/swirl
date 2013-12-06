@@ -71,6 +71,7 @@ initSwirl.default <- function(e){
   e$instr <- list(present, waitUser, testResponse.default)
   # An identifier for the active row
   e$current.row <- NULL
+  e$path <- modPath
 }
 
 saveProgress.default <- function(e){} # do nothing

@@ -58,6 +58,12 @@ waitUser.text_question <- function(current.row, e){
   e$iptr <- 1
 }
 
+waitUser.text_many_question <- function(current.row, e){
+  e$val <- str_trim(unlist(strsplit(readline("ANSWER: "),",")))
+  e$row <- 1 + e$row
+  e$iptr <- 1
+}
+
 waitUser.text_order_question <- function(current.row, e){
   e$val <- str_trim(unlist(strsplit(readline("ANSWER: "),",")))
   e$row <- 1 + e$row
@@ -99,6 +105,13 @@ waitUser.mult_question <- function(current.row, e){
   choices <- str_trim(choices[[1]])
   # Store the choice in e$val for testing
   e$val <- select.list(sample(choices), graphics=FALSE)
+  e$iptr <- 1 + e$iptr
+}
+
+
+waitUser.exact_question <- function(current.row, e){
+  # Indicate a return to the prompt is necessary.
+  e$prompt <- TRUE
   e$iptr <- 1 + e$iptr
 }
 

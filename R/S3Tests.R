@@ -46,24 +46,27 @@ runTest.useFunc <- function(keyphrase, e) {
 
 #' Returns TRUE if as.character(e$val) matches the string to the right
 #' of "=" in keyphase
-#' 
+#' This is for single word answers
 runTest.word <- function(keyphrase, e) {
   correctVal <- strsplit(keyphrase,"=")[[1]][2]
   identical(as.character(e$val), correctVal)
 }
 #' Returns TRUE if as.character(e$val) matches the string to the right
 #' of "=" in keyphase
-#' 
+#' This is for multi-word answers for which order matters
 runTest.word_order <- function(keyphrase, e) {
   correctVal <- strsplit(keyphrase,"=")[[1]][2]
   identical(as.character(e$val), correctVal)
 }
-
+#' Returns TRUE if as.character(e$val) matches the string to the right
+#' of "=" in keyphase
+#' This is for multi-word answers for which order doesn't matter
 runTest.word_many <- function(keyphrase,e){
   correct_ans <- strsplit(keyphrase,"=")[[1]][2]
-  identical(sort(correct_ans), sort(e$val))
-  
+  correct_list <- str_trim(unlist(strsplit(correct_ans,",")))
+  identical(sort(correct_list), sort(e$val))
 }
+
 #' Tests if the user has just created one new variable. If so, assigns 
 #' e$newVar its value and returns TRUE.
 runTest.newVar <- function(keyphrase, e){
@@ -100,6 +103,15 @@ runTest.result <- function(keyphrase, e){
   newVar <- e$newVar
   return(identical(e$val, eval(correct.expr)))
 }
+
+runTest.swirl1cmd <- function(keyphrase,e){
+  
+  
+  
+}
+
+
+
 
 
 ### HELPER FUNCTIONS
