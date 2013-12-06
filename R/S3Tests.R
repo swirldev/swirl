@@ -59,6 +59,11 @@ runTest.word_order <- function(keyphrase, e) {
   identical(as.character(e$val), correctVal)
 }
 
+runTest.word_many <- function(keyphrase,e){
+  correct_ans <- strsplit(keyphrase,"=")[[1]][2]
+  identical(sort(correct_ans), sort(e$val))
+  
+}
 #' Tests if the user has just created one new variable. If so, assigns 
 #' e$newVar its value and returns TRUE.
 runTest.newVar <- function(keyphrase, e){

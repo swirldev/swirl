@@ -3,8 +3,10 @@ fixdata <- function(filename){
 mod <- read.csv(filename,as.is=TRUE)
 nr <- nrow(mod)
 mod[,"Class"] <- NA
+mod[,"AnswerTests"] <- NA
 cmds <- list(text = "text_question", 
              text_order = "text_order_question",
+             text_many = "text_many_question",
              multiple = "mult_question",
              exact="exact_question", 
              range="range_question",
@@ -32,13 +34,24 @@ for (n in 1:nr)
    correct_ans <- mod[n,"Correct.Answer"]
    test_string <- paste("word_order=",correct_ans,sep="")
  }
+ if (identical(class_type,"text_many_question")){
+   correct_ans <- mod[n,"Correct.Answer"]
+   test_string <- paste("word_many=",correct_ans,sep="")
+ }
+ if (identical(class_type,"cmd_question")){
+   test_string <- "swirl1cmd"
+ }
  
- mod[n,"Correct.Answer"] <- test_string
+ mod[n,"AnswerTests"] <- test_string
 }
 
 #file column headings to match daphne test mod
-colheads <- c("OutputType","Output","AnswerType","AnswerChoices","AnswerTests","Hint",
-                 "Figure","FigureType","VideoLink","Tag","Notes","Class")
+colheads <- c("OutputType","Output",
+              "AnswerType","AnswerChoices",
+              "CorrectAnswer","Hint",
+              "Figure","FigureType","VideoLink",
+              "Tag","Notes",
+              "Class","AnswerTests")
 
 len <- str_length(filename)
 newfilename <-str_c(substr(filename,1,str_length(filename)-4),"_new.csv",sep = "")
