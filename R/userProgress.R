@@ -1,10 +1,28 @@
 #' Prototype feature to save and restore user progress.
-#' Source and type hi(c("userProgress", "testMod")).
-#' End session with <esc>
-#' 
-#' TODO: somehow mark finished modules by renaming or something
+#' Source and type hi("userProgress").
+#' End session with <esc>, then bye()
 
 source("R/testMod.R")
+
+#' This overrides and wraps resume.testMod for the simple
+#' purpose of detecting when a module is complete and
+#' taking appropriate action on the progress file.
+resume.userProgress <- function(e){
+  rtn <- resume.testMod(e)
+  # independently of testMod, check for end of module
+  if(e$row > nrow(e$mod)){
+    saveProgress.userProgress(e)
+    # form a new path for the progress file
+    # which indicates completion and doesn't
+    # fit the regex pattern "[.]rda$" i.e.
+    # doesn't end in .rda, hence won't be
+    # recognized as an active progress file.
+    new_path <- paste(e$progress,".done", sep="")
+    # rename the progress file to indicate completion
+    if(!file.exists(new_path))file.rename(e$progress, new_path)
+  }
+  return(rtn)
+}
 
 initSwirl.userProgress <- function(e){
   e$usr <- "swirladmin"   # stub for sign in or sign up
@@ -12,11 +30,11 @@ initSwirl.userProgress <- function(e){
   udat <- file.path(find.package("swirl"), "user_data", e$usr)
   if(!file.exists(udat))dir.create(udat)
   # Check for the existence of progress files
-  pfiles <- dir(udat)[grep("[.]rda", dir(udat))]
+  pfiles <- dir(udat)[grep("[.]rda$", dir(udat))]
   # Would the user care to continue with any of these?
   selection <- "No thanks"
-  swirl_out("Would you like to continue with one of these modules?")
   if(length(pfiles) > 0){
+    swirl_out("Would you like to continue with one of these modules?")
     selection <- select.list(c(pfiles, selection))
   }
   if(selection == "No thanks"){
