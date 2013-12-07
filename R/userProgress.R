@@ -25,10 +25,9 @@ resume.userProgress <- function(e){
 }
 
 initSwirl.userProgress <- function(e){
-  e$usr <- "swirladmin"   # stub for sign in or sign up
-  # Find or create progress storage location
+  e$usr <- getUser()
   udat <- file.path(find.package("swirl"), "user_data", e$usr)
-  if(!file.exists(udat))dir.create(udat)
+  if(!file.exists(udat))dir.create(udat, recursive=TRUE)
   # Check for the existence of progress files
   pfiles <- dir(udat)[grep("[.]rda$", dir(udat))]
   # Would the user care to continue with any of these?
@@ -76,6 +75,10 @@ saveProgress.userProgress <-  function(e){
   # save progress
   saveRDS(e, e$progress)
 }
+
+#' Default for determining the user
+getUser <- function()UseMethod("getUser")
+getUser.default <- function()"swirladmin"
 
 # utils
 
