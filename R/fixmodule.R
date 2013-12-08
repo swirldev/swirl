@@ -1,6 +1,7 @@
 fixdata <- function(filename){
 #filename="data/Courses/Open_Intro/module1/mod1.csv"
 mod <- read.csv(filename,as.is=TRUE)
+mod <- mod[,-3]
 nr <- nrow(mod)
 mod[,"Class"] <- NA
 mod[,"AnswerTests"] <- NA
@@ -50,16 +51,17 @@ for (n in 1:nr)
    test_string <- new_correct
  } 
  if (identical(class_type,"range_question")){
-   correct_ans <- mod[n,"Correct.Answer"]
-  # correct_ans <- str_trim(unlist(strsplit(mod[n,"Correct.Answer"],";")))
-   new_correct <- paste("range=",correct_ans,sep="",collapse=";")
+  # correct_ans <- mod[n,"Correct.Answer"]
+   correct_ans <- str_trim(unlist(strsplit(mod[n,"Correct.Answer"],";")))
+   temp <- paste(correct_ans,collapse="-")
+   new_correct <- paste("range=",temp,sep="")
    test_string <- new_correct
  } 
  mod[n,"AnswerTests"] <- test_string
 }
 
 #file column headings to match daphne test mod
-colheads <- c("OutputType","Output",
+names(mod) <- c("OutputType","Output",
               "AnswerType","AnswerChoices",
               "CorrectAnswer","Hint",
               "Figure","FigureType","VideoLink",
@@ -68,5 +70,9 @@ colheads <- c("OutputType","Output",
 
 len <- str_length(filename)
 newfilename <-str_c(substr(filename,1,str_length(filename)-4),"_new.csv",sep = "")
-write.table(mod,newfilename,col.names  =colheads,sep = ",")
+print(newfilename)
+print(colheads)
+mod <- mod[,1:13]
+print(attributes(mod))
+write.csv(mod,newfilename,row.names=FALSE)
 }

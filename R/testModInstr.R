@@ -27,6 +27,7 @@
 #' in the loop.
 
 library(stringr)
+library(plotrix)
 source("R/S3Tests.R")
 source("R/phrases.R")
 
@@ -54,20 +55,23 @@ waitUser.default <- function(current.row, e){
 
 waitUser.text_question <- function(current.row, e){
   e$val <- str_trim(unlist(strsplit(readline("ANSWER: "),",")))
-  e$row <- 1 + e$row
-  e$iptr <- 1
+#   e$row <- 1 + e$row
+#   e$iptr <- 1
+  e$iptr <- 1 + e$iptr
 }
 
 waitUser.text_many_question <- function(current.row, e){
   e$val <- str_trim(unlist(strsplit(readline("ANSWER: "),",")))
-  e$row <- 1 + e$row
-  e$iptr <- 1
+#   e$row <- 1 + e$row
+#   e$iptr <- 1
+  e$iptr <- 1 + e$iptr
 }
 
 waitUser.text_order_question <- function(current.row, e){
   e$val <- str_trim(unlist(strsplit(readline("ANSWER: "),",")))
-  e$row <- 1 + e$row
-  e$iptr <- 1
+#   e$row <- 1 + e$row
+#   e$iptr <- 1
+  e$iptr <- 1 + e$iptr
 }
 
 
@@ -83,10 +87,9 @@ waitUser.video <- function(current.row, e){
 }
 
 waitUser.figure <- function(current.row, e){
-  swirl_out("Type nxt() to continue")
-  e$prompt <- TRUE
   file.path <- paste(e$path,current.row[,"Figure"],sep="/")
   source(file=file.path,local=TRUE)
+  readline("...")
   e$row <- 1 + e$row
   e$iptr <- 1
 } 
@@ -112,6 +115,12 @@ waitUser.exact_question <- function(current.row, e){
   e$iptr <- 1 + e$iptr
 }
 
+waitUser.range_question <- function(current.row, e){
+  # Indicate a return to the prompt is necessary.
+  e$prompt <- TRUE
+  e$iptr <- 1 + e$iptr
+}
+
 waitUser.cmd_question <- function(current.row, e){
   # Indicate a return to the prompt is necessary.
   e$prompt <- TRUE
@@ -131,7 +140,8 @@ testResponse.default <- function(current.row, e){
     e$iptr <- 1
     e$row <- 1 + e$row
   } else {
-    swirl_out(paste(tryAgain(), current.row[,"Hint"]))
+    swirl_out(tryAgain())
+    swirl_out(current.row[,"Hint"])
     e$iptr <- e$iptr -1
   }
 }

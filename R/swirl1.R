@@ -55,17 +55,19 @@ resume.swirl1 <- function(e){
 initSwirl <- function(e)UseMethod("initSwirl")
 saveProgress <- function(e)UseMethod("saveProgress")
 
-initSwirl.default <- function(e){
+initSwirl.swirl1 <- function(e){
+  assign("e",e,globalenv())
   modPath <- getModPath()
-  print(modPath)
-  print(paste(text="modname is ",basename(modPath)))
   base <- basename(modPath)
-  print(base)
   len <- str_length(base)
-  shortname <- paste0(substr(base,1,3),substr(base,len,len),text="_new.csv",collapse=NULL)
+  shortname <- paste0(substr(base,1,3),substr(base,len,len),"_new.csv",collapse=NULL)
   dataName <- paste(modPath,shortname,sep="/")
-  print(paste(text="dataName is ",dataName))
 
+  #initialize course module, assigning module-specific variables
+  initFile <- paste(modPath,"initModule.R",sep="/")
+   if (file.exists(initFile)){
+    source(initFile)
+  }
   # Load the course module, using Nick's constructor which 
   # adds attributes identifying the course and indicating dependencies.
   e$mod <- module(read.csv(dataName, as.is=TRUE),"4Daphne", "test", "Nick")
@@ -81,8 +83,6 @@ initSwirl.default <- function(e){
   # An identifier for the active row
   e$current.row <- NULL
   e$path <- modPath
-  assign("cars", read.csv("data/cars.csv", as.is=TRUE, comment.char="#"), envir=globalenv())
-  #assign("mpg.midsize", cars[cars$type=="midsize","mpgCity"], envir=globalenv())
 }
 
 saveProgress.default <- function(e){} # do nothing

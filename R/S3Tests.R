@@ -48,15 +48,19 @@ runTest.useFunc <- function(keyphrase, e) {
 #' of "=" in keyphase
 #' This is for single word answers
 runTest.word <- function(keyphrase, e) {
-  correctVal <- strsplit(keyphrase,"=")[[1]][2]
-  identical(as.character(e$val), correctVal)
+  correctVal <- str_trim(strsplit(keyphrase,"=")[[1]][2])
+  identical(as.character(e$val), str_trim(correctVal))
 }
 #' Returns TRUE if as.character(e$val) matches the string to the right
 #' of "=" in keyphase
 #' This is for multi-word answers for which order matters
 runTest.word_order <- function(keyphrase, e) {
-  correctVal <- strsplit(keyphrase,"=")[[1]][2]
-  identical(as.character(e$val), correctVal)
+  correctVal <- str_trim(strsplit(keyphrase,"=")[[1]][2])
+  correct_list <- str_trim(unlist(strsplit(correctVal,",")))
+  userAns <- str_trim(unlist(strsplit(as.character(e$val),",")))
+#   print(correct_list)
+#   print(userAns)
+  identical(userAns, correct_list)
 }
 #' Returns TRUE if as.character(e$val) matches the string to the right
 #' of "=" in keyphase
@@ -120,7 +124,7 @@ runTest.range <- function(keyphrase,e){
   if (is.numeric(e$val)){
      temp <- as.numeric(unlist(str_split(correct.ans,";")))
      # use is.logical in case the user types a non-digit which converts to NA's
-     is.correct <- is.logical(ans >= temp[1] && ans <= temp[2])
+     is.correct <- is.logical(e$val >= temp[1] && e$val <= temp[2])
   }
   return(is.correct)
 }
@@ -145,6 +149,16 @@ runTest.swirl1cmd <- function(keyphrase,e){
     return(FALSE)
 }
 
+runTest.trick <- function(keyphrase,e){
+ if (exists("trick",e,inherits=FALSE)){
+   rm("trick",envir=e,inherits=FALSE)
+   return(TRUE)
+ }
+ else{
+   e$trick <- 1
+   return(FALSE)
+ } 
+}
 
 
 
