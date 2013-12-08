@@ -135,8 +135,6 @@ runTest.range <- function(keyphrase,e){
 runTest.swirl1cmd <- function(keyphrase,e){
   correct.expr <- parse(text=strsplit(keyphrase,"=")[[1]][2])
   correct.ans  <- eval(correct.expr)
-  print(paste("e$val is ",e$val))
-  print(paste("correct.ans is ",correct.ans))
 #   if(is.numeric(e$val) && is.numeric(correct.ans)){
 #     epsilon <- 0.01*abs(correct.ans)
 #     ans.is.correct <- abs(e$val-correct.ans) <= epsilon
@@ -145,14 +143,16 @@ runTest.swirl1cmd <- function(keyphrase,e){
 #     ans.is.correct <- TRUE
 #   }
   ans.is.correct <- isTRUE(all.equal(correct.ans, e$val))
-  print(paste("correct expr is ",correct.expr))
-  print(paste("user    expr is ",deparse(e$expr)))
-  call.is.correct <- identical(as.expression(e$expr), correct.expr)
+#   print(paste("correct expr is ",correct.expr))
+#   print(paste("user    expr is ",deparse(e$expr)))
+  call.is.correct <- identical(as.expression(e$expr)[[1]], as.expression(correct.expr)[[1]])
   if(ans.is.correct && call.is.correct){
     return(TRUE)
   } else  
     if (ans.is.correct && !call.is.correct){
-      swirl_out("That's not the expression I expected but it works")
+      assign("uexpr",e$expr,globalenv())
+      assign("cexpr",correct.expr,globalenv())
+      swirl_out("That's not the expression I expected but it works.")
       #following line is temporary fix to create correct vars for future ques if needed
       eval(correct.expr,globalenv())
       return(TRUE)
