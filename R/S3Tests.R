@@ -120,32 +120,44 @@ runTest.exact <- function(keyphrase,e){
 
 runTest.range <- function(keyphrase,e){
   is.correct <- FALSE
-  correct.ans <- eval(parse(text=strsplit(keyphrase,"=")[[1]][2]))
+  correct.ans <-parse(text=strsplit(keyphrase,"=")[[1]][2])
   if (is.numeric(e$val)){
-     temp <- as.numeric(unlist(str_split(correct.ans,";")))
+     correct.ans <- as.character(correct.ans)
+     temp <- str_split(correct.ans,"-")
+     temp <- as.numeric(unlist(str_split(correct.ans,"-")))
      # use is.logical in case the user types a non-digit which converts to NA's
-     is.correct <- is.logical(e$val >= temp[1] && e$val <= temp[2])
+     is.correct <- (e$val >= temp[1] && e$val <= temp[2])
   }
   return(is.correct)
 }
 
 
 runTest.swirl1cmd <- function(keyphrase,e){
-  #  correct.expr <- eval(parse(text=strsplit(keyphrase,"=")[[1]][2]))
   correct.expr <- parse(text=strsplit(keyphrase,"=")[[1]][2])
-  correct.ans  <- eval(parse(text=correct.expr))
-  ans.is.correct <- FALSE
-  if(is.numeric(e$val)){
-    epsilon <- 0.01*abs(correct.ans)
-    ans.is.correct <- abs(e$val-correct.ans) <= epsilon
-  }
-  else {
-    ans.is.correct <- TRUE
-  }
-  call.is.correct <- identical(e$expr, correct.expr[[1]])
+  correct.ans  <- eval(correct.expr)
+  print(paste("e$val is ",e$val))
+  print(paste("correct.ans is ",correct.ans))
+#   if(is.numeric(e$val) && is.numeric(correct.ans)){
+#     epsilon <- 0.01*abs(correct.ans)
+#     ans.is.correct <- abs(e$val-correct.ans) <= epsilon
+#   }
+#   else {
+#     ans.is.correct <- TRUE
+#   }
+  ans.is.correct <- isTRUE(all.equal(correct.ans, e$val))
+  print(paste("correct expr is ",correct.expr))
+  print(paste("user    expr is ",deparse(e$expr)))
+  call.is.correct <- identical(as.expression(e$expr), correct.expr)
   if(ans.is.correct && call.is.correct){
     return(TRUE)
-  } else   
+  } else  
+    if (ans.is.correct && !call.is.correct){
+      swirl_out("That's not the expression I expected but it works")
+      #following line is temporary fix to create correct vars for future ques if needed
+      eval(correct.expr,globalenv())
+      return(TRUE)
+    }
+  else
     return(FALSE)
 }
 

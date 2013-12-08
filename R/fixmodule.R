@@ -1,7 +1,10 @@
 fixdata <- function(filename){
 #filename="data/Courses/Open_Intro/module1/mod1.csv"
 mod <- read.csv(filename,as.is=TRUE)
-mod <- mod[,-3]
+
+#remove bogus status column if it's there
+#mod <- mod[,-3]
+
 nr <- nrow(mod)
 mod[,"Class"] <- NA
 mod[,"AnswerTests"] <- NA
@@ -71,7 +74,6 @@ names(mod) <- c("OutputType","Output",
 len <- str_length(filename)
 newfilename <-str_c(substr(filename,1,str_length(filename)-4),"_new.csv",sep = "")
 print(newfilename)
-print(colheads)
 mod <- mod[,1:13]
 print(attributes(mod))
 write.csv(mod,newfilename,row.names=FALSE)
