@@ -39,7 +39,7 @@ runTest.assign <- function(keyphrase, e) {
 #' been used in e$expr
 #'  
 runTest.useFunc <- function(keyphrase, e) {
-  func <- strsplit(keyphrase,"=")[[1]][2]
+  func <- rightside(keyphrase)
   (is.call(e$expr) || is.expression(e$expr)) &&
     func %in% flatten(e$expr)
 }
@@ -48,14 +48,14 @@ runTest.useFunc <- function(keyphrase, e) {
 #' of "=" in keyphase
 #' This is for single word answers
 runTest.word <- function(keyphrase, e) {
-  correctVal <- str_trim(strsplit(keyphrase,"=")[[1]][2])
+  correctVal <- str_trim(rightside(keyphrase))
   identical(as.character(e$val), str_trim(correctVal))
 }
 #' Returns TRUE if as.character(e$val) matches the string to the right
 #' of "=" in keyphase
 #' This is for multi-word answers for which order matters
 runTest.word_order <- function(keyphrase, e) {
-  correctVal <- str_trim(strsplit(keyphrase,"=")[[1]][2])
+  correctVal <- str_trim(rightside(keyphrase))
   correct_list <- str_trim(unlist(strsplit(correctVal,",")))
   userAns <- str_trim(unlist(strsplit(as.character(e$val),",")))
 #   print(correct_list)
@@ -66,7 +66,7 @@ runTest.word_order <- function(keyphrase, e) {
 #' of "=" in keyphase
 #' This is for multi-word answers for which order doesn't matter
 runTest.word_many <- function(keyphrase,e){
-  correct_ans <- strsplit(keyphrase,"=")[[1]][2]
+  correct_ans <- rightside(keyphrase)
   correct_list <- str_trim(unlist(strsplit(correct_ans,",")))
   identical(sort(correct_list), sort(e$val))
 }
@@ -89,7 +89,7 @@ runTest.newVar <- function(keyphrase, e){
 #' Tests if the user has just created one new variable of correct name. If so, 
 #' returns TRUE.
 runTest.correctName <- function(keyphrase, e){
-  correctName <- strsplit(keyphrase,"=")[[1]][2]
+  correctName <- rightside(keyphrase)
   eval(e$expr)
   newVars <- setdiff(ls(),c("keyphrase", "e"))
   if ((length(newVars)==1) && (identical(newVars,correctName))) {
@@ -103,7 +103,7 @@ runTest.correctName <- function(keyphrase, e){
 #' Tests the result of a computation such as mean(newVar) applied
 #' to a specific variable created in a previous question. 
 runTest.result <- function(keyphrase, e){
-  correct.expr <- parse(text=strsplit(keyphrase,"=")[[1]][2])
+  correct.expr <- parse(text=rightside(keyphrase))
   newVar <- e$newVar
   return(identical(e$val, eval(correct.expr)))
 }
@@ -111,7 +111,7 @@ runTest.result <- function(keyphrase, e){
 runTest.exact <- function(keyphrase,e){
   is.correct <- FALSE
   if(is.numeric(e$val)){
-    correct.ans <- eval(parse(text=strsplit(keyphrase,"=")[[1]][2]))
+    correct.ans <- eval(parse(text=rightside(keyphrase)))
     epsilon <- 0.01*abs(correct.ans)
     is.correct <- abs(e$val-correct.ans) <= epsilon
   }
@@ -120,7 +120,7 @@ runTest.exact <- function(keyphrase,e){
 
 runTest.range <- function(keyphrase,e){
   is.correct <- FALSE
-  correct.ans <-parse(text=strsplit(keyphrase,"=")[[1]][2])
+  correct.ans <-parse(text=rightside(keyphrase))
   if (is.numeric(e$val)){
      correct.ans <- as.character(correct.ans)
      temp <- str_split(correct.ans,"-")
@@ -133,7 +133,7 @@ runTest.range <- function(keyphrase,e){
 
 
 runTest.swirl1cmd <- function(keyphrase,e){
-  correct.expr <- parse(text=strsplit(keyphrase,"=")[[1]][2])
+  correct.expr <- parse(text=rightside(keyphrase))
   correct.ans  <- eval(correct.expr)
 #   if(is.numeric(e$val) && is.numeric(correct.ans)){
 #     epsilon <- 0.01*abs(correct.ans)
@@ -175,6 +175,12 @@ runTest.trick <- function(keyphrase,e){
 
 
 ### HELPER FUNCTIONS
+
+rightside <- function(keyphrase){
+  n <- str_locate(keyphrase,"=")[1]
+  return(substr(keyphrase,n+1,nchar(keyphrase)))
+}
+
 
 flatten <- function(expr){
   if(is.leaff(expr)){
