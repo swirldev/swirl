@@ -49,7 +49,7 @@ runTest.useFunc <- function(keyphrase, e) {
 #' This is for single word answers
 runTest.word <- function(keyphrase, e) {
   correctVal <- str_trim(rightside(keyphrase))
-  identical(as.character(e$val), str_trim(correctVal))
+  identical(as.character(e$val), as.character(str_trim(correctVal)))
 }
 #' Returns TRUE if as.character(e$val) matches the string to the right
 #' of "=" in keyphase
