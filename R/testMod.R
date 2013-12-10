@@ -44,12 +44,12 @@ resume.testMod <- function(e){
 }
 
 # Determines the class of a row
-#classifyRow <- function(current.row){
-#  if(current.row[,"OutputType"] == "text")return("text")
-#  if(current.row[,"OutputType"] == "video")return("video")
-#  if(current.row[,"AnswerType"] == "multiple")return("mult_question")
-#  return("cmd_question")
-#}
+classifyRow <- function(current.row){
+ if(current.row[,"OutputType"] == "text")return("text")
+ if(current.row[,"OutputType"] == "video")return("video")
+ if(current.row[,"AnswerType"] == "multiple")return("mult_question")
+ return("cmd_question")
+}
 
 initSwirl <- function(e)UseMethod("initSwirl")
 saveProgress <- function(e)UseMethod("saveProgress")
