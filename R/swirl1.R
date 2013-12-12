@@ -2,7 +2,7 @@ source("R/miniMulti.R")
 source("R/modConstructor.R")
 source("R/testModInstr.R")
 source("R/menu.R")
-source("R/userProgress.R")
+#source("R/userProgress.R")
 
 #' Method resume.testMod implements a finite state (or virtual) machine 
 #' which could be generalized but is specialized here for testMod4Daphne. 
@@ -26,7 +26,7 @@ resume.swirl1 <- function(e){
   while(!e$prompt){
     # If the module is complete, return FALSE to remove callback
     if(e$row > nrow(e$mod)){
-      saveProgress.userProgress(e)
+      saveProgress(e)
       # form a new path for the progress file
       # which indicates completion and doesn't
       # fit the regex pattern "[.]rda$" i.e.
@@ -59,7 +59,7 @@ saveProgress <- function(e)UseMethod("saveProgress")
 initSwirl.swirl1 <- function(e){
   
   e$usr <- getUser()
-  udat <- file.path(find.package("swirl"), "user_data", e$usr)
+  udat <- file.path(find.package("swirlfancy"), "user_data", e$usr)
   if(!file.exists(udat))dir.create(udat, recursive=TRUE)
   # Check for the existence of progress files
   pfiles <- dir(udat)[grep("[.]rda$", dir(udat))]
@@ -125,5 +125,32 @@ initSwirl.swirl1 <- function(e){
 }
 
 saveProgress.swirl1 <- function(e){
-  saveProgress.userProgress(e)
+  n <- length(e$usrexpr)
+  expr <- e$expr
+  if(n==0 || !identical(e$usrexpr[[n]], expr)){
+    e$usrexpr <- c(e$usrexpr, expr)
+  }
+  # save progress
+  saveRDS(e, e$progress)
+  
  } 
+
+#' Default for determining the user
+getUser <- function()UseMethod("getUser")
+getUser.default <- function()"swirladmin"
+
+# utils
+
+xfer <- function(env1, env2){
+  lapply(ls(env1), function(var)getAssign(var, env1, env2))
+}
+
+getAssign <- function(var, env1, env2){
+  assign(var, get(var, env1, inherits=FALSE), envir=env2)
+}
+
+cleanAdmin <- function(){
+  udat <- file.path(find.package("swirl"), "user_data", "swirladmin")
+  file.remove(dir(udat, pattern="*[.]rda", full.names=TRUE))
+  invisible()
+}
