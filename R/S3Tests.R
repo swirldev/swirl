@@ -49,7 +49,8 @@ runTest.useFunc <- function(keyphrase, e) {
 #' This is for single word answers
 runTest.word <- function(keyphrase, e) {
   correctVal <- str_trim(rightside(keyphrase))
-  identical(as.character(e$val), as.character(str_trim(correctVal)))
+  identical(str_trim(as.character(e$val)), 
+            str_trim(as.character(correctVal)))
 }
 #' Returns TRUE if as.character(e$val) matches the string to the right
 #' of "=" in keyphase
@@ -105,7 +106,9 @@ runTest.correctName <- function(keyphrase, e){
 runTest.result <- function(keyphrase, e){
   correct.expr <- parse(text=rightside(keyphrase))
   newVar <- e$newVar
-  return(identical(e$val, eval(correct.expr)))
+  ans <- all.equal(e$val, eval(correct.expr))
+  # all.equal may return a diagnostic string
+  return(ifelse(is.logical(ans), ans, FALSE))
 }
 
 runTest.exact <- function(keyphrase,e){
