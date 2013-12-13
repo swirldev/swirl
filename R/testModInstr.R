@@ -28,8 +28,6 @@
 
 library(stringr)
 library(plotrix)
-source("R/S3Tests.R")
-source("R/phrases.R")
 
 #' All classes first Output, all in the same way, hence one method
 #' suffices.

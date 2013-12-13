@@ -2,17 +2,22 @@ Package: swirlfancy
 Version: 2.0
 Type: Package
 Title: Statistics with Interactive R Learning
-Date: 2013-11-19
+Date: 2013-12-12
 License: GPL-2
-Author: Nick Carchedi and Bill Bauer, with significant contributions from Peter Schulam and Hadley Wickham
+Author: Nick Carchedi, Bill Bauer, and Gina Bauer, with significant contributions from Peter Schulam and Hadley Wickham
 Maintainer: Nick Carchedi <nick.carchedi@gmail.com>
 Depends: 
   R (>= 2.14),
-  stringr
+  stringr,
+  plotrix
 Description: swirl is an interactive platform for teaching and learning
     statistics and the R programming language.
 URL: http://swirlstats.com
 Collate: 
-  'control.R'
-  'states.R'
-	'ansTests.R'
+  'menu.R'
+  'miniMulti.R'
+  'modConstructor.R'
+  'phrases.R'
+  'S3Tests.R'
+  'swirl1.R'
+  'testModInstr.R'
