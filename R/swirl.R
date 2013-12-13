@@ -1,12 +1,48 @@
-#' Method resume.testMod implements a finite state (or virtual) machine 
-#' which could be generalized but is specialized here for testMod4Daphne. 
+#' Creates an environment, e, defines a function, cb, and registers
+#' cb as a callback with data argument, e. The callback retains a
+#' reference to the environment in which it was created, environment(cb),
+#' hence that environment, which also contains e, persists as long
+#' as cb remains registered. Thus e can be used to store infomation
+#' between invocations of cb. 
+swirl <- function(resume.class="default"){
+  bye()
+  # e lives here, in the environment created when swirl() is run
+  e <- new.env(globalenv())
+  # The callback also lives in the environment created when swirl()
+  # is run and retains a reference to it. Because of this reference,
+  # the environment which contains both e and cb() persists as
+  # long as cb() remains registered.
+  cb <- function(expr, val, ok, vis, data=e){
+    # The following will modify the persistent e, as per Hadley's
+    # remark, above.
+    e$expr <- expr
+    e$val <- val
+    e$ok <- ok
+    e$vis <- vis
+    # This dummy object of class resume.class "tricks" the S3 system
+    # into calling the proper resume method.
+    return(resume(structure(e,class=resume.class )))
+  }
+  addTaskCallback(cb, name="mini")
+  invisible()
+}
+
+bye <- function(){
+  removeTaskCallback("mini")
+  invisible()
+}
+
+resume <- function(...)UseMethod("resume")
+
+
+#' Method resume.default implements a finite state (or virtual) machine. 
 #' It runs a fixed "program" consisting of three "instructions" which in 
 #' turn present information, capture a user's response, and test and retry 
 #' if necessary. The three instructions are themselves S3 methods which 
 #' depend on the class of the active row of the course module. The 
-#' instruction set is thus extensible. It can be found in R/testModInstr.R. 
-
-resume.swirl1 <- function(e){
+#' instruction set is thus extensible. It can be found in R/instructionSet.R. 
+#' 
+resume.default <- function(e){
   # This function is entered ONLY when the user has entered a
   # valid expression at the R prompt.
   #
@@ -50,7 +86,7 @@ resume.swirl1 <- function(e){
 initSwirl <- function(e)UseMethod("initSwirl")
 saveProgress <- function(e)UseMethod("saveProgress")
 
-initSwirl.swirl1 <- function(e){
+initSwirl.default <- function(e){
   
   e$usr <- getUser()
   udat <- file.path(find.package("swirlfancy"), "user_data", e$usr)
@@ -78,7 +114,7 @@ initSwirl.swirl1 <- function(e){
   } else {
 
     # begin a new module
-    #todo these names might change when swirl is made into a package
+    #todo this code will change when rda files become available
     modPath <- getModPath()
     base <- basename(modPath)
     len <- str_length(base)
@@ -118,7 +154,7 @@ initSwirl.swirl1 <- function(e){
   }
 }
 
-saveProgress.swirl1 <- function(e){
+saveProgress.default <- function(e){
   n <- length(e$usrexpr)
   expr <- e$expr
   if(n==0 || !identical(e$usrexpr[[n]], expr)){
@@ -133,8 +169,13 @@ saveProgress.swirl1 <- function(e){
 getUser <- function()UseMethod("getUser")
 getUser.default <- function()"swirladmin"
 
-# utils
+#' UTILITIES
 
+swirl_out <- function(...) {
+  wrapped <- strwrap(str_c(..., sep = " "),
+                     width = getOption("width") - 2)
+  message(str_c("| ", wrapped, collapse = "\n"))
+}
 xfer <- function(env1, env2){
   lapply(ls(env1), function(var)getAssign(var, env1, env2))
 }

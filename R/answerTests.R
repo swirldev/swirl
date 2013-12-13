@@ -1,4 +1,4 @@
-#' One approach to extensible testing
+#' Extensible testing
 #' 
 #' If tests are to be identified by keyphrases, then keyphrases must somehow be
 #' converted (i.e., parsed) to function calls. It is reasonable to anticipate
@@ -11,11 +11,6 @@
 #' One possibility, illustrated below, is to give new tests themselves
 #' primary responsibility for parsing their own keyphrases.
 #' 
-#' This would leave the problem of having core swirl code invoke a new test
-#' based on the presence of a new keyphrase in a course Module. In our test
-#' module, the unique keyphrases are:
-#'  "assign"  "newVar"  "word=20" "useFunc=c" "useFunc=mean" 
-#'  "result=mean(newVar)" "word=mean()"
 #' The tests themselves are identified by the substrings before the "=".
 #' Substrings after "=" are essentially arguments. To illustrate a possiblity
 #' we'll have core code base its function call on the string prior to "=",
@@ -59,8 +54,6 @@ runTest.word_order <- function(keyphrase, e) {
   correctVal <- str_trim(rightside(keyphrase))
   correct_list <- str_trim(unlist(strsplit(correctVal,",")))
   userAns <- str_trim(unlist(strsplit(as.character(e$val),",")))
-#   print(correct_list)
-#   print(userAns)
   identical(userAns, correct_list)
 }
 #' Returns TRUE if as.character(e$val) matches the string to the right
@@ -138,16 +131,7 @@ runTest.range <- function(keyphrase,e){
 runTest.swirl1cmd <- function(keyphrase,e){
   correct.expr <- parse(text=rightside(keyphrase))
   correct.ans  <- eval(correct.expr)
-#   if(is.numeric(e$val) && is.numeric(correct.ans)){
-#     epsilon <- 0.01*abs(correct.ans)
-#     ans.is.correct <- abs(e$val-correct.ans) <= epsilon
-#   }
-#   else {
-#     ans.is.correct <- TRUE
-#   }
   ans.is.correct <- isTRUE(all.equal(correct.ans, e$val))
-#   print(paste("correct expr is ",correct.expr))
-#   print(paste("user    expr is ",deparse(e$expr)))
   call.is.correct <- identical(as.expression(e$expr)[[1]], as.expression(correct.expr)[[1]])
   if(ans.is.correct && call.is.correct){
     return(TRUE)
@@ -156,6 +140,7 @@ runTest.swirl1cmd <- function(keyphrase,e){
       assign("uexpr",e$expr,globalenv())
       assign("cexpr",correct.expr,globalenv())
       swirl_out("That's not the expression I expected but it works.")
+      #todo
       #following line is temporary fix to create correct vars for future ques if needed
       eval(correct.expr,globalenv())
       return(TRUE)

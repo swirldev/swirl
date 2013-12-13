@@ -9,15 +9,15 @@ Maintainer: Nick Carchedi <nick.carchedi@gmail.com>
 Depends: 
   R (>= 2.14),
   stringr,
-  plotrix
+  plotrix,
+  pwr
 Description: swirl is an interactive platform for teaching and learning
     statistics and the R programming language.
 URL: http://swirlstats.com
 Collate: 
   'menu.R'
-  'miniMulti.R'
   'modConstructor.R'
   'phrases.R'
-  'S3Tests.R'
-  'swirl1.R'
-  'testModInstr.R'
+  'answerTests.R'
+  'swirl.R'
+  'instructionSet.R'
