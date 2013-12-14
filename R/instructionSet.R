@@ -117,7 +117,10 @@ testResponse.default <- function(current.row, e){
 }
 
 testMe <- function(keyphrase, e){
-  attr(keyphrase, "class") <- strsplit(keyphrase, "=")[[1]][1]
+  # Add a new class attribute to the keyphrase using
+  # the substring left of its first "=".
+  attr(keyphrase, "class") <- c(class(keyphrase),
+                                strsplit(keyphrase, "=")[[1]][1])
   return(runTest(keyphrase, e))
 }
 
