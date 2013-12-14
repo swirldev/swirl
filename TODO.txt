@@ -1,7 +1,0 @@
-- Opening menu similar to swirl 1.0
-- Support for figures/plots
-- Fully integrated swirl 1.0 modules (remove & revise content columns as necessary)
-- Use .Rdata file(s) to save necessary environments/variables between sessions
-- User-created variable tagging per email below
-- skip() [or nxt()] feature which increments user to next state
-- play() feature which breaks auto-feedback and allows user to experiment in console
