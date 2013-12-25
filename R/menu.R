@@ -19,3 +19,6 @@ getModPath <- function() {
   modulePath <- chooseFile(courseDir)
 }
 
+#' Default for determining the user
+getUser <- function()UseMethod("getUser")
+getUser.default <- function()"swirladmin"

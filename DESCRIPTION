@@ -21,3 +21,6 @@ Collate:
   'answerTests.R'
   'swirl.R'
   'instructionSet.R'
+  'initSwirl.R'
+  'progress.R'
+  'utilities.R'
