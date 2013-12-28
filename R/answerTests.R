@@ -30,7 +30,9 @@ runTest.default <- function(...)return(FALSE)
 #' Returns TRUE if e$expr is an assignment 
 #' 
 runTest.assign <- function(keyphrase, e) {
-  identical(class(e$expr), "<-")
+  results <- expectThat(e$expr, is_a("<-"), label=deparse(e$expr))
+  if(!results$passed)swirl_out(results$message)
+  return(results$passed)
 }
 
 #' Returns TRUE if the function to the right of = in the keyphrase has
@@ -38,63 +40,72 @@ runTest.assign <- function(keyphrase, e) {
 #'  
 runTest.useFunc <- function(keyphrase, e) {
   func <- rightside(keyphrase)
-  (is.call(e$expr) || is.expression(e$expr)) &&
-    func %in% flatten(e$expr)
+  condition <- do.call(uses_func, list(func)) # to finesse diagnostic message
+  results <- expectThat(e$expr, condition, label=deparse(e$expr))
+  if(!results$passed)swirl_out(results$message)
+  return(results$passed)
 }
 
 #' Returns TRUE if as.character(e$val) matches the string to the right
 #' of "=" in keyphase
 #' This is for single word answers
 runTest.word <- function(keyphrase, e) {
-  correctVal <- str_trim(rightside(keyphrase))
-  identical(str_trim(as.character(e$val)), 
-            str_trim(as.character(correctVal)))
+  correctVal <- tolower(str_trim(rightside(keyphrase)))
+  userVal <- str_trim(as.character(e$val))
+  condition <- do.call(matches, list(correctVal))
+  results <- expectThat(tolower(userVal), condition, label=userVal)
+  if(!results$passed)swirl_out(results$message)
+  return(results$passed)
 }
 #' Returns TRUE if as.character(e$val) matches the string to the right
 #' of "=" in keyphase
 #' This is for multi-word answers for which order matters
 runTest.word_order <- function(keyphrase, e) {
   correctVal <- str_trim(rightside(keyphrase))
-  correct_list <- str_trim(unlist(strsplit(correctVal,",")))
+  correct_list <- tolower(str_trim(unlist(strsplit(correctVal,","))))
+  condition <- do.call(is_identical_to, list(correct_list))
   userAns <- str_trim(unlist(strsplit(as.character(e$val),",")))
-  identical(userAns, correct_list)
+  results <- expectThat(tolower(userAns), condition, label=userAns)
+  if(!results$passed)swirl_out(results$message)
+  return(results$passed)
 }
 #' Returns TRUE if as.character(e$val) matches the string to the right
 #' of "=" in keyphase
 #' This is for multi-word answers for which order doesn't matter
 runTest.word_many <- function(keyphrase,e){
-  correct_ans <- rightside(keyphrase)
-  correct_list <- str_trim(unlist(strsplit(correct_ans,",")))
-  identical(sort(correct_list), sort(e$val))
+  correctVal <- str_trim(rightside(keyphrase))
+  correct_list <- sort(tolower(str_trim(unlist(strsplit(correctVal,",")))))
+  condition <- do.call(is_identical_to, list(correct_list))
+  userAns <- str_trim(unlist(strsplit(as.character(e$val),",")))
+  results <- expectThat(sort(tolower(userAns)), condition, label=userAns)
+  if(!results$passed)swirl_out(results$message)
+  return(results$passed)
 }
 
 #' Tests if the user has just created one new variable. If so, assigns 
 #' e$newVar its value and returns TRUE.
 runTest.newVar <- function(keyphrase, e){
-  eval(e$expr)
-  newVars <- setdiff(ls(),c("keyphrase", "e"))
-  if (length(newVars)==1){
-    eval(e$expr,e)
+  results <- expectThat(e$expr, creates_var(), label=deparse(e$expr))
+  if(results$passed){
     e$newVar <- e$val
-    return(TRUE)
+  } else {
+    swirl_out(results$message)
   }
-  else {
-    return(FALSE)
-  }
+  return(results$passed)
 }
 
 #' Tests if the user has just created one new variable of correct name. If so, 
 #' returns TRUE.
 runTest.correctName <- function(keyphrase, e){
   correctName <- rightside(keyphrase)
-  eval(e$expr)
-  newVars <- setdiff(ls(),c("keyphrase", "e"))
-  if ((length(newVars)==1) && (identical(newVars,correctName))) {
-    return(TRUE)
+  condition <- do.call(creates_var, list(correctName))
+  results <- expectThat(e$expr, condition, label=deparse(e$expr))
+  if(results$passed){
+    e$newVar <- e$val
+  } else {
+    swirl_out(results$message)
   }
-  else {
-    return(FALSE)
-  }
+  return(results$passed)
  }
 
 #' Tests the result of a computation such as mean(newVar) applied
@@ -102,11 +113,12 @@ runTest.correctName <- function(keyphrase, e){
 runTest.result <- function(keyphrase, e){
   correct.expr <- parse(text=rightside(keyphrase))
   newVar <- e$newVar
-  ans <- all.equal(e$val, eval(correct.expr))
-  # all.equal may return a diagnostic string
-  return(ifelse(is.logical(ans), ans, FALSE))
+  condition <- do.call(equals, list(eval(correct.expr)))
+  results <- expectThat(e$val, condition, label=deparse(e$expr))
+  if(!results$passed)swirl_out(results$message)
+  return(results$passed)
 }
-
+#hereS
 runTest.exact <- function(keyphrase,e){
   is.correct <- FALSE
   if(is.numeric(e$val)){
