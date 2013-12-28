@@ -163,7 +163,64 @@ runTest.trick <- function(keyphrase,e){
  } 
 }
 
+### TESTTHAT FUNCTIONS CUSTOMIZED FOR ANSWERTESTS
 
+findExpr <- function(name, env = parent.frame()){
+  library(stringr) # TODO: omit in package
+  subs <- do.call("substitute", list(as.name(name), env))
+  str_c(deparse(subs, width.cutoff = 500), collapse = "\n")
+}
+
+expectThat <- function(object, condition, info=NULL, label=NULL){
+  if (is.null(label)) {
+    label <- findExpr("object")
+  }
+  results <- condition(object)
+  results$message <- str_c(label, " ", results$message)
+  if (!is.null(info)) {
+    results$message <- str_c(results$message, "\n", info)
+  }
+  return(results)
+}
+
+## CUSTOM EXPECTATIONS FOR ANSWER TESTS 
+
+uses_func <- function(expected, label = NULL, ...){
+  if(is.null(label)){
+    label <- findExpr("expected")
+  }else if (!is.character(label) || length(label) != 1) {
+        label <- deparse(label)
+  }
+  function(expr){
+    uses <- (is.call(expr) || is.expression(expr)) && 
+      expected %in% flatten(expr)
+    expectation(identical(uses, TRUE),
+                str_c("does not use ", label))
+  }
+}
+
+creates_var <- function(expected=NULL, label = NULL){
+  function(expr){
+    eval(expr)
+    newVars <- setdiff(ls(),"expr")
+    creates <- length(newVars) == 1
+   asNamed <- is.null(expected) || identical(expected, newVars[1])
+    message <- str_c("does not create a variable ")
+    if(!is.null(expected)) message <- str_c(message, "named ", expected)
+    expectation(identical(creates&&asNamed, TRUE), message)
+  }
+}
+
+in_range <- function(range, label=NULL){
+  range <- sort(range)
+  function(number){
+    isOK <- is.numeric(number) && 
+      isTRUE(number >= range[1]) && 
+      isTRUE(number <= range[2])
+    expectation(identical(isOK, TRUE), 
+                str_c("is not between ", range[1], " and ", range[2]))
+  }
+}
 
 ### HELPER FUNCTIONS
 
