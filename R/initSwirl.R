@@ -51,7 +51,8 @@ initSwirl.default <- function(e){
     e$iptr <- 1
     # A flag indicating we should return to the prompt
     e$prompt <- FALSE
-    # A fixed list of instructions for this "virtual machine"
+    # The job of loading instructions for this "virtual machine"
+    # is relegated to an S3 method to allow for different "programs."
     e$instr <- list(present, waitUser, testResponse.default)
     # An identifier for the active row
     e$current.row <- NULL
@@ -66,4 +67,10 @@ initSwirl.default <- function(e){
     # create the file
     saveRDS(e, e$progress)
   }
+}
+
+loadInstructions <- function(e, ...)UseMethod("loadInstructions")
+
+loadInstructions.default <- function(e){
+  e$instr <- list(present, waitUser, testResponse)
 }
