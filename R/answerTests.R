@@ -1,4 +1,15 @@
-#' Extensible testing
+#' A kludge illustrating the use of testthat to check user responses.
+#' Prototype course material specifies tests using a keyphrase syntax which,
+#' for purposes of this illustration, must be converted to testthat syntax.
+#' Hence, some of the awkwardness below. However, we find testthat syntax
+#' very intuitive and powerful, facilitating the job of writing tests.
+#' 
+#' We found it expedient to adapt testthat's expect_that and find_expr 
+#' functions which were designed for unit testing. The adaptations are
+#' expectThat and findExpr, below. We also found it useful to write three
+#' new expectations, uses_function, creates_var, and in_range.
+#' 
+#' Extensible testing using keyphrases.
 #' 
 #' If tests are to be identified by keyphrases, then keyphrases must somehow be
 #' converted (i.e., parsed) to function calls. It is reasonable to anticipate
@@ -178,7 +189,6 @@ runTest.trick <- function(keyphrase,e){
 ### TESTTHAT FUNCTIONS CUSTOMIZED FOR ANSWERTESTS
 
 findExpr <- function(name, env = parent.frame()){
-  library(stringr) # TODO: omit in package
   subs <- do.call("substitute", list(as.name(name), env))
   str_c(deparse(subs, width.cutoff = 500), collapse = "\n")
 }
