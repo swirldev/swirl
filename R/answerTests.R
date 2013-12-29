@@ -51,8 +51,9 @@ runTest.assign <- function(keyphrase, e) {
 #'  
 runTest.useFunc <- function(keyphrase, e) {
   func <- rightside(keyphrase)
-  condition <- do.call(uses_func, list(func)) # to finesse diagnostic message
-  results <- expectThat(e$expr, condition, label=deparse(e$expr))
+  results <- expectThat(e$expr,
+                        uses_func(func, label=func), 
+                        label=deparse(e$expr))
   if(!results$passed)swirl_out(results$message)
   return(results$passed)
 }
@@ -63,8 +64,9 @@ runTest.useFunc <- function(keyphrase, e) {
 runTest.word <- function(keyphrase, e) {
   correctVal <- tolower(str_trim(rightside(keyphrase)))
   userVal <- str_trim(as.character(e$val))
-  condition <- do.call(matches, list(correctVal))
-  results <- expectThat(tolower(userVal), condition, label=userVal)
+  results <- expectThat(tolower(userVal), 
+                        matches(correctVal), 
+                        label=userVal)
   if(!results$passed)swirl_out(results$message)
   return(results$passed)
 }
@@ -72,11 +74,14 @@ runTest.word <- function(keyphrase, e) {
 #' of "=" in keyphase
 #' This is for multi-word answers for which order matters
 runTest.word_order <- function(keyphrase, e) {
-  correctVal <- str_trim(rightside(keyphrase))
-  correct_list <- tolower(str_trim(unlist(strsplit(correctVal,","))))
-  condition <- do.call(is_identical_to, list(correct_list))
-  userAns <- str_trim(unlist(strsplit(as.character(e$val),",")))
-  results <- expectThat(tolower(userAns), condition, label=userAns)
+  correctVal <- rightside(keyphrase)
+  temp <- tolower(str_trim(unlist(strsplit(correctVal,","))))
+  correctVal <- paste(temp, collapse=",")
+  temp <- str_trim(unlist(strsplit(as.character(e$val),",")))
+  userAns <- paste(temp, collapse=",")
+  results <- expectThat(tolower(userAns), 
+                        is_identical_to(correctVal, label=correctVal), 
+                        label=userAns)
   if(!results$passed)swirl_out(results$message)
   return(results$passed)
 }
@@ -84,11 +89,14 @@ runTest.word_order <- function(keyphrase, e) {
 #' of "=" in keyphase
 #' This is for multi-word answers for which order doesn't matter
 runTest.word_many <- function(keyphrase,e){
-  correctVal <- str_trim(rightside(keyphrase))
-  correct_list <- sort(tolower(str_trim(unlist(strsplit(correctVal,",")))))
-  condition <- do.call(is_identical_to, list(correct_list))
-  userAns <- str_trim(unlist(strsplit(as.character(e$val),",")))
-  results <- expectThat(sort(tolower(userAns)), condition, label=userAns)
+  correctVal <- rightside(keyphrase)
+  temp <- sort(tolower(str_trim(unlist(strsplit(correctVal,",")))))
+  correctVal <- paste(temp, collapse=",")
+  temp <- sort(str_trim(unlist(strsplit(as.character(e$val),","))))
+  userAns <- paste(temp, collapse=",")
+  results <- expectThat(tolower(userAns), 
+                        is_identical_to(correctVal, label=correctVal), 
+                        label=userAns)
   if(!results$passed)swirl_out(results$message)
   return(results$passed)
 }
@@ -109,8 +117,9 @@ runTest.newVar <- function(keyphrase, e){
 #' returns TRUE.
 runTest.correctName <- function(keyphrase, e){
   correctName <- rightside(keyphrase)
-  condition <- do.call(creates_var, list(correctName))
-  results <- expectThat(e$expr, condition, label=deparse(e$expr))
+  results <- expectThat(e$expr, 
+                        creates_var(correctName, label=correctName), 
+                        label=deparse(e$expr))
   if(results$passed){
     e$newVar <- e$val
   } else {
@@ -124,33 +133,37 @@ runTest.correctName <- function(keyphrase, e){
 runTest.result <- function(keyphrase, e){
   correct.expr <- parse(text=rightside(keyphrase))
   newVar <- e$newVar
-  condition <- do.call(equals, list(eval(correct.expr)))
-  results <- expectThat(e$val, condition, label=deparse(e$expr))
+  results <- expectThat(e$val, 
+                        equals(eval(correct.expr), label=rightside(keyphrase)), 
+                        label=deparse(e$expr))
   if(!results$passed)swirl_out(results$message)
   return(results$passed)
 }
-#hereS
+
 runTest.exact <- function(keyphrase,e){
-  is.correct <- FALSE
   if(is.numeric(e$val)){
     correct.ans <- eval(parse(text=rightside(keyphrase)))
-    epsilon <- 0.01*abs(correct.ans)
-    is.correct <- abs(e$val-correct.ans) <= epsilon
+    results <- expectThat(e$val, 
+                          equals(correct.ans, label=correct.ans), 
+                          label=e$val)
+    if(!results$passed)swirl_out(results$message)
+    return(results$passed)
   }
-  return(is.correct)
+  return(FALSE)
 }
 
 runTest.range <- function(keyphrase,e){
-  is.correct <- FALSE
   correct.ans <-parse(text=rightside(keyphrase))
   if (is.numeric(e$val)){
      correct.ans <- as.character(correct.ans)
      temp <- str_split(correct.ans,"-")
      temp <- as.numeric(unlist(str_split(correct.ans,"-")))
-     # use is.logical in case the user types a non-digit which converts to NA's
-     is.correct <- (e$val >= temp[1] && e$val <= temp[2])
+     results <- expectThat(e$val,
+                           in_range(temp, label=temp), label=e$val)
+     if(!results$passed)swirl_out(results$message)
+     return(results$passed)
   }
-  return(is.correct)
+  return(FALSE)
 }
 
 
