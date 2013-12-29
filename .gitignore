@@ -4,3 +4,4 @@
 .RData
 data/saved.RData
 *.html
+^user_data/.+/rda$

@@ -24,6 +24,9 @@
 
 runTest <- function(...)UseMethod("runTest")
 
+#' Always returns FALSE. If the default test in invoked, something is wrong.
+runTest.default <- function(...)return(FALSE)
+
 #' Returns TRUE if e$expr is an assignment 
 #' 
 runTest.assign <- function(keyphrase, e) {
