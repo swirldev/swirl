@@ -102,6 +102,14 @@ waitUser.cmd_question <- function(current.row, e){
 #' instruction should progress. If incorrect, they publish a hint
 #' and return to the previous step.  
 testResponse.default <- function(current.row, e){
+  # If user enters skip(), then increment row number and reset instruction pointer
+  if(identical(e$expr, quote(skip()))) {
+    swirl_out("Skipping question...")
+    e$iptr <- 1
+    e$row <- 1 + e$row
+    return(TRUE)
+  }
+  
   tests <- str_trim(unlist(strsplit(current.row[,"AnswerTests"],";")))
   results <- lapply(tests, function(keyphrase){testMe(keyphrase,e)})
   correct <- !(FALSE %in% results)

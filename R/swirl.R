@@ -31,6 +31,13 @@ bye <- function(){
   invisible()
 }
 
+#' Define skip function so that when user uses `skip()` at prompt, it doesn't
+#' return an error. Actual skip feature implementation occurs in 
+#' testResponse.default().
+skip <- function() {
+  invisible()
+} 
+
 resume <- function(...)UseMethod("resume")
 
 #' Method resume.default implements a finite state (or virtual) machine. 
