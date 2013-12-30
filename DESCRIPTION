@@ -24,3 +24,4 @@ Collate:
   'initSwirl.R'
   'progress.R'
   'utilities.R'
+  'withMenus.R'
