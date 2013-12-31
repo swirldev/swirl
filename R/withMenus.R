@@ -44,22 +44,51 @@ resume.withMenus <- function(e){
 
 menu <- function(e, ...)UseMethod("menu")
 welcome <- function(e, ...)UseMethod("welcome")
+inProgressMenu <- function(e, choices, ...)UseMethod("inProgressMenu")
+restoreUserProgress <- function(e, selection)UseMethod("restoreUserProgress")
 loadModule <- function(e, ...)UseMethod("loadModule")
 
 menu.default <- function(e){
   # Welcome the user if necessary and set up progress tracking
   if(!exists("usr",e,inherits = FALSE)){
-    welcome(e)
+    e$usr <- welcome()
     udat <- file.path(find.package("swirlfancy"), "user_data", e$usr)
     if(!file.exists(udat))dir.create(udat, recursive=TRUE)
     e$udat <- udat
   }
-  if(!exists("mod",e,inherits = FALSE))loadModule(e)
+  # If there is no active module, obtain one.
+  if(!exists("mod",e,inherits = FALSE)){
+    # First, allow user to continue unfinished modules
+    # if there are any
+    pfiles <- inProgress(e)
+    response <- character()
+    if(length(pfiles) > 0){
+      response <- inProgressMenu(pfiles)
+    }
+    if(length(response) > 0 ){
+      # If the user has chosen to continue, restore progress
+      response <- gsub(" ", "_", response)
+      response <- paste0(response,"_.rda")
+      restoreUserProgress(e, response)
+    } else {
+      # Else load a new module
+    }
+  }
 }
 
 #' A stub. Eventually this should be a full welcome menu
-welcome.default <- function(e, ...){
-  e$usr <- "swirladmin"
+welcome.default <- function(...){
+  "swirladmin"
+}
+
+#' A stub. Eventually this should be a full menu
+inProgressMenu.default <- function(e, choices){
+  nada <- "No. Let me start something new."
+  print("Would you like to continue with one of these modules?")
+  selection <- select.list(c(choices, nada))
+  # return an empty character array if the user rejects all choices
+  if(identical(selection, nada))selection <- character()
+  return(selection)
 }
 
 #' Almost the same as initSwirl.default at the moment,
@@ -119,7 +148,7 @@ loadModule.default <- function(e, ...){
     e$path <- modPath
     # the following is from userProgress.R
     # make file path from module info
-    fname <- paste(attr(e$mod,"courseName"), attr(e$mod,"modName"), ".rda", sep="")
+    fname <- progressName(attr(e$mod,"courseName"), attr(e$mod,"modName"))
     # path to file 
     e$progress <- file.path(e$udat, fname)
     # list to hold expressions entered by the user
@@ -127,4 +156,40 @@ loadModule.default <- function(e, ...){
     # create the file
     saveRDS(e, e$progress)
   }
+}
+
+restoreUserProgress.default <- function(e, selection){
+  # restore progress from selected file
+  temp <- readRDS(file.path(e$udat, selection))
+  xfer(temp, e)
+  # eval retrieved user expr's in global env, but don't include
+  # call to swirl (the first entry)
+  if(length(e$usrexpr) > 1){
+    for(n in 2:length(e$usrexpr)){
+      expr <- e$usrexpr[[n]]
+      eval(expr, globalenv())
+    }
+  }
+}
+
+
+# UTILITIES
+
+progressName <- function(courseName, modName){
+  paste(courseName, modName, ".rda", sep="_")
+}
+
+inProgress <- function(e){
+  pfiles <- dir(e$udat)[grep("[.]rda$", dir(e$udat))]
+  pfiles <- gsub("[.]rda", "", pfiles)
+  pfiles <- str_trim(gsub("_", " ", pfiles))
+  return(pfiles)
+}
+
+completed <- function(e){
+  pfiles <- dir(e$udat)[grep("[.]done$", dir(e$udat))]
+  pfiles <- gsub("[.]done", "", pfiles)
+  pfiles <- gsub("[.]rda", "", pfiles)
+  pfiles <- str_trim(gsub("_", " ", pfiles))
+  return(pfiles)
 }
