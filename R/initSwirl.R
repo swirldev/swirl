@@ -59,7 +59,7 @@ initSwirl.default <- function(e){
     e$path <- modPath
     # the following is from userProgress.R
     # make file path from module info
-    fname <- paste(attr(e$mod,"courseName"), attr(e$mod,"modName"), ".rda", sep="")
+    fname <- paste(attr(e$mod,"courseName"), attr(e$mod,"modName"), ".rda", sep="_")
     # path to file 
     e$progress <- file.path(udat, fname)
     # list to hold expressions entered by the user
