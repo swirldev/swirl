@@ -1,12 +1,12 @@
-#' Resume method which accommodates menus. To test, use swirl("withMenus").
+#' Resume method which accommodates customized menus. To test, use swirl("dev").
 #' REMARKS:
-#' -a work in progress
-#' -allows continuation after completion of a module unlike resume.default.
-#' -should eventually replace resume.default
-#' -should eventually decouple presentation of menus from 
-#'  internal technicalities
+#' -allows continuation after completion of a module,
+#' -should replace resume.default soon,
+#' -decouples presentation of menus from internal technicalities,
+#' -accommodates different course locations and formats, currently just csv
+#' files in the project directory.
 
-resume.withMenus <- function(e){
+resume.dev <- function(e){
   # We may be entering for the first time, in which case our environment
   # will not be fully initialized. Method menu checks for this
   menu(e)
@@ -45,6 +45,9 @@ resume.withMenus <- function(e){
 menu <- function(e, ...)UseMethod("menu")
 welcome <- function(e, ...)UseMethod("welcome")
 inProgressMenu <- function(e, choices, ...)UseMethod("inProgressMenu")
+courseMenu <- function(e, courses)UseMethod("courseMenu")
+courseDir <- function(e)UseMethod("courseDir")
+moduleMenu <- function(e, choices)UseMethod("moduleMenu")
 restoreUserProgress <- function(e, selection)UseMethod("restoreUserProgress")
 loadModule <- function(e, ...)UseMethod("loadModule")
 
@@ -71,7 +74,42 @@ menu.default <- function(e){
       response <- paste0(response,"_.rda")
       restoreUserProgress(e, response)
     } else {
-      # Else load a new module
+      # Else load a new module.
+      # Let user choose the course.
+      coursesU <- dir(courseDir(e))
+      # path cosmetics
+      coursesR <- gsub("_", " ", coursesU)
+      course <- courseMenu(e, coursesR)
+      # reverse path cosmetics
+      courseU <- coursesU[course == coursesR]
+      modules <- dir(file.path(courseDir(e), courseU))
+      # Let user choose the module.
+      module <- moduleMenu(e, modules)
+      # Load the module and intialize everything
+      e$mod <- loadModule(e, courseU, module)
+      # expr, val, ok, and vis should have been set by the callback.
+      # The module's current row
+      e$row <- 1
+      # The current row's instruction pointer
+      e$iptr <- 1
+      # A flag indicating we should return to the prompt
+      e$prompt <- FALSE
+      # The job of loading instructions for this "virtual machine"
+      # is relegated to an S3 method to allow for different "programs."
+      e$instr <- list(present, waitUser, testResponse.default)
+      # An identifier for the active row
+      e$current.row <- NULL
+      # For sourcing files which construct figures etc
+      e$path <- file.path(courseDir(e), courseU, module)
+      # Set up paths and files to save user progress
+      # Make file path from module info
+      fname <- progressName(attr(e$mod,"courseName"), attr(e$mod,"modName"))
+      # path to file 
+      e$progress <- file.path(e$udat, fname)
+      # list to hold expressions entered by the user
+      e$usrexpr <- list()
+      # create the file
+      saveRDS(e, e$progress)
     }
   }
 }
@@ -91,10 +129,38 @@ inProgressMenu.default <- function(e, choices){
   return(selection)
 }
 
+#' A stub. Eventually this should be a full menu
+courseMenu.default <- function(e, choices){
+  swirl_out("Please choose a course.")
+  return(select.list(choices))
+}
+
+#' A stub. Eventually this should be a full menu
+moduleMenu.default <- function(e, choices){
+  swirl_out("Please choose a module.")
+  return(select.list(choices))
+}
+
+loadModule.default <- function(e, courseU, module){
+  # Load the content file
+  modPath <- file.path(courseDir(e), courseU, module)
+  len <- str_length(module)
+  shortname <- paste0(substr(module,1,3),substr(module,len,len),"_new.csv",collapse=NULL)
+  dataName <- file.path(modPath,shortname)     
+  #initialize course module, assigning module-specific variables
+  initFile <- file.path(modPath,"initModule.R")
+  if (file.exists(initFile)){
+    source(initFile)
+  }
+  # Return the course module, using Nick's constructor which 
+  # adds attributes identifying the course and indicating dependencies.
+  return(module(read.csv(dataName, as.is=TRUE),module, courseU, "Nick"))
+}
+
 #' Almost the same as initSwirl.default at the moment,
 #' eventually to be broken up into smaller units separating
 #' presentation of menus from internal technicalities.
-loadModule.default <- function(e, ...){
+loadModule.depr <- function(e, ...){
   # Check for the existence of progress files
   pfiles <- dir(e$udat)[grep("[.]rda$", dir(e$udat))]
   # Would the user care to continue with any of these?
@@ -192,4 +258,9 @@ completed <- function(e){
   pfiles <- gsub("[.]rda", "", pfiles)
   pfiles <- str_trim(gsub("_", " ", pfiles))
   return(pfiles)
+}
+
+courseDir.default <- function(e){
+  # e's only role is to determine the method used
+  file.path("data", "Courses")
 }
