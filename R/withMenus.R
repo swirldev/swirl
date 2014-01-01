@@ -66,7 +66,7 @@ menu.default <- function(e){
     pfiles <- inProgress(e)
     response <- character()
     if(length(pfiles) > 0){
-      response <- inProgressMenu(pfiles)
+      response <- inProgressMenu(e, pfiles)
     }
     if(length(response) > 0 ){
       # If the user has chosen to continue, restore progress
@@ -155,73 +155,6 @@ loadModule.default <- function(e, courseU, module){
   # Return the course module, using Nick's constructor which 
   # adds attributes identifying the course and indicating dependencies.
   return(module(read.csv(dataName, as.is=TRUE),module, courseU, "Nick"))
-}
-
-#' Almost the same as initSwirl.default at the moment,
-#' eventually to be broken up into smaller units separating
-#' presentation of menus from internal technicalities.
-loadModule.depr <- function(e, ...){
-  # Check for the existence of progress files
-  pfiles <- dir(e$udat)[grep("[.]rda$", dir(e$udat))]
-  # Would the user care to continue with any of these?
-  selection <- "No thanks"
-  if(length(pfiles) > 0){
-    swirl_out("Would you like to continue with one of these modules?")
-    selection <- select.list(c(pfiles, selection))
-  }
-  if(selection != "No thanks"){
-    # continue with a previous module
-    # restore progress from selected file
-    temp <- readRDS(file.path(e$udat, selection))
-    xfer(temp, e)
-    # eval retrieved user expr's in global env, but don't include hi
-    if(length(e$usrexpr) > 1){
-      for(n in 2:length(e$usrexpr)){
-        expr <- e$usrexpr[[n]]
-        eval(expr, globalenv())
-      }
-    }
-  } else {   
-    # begin a new module
-    #todo this code will change when rda files become available
-    modPath <- getModPath()
-    base <- basename(modPath)
-    len <- str_length(base)
-    courseName <- basename(dirname(modPath))
-    shortname <- paste0(substr(base,1,3),substr(base,len,len),"_new.csv",collapse=NULL)
-    dataName <- paste(modPath,shortname,sep="/")
-    
-    #initialize course module, assigning module-specific variables
-    initFile <- paste(modPath,"initModule.R",sep="/")
-    if (file.exists(initFile)){
-      source(initFile)
-    }
-    # Load the course module, using Nick's constructor which 
-    # adds attributes identifying the course and indicating dependencies.
-    e$mod <- module(read.csv(dataName, as.is=TRUE),base, courseName, "Nick")
-    # expr, val, ok, and vis should have been set by the callback.
-    # The module's current row
-    e$row <- 1
-    # The current row's instruction pointer
-    e$iptr <- 1
-    # A flag indicating we should return to the prompt
-    e$prompt <- FALSE
-    # The job of loading instructions for this "virtual machine"
-    # is relegated to an S3 method to allow for different "programs."
-    e$instr <- list(present, waitUser, testResponse.default)
-    # An identifier for the active row
-    e$current.row <- NULL
-    e$path <- modPath
-    # the following is from userProgress.R
-    # make file path from module info
-    fname <- progressName(attr(e$mod,"courseName"), attr(e$mod,"modName"))
-    # path to file 
-    e$progress <- file.path(e$udat, fname)
-    # list to hold expressions entered by the user
-    e$usrexpr <- list()
-    # create the file
-    saveRDS(e, e$progress)
-  }
 }
 
 restoreUserProgress.default <- function(e, selection){
