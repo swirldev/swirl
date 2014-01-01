@@ -163,6 +163,98 @@ runTest.trick <- function(keyphrase,e){
  } 
 }
 
+## TESTS AND KEYPHRASES BASED ON PACKAGE EXPECTTHAT
+
+#' Returns TRUE if e$expr is of the given class
+#' keyphrase: is_a=class,variable
+runTest.is_a <- function(keyphrase, e) {
+  temp <- strsplit(rightside(keyphrase),",")[[1]]
+  class <-  str_trim(temp[1])
+  variable <- str_trim(temp[2])
+  label <- deparse(get(variable,e))
+  results <- expectThat(get(variable, e), is_a(class), label=label)
+  if(!results$passed)swirl_out(results$message)
+  return(results$passed)
+}
+
+#' Returns TRUE if the function to the right of = in the keyphrase has
+#' been used in e$expr
+#' keyphrase: uses_func=functionName
+runTest.uses_func <- function(keyphrase, e) {
+  func <- rightside(keyphrase)
+  results <- expectThat(e$expr,
+                        uses_func(func, label=func), 
+                        label=deparse(e$expr))
+  if(!results$passed)swirl_out(results$message)
+  return(results$passed)
+}
+
+#' Returns TRUE if as.character(e$val) matches the string to the right
+#' of "=" in keyphase
+#' keyphrase: matches=regularExpresion
+runTest.matches <- function(keyphrase, e) {
+  correctVal <- tolower(str_trim(rightside(keyphrase)))
+  userVal <- str_trim(as.character(e$val))
+  results <- expectThat(tolower(userVal), 
+                        matches(correctVal), 
+                        label=userVal)
+  if(!results$passed)swirl_out(results$message)
+  return(results$passed)
+}
+
+#' Tests if the user has just created one new variable (of correct name
+#' if given.) If so, returns TRUE.
+#' keyphrase: creates_var or creates_var=correctName
+runTest.creates_var <- function(keyphrase, e){
+  correctName <- rightside(keyphrase)
+  if(is.na(correctName)){
+    results <- expectThat(e$expr, creates_var(), label=deparse(e$expr))
+  } else {
+    results <- expectThat(e$expr, 
+                          creates_var(correctName, label=correctName), 
+                          label=deparse(e$expr))
+  }
+  if(results$passed){
+    e$newVar <- e$val
+  } else {
+    swirl_out(results$message)
+  }
+  return(results$passed)
+}
+
+#' Tests the result of a computation such as mean(newVar) applied
+#' to a specific variable created in a previous question.
+#' keyphrase: equals=correctExpression,variable 
+runTest.equals <- function(keyphrase, e){
+  temp <- strsplit(rightside(keyphrase),",")[[1]]
+  correctExprLabel <- temp[1]
+  variable <- str_trim(temp[2])
+  correctExpr <- gsub(variable, paste0("e$",variable), correctExprLabel)
+  results <- expectThat(e$var, 
+                        equals(eval(parse(text=correctExpr)), 
+                               label=correctExprLabel), 
+                        label=deparse(e$expr))
+  if(!results$passed)swirl_out(results$message)
+  return(results$passed)
+}
+
+#' Tests that a value just entered at the R prompt is within
+#' the given range
+#' keyphrase: in_range=a,b
+runTest.in_range <- function(keyphrase, e){
+  range <- try(eval(parse(text=paste0("c(", rightside(keyphrase), ")"))),
+               silent=TRUE)
+  if(!is.numeric(range)){
+    swirl_out(paste("The given range", rightside(keyphrase), "is not numeric."))
+    return(FALSE)
+  }
+  results <- expectThat(e$var, 
+                        in_range(range, 
+                                 label=range), 
+                        label=e$var)
+  if(!results$passed)swirl_out(results$message)
+  return(results$passed)
+}
 
 
 ### HELPER FUNCTIONS
@@ -182,4 +274,67 @@ flatten <- function(expr){
 }
 
 is.leaff <- function(x)!(is.call(x) || is.expression(x))
+
+
+### TESTTHAT FUNCTIONS CUSTOMIZED FOR ANSWERTESTS
+
+findExpr <- function(name, env = parent.frame()){
+  subs <- do.call("substitute", list(as.name(name), env))
+  str_c(deparse(subs, width.cutoff = 500), collapse = "\n")
+}
+
+expectThat <- function(object, condition, info=NULL, label=NULL){
+  if (is.null(label)) {
+    label <- findExpr("object")
+  }
+  results <- condition(object)
+  results$message <- str_c(label, " ", results$message)
+  if (!is.null(info)) {
+    results$message <- str_c(results$message, "\n", info)
+  }
+  return(results)
+}
+
+## CUSTOM EXPECTATIONS FOR ANSWER TESTS 
+
+uses_func <- function(expected, label = NULL, ...){
+  if(is.null(label)){
+    label <- findExpr("expected")
+  }else if (!is.character(label) || length(label) != 1) {
+    label <- deparse(label)
+  }
+  function(expr){
+    uses <- (is.call(expr) || is.expression(expr)) && 
+      expected %in% flatten(expr)
+    expectation(identical(uses, TRUE),
+                str_c("does not use ", label))
+  }
+}
+
+creates_var <- function(expected=NULL, label = NULL){
+  function(expr){
+    eval(expr)
+    newVars <- setdiff(ls(),"expr")
+    creates <- length(newVars) == 1
+    asNamed <- is.null(expected) || identical(expected, newVars[1])
+    message <- str_c("does not create a variable ")
+    if(!is.null(expected)) message <- str_c(message, "named ", expected)
+    expectation(identical(creates&&asNamed, TRUE), message)
+  }
+}
+
+in_range <- function(range, label=NULL){
+  range <- sort(range)
+  function(number){
+    isOK <- is.numeric(number) && 
+      isTRUE(number >= range[1]) && 
+      isTRUE(number <= range[2])
+    expectation(identical(isOK, TRUE), 
+                str_c("is not between ", range[1], " and ", range[2]))
+  }
+}
+
+
+
+
 
