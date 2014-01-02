@@ -18,6 +18,9 @@ initSwirl.default <- function(e){
     # restore progress from selected file
     temp <- readRDS(file.path(udat, selection))
     xfer(temp, e)
+    # source the initModule.R file if it exists (fixes swirlfancy #28)
+    initf <- file.path(e$path, "initModule.R")
+    if(file.exists(initf))source(initf)
     # eval retrieved user expr's in global env, but don't include hi
     if(length(e$usrexpr) > 1){
       for(n in 2:length(e$usrexpr)){
@@ -59,7 +62,7 @@ initSwirl.default <- function(e){
     e$path <- modPath
     # the following is from userProgress.R
     # make file path from module info
-    fname <- paste(attr(e$mod,"courseName"), attr(e$mod,"modName"), ".rda", sep="")
+    fname <- paste(attr(e$mod,"courseName"), attr(e$mod,"modName"), ".rda", sep="_")
     # path to file 
     e$progress <- file.path(udat, fname)
     # list to hold expressions entered by the user
