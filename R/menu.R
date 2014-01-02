@@ -13,7 +13,7 @@ chooseFile <- function(path2Dir) {
 #' Gets desired course and module from user, then returns full path to module.
 getModPath <- function() {
   swirl_out("Please select a course: ")
-  courseDir <- chooseFile(file.path("data", "Courses"))
+  courseDir <- chooseFile(file.path("inst", "Courses"))
   
   swirl_out("Please select a module: ")
   modulePath <- chooseFile(courseDir)

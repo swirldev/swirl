@@ -10,6 +10,7 @@
 
 menu <- function(e, ...)UseMethod("menu")
 welcome <- function(e, ...)UseMethod("welcome")
+housekeeping <- function(e, ...)UseMethod("housekeeping")
 inProgressMenu <- function(e, choices, ...)UseMethod("inProgressMenu")
 courseMenu <- function(e, courses)UseMethod("courseMenu")
 courseDir <- function(e)UseMethod("courseDir")
@@ -17,13 +18,15 @@ moduleMenu <- function(e, choices)UseMethod("moduleMenu")
 restoreUserProgress <- function(e, selection)UseMethod("restoreUserProgress")
 loadModule <- function(e, ...)UseMethod("loadModule")
 
+
 resume.dev <- function(e){
   # We may be entering for the first time, in which case our environment
   # will not be fully initialized. Method menu checks for this
   menu(e)
   # Execute instructions until a return to the prompt is necessary
   while(!e$prompt){
-    # If the module is complete, return FALSE to remove callback
+    # If the module is complete, save progress, remove the current
+    # module from e, and invoke the top level menu method.
     if(e$row > nrow(e$mod)){
       saveProgress(e)
       # form a new path for the progress file
@@ -52,12 +55,24 @@ resume.dev <- function(e){
   return(TRUE)
 }
 
+#' Default course and module navigation logic
+#' 
+#' This method implements default course and module navigation logic, 
+#' decoupling menu presentation from internal processing of user
+#' selections. It relies on several methods for menu presentation,
+#' namely welcome(e), newUserBlurb(e), inProgressMenu(e, modules),
+#' courseMenu(e, courses), and moduleMenu(e, modules). Defaults are provided.
+#' 
+#' @param e persistent environment accessible to the callback
 menu.default <- function(e){
   # Welcome the user if necessary and set up progress tracking
   if(!exists("usr",e,inherits = FALSE)){
     e$usr <- welcome(e)
     udat <- file.path(find.package("swirlfancy"), "user_data", e$usr)
-    if(!file.exists(udat))dir.create(udat, recursive=TRUE)
+    if(!file.exists(udat)){
+      newUserBlurb(e)
+      dir.create(udat, recursive=TRUE)
+    }
     e$udat <- udat
   }
   # If there is no active module, obtain one.
@@ -115,10 +130,29 @@ menu.default <- function(e){
   }
 }
 
-#' Development version. Default should be a full welcome menu
+#' Development version.
 welcome.dev <- function(e, ...){
   "swirladmin"
 }
+
+#' Default version.
+welcome.default <- function(e, ...){
+  swirl_out("Welcome! My name is Swirl and I'll be your host today! Please sign in. If you've been here before please use the same name as you did then. If you are new, call yourself something unique.")
+  return(readline("What shall I call you? "))
+}
+
+#' Presents preliminary information to a new user
+#' 
+#' @param e persistent environment used here only for its class attribute
+#' 
+housekeeping.default <- function(e){
+  swirl_out("Let's cover a couple of quick housekeeping items before we begin our first lesson. First off, you should know that when you see '...', that means you should press Enter when you are done reading and ready to continue. Also, as you've probably figured out, when you see 'ANSWER:', that means it's your turn to enter a response, then press Enter to continue.")
+  swirl_out("Remember you can stop at any time by pressing the Esc key and typing bye(). Your progress will be saved. Let's get started!")
+  readline("\n...  <-- That's your cue to press Enter to continue")
+}
+
+#' Development version; does nothing
+housekeeping.dev <- function(e){}
 
 #' A stub. Eventually this should be a full menu
 inProgressMenu.default <- function(e, choices){
@@ -200,5 +234,5 @@ completed <- function(e){
 
 courseDir.default <- function(e){
   # e's only role is to determine the method used
-  file.path("data", "Courses")
+  file.path("inst", "Courses")
 }
