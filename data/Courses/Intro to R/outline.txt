@@ -33,7 +33,6 @@
 	- vectors with a dimension attribute
 	- constructed column-wise
 	- construct from vector by adding dim attribute
-	- rbind()/cbind()
 - lists
 	- can contain multiple data types
 	- very important in R
