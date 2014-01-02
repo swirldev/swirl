@@ -18,6 +18,9 @@ initSwirl.default <- function(e){
     # restore progress from selected file
     temp <- readRDS(file.path(udat, selection))
     xfer(temp, e)
+    # source the initModule.R file if it exists (fixes swirlfancy #28)
+    initf <- file.path(e$path, "initModule.R")
+    if(file.exists(initf))source(initf)
     # eval retrieved user expr's in global env, but don't include hi
     if(length(e$usrexpr) > 1){
       for(n in 2:length(e$usrexpr)){

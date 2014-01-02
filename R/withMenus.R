@@ -6,6 +6,17 @@
 #' -accommodates different course locations and formats, currently just csv
 #' files in the project directory.
 
+## Method declarations
+
+menu <- function(e, ...)UseMethod("menu")
+welcome <- function(e, ...)UseMethod("welcome")
+inProgressMenu <- function(e, choices, ...)UseMethod("inProgressMenu")
+courseMenu <- function(e, courses)UseMethod("courseMenu")
+courseDir <- function(e)UseMethod("courseDir")
+moduleMenu <- function(e, choices)UseMethod("moduleMenu")
+restoreUserProgress <- function(e, selection)UseMethod("restoreUserProgress")
+loadModule <- function(e, ...)UseMethod("loadModule")
+
 resume.dev <- function(e){
   # We may be entering for the first time, in which case our environment
   # will not be fully initialized. Method menu checks for this
@@ -41,20 +52,10 @@ resume.dev <- function(e){
   return(TRUE)
 }
 
-
-menu <- function(e, ...)UseMethod("menu")
-welcome <- function(e, ...)UseMethod("welcome")
-inProgressMenu <- function(e, choices, ...)UseMethod("inProgressMenu")
-courseMenu <- function(e, courses)UseMethod("courseMenu")
-courseDir <- function(e)UseMethod("courseDir")
-moduleMenu <- function(e, choices)UseMethod("moduleMenu")
-restoreUserProgress <- function(e, selection)UseMethod("restoreUserProgress")
-loadModule <- function(e, ...)UseMethod("loadModule")
-
 menu.default <- function(e){
   # Welcome the user if necessary and set up progress tracking
   if(!exists("usr",e,inherits = FALSE)){
-    e$usr <- welcome()
+    e$usr <- welcome(e)
     udat <- file.path(find.package("swirlfancy"), "user_data", e$usr)
     if(!file.exists(udat))dir.create(udat, recursive=TRUE)
     e$udat <- udat
@@ -114,8 +115,8 @@ menu.default <- function(e){
   }
 }
 
-#' A stub. Eventually this should be a full welcome menu
-welcome.default <- function(...){
+#' Development version. Default should be a full welcome menu
+welcome.dev <- function(e, ...){
   "swirladmin"
 }
 
@@ -158,9 +159,13 @@ loadModule.default <- function(e, courseU, module){
 }
 
 restoreUserProgress.default <- function(e, selection){
-  # restore progress from selected file
+  # read the progress file
   temp <- readRDS(file.path(e$udat, selection))
+  # transfer its contents to e
   xfer(temp, e)
+  # source the initModule.R file if it exists (fixes swirlfancy #28)
+  initf <- file.path(e$path, "initModule.R")
+  if(file.exists(initf))source(initf)
   # eval retrieved user expr's in global env, but don't include
   # call to swirl (the first entry)
   if(length(e$usrexpr) > 1){
