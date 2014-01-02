@@ -10,7 +10,8 @@ Depends:
   R (>= 2.14),
   stringr,
   plotrix,
-  pwr
+  pwr,
+  testthat
 Description: swirl is an interactive platform for teaching and learning
     statistics and the R programming language.
 URL: http://swirlstats.com
