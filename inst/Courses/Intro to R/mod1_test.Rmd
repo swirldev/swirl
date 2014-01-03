@@ -64,19 +64,51 @@ y
 
 ---
 
-In the examples above, we know the numbers 3, 5, and 7 to be integers, but R sees them differently.
+So the value of `y` is `3`, which we recognize as an integer. However, R views `3` differently. To see this, type `typeof(y)`.
+
+```{r}
+typeof(y)
+```
 
 ---
 
-If you want to use integers in R, you must specify the `L` suffix. Otherwise, R will treat numeric values as real (decimal) numbers. (Ex: `3L` is an integer; `3` is a real number). Let's explore this theme some more by looking the most fundamental data types in R.
+The `typeof()` function tells us the data type of the object given to it. In this case, R recognizes `3` as being of type "double", which just means a real (decimal) number.
 
 ---
 
-First, it's useful to distinguish data structures from data types. You can think of data structures as containers that hold data. Data types describe fundamental properties of that data.
+If you want to use integers in R, you must specify the `L` suffix. Otherwise, R will generally treat numeric values as real numbers.
 
 ---
 
-The most basic data structure in R is a vector. Vectors are just collections of objects. Even single numbers are considered vectors of length 1.
+Suppose we really wanted `y` to store the integer `3L` and not the real number `3`. We can correct our mistake by assigning `3L` to `y`, essentially "overwriting" the old value. Do this now.
+
+```{r}
+y <- 3L
+```
+
+---
+
+Let's check the type of `y` again with `typeof(y)` to make sure we got it right this time.
+
+```{r}
+typeof(y)
+```
+
+---
+
+
+
+
+
+
+
+---
+
+First, it's useful to distinguish data structures from data types. Data structures are like containers that hold data. Data types describe fundamental properties of that data.
+
+---
+
+The most basic data structure in R is the vector. Vectors are just collections of objects. Even single numbers are considered vectors of length 1.
 
 ---
 
@@ -84,7 +116,7 @@ There are two different flavors of vectors in R: atomic vectors and lists. The d
 
 ---
 
-Let's take a closer look at atomic vectors, since they are so fundamental to everything else in R.
+For now, we'll stick with atomic vectors, since they are so fundamental to everything else in R.
 
 ---
 
