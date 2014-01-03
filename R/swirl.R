@@ -40,7 +40,7 @@ resume <- function(...)UseMethod("resume")
 #' depend on the class of the active row of the course module. The 
 #' instruction set is thus extensible. It can be found in R/instructionSet.R. 
 #' 
-resume.default <- function(e){
+resume.depr <- function(e){
   # This function is entered ONLY when the user has entered a
   # valid expression at the R prompt.
   #

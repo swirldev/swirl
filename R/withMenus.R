@@ -19,7 +19,7 @@ restoreUserProgress <- function(e, selection)UseMethod("restoreUserProgress")
 loadModule <- function(e, ...)UseMethod("loadModule")
 
 
-resume.dev <- function(e){
+resume.default <- function(e){
   # We may be entering for the first time, in which case our environment
   # will not be fully initialized. Method menu checks for this
   menu(e)
@@ -70,7 +70,7 @@ menu.default <- function(e){
     e$usr <- welcome(e)
     udat <- file.path(find.package("swirlfancy"), "user_data", e$usr)
     if(!file.exists(udat)){
-      newUserBlurb(e)
+      housekeeping(e)
       dir.create(udat, recursive=TRUE)
     }
     e$udat <- udat
@@ -146,8 +146,7 @@ welcome.default <- function(e, ...){
 #' @param e persistent environment used here only for its class attribute
 #' 
 housekeeping.default <- function(e){
-  swirl_out("Let's cover a couple of quick housekeeping items before we begin our first lesson. First off, you should know that when you see '...', that means you should press Enter when you are done reading and ready to continue. Also, as you've probably figured out, when you see 'ANSWER:', that means it's your turn to enter a response, then press Enter to continue.")
-  swirl_out("Remember you can stop at any time by pressing the Esc key and typing bye(). Your progress will be saved. Let's get started!")
+  swirl_out("Let's cover a couple of quick housekeeping items before we begin our first lesson. \n\nFirst off, you should know that when you see '...', that means you should press Enter when you are done reading and ready to continue. Also, as you've probably figured out, when you see 'ANSWER:', that means it's your turn to enter a response, then press Enter to continue.\n\nRemember you can stop at any time by pressing the Esc key and typing bye(). Your progress will be saved. Let's get started!")
   readline("\n...  <-- That's your cue to press Enter to continue")
 }
 
@@ -157,7 +156,7 @@ housekeeping.dev <- function(e){}
 #' A stub. Eventually this should be a full menu
 inProgressMenu.default <- function(e, choices){
   nada <- "No. Let me start something new."
-  print("Would you like to continue with one of these modules?")
+  swirl_out("Would you like to continue with one of these modules?")
   selection <- select.list(c(choices, nada))
   # return an empty character array if the user rejects all choices
   if(identical(selection, nada))selection <- character()
