@@ -50,12 +50,16 @@ menu.default <- function(e){
       coursesU <- dir(courseDir(e))
       # path cosmetics
       coursesR <- gsub("_", " ", coursesU)
-      course <- courseMenu(e, coursesR)
-      # reverse path cosmetics
-      courseU <- coursesU[course == coursesR]
-      modules <- dir(file.path(courseDir(e), courseU), pattern="module")
-      # Let user choose the module.
-      module <- moduleMenu(e, modules)
+      module <- ""
+      while(module == ""){
+        course <- courseMenu(e, coursesR)
+        if(course=="")return(FALSE)
+        # reverse path cosmetics
+        courseU <- coursesU[course == coursesR]
+        modules <- dir(file.path(courseDir(e), courseU), pattern="module")
+        # Let user choose the module.
+        module <- moduleMenu(e, modules)
+      }
       # Load the module and intialize everything
       e$mod <- loadModule(e, courseU, module)
       # expr, val, ok, and vis should have been set by the callback.
@@ -83,6 +87,7 @@ menu.default <- function(e){
       saveRDS(e, e$progress)
     }
   }
+  return(TRUE)
 }
 
 #' Development version.
@@ -120,13 +125,13 @@ inProgressMenu.default <- function(e, choices){
 
 #' A stub. Eventually this should be a full menu
 courseMenu.default <- function(e, choices){
-  swirl_out("Please choose a course.")
+  swirl_out("Please choose a course, or type 0 to exit.")
   return(select.list(choices))
 }
 
 #' A stub. Eventually this should be a full menu
 moduleMenu.default <- function(e, choices){
-  swirl_out("Please choose a module.")
+  swirl_out("Please choose a module, or type 0 to return to course menu.")
   return(select.list(choices))
 }
 

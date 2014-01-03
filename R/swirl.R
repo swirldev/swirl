@@ -43,7 +43,8 @@ resume <- function(...)UseMethod("resume")
 resume.default <- function(e){
   # We may be entering for the first time, in which case our environment
   # will not be fully initialized. Method menu checks for this
-  menu(e)
+  temp <- menu(e)
+  if(is.logical(temp) && !isTRUE(temp))return(FALSE)
   # Execute instructions until a return to the prompt is necessary
   while(!e$prompt){
     # If the module is complete, save progress, remove the current
@@ -59,7 +60,8 @@ resume.default <- function(e){
       # rename the progress file to indicate completion
       if(!file.exists(new_path))file.rename(e$progress, new_path)
       rm(mod, envir=e)
-      menu(e)
+      temp <- menu(e)
+      if(is.logical(temp) && !isTRUE(temp))return(FALSE)
     }
     # If we are ready for a new row, prepare it
     if(e$iptr == 1){
