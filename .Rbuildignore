@@ -1,4 +1,2 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^data/Courses/.+/.+/csv$
-^user_data/.+/rda$
