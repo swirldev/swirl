@@ -133,6 +133,31 @@ runTest.range <- function(keyphrase,e){
   return(is.correct)
 }
 
+runTest.newcmd <- function(keyphrase,e){
+  correct.expr <- parse(text=rightside(keyphrase))[[1]]
+  correct.ans  <- eval(correct.expr)
+  ansResults <- expectThat(e$val,
+                               equals(correct.ans,label=correct.ans),
+                               label=e$val)
+  callResults <- expectThat(as.expression(e$expr)[[1]],
+                                is_identical_to(correct.expr,label=deparse(correct.expr)),
+                                label=deparse(e$expr))
+    
+ #   identical(as.expression(e$expr)[[1]], as.expression(correct.expr)[[1]])
+  if(ansResults$passed && callResults$passed){
+    return(TRUE)
+  } else  
+    if (ansResults$passed && !callResults$passed){
+      swirl_out("That's not the expression I expected but it works.")
+      swirl_out(callResults$message)
+      #todo
+      #following line is temporary fix to create correct vars for future ques if needed
+      eval(correct.expr,globalenv())
+      return(TRUE)
+    }
+  else
+    return(FALSE)
+}
 
 runTest.swirl1cmd <- function(keyphrase,e){
   correct.expr <- parse(text=rightside(keyphrase))
@@ -205,6 +230,20 @@ runTest.matches <- function(keyphrase, e) {
   return(results$passed)
 }
 
+#' Returns TRUE if as.expression
+#' (e$expr) matches the expression indicated to the right
+#' of "=" in keyphrase
+#' keyphrase:equivalent=expression
+runTest.equivalent <- function(keyphrase,e) {
+  correctExpr <- parse(text=rightside(keyphrase))
+  userExpr <- as.expression(e$expr)
+  results <- expectThat(userExpr,
+                        is_equivalent_to(correctExpr,deparse(correctExpr)),
+                        label=deparse(userExpr))
+                        
+  if(!results$passed)swirl_out(results$message)
+  return(results$passed)
+}
 #' Tests if the user has just created one new variable (of correct name
 #' if given.) If so, returns TRUE.
 #' keyphrase: creates_var or creates_var=correctName
