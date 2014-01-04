@@ -57,9 +57,11 @@ resume.default <- function(e){
     e$iptr <- 1
   }
   if(uses_func("skip")(e$expr)[[1]]){
-    # Stub
-    swirl_out("skip() does nothing just yet.")
-    return(TRUE)
+    correctAns <- e$current.row[,"CorrectAnswer"]
+    e$expr <- parse(text=correctAns)[[1]]
+    e$val <- eval(e$expr)
+    eval(e$expr, globalenv())
+    swirl_out(paste("I've entered the correct answer", correctAns,"for you."))
   }
   if(uses_func("play")(e$expr)[[1]]){
     e$playing <- TRUE
