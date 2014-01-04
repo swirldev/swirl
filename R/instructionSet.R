@@ -1,5 +1,4 @@
-#' Instruction set for swirl.R's "virtual machine".
-#' 
+#' Instruction set for swirl.R's "virtual machine". 
 
 #' All classes first Output, all in the same way, hence one method
 #' suffices.
@@ -100,7 +99,9 @@ waitUser.cmd_question <- function(current.row, e){
 #' Only the question classes enter a testing loop. Testing is the
 #' same in both cases. If the response is correct they indicate
 #' instruction should progress. If incorrect, they publish a hint
-#' and return to the previous step.  
+#' and return to the previous step. 
+testResponse <- function(current.row, e)UseMethod("testResponse")
+
 testResponse.default <- function(current.row, e){
   tests <- current.row[,"AnswerTests"]
   if(is.na(tests) || tests == ""){

@@ -9,6 +9,7 @@ courseDir <- function(e)UseMethod("courseDir")
 moduleMenu <- function(e, choices)UseMethod("moduleMenu")
 restoreUserProgress <- function(e, selection)UseMethod("restoreUserProgress")
 loadModule <- function(e, ...)UseMethod("loadModule")
+loadInstructions <- function(e, ...)UseMethod("loadInstructions")
 
 #' Default course and module navigation logic
 #' 
@@ -16,7 +17,8 @@ loadModule <- function(e, ...)UseMethod("loadModule")
 #' decoupling menu presentation from internal processing of user
 #' selections. It relies on several methods for menu presentation,
 #' namely welcome(e), housekeeping(e), inProgressMenu(e, modules),
-#' courseMenu(e, courses), and moduleMenu(e, modules). Defaults are provided.
+#' courseMenu(e, courses), and moduleMenu(e, modules). Defaults 
+#' are provided.
 #' 
 #' @param e persistent environment accessible to the callback
 menu.default <- function(e){
@@ -71,7 +73,7 @@ menu.default <- function(e){
       e$prompt <- FALSE
       # The job of loading instructions for this "virtual machine"
       # is relegated to an S3 method to allow for different "programs."
-      e$instr <- list(present, waitUser, testResponse.default)
+      loadInstructions(e)
       # An identifier for the active row
       e$current.row <- NULL
       # For sourcing files which construct figures etc
@@ -172,6 +174,10 @@ restoreUserProgress.default <- function(e, selection){
       eval(expr, globalenv())
     }
   }
+}
+
+loadInstructions.default <- function(e){
+  e$instr <- list(present, waitUser, testResponse)
 }
 
 

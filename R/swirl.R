@@ -33,7 +33,7 @@ bye <- function(){
 
 resume <- function(...)UseMethod("resume")
 
-#' Default method resume.depr implements a finite state (or virtual) machine. 
+#' Default method resume implements a finite state (or virtual) machine. 
 #' It runs a fixed "program" consisting of three "instructions" which in 
 #' turn present information, capture a user's response, and test and retry 
 #' if necessary. The three instructions are themselves S3 methods which 
@@ -41,9 +41,9 @@ resume <- function(...)UseMethod("resume")
 #' instruction set is thus extensible. It can be found in R/instructionSet.R. 
 #' 
 resume.default <- function(e){
-  # We may be entering for the first time, in which case our environment
-  # will not be fully initialized. Method menu checks for this
+  # Method menu initializes or reinitializes e if necessary.
   temp <- menu(e)
+  # If menu returns FALSE, the user wants to exit.
   if(is.logical(temp) && !isTRUE(temp))return(FALSE)
   # Execute instructions until a return to the prompt is necessary
   while(!e$prompt){
@@ -60,7 +60,9 @@ resume.default <- function(e){
       # rename the progress file to indicate completion
       if(!file.exists(new_path))file.rename(e$progress, new_path)
       rm(mod, envir=e)
+      # let the user select another course module
       temp <- menu(e)
+      # if menu returns FALSE, user wants to quit.
       if(is.logical(temp) && !isTRUE(temp))return(FALSE)
     }
     # If we are ready for a new row, prepare it

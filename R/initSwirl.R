@@ -74,8 +74,3 @@ initSwirl.default <- function(e){
   }
 }
 
-loadInstructions <- function(e, ...)UseMethod("loadInstructions")
-
-loadInstructions.default <- function(e){
-  e$instr <- list(present, waitUser, testResponse)
-}
