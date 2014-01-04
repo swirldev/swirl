@@ -125,7 +125,7 @@ inProgressMenu.default <- function(e, choices){
 
 #' A stub. Eventually this should be a full menu
 courseMenu.default <- function(e, choices){
-  swirl_out("Please choose a course, or type 0 to exit.")
+  swirl_out("Please choose a course, or type 0 to exit swirl.")
   return(select.list(choices))
 }
 
@@ -146,9 +146,14 @@ loadModule.default <- function(e, courseU, module){
   if (file.exists(initFile)){
     source(initFile)
   }
+  instructor <- courseU # default
+  instructorFile <- file.path(modPath,"instructor.txt")
+  if(file.exists(instructorFile)){
+    instructor <- readLines(instructorFile)[1]
+  }
   # Return the course module, using Nick's constructor which 
   # adds attributes identifying the course and indicating dependencies.
-  return(module(read.csv(dataName, as.is=TRUE),module, courseU, "Nick"))
+  return(module(read.csv(dataName, as.is=TRUE),module, courseU, instructor))
 }
 
 restoreUserProgress.default <- function(e, selection){
@@ -192,6 +197,11 @@ completed <- function(e){
 }
 
 courseDir.default <- function(e){
+  # e's only role is to determine the method used
+  file.path(find.package("swirlfancy"), "Courses")
+}
+
+courseDir.dev <- function(e){
   # e's only role is to determine the method used
   file.path("inst", "Courses")
 }
