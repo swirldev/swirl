@@ -1,3 +1,5 @@
+#' DEPRECATED. Used by resume.depr, file swirl.R
+
 initSwirl <- function(e)UseMethod("initSwirl")
 
 initSwirl.default <- function(e){

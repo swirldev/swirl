@@ -50,12 +50,16 @@ menu.default <- function(e){
       coursesU <- dir(courseDir(e))
       # path cosmetics
       coursesR <- gsub("_", " ", coursesU)
-      course <- courseMenu(e, coursesR)
-      # reverse path cosmetics
-      courseU <- coursesU[course == coursesR]
-      modules <- dir(file.path(courseDir(e), courseU), pattern="module")
-      # Let user choose the module.
-      module <- moduleMenu(e, modules)
+      module <- ""
+      while(module == ""){
+        course <- courseMenu(e, coursesR)
+        if(course=="")return(FALSE)
+        # reverse path cosmetics
+        courseU <- coursesU[course == coursesR]
+        modules <- dir(file.path(courseDir(e), courseU), pattern="module")
+        # Let user choose the module.
+        module <- moduleMenu(e, modules)
+      }
       # Load the module and intialize everything
       e$mod <- loadModule(e, courseU, module)
       # expr, val, ok, and vis should have been set by the callback.
@@ -83,6 +87,7 @@ menu.default <- function(e){
       saveRDS(e, e$progress)
     }
   }
+  return(TRUE)
 }
 
 #' Development version.
@@ -120,13 +125,13 @@ inProgressMenu.default <- function(e, choices){
 
 #' A stub. Eventually this should be a full menu
 courseMenu.default <- function(e, choices){
-  swirl_out("Please choose a course.")
+  swirl_out("Please choose a course, or type 0 to exit swirl.")
   return(select.list(choices))
 }
 
 #' A stub. Eventually this should be a full menu
 moduleMenu.default <- function(e, choices){
-  swirl_out("Please choose a module.")
+  swirl_out("Please choose a module, or type 0 to return to course menu.")
   return(select.list(choices))
 }
 
@@ -141,9 +146,14 @@ loadModule.default <- function(e, courseU, module){
   if (file.exists(initFile)){
     source(initFile)
   }
+  instructor <- courseU # default
+  instructorFile <- file.path(modPath,"instructor.txt")
+  if(file.exists(instructorFile)){
+    instructor <- readLines(instructorFile)[1]
+  }
   # Return the course module, using Nick's constructor which 
   # adds attributes identifying the course and indicating dependencies.
-  return(module(read.csv(dataName, as.is=TRUE),module, courseU, "Nick"))
+  return(module(read.csv(dataName, as.is=TRUE),module, courseU, instructor))
 }
 
 restoreUserProgress.default <- function(e, selection){
@@ -187,6 +197,11 @@ completed <- function(e){
 }
 
 courseDir.default <- function(e){
+  # e's only role is to determine the method used
+  file.path(find.package("swirlfancy"), "Courses")
+}
+
+courseDir.dev <- function(e){
   # e's only role is to determine the method used
   file.path("inst", "Courses")
 }
