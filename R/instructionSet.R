@@ -105,7 +105,9 @@ testResponse.default <- function(current.row, e){
   tests <- current.row[,"AnswerTests"]
   if(is.na(tests) || tests == ""){
     results <- is(e, "dev")
-    if(!results)swirl_out("BUG: There are no tests for this question!")
+    if(!results){
+      stop("BUG: There are no tests for this question!")
+    }
   } else {
     tests <- str_trim(unlist(strsplit(temp,";")))
     results <- lapply(tests, function(keyphrase){testMe(keyphrase,e)})
