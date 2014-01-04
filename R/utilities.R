@@ -3,6 +3,7 @@ swirl_out <- function(...) {
                      width = getOption("width") - 2)
   message(str_c("| ", wrapped, collapse = "\n"))
 }
+
 xfer <- function(env1, env2){
   lapply(ls(env1), function(var)getAssign(var, env1, env2))
 }

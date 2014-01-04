@@ -85,6 +85,8 @@ menu.default <- function(e){
       e$progress <- file.path(e$udat, fname)
       # list to hold expressions entered by the user
       e$usrexpr <- list()
+      # indicator that swirl is not reacting to console input
+      e$playing <- FALSE
       # create the file
       saveRDS(e, e$progress)
     }

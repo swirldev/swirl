@@ -26,10 +26,20 @@ swirl <- function(resume.class="default"){
   invisible()
 }
 
+## SPECIAL COMMANDS
+
 bye <- function(){
   removeTaskCallback("mini")
   invisible()
 }
+
+nxt <- function(){invisible()}
+
+skip <- function(){invisible()}
+
+play <- function(){invisible()}
+
+## RESUME
 
 resume <- function(...)UseMethod("resume")
 
@@ -41,6 +51,22 @@ resume <- function(...)UseMethod("resume")
 #' instruction set is thus extensible. It can be found in R/instructionSet.R. 
 #' 
 resume.default <- function(e){
+  # Trap special functions
+  if(uses_func("nxt")(e$expr)[[1]]){
+    e$playing <- FALSE
+    e$iptr <- 1
+  }
+  if(uses_func("skip")(e$expr)[[1]]){
+    # Stub
+    swirl_out("skip() does nothing just yet.")
+    return(TRUE)
+  }
+  if(uses_func("play")(e$expr)[[1]]){
+    e$playing <- TRUE
+  }
+  # If the user is playing, ignore console input,
+  # but remain in operation.
+  if(exists("playing", envir=e, inherits=FALSE) && e$playing)return(TRUE)
   # Method menu initializes or reinitializes e if necessary.
   temp <- menu(e)
   # If menu returns FALSE, the user wants to exit.

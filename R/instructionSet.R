@@ -132,7 +132,3 @@ testMe <- function(keyphrase, e){
                                 strsplit(keyphrase, "=")[[1]][1])
   return(runTest(keyphrase, e))
 }
-
-
-#' The video class requires a nxt() function.
-nxt <- function(){invisible()}
