@@ -109,7 +109,7 @@ testResponse.default <- function(current.row, e){
       stop("BUG: There are no tests for this question!")
     }
   } else {
-    tests <- str_trim(unlist(strsplit(temp,";")))
+    tests <- str_trim(unlist(strsplit(tests,";")))
     results <- lapply(tests, function(keyphrase){testMe(keyphrase,e)})
   }
   correct <- !(FALSE %in% results)
