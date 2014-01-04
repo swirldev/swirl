@@ -102,8 +102,14 @@ waitUser.cmd_question <- function(current.row, e){
 #' instruction should progress. If incorrect, they publish a hint
 #' and return to the previous step.  
 testResponse.default <- function(current.row, e){
-  tests <- str_trim(unlist(strsplit(current.row[,"AnswerTests"],";")))
-  results <- lapply(tests, function(keyphrase){testMe(keyphrase,e)})
+  tests <- current.row[,"AnswerTests"]
+  if(is.na(tests) || tests == ""){
+    results <- is(e, "dev")
+    if(!results)swirl_out("BUG: There are no tests for this question!")
+  } else {
+    tests <- str_trim(unlist(strsplit(temp,";")))
+    results <- lapply(tests, function(keyphrase){testMe(keyphrase,e)})
+  }
   correct <- !(FALSE %in% results)
   if(correct){
     swirl_out(praise())
