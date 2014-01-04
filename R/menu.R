@@ -35,11 +35,11 @@ menu.default <- function(e){
     # First, allow user to continue unfinished modules
     # if there are any
     pfiles <- inProgress(e)
-    response <- character()
+    response <- ""
     if(length(pfiles) > 0){
       response <- inProgressMenu(e, pfiles)
     }
-    if(length(response) > 0 ){
+    if(response != "" ){
       # If the user has chosen to continue, restore progress
       response <- gsub(" ", "_", response)
       response <- paste0(response,"_.rda")
@@ -118,8 +118,8 @@ inProgressMenu.default <- function(e, choices){
   nada <- "No. Let me start something new."
   swirl_out("Would you like to continue with one of these modules?")
   selection <- select.list(c(choices, nada))
-  # return an empty character array if the user rejects all choices
-  if(identical(selection, nada))selection <- character()
+  # return a blank if the user rejects all choices
+  if(identical(selection, nada))selection <- ""
   return(selection)
 }
 
