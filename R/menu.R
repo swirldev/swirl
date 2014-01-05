@@ -121,7 +121,7 @@ housekeeping.default <- function(e){
   select.list(c("Continue.", "Proceed.", "Let's get going!"),
               title="Select 1, 2, or 3 and press Enter", graphics=FALSE)
   swirl_out()
-  swirl_out("Remember, you can return to the R console at any time by pressing the Esc key. Swirl will not exit, but will remain in operation. When you are in the R console:")
+  swirl_out("You can return to the R console (>) at any time by pressing the Esc key; this doesn't exit so swirl remains in operation.")
   info()
   swirl_out("Let's get started!")
   readline("\n...")
