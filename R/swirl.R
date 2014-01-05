@@ -41,11 +41,17 @@ play <- function(){invisible()}
 
 info <- function(){
   swirl_out()
-  swirl_out("-- If you type play() swirl will ignore what you do...")
+  swirl_out(" When you are in the R console:")
+  swirl_out()
+  swirl_out("-- Typing skip() allows you to skip the current question.")
+  swirl_out()
+  swirl_out("-- Typing play() lets you experiment with R on your own; swirl will ignore what you do...")
   swirl_out("-- UNTIL you type nxt() which will regain swirl's attention.")
-  swirl_out("-- Typing skip() will allow you to skip the current question.")
-  swirl_out("-- Typing info() will display these options again.")  
-  swirl_out("-- Typing bye() will cause swirl to exit. Your progress will be saved.")
+  swirl_out()
+  swirl_out("-- Typing bye() causes swirl to exit. Your progress will be saved.")
+  swirl_out()
+  swirl_out("-- Typing info() displays these options again.")  
+
   swirl_out()
   invisible()
 }
