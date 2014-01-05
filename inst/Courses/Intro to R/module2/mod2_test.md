@@ -1,121 +1,154 @@
 Intro to R - Module 2
 ========================================================
 
-So the value of `y` is `3`, which we recognize as an integer. However, R views `3` differently. To see this, type `typeof(y)`.
+In this module, you'll learn how to create sequences of numbers in R. Then, you'll apply that knowledge to take subsets of vectors.
+
+---
+
+The simplest way to create a sequence of numbers in R is by using the `:` operator. Type `1:20` to see how it works.
 
 
 ```r
-typeof(y)
+1:20
 ```
 
 ```
-## Error: object 'y' not found
+##  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20
 ```
 
 
 ---
 
-The `typeof()` function tells us the data type of the object given to it. In this case, R recognizes `3` as being of type "double", which just means a real (decimal) number.
-
----
-
-If you want to use integers in R, you must specify the `L` suffix. Otherwise, R will generally treat numeric values as real numbers.
-
----
-
-Suppose we really wanted `y` to store the integer `3L` and not the real number `3`. We can correct our mistake by assigning `3L` to `y`, essentially "overwriting" the old value. Do this now.
+That gave us every integer between (and including) 1 and 20. We could also use it to create a sequence of real numbers. For example, try `pi:10`.
 
 
 ```r
-y <- 3L
+pi:10
+```
+
+```
+## [1] 3.142 4.142 5.142 6.142 7.142 8.142 9.142
 ```
 
 
 ---
 
-Let's check the type of `y` again with `typeof(y)` to make sure we got it right this time.
+The result is a vector of real numbers starting with pi (3.142...) and increasing in increments of 1. The upper limit of 10 is never reached, since the next number in our sequence would be greater than 10.
+
+---
+
+What happens if we do this: `15:1`? Give it a try to find out.
 
 
 ```r
-typeof(y)
+15:1
 ```
 
 ```
-## [1] "integer"
+##  [1] 15 14 13 12 11 10  9  8  7  6  5  4  3  2  1
 ```
 
 
 ---
 
-
-
-
-
-
+It counted backwards in increments of 1! It's unlikely we'd want this behavior, but nonetheless it's good to know how it could happen.
 
 ---
 
-First, it's useful to distinguish data structures from data types. Data structures are like containers that hold data. Data types describe fundamental properties of that data.
+Generally, we'll desire more control over a sequence we're creating. The `seq()` function serves this purpose.
 
 ---
 
-The most basic data structure in R is the vector. Vectors are just collections of objects. Even single numbers are considered vectors of length 1.
-
----
-
-There are two different flavors of vectors in R: atomic vectors and lists. The data contained in an atomic vector must all be of the same type, whereas the data contained in a list can be of many different types.
-
----
-
-For now, we'll stick with atomic vectors, since they are so fundamental to everything else in R.
-
----
-
-The easiest way to create an atomic vector in R is with the `c()` function, which stands for "concatenate" or "combine".
-
----
-
-To create a vector containing the real numbers 2, 3, and 4, type `c(2, 3, 4)`. Try it now and store the result in a variable called `z`.
+The most basic use of `seq()` does exactly the same thing as the `:` operator. Try `seq(1, 20)` to see this.
 
 
 ```r
-z <- c(2, 3, 4)
+seq(1, 20)
+```
+
+```
+##  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20
 ```
 
 
----
-
-Since `z` is an atomic vector, all of its elements must be the same data type. In this case, we might expect the data type to be "real" or "decimal". In fact, R has a special name for real numbers: "double" (synonym "numeric").
-
----
-
-The 4 most common types of atomic vectors in R are "character", "double", "integer", and "logical" (TRUE/FALSE).
-
----
-
-If you want to know the type of data stored in an atomic vector, use the `typeof()` function. Try `typeof(z)` to see how R views our numbers 2, 4, 6, and 8.
-
----
-
-So R considers 2, 4, 6, and 8 to be of type "double", which essentially means decimal or real numbers. This is R's default data type for numeric data. If you explicitly want an integer in R, you have to specify the `L` suffix.
-
----
-
-For example, let's create a new vector called intVect that contains the integers 3 and 7. To do this, type `intVect <- c(3L, 7L)`.
-
----
-
-Now, check that intVect is of type integer using the `typeof()` function.
-
----
-
-Create one of each of 4 most common types of atomic vector
+This gives us the same output as `1:20`. However, let's say that instead we want a vector of numbers ranging from 0 to 10, incremented by 0.5. `seq(0, 10, by=0.5)` does just that. Try it out.
 
 
 ```r
-numVect <- c(4, 2.12, 88, 0.3)
-intVect <- c(3L, 7L)
-charVect <- c("Nick", "Carchedi")
-logVect <- c(TRUE, FALSE, TRUE)
+seq(0, 10, by = 0.5)
 ```
+
+```
+##  [1]  0.0  0.5  1.0  1.5  2.0  2.5  3.0  3.5  4.0  4.5  5.0  5.5  6.0  6.5
+## [15]  7.0  7.5  8.0  8.5  9.0  9.5 10.0
+```
+
+
+---
+
+Or maybe we don't care what the increment is and we just want a sequence of 30 numbers between 5 and 10. `seq(5, 10, length=30)` does the trick. Give it shot now and store the result in a new variable called `my_seq`.
+
+
+```r
+my_seq <- seq(5, 10, length = 30)
+```
+
+
+---
+
+To confirm that `my_seq` has length 30, we can use the `length()` function. Try it now.
+
+
+```r
+length(my_seq)
+```
+
+```
+## [1] 30
+```
+
+
+---
+
+Let's pretend we don't know the length of `my_seq`, but we want to generate a sequence of integers from 1 to N, where N represents the length of the `my_seq` vector. In other words, we want a new vector (1, 2, 3, ...) that is the same length as `my_seq`.
+
+---
+
+There are several ways we could do this. One possibility is to combine the `:` operator and the `length()` function like this: `1:length(my_seq)`. Give that a try.
+
+
+```r
+1:length(my_seq)
+```
+
+```
+##  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+## [24] 24 25 26 27 28 29 30
+```
+
+
+---
+
+However, as is the case with many common tasks, R has a built-in function for this purpose called `seq_along()`. Type `seq_along(my_seq)` to see it in action.
+
+
+```r
+seq_along(my_seq)
+```
+
+```
+##  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+## [24] 24 25 26 27 28 29 30
+```
+
+
+---
+
+There are often several approaches to solving the same problem, particularly in R. Simple approaches that involve less typing are generally best. It's also important for your code to be readable, so that you and others can figure out what's going on without too much trouble.
+
+---
+
+If R has a built-in function for a particular task, it's likely that function is highly optimized for that purpose and is your best option. As you become a more advanced R programmer, you'll want to design your own functions to perform tasks when there are no better options. We'll explore writing your own functions in future lessons.
+
+---
 

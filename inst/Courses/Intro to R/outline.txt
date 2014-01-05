@@ -1,6 +1,9 @@
 ### Intro to R - Content Outline ###
+#######################################
 
 # Keep modules to less than 50 rows
+
+#######################################
 
 # Module1 (assignment, atomic vectors, data types):
 
@@ -9,6 +12,34 @@
 - motivation for programming
 
 - creating variables with the assignment operator
+
+- numeric vector = simplest data type in R
+
+- vector arithmetic
+
+- vector recycling
+
+#######################################
+
+# Module2 (sequencing and subsetting)
+
+`:`
+seq()
+seq_along()
+length()
+
+`[`
+subset()
+which()
+
+
+
+
+
+
+
+
+
 
 - define data structures vs. data types
 
@@ -63,3 +94,7 @@
 # Module5 (vectorized operations):
 
 # Module6 (control structures):
+
+TODO:
+
+- List of all functions used/introduced in each module
