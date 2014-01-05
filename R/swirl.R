@@ -78,11 +78,26 @@ resume.default <- function(e){
   if(exists("playing", envir=e, inherits=FALSE) && e$playing)return(TRUE)
   # If the user wants to skip the current question, do the bookkeeping.
   if(uses_func("skip")(e$expr)[[1]]){
+    # Increment a skip count kept in e.
+    if(!exists("skips", e))e$skips <- 0
+    e$skips <- 1 + e$skips
+    # Enter the correct answer for the user.
     correctAns <- e$current.row[,"CorrectAnswer"]
     e$expr <- parse(text=correctAns)[[1]]
     e$val <- eval(e$expr)
+    # Evaluate it in the global environment
     eval(e$expr, globalenv())
-    swirl_out(paste("I've entered the correct answer", correctAns,"for you."))
+    # Inform the user, but don't expose the actual answer.
+    swirl_out()
+    swirl_out("I've entered the correct answer for you.")
+    temp <- new.env()
+    eval(e$expr, temp)
+    temp <- ls(temp)
+    if(length(temp) > 0){
+      swirl_out(paste0("In doing so, I've created the variable(s) ", 
+                       temp, ", which you may need later."))
+    }
+    swirl_out()
   }
   # Method menu initializes or reinitializes e if necessary.
   temp <- mainMenu(e)
