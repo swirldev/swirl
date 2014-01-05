@@ -1,3 +1,5 @@
 export(swirl)
 export(bye)
 export(nxt)
+export(play)
+export(skip)

@@ -18,16 +18,24 @@
 	- atomic vectors: only one data type
 	- lists: many data types
 	
-- 4 common types of atomic vectors (example of each)
+- 4 common types of atomic vectors (have user create one of each)
 	- integer
 	- double (numeric)
 	- logical
 	- character
+	
+# Module2 (coersion)
 
-- automatic and explicit coersion
+- motivation for dedicating entire module to coersion
+
+- automatic vs. explicit coersion
+
+- start with explicit examples
+
+- have user guess automatic
 
 
-# Module2 (matrices, lists, factors, data frames, missing values, attributes)
+# Module3 (matrices, lists, factors, data frames, missing values, attributes)
 
 - matrices 
 	- vectors with a dimension attribute
@@ -50,8 +58,8 @@
 - attributes/names
 
 
-# Module3 (subsetting):
+# Module4 (subsetting):
 
-# Module4 (vectorized operations):
+# Module5 (vectorized operations):
 
-# Module5 (control structures):
+# Module6 (control structures):

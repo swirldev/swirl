@@ -1,5 +1,4 @@
-#' Instruction set for swirl.R's "virtual machine".
-#' 
+#' Instruction set for swirl.R's "virtual machine". 
 
 #' All classes first Output, all in the same way, hence one method
 #' suffices.
@@ -100,10 +99,20 @@ waitUser.cmd_question <- function(current.row, e){
 #' Only the question classes enter a testing loop. Testing is the
 #' same in both cases. If the response is correct they indicate
 #' instruction should progress. If incorrect, they publish a hint
-#' and return to the previous step.  
+#' and return to the previous step. 
+testResponse <- function(current.row, e)UseMethod("testResponse")
+
 testResponse.default <- function(current.row, e){
-  tests <- str_trim(unlist(strsplit(current.row[,"AnswerTests"],";")))
-  results <- lapply(tests, function(keyphrase){testMe(keyphrase,e)})
+  tests <- current.row[,"AnswerTests"]
+  if(is.na(tests) || tests == ""){
+    results <- is(e, "dev")
+    if(!results){
+      stop("BUG: There are no tests for this question!")
+    }
+  } else {
+    tests <- str_trim(unlist(strsplit(tests,";")))
+    results <- lapply(tests, function(keyphrase){testMe(keyphrase,e)})
+  }
   correct <- !(FALSE %in% results)
   if(correct){
     swirl_out(praise())
@@ -123,7 +132,3 @@ testMe <- function(keyphrase, e){
                                 strsplit(keyphrase, "=")[[1]][1])
   return(runTest(keyphrase, e))
 }
-
-
-#' The video class requires a nxt() function.
-nxt <- function(){invisible()}

@@ -9,6 +9,7 @@ courseDir <- function(e)UseMethod("courseDir")
 moduleMenu <- function(e, choices)UseMethod("moduleMenu")
 restoreUserProgress <- function(e, selection)UseMethod("restoreUserProgress")
 loadModule <- function(e, ...)UseMethod("loadModule")
+loadInstructions <- function(e, ...)UseMethod("loadInstructions")
 
 #' Default course and module navigation logic
 #' 
@@ -16,7 +17,8 @@ loadModule <- function(e, ...)UseMethod("loadModule")
 #' decoupling menu presentation from internal processing of user
 #' selections. It relies on several methods for menu presentation,
 #' namely welcome(e), housekeeping(e), inProgressMenu(e, modules),
-#' courseMenu(e, courses), and moduleMenu(e, modules). Defaults are provided.
+#' courseMenu(e, courses), and moduleMenu(e, modules). Defaults 
+#' are provided.
 #' 
 #' @param e persistent environment accessible to the callback
 menu.default <- function(e){
@@ -35,11 +37,11 @@ menu.default <- function(e){
     # First, allow user to continue unfinished modules
     # if there are any
     pfiles <- inProgress(e)
-    response <- character()
+    response <- ""
     if(length(pfiles) > 0){
       response <- inProgressMenu(e, pfiles)
     }
-    if(length(response) > 0 ){
+    if(response != "" ){
       # If the user has chosen to continue, restore progress
       response <- gsub(" ", "_", response)
       response <- paste0(response,"_.rda")
@@ -50,12 +52,16 @@ menu.default <- function(e){
       coursesU <- dir(courseDir(e))
       # path cosmetics
       coursesR <- gsub("_", " ", coursesU)
-      course <- courseMenu(e, coursesR)
-      # reverse path cosmetics
-      courseU <- coursesU[course == coursesR]
-      modules <- dir(file.path(courseDir(e), courseU), pattern="module")
-      # Let user choose the module.
-      module <- moduleMenu(e, modules)
+      module <- ""
+      while(module == ""){
+        course <- courseMenu(e, coursesR)
+        if(course=="")return(FALSE)
+        # reverse path cosmetics
+        courseU <- coursesU[course == coursesR]
+        modules <- dir(file.path(courseDir(e), courseU), pattern="module")
+        # Let user choose the module.
+        module <- moduleMenu(e, modules)
+      }
       # Load the module and intialize everything
       e$mod <- loadModule(e, courseU, module)
       # expr, val, ok, and vis should have been set by the callback.
@@ -67,7 +73,7 @@ menu.default <- function(e){
       e$prompt <- FALSE
       # The job of loading instructions for this "virtual machine"
       # is relegated to an S3 method to allow for different "programs."
-      e$instr <- list(present, waitUser, testResponse.default)
+      loadInstructions(e)
       # An identifier for the active row
       e$current.row <- NULL
       # For sourcing files which construct figures etc
@@ -79,10 +85,13 @@ menu.default <- function(e){
       e$progress <- file.path(e$udat, fname)
       # list to hold expressions entered by the user
       e$usrexpr <- list()
+      # indicator that swirl is not reacting to console input
+      e$playing <- FALSE
       # create the file
       saveRDS(e, e$progress)
     }
   }
+  return(TRUE)
 }
 
 #' Development version.
@@ -113,20 +122,20 @@ inProgressMenu.default <- function(e, choices){
   nada <- "No. Let me start something new."
   swirl_out("Would you like to continue with one of these modules?")
   selection <- select.list(c(choices, nada))
-  # return an empty character array if the user rejects all choices
-  if(identical(selection, nada))selection <- character()
+  # return a blank if the user rejects all choices
+  if(identical(selection, nada))selection <- ""
   return(selection)
 }
 
 #' A stub. Eventually this should be a full menu
 courseMenu.default <- function(e, choices){
-  swirl_out("Please choose a course.")
+  swirl_out("Please choose a course, or type 0 to exit swirl.")
   return(select.list(choices))
 }
 
 #' A stub. Eventually this should be a full menu
 moduleMenu.default <- function(e, choices){
-  swirl_out("Please choose a module.")
+  swirl_out("Please choose a module, or type 0 to return to course menu.")
   return(select.list(choices))
 }
 
@@ -141,9 +150,14 @@ loadModule.default <- function(e, courseU, module){
   if (file.exists(initFile)){
     source(initFile)
   }
+  instructor <- courseU # default
+  instructorFile <- file.path(modPath,"instructor.txt")
+  if(file.exists(instructorFile)){
+    instructor <- readLines(instructorFile)[1]
+  }
   # Return the course module, using Nick's constructor which 
   # adds attributes identifying the course and indicating dependencies.
-  return(module(read.csv(dataName, as.is=TRUE),module, courseU, "Nick"))
+  return(module(read.csv(dataName, as.is=TRUE),module, courseU, instructor))
 }
 
 restoreUserProgress.default <- function(e, selection){
@@ -162,6 +176,10 @@ restoreUserProgress.default <- function(e, selection){
       eval(expr, globalenv())
     }
   }
+}
+
+loadInstructions.default <- function(e){
+  e$instr <- list(present, waitUser, testResponse)
 }
 
 
@@ -187,6 +205,11 @@ completed <- function(e){
 }
 
 courseDir.default <- function(e){
+  # e's only role is to determine the method used
+  file.path(find.package("swirlfancy"), "Courses")
+}
+
+courseDir.dev <- function(e){
   # e's only role is to determine the method used
   file.path("inst", "Courses")
 }
