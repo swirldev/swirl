@@ -56,6 +56,12 @@ resume.default <- function(e){
     e$playing <- FALSE
     e$iptr <- 1
   }
+  if(uses_func("play")(e$expr)[[1]]){
+    e$playing <- TRUE
+  }
+  # If the user is playing, ignore console input,
+  # but remain in operation.
+  if(exists("playing", envir=e, inherits=FALSE) && e$playing)return(TRUE)
   if(uses_func("skip")(e$expr)[[1]]){
     correctAns <- e$current.row[,"CorrectAnswer"]
     e$expr <- parse(text=correctAns)[[1]]
@@ -63,12 +69,6 @@ resume.default <- function(e){
     eval(e$expr, globalenv())
     swirl_out(paste("I've entered the correct answer", correctAns,"for you."))
   }
-  if(uses_func("play")(e$expr)[[1]]){
-    e$playing <- TRUE
-  }
-  # If the user is playing, ignore console input,
-  # but remain in operation.
-  if(exists("playing", envir=e, inherits=FALSE) && e$playing)return(TRUE)
   # Method menu initializes or reinitializes e if necessary.
   temp <- menu(e)
   # If menu returns FALSE, the user wants to exit.

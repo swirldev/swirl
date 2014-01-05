@@ -259,6 +259,14 @@ runTest.in_range <- function(keyphrase, e){
   return(results$passed)
 }
 
+#' Test that the user has entered an expression identical to that
+#' given in the keyphrase.
+#' keyphrase: "expr_identical=<correct expression>"
+runTest.expr_identical <- function(keyphrase, e){
+  correct <- as.call(parse(text=rightside(keyphrase))[[1]])
+  results <- expectThat(e$expr, is_identical_to(correct))
+  return(results$passed)
+}
 
 ### HELPER FUNCTIONS
 
