@@ -39,7 +39,18 @@ skip <- function(){invisible()}
 
 play <- function(){invisible()}
 
-## RESUME
+info <- function(){
+  swirl_out()
+  swirl_out("-- If you type play() swirl will ignore what you do...")
+  swirl_out("-- UNTIL you type nxt() which will regain swirl's attention.")
+  swirl_out("-- Typing skip() will allow you to skip the current question.")
+  swirl_out("-- Typing info() will display these options again.")  
+  swirl_out("-- Typing bye() will cause swirl to exit. Your progress will be saved.")
+  swirl_out()
+  invisible()
+}
+
+## RESUME METHOD
 
 resume <- function(...)UseMethod("resume")
 
@@ -52,6 +63,9 @@ resume <- function(...)UseMethod("resume")
 #' 
 resume.default <- function(e){
   # Trap special functions
+  if(uses_func("info")(e$expr)[[1]]){
+    return(TRUE)
+  }
   if(uses_func("nxt")(e$expr)[[1]]){
     e$playing <- FALSE
     e$iptr <- 1
@@ -62,6 +76,7 @@ resume.default <- function(e){
   # If the user is playing, ignore console input,
   # but remain in operation.
   if(exists("playing", envir=e, inherits=FALSE) && e$playing)return(TRUE)
+  # If the user wants to skip the current question, do the bookkeeping.
   if(uses_func("skip")(e$expr)[[1]]){
     correctAns <- e$current.row[,"CorrectAnswer"]
     e$expr <- parse(text=correctAns)[[1]]
@@ -70,7 +85,7 @@ resume.default <- function(e){
     swirl_out(paste("I've entered the correct answer", correctAns,"for you."))
   }
   # Method menu initializes or reinitializes e if necessary.
-  temp <- menu(e)
+  temp <- mainMenu(e)
   # If menu returns FALSE, the user wants to exit.
   if(is.logical(temp) && !isTRUE(temp))return(FALSE)
   # Execute instructions until a return to the prompt is necessary
@@ -89,7 +104,7 @@ resume.default <- function(e){
       if(!file.exists(new_path))file.rename(e$progress, new_path)
       rm(mod, envir=e)
       # let the user select another course module
-      temp <- menu(e)
+      temp <- mainMenu(e)
       # if menu returns FALSE, user wants to quit.
       if(is.logical(temp) && !isTRUE(temp))return(FALSE)
     }

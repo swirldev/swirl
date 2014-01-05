@@ -120,6 +120,7 @@ testResponse.default <- function(current.row, e){
     e$row <- 1 + e$row
   } else {
     swirl_out(tryAgain())
+    swirl_out()
     swirl_out(current.row[,"Hint"])
     e$iptr <- e$iptr -1
   }

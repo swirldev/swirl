@@ -1,6 +1,6 @@
 ## Method declarations
 
-menu <- function(e, ...)UseMethod("menu")
+mainMenu <- function(e, ...)UseMethod("mainMenu")
 welcome <- function(e, ...)UseMethod("welcome")
 housekeeping <- function(e, ...)UseMethod("housekeeping")
 inProgressMenu <- function(e, choices, ...)UseMethod("inProgressMenu")
@@ -21,7 +21,7 @@ loadInstructions <- function(e, ...)UseMethod("loadInstructions")
 #' are provided.
 #' 
 #' @param e persistent environment accessible to the callback
-menu.default <- function(e){
+mainMenu.default <- function(e){
   # Welcome the user if necessary and set up progress tracking
   if(!exists("usr",e,inherits = FALSE)){
     e$usr <- welcome(e)
@@ -101,7 +101,9 @@ welcome.dev <- function(e, ...){
 
 #' Default version.
 welcome.default <- function(e, ...){
+  swirl_out()
   swirl_out("Welcome! My name is Swirl and I'll be your host today! Please sign in. If you've been here before please use the same name as you did then. If you are new, call yourself something unique.")
+  swirl_out()
   return(readline("What shall I call you? "))
 }
 
@@ -110,8 +112,19 @@ welcome.default <- function(e, ...){
 #' @param e persistent environment used here only for its class attribute
 #' 
 housekeeping.default <- function(e){
-  swirl_out("Let's cover a couple of quick housekeeping items before we begin our first lesson. \n\nFirst off, you should know that when you see '...', that means you should press Enter when you are done reading and ready to continue. Also, as you've probably figured out, when you see 'ANSWER:', that means it's your turn to enter a response, then press Enter to continue.\n\nRemember you can stop at any time by pressing the Esc key and typing bye(). Your progress will be saved. Let's get started!")
+  swirl_out()
+  swirl_out(paste0("Thanks, ", e$usr,". Let's cover a couple of quick housekeeping items before we begin our first lesson. First off, you should know that when you see '...', that means you should press Enter when you are done reading and ready to continue."))
   readline("\n...  <-- That's your cue to press Enter to continue")
+  swirl_out()
+  swirl_out("Also, as you've probably figured out, when you see 'ANSWER:', or when you see the R prompt (>), or when you are asked to select from a list, that means it's your turn to enter a response, then press Enter to continue.")
+  swirl_out()
+  select.list(c("Continue.", "Procede.", "Let's get going!"),
+              title="Select 1, 2, or 3 and press Enter", graphics=FALSE)
+  swirl_out()
+  swirl_out("Remember, you can return to the R console at any time by pressing the Esc key. Swirl will not exit, but will remain in operation. When you are in the R console:")
+  info()
+  swirl_out("Let's get started!")
+  readline("\n...")
 }
 
 #' Development version; does nothing
@@ -121,7 +134,7 @@ housekeeping.dev <- function(e){}
 inProgressMenu.default <- function(e, choices){
   nada <- "No. Let me start something new."
   swirl_out("Would you like to continue with one of these modules?")
-  selection <- select.list(c(choices, nada))
+  selection <- select.list(c(choices, nada), graphics=FALSE)
   # return a blank if the user rejects all choices
   if(identical(selection, nada))selection <- ""
   return(selection)
@@ -130,13 +143,13 @@ inProgressMenu.default <- function(e, choices){
 #' A stub. Eventually this should be a full menu
 courseMenu.default <- function(e, choices){
   swirl_out("Please choose a course, or type 0 to exit swirl.")
-  return(select.list(choices))
+  return(select.list(choices, graphics=FALSE))
 }
 
 #' A stub. Eventually this should be a full menu
 moduleMenu.default <- function(e, choices){
   swirl_out("Please choose a module, or type 0 to return to course menu.")
-  return(select.list(choices))
+  return(select.list(choices, graphics=FALSE))
 }
 
 loadModule.default <- function(e, courseU, module){
