@@ -22,6 +22,7 @@
 #' attribute corresponding to the substring prior to "=", and use the keyphrase
 #' as first argument to the method.
 
+
 runTest <- function(...)UseMethod("runTest")
 
 #' Always returns FALSE. If the default test in invoked, something is wrong.
@@ -133,6 +134,31 @@ runTest.range <- function(keyphrase,e){
   return(is.correct)
 }
 
+runTest.newcmd <- function(keyphrase,e){
+  correct.expr <- parse(text=rightside(keyphrase))[[1]]
+  correct.ans  <- eval(correct.expr)
+  ansResults <- expectThat(e$val,
+                               equals(correct.ans,label=correct.ans),
+                               label=e$val)
+  callResults <- expectThat(as.expression(e$expr)[[1]],
+                                is_identical_to(correct.expr,label=deparse(correct.expr)),
+                                label=deparse(e$expr))
+    
+ #   identical(as.expression(e$expr)[[1]], as.expression(correct.expr)[[1]])
+  if(ansResults$passed && callResults$passed){
+    return(TRUE)
+  } else  
+    if (ansResults$passed && !callResults$passed){
+      swirl_out("That's not the expression I expected but it works.")
+      swirl_out(callResults$message)
+      #todo
+      #following line is temporary fix to create correct vars for future ques if needed
+      eval(correct.expr,globalenv())
+      return(TRUE)
+    }
+  else
+    return(FALSE)
+}
 
 runTest.swirl1cmd <- function(keyphrase,e){
   correct.expr <- parse(text=rightside(keyphrase))
@@ -167,6 +193,8 @@ runTest.trick <- function(keyphrase,e){
 }
 
 ## TESTS AND KEYPHRASES BASED ON PACKAGE EXPECTTHAT
+#' These tests will print diagnostics in "dev" mode
+#' but not in user (default) mode.
 
 #' Returns TRUE if e$expr is of the given class
 #' keyphrase: is_a=class,variable
@@ -176,7 +204,7 @@ runTest.is_a <- function(keyphrase, e) {
   variable <- str_trim(temp[2])
   label <- deparse(get(variable,e))
   results <- expectThat(get(variable, e), is_a(class), label=label)
-  if(!results$passed)swirl_out(results$message)
+  if(is(e,"dev") && !results$passed)swirl_out(results$message)
   return(results$passed)
 }
 
@@ -188,7 +216,7 @@ runTest.uses_func <- function(keyphrase, e) {
   results <- expectThat(e$expr,
                         uses_func(func, label=func), 
                         label=deparse(e$expr))
-  if(!results$passed)swirl_out(results$message)
+  if(is(e,"dev") && !results$passed)swirl_out(results$message)
   return(results$passed)
 }
 
@@ -201,10 +229,24 @@ runTest.matches <- function(keyphrase, e) {
   results <- expectThat(tolower(userVal), 
                         matches(correctVal), 
                         label=userVal)
-  if(!results$passed)swirl_out(results$message)
+  if(is(e,"dev") && !results$passed)swirl_out(results$message)
   return(results$passed)
 }
 
+#' Returns TRUE if as.expression
+#' (e$expr) matches the expression indicated to the right
+#' of "=" in keyphrase
+#' keyphrase:equivalent=expression
+runTest.equivalent <- function(keyphrase,e) {
+  correctExpr <- parse(text=rightside(keyphrase))
+  userExpr <- as.expression(e$expr)
+  results <- expectThat(userExpr,
+                        is_equivalent_to(correctExpr,deparse(correctExpr)),
+                        label=deparse(userExpr))
+                        
+  if(is(e,"dev") && !results$passed)swirl_out(results$message)
+  return(results$passed)
+}
 #' Tests if the user has just created one new variable (of correct name
 #' if given.) If so, returns TRUE.
 #' keyphrase: creates_var or creates_var=correctName
@@ -219,7 +261,7 @@ runTest.creates_var <- function(keyphrase, e){
   }
   if(results$passed){
     e$newVar <- e$val
-  } else {
+  } else if(is(e,"dev")){
     swirl_out(results$message)
   }
   return(results$passed)
@@ -237,7 +279,7 @@ runTest.equals <- function(keyphrase, e){
                         equals(eval(parse(text=correctExpr)), 
                                label=correctExprLabel), 
                         label=deparse(e$expr))
-  if(!results$passed)swirl_out(results$message)
+  if(is(e, "dev") && !results$passed)swirl_out(results$message)
   return(results$passed)
 }
 
@@ -255,7 +297,7 @@ runTest.in_range <- function(keyphrase, e){
                         in_range(range, 
                                  label=range), 
                         label=e$var)
-  if(!results$passed)swirl_out(results$message)
+  if(is(e, "dev") && !results$passed)swirl_out(results$message)
   return(results$passed)
 }
 
@@ -265,6 +307,7 @@ runTest.in_range <- function(keyphrase, e){
 runTest.expr_identical <- function(keyphrase, e){
   correct <- as.call(parse(text=rightside(keyphrase))[[1]])
   results <- expectThat(e$expr, is_identical_to(correct))
+  if( is(e, "dev") && !results$passed)swirl_out(results$message) 
   return(results$passed)
 }
 
