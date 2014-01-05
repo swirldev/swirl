@@ -167,3 +167,15 @@ Before we view the contents of the `mySqrt` variable, what do you think it conta
 
 ---
 
+Print print the contents of `mySqrt`.
+
+
+```r
+mySqrt
+```
+
+```
+## [1] 0.3162 2.8284 1.4629
+```
+
+
