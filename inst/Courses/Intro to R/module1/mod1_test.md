@@ -19,7 +19,7 @@ In it's simplest form, R can be used as an interactive calculator. Type `5 + 7` 
 
 --- 
 
-R simply prints the result of 12 by default. However, R is a programming language and often the reason we use a programming language as opposed to a calculator is to automate some process or avoid unneccessary repetition.
+R simply prints the result of 12 by default. However, R is a programming language and often the reason we use a programming language as opposed to a calculator is to automate some process or avoid unnecessary repetition.
 
 ---
 
@@ -114,15 +114,15 @@ z
 
 ---
 
-You can combine vectors to make a new vector. Create a new vector that contains z, 55, then z again in that order. Don't assign this vector to a new variable, so that we can just see the result immediately.
+You can combine vectors to make a new vector. Create a new vector that contains z, 555, then z again in that order. Don't assign this vector to a new variable, so that we can just see the result immediately.
 
 
 ```r
-c(z, 55, z)
+c(z, 555, z)
 ```
 
 ```
-## [1]  1.10  9.00  3.14 55.00  1.10  9.00  3.14
+## [1]   1.10   9.00   3.14 555.00   1.10   9.00   3.14
 ```
 
 
@@ -163,11 +163,12 @@ mySqrt <- sqrt(z - 1)
 Before we view the contents of the `mySqrt` variable, what do you think it contains?
 
 1. a vector of length 3
-2. a single number
+2. a single number (i.e a vector of length 1)
+3. a vector of length 0 (i.e. an empty vector)
 
 ---
 
-Print print the contents of `mySqrt`.
+Print the contents of `mySqrt`.
 
 
 ```r
@@ -178,4 +179,87 @@ mySqrt
 ## [1] 0.3162 2.8284 1.4629
 ```
 
+
+---
+
+As you may have guessed, R first subtracted 1 from each element of z, then took the square root of each element. This leaves you with a vector of the same length as the original vector `z`.
+
+---
+
+Now, create a new variable called `myDiv` that gets the value of `z` divided by `mySqrt`.
+
+
+```r
+myDiv <- z/mySqrt
+```
+
+
+---
+
+Which statement do you think is true?
+
+1. The first element of `myDiv` is equal to the first element of `z` divided by the first element of `mySqrt`, and so on...
+2. `myDiv` is a single number (i.e a vector of length 1)
+3. `myDiv` is undefined
+
+---
+
+Go ahead and print the contents of `myDiv`.
+
+
+```r
+myDiv
+```
+
+```
+## [1] 3.479 3.182 2.146
+```
+
+
+---
+
+When given two vectors of the same length, R simply performs the specified arithmetic operation (`+`, `-`, `*`, etc.) element-by-element. If the vectors are of different lengths, R "recycles" the shorter vector until it is the same length as the longer vector.
+
+---
+
+When we did `z * 2 + 100` in our earlier example, `z` was a vector of length 3, but technically `2` and `100` are each vectors of length 1.
+
+---
+
+Behind the scenes, R is "recycling" the `2` to make a vector of 2s and the `100` to make a vector of 100s. In other words, when you ask R to compute `z * 2 + 100`, what it really computes is this: `z * c(2, 2, 2) + c(100, 100, 100)`.
+
+---
+
+To see another example of how this vector "recycling" works, try adding `c(1, 2, 3, 4)` and `c(0, 10)`. Don't worry about saving the result in a new variable.
+
+
+```r
+c(1, 2, 3, 4) + c(0, 10)
+```
+
+```
+## [1]  1 12  3 14
+```
+
+
+---
+
+If the length of the shorter vector does not divide evenly into the length of the longer vector, R will still apply the "recycling" method, but will throw a warning to let you know something fishy might be going on.
+
+---
+
+Try `c(1, 2, 3, 4) + c(0, 10, 100)` for an example.
+
+
+```r
+c(1, 2, 3, 4) + c(0, 10, 100)
+```
+
+```
+## Warning: longer object length is not a multiple of shorter object length
+```
+
+```
+## [1]   1  12 103   4
+```
 
