@@ -43,7 +43,7 @@ swirl <- function(resume.class="default"){
   # hence that environment, which also contains e, persists as long
   # as cb remains registered. Thus e can be used to store infomation
   # between invocations of cb.
-  bye()
+  removeTaskCallback("mini")
   # e lives here, in the environment created when swirl() is run
   e <- new.env(globalenv())
   # The callback also lives in the environment created when swirl()
@@ -76,6 +76,7 @@ swirl <- function(resume.class="default"){
 #' @export
 bye <- function(){
   removeTaskCallback("mini")
+  swirl_out("Leaving swirl now...")
   invisible()
 }
 
@@ -177,7 +178,10 @@ resume.default <- function(e){
   # Method menu initializes or reinitializes e if necessary.
   temp <- mainMenu(e)
   # If menu returns FALSE, the user wants to exit.
-  if(is.logical(temp) && !isTRUE(temp))return(FALSE)
+  if(is.logical(temp) && !isTRUE(temp)){
+    swirl_out("Leaving swirl now...")
+    return(FALSE)
+  }
   # Execute instructions until a return to the prompt is necessary
   while(!e$prompt){
     # If the module is complete, save progress, remove the current
@@ -196,7 +200,10 @@ resume.default <- function(e){
       # let the user select another course module
       temp <- mainMenu(e)
       # if menu returns FALSE, user wants to quit.
-      if(is.logical(temp) && !isTRUE(temp))return(FALSE)
+      if(is.logical(temp) && !isTRUE(temp)){
+        swirl_out("Leaving swirl now...")
+        return(FALSE)
+    }
     }
     # If we are ready for a new row, prepare it
     if(e$iptr == 1){
