@@ -106,6 +106,3 @@ Try your best to predict the result of each of the following statements. You can
 ---
 
 Don't worry if you found these to be tricky. They're supposed to be. Working with logical statements in R takes practice, but your efforts will be rewarded in future lessons (e.g. subsetting and control structures).
-
----
-
