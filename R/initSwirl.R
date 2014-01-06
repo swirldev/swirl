@@ -1,4 +1,4 @@
-#' DEPRECATED. Used by resume.depr, file swirl.R
+# DEPRECATED. Used by resume.depr, file swirl.R
 
 initSwirl <- function(e)UseMethod("initSwirl")
 

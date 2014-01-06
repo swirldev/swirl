@@ -1,79 +1,79 @@
-#' Extensible testing
-#' 
-#' If tests are to be identified by keyphrases, then keyphrases must somehow be
-#' converted (i.e., parsed) to function calls. It is reasonable to anticipate
-#' that new tests will arise with broad deployment and new course material. 
-#' Thus it would be convenient if new tests and keyphrases could be added 
-#' without the need to change core swirl source code. 
-#' 
-#' Tests themselves would be new functions or methods, hence are additional code
-#' by nature. The problem is to extensibly parse keyphrases to function calls.
-#' One possibility, illustrated below, is to give new tests themselves
-#' primary responsibility for parsing their own keyphrases.
-#' 
-#' The tests themselves are identified by the substrings before the "=".
-#' Substrings after "=" are essentially arguments. To illustrate a possiblity
-#' we'll have core code base its function call on the string prior to "=",
-#' and leave the rest to tests themselves. It is doubtful this scheme would
-#' be flexible enough in general.
-#' 
-#' There are various ways to do it, but we'll use S3 methods because we're
-#' using them for other things as well. We'll give the keyphrase a class
-#' attribute corresponding to the substring prior to "=", and use the keyphrase
-#' as first argument to the method.
+# Extensible testing
+# 
+# If tests are to be identified by keyphrases, then keyphrases must somehow be
+# converted (i.e., parsed) to function calls. It is reasonable to anticipate
+# that new tests will arise with broad deployment and new course material. 
+# Thus it would be convenient if new tests and keyphrases could be added 
+# without the need to change core swirl source code. 
+# 
+# Tests themselves would be new functions or methods, hence are additional code
+# by nature. The problem is to extensibly parse keyphrases to function calls.
+# One possibility, illustrated below, is to give new tests themselves
+# primary responsibility for parsing their own keyphrases.
+# 
+# The tests themselves are identified by the substrings before the "=".
+# Substrings after "=" are essentially arguments. To illustrate a possiblity
+# we'll have core code base its function call on the string prior to "=",
+# and leave the rest to tests themselves. It is doubtful this scheme would
+# be flexible enough in general.
+# 
+# There are various ways to do it, but we'll use S3 methods because we're
+# using them for other things as well. We'll give the keyphrase a class
+# attribute corresponding to the substring prior to "=", and use the keyphrase
+# as first argument to the method.
 
 
 runTest <- function(...)UseMethod("runTest")
 
-#' Always returns FALSE. If the default test in invoked, something is wrong.
+# Always returns FALSE. If the default test in invoked, something is wrong.
 runTest.default <- function(...)return(FALSE)
 
-#' Always returns TRUE, for development purposes.
+# Always returns TRUE, for development purposes.
 runTest.true <- function(...)return(TRUE)
 
-#' Returns TRUE if e$expr is an assignment 
-#' 
+# Returns TRUE if e$expr is an assignment 
+# 
 runTest.assign <- function(keyphrase, e) {
   identical(class(e$expr), "<-")
 }
 
-#' Returns TRUE if the function to the right of = in the keyphrase has
-#' been used in e$expr
-#'  
+# Returns TRUE if the function to the right of = in the keyphrase has
+# been used in e$expr
+#  
 runTest.useFunc <- function(keyphrase, e) {
   func <- rightside(keyphrase)
   (is.call(e$expr) || is.expression(e$expr)) &&
     func %in% flatten(e$expr)
 }
 
-#' Returns TRUE if as.character(e$val) matches the string to the right
-#' of "=" in keyphase
-#' This is for single word answers
+# Returns TRUE if as.character(e$val) matches the string to the right
+# of "=" in keyphase
+# This is for single word answers
 runTest.word <- function(keyphrase, e) {
   correctVal <- str_trim(rightside(keyphrase))
   identical(str_trim(as.character(e$val)), 
             str_trim(as.character(correctVal)))
 }
-#' Returns TRUE if as.character(e$val) matches the string to the right
-#' of "=" in keyphase
-#' This is for multi-word answers for which order matters
+# Returns TRUE if as.character(e$val) matches the string to the right
+# of "=" in keyphase
+# This is for multi-word answers for which order matters
 runTest.word_order <- function(keyphrase, e) {
   correctVal <- str_trim(rightside(keyphrase))
   correct_list <- str_trim(unlist(strsplit(correctVal,",")))
   userAns <- str_trim(unlist(strsplit(as.character(e$val),",")))
   identical(userAns, correct_list)
 }
-#' Returns TRUE if as.character(e$val) matches the string to the right
-#' of "=" in keyphase
-#' This is for multi-word answers for which order doesn't matter
+# Returns TRUE if as.character(e$val) matches the string to the right
+# of "=" in keyphase
+# This is for multi-word answers for which order doesn't matter
 runTest.word_many <- function(keyphrase,e){
   correct_ans <- rightside(keyphrase)
   correct_list <- str_trim(unlist(strsplit(correct_ans,",")))
   identical(sort(correct_list), sort(e$val))
 }
 
-#' Tests if the user has just created one new variable. If so, assigns 
-#' e$newVar its value and returns TRUE.
+# Tests if the user has just created one new variable. If so, assigns 
+# e$newVar its value and returns TRUE.
 runTest.newVar <- function(keyphrase, e){
   eval(e$expr)
   newVars <- setdiff(ls(),c("keyphrase", "e"))
@@ -87,8 +87,8 @@ runTest.newVar <- function(keyphrase, e){
   }
 }
 
-#' Tests if the user has just created one new variable of correct name. If so, 
-#' returns TRUE.
+# Tests if the user has just created one new variable of correct name. If so, 
+# returns TRUE.
 runTest.correctName <- function(keyphrase, e){
   correctName <- rightside(keyphrase)
   eval(e$expr)
@@ -101,8 +101,8 @@ runTest.correctName <- function(keyphrase, e){
   }
  }
 
-#' Tests the result of a computation such as mean(newVar) applied
-#' to a specific variable created in a previous question. 
+# Tests the result of a computation such as mean(newVar) applied
+# to a specific variable created in a previous question. 
 runTest.result <- function(keyphrase, e){
   correct.expr <- parse(text=rightside(keyphrase))
   newVar <- e$newVar
@@ -193,11 +193,11 @@ runTest.trick <- function(keyphrase,e){
 }
 
 ## TESTS AND KEYPHRASES BASED ON PACKAGE EXPECTTHAT
-#' These tests will print diagnostics in "dev" mode
-#' but not in user (default) mode.
+# These tests will print diagnostics in "dev" mode
+# but not in user (default) mode.
 
-#' Returns TRUE if e$expr is of the given class
-#' keyphrase: is_a=class,variable
+# Returns TRUE if e$expr is of the given class
+# keyphrase: is_a=class,variable
 runTest.is_a <- function(keyphrase, e) {
   temp <- strsplit(rightside(keyphrase),",")[[1]]
   class <-  str_trim(temp[1])
@@ -208,9 +208,9 @@ runTest.is_a <- function(keyphrase, e) {
   return(results$passed)
 }
 
-#' Returns TRUE if the function to the right of = in the keyphrase has
-#' been used in e$expr
-#' keyphrase: uses_func=functionName
+# Returns TRUE if the function to the right of = in the keyphrase has
+# been used in e$expr
+# keyphrase: uses_func=functionName
 runTest.uses_func <- function(keyphrase, e) {
   func <- rightside(keyphrase)
   results <- expectThat(e$expr,
@@ -220,9 +220,9 @@ runTest.uses_func <- function(keyphrase, e) {
   return(results$passed)
 }
 
-#' Returns TRUE if as.character(e$val) matches the string to the right
-#' of "=" in keyphase
-#' keyphrase: matches=regularExpresion
+# Returns TRUE if as.character(e$val) matches the string to the right
+# of "=" in keyphase
+# keyphrase: matches=regularExpresion
 runTest.matches <- function(keyphrase, e) {
   correctVal <- tolower(str_trim(rightside(keyphrase)))
   userVal <- str_trim(as.character(e$val))
@@ -233,10 +233,10 @@ runTest.matches <- function(keyphrase, e) {
   return(results$passed)
 }
 
-#' Returns TRUE if as.expression
-#' (e$expr) matches the expression indicated to the right
-#' of "=" in keyphrase
-#' keyphrase:equivalent=expression
+# Returns TRUE if as.expression
+# (e$expr) matches the expression indicated to the right
+# of "=" in keyphrase
+# keyphrase:equivalent=expression
 runTest.equivalent <- function(keyphrase,e) {
   correctExpr <- parse(text=rightside(keyphrase))
   userExpr <- as.expression(e$expr)
@@ -247,9 +247,9 @@ runTest.equivalent <- function(keyphrase,e) {
   if(is(e,"dev") && !results$passed)swirl_out(results$message)
   return(results$passed)
 }
-#' Tests if the user has just created one new variable (of correct name
-#' if given.) If so, returns TRUE.
-#' keyphrase: creates_var or creates_var=correctName
+# Tests if the user has just created one new variable (of correct name
+# if given.) If so, returns TRUE.
+# keyphrase: creates_var or creates_var=correctName
 runTest.creates_var <- function(keyphrase, e){
   correctName <- rightside(keyphrase)
   if(is.na(correctName)){
@@ -267,9 +267,9 @@ runTest.creates_var <- function(keyphrase, e){
   return(results$passed)
 }
 
-#' Tests the result of a computation such as mean(newVar) applied
-#' to a specific variable created in a previous question.
-#' keyphrase: equals=correctExpression,variable 
+# Tests the result of a computation such as mean(newVar) applied
+# to a specific variable created in a previous question.
+# keyphrase: equals=correctExpression,variable 
 runTest.equals <- function(keyphrase, e){
   temp <- strsplit(rightside(keyphrase),",")[[1]]
   correctExprLabel <- temp[1]
@@ -283,9 +283,9 @@ runTest.equals <- function(keyphrase, e){
   return(results$passed)
 }
 
-#' Tests that a value just entered at the R prompt is within
-#' the given range
-#' keyphrase: in_range=a,b
+# Tests that a value just entered at the R prompt is within
+# the given range
+# keyphrase: in_range=a,b
 runTest.in_range <- function(keyphrase, e){
   range <- try(eval(parse(text=paste0("c(", rightside(keyphrase), ")"))),
                silent=TRUE)
@@ -301,9 +301,9 @@ runTest.in_range <- function(keyphrase, e){
   return(results$passed)
 }
 
-#' Test that the user has entered an expression identical to that
-#' given in the keyphrase.
-#' keyphrase: "expr_identical=<correct expression>"
+# Test that the user has entered an expression identical to that
+# given in the keyphrase.
+# keyphrase: "expr_identical=<correct expression>"
 runTest.expr_identical <- function(keyphrase, e){
   correct <- as.call(parse(text=rightside(keyphrase))[[1]])
   results <- expectThat(e$expr, is_identical_to(correct))

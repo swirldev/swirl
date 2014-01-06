@@ -11,16 +11,16 @@ restoreUserProgress <- function(e, selection)UseMethod("restoreUserProgress")
 loadModule <- function(e, ...)UseMethod("loadModule")
 loadInstructions <- function(e, ...)UseMethod("loadInstructions")
 
-#' Default course and module navigation logic
-#' 
-#' This method implements default course and module navigation logic, 
-#' decoupling menu presentation from internal processing of user
-#' selections. It relies on several methods for menu presentation,
-#' namely welcome(e), housekeeping(e), inProgressMenu(e, modules),
-#' courseMenu(e, courses), and moduleMenu(e, modules). Defaults 
-#' are provided.
-#' 
-#' @param e persistent environment accessible to the callback
+# Default course and module navigation logic
+# 
+# This method implements default course and module navigation logic, 
+# decoupling menu presentation from internal processing of user
+# selections. It relies on several methods for menu presentation,
+# namely welcome(e), housekeeping(e), inProgressMenu(e, modules),
+# courseMenu(e, courses), and moduleMenu(e, modules). Defaults 
+# are provided.
+# 
+# @param e persistent environment accessible to the callback
 mainMenu.default <- function(e){
   # Welcome the user if necessary and set up progress tracking
   if(!exists("usr",e,inherits = FALSE)){
@@ -94,12 +94,12 @@ mainMenu.default <- function(e){
   return(TRUE)
 }
 
-#' Development version.
+# Development version.
 welcome.dev <- function(e, ...){
   "swirladmin"
 }
 
-#' Default version.
+# Default version.
 welcome.default <- function(e, ...){
   swirl_out()
   swirl_out("Welcome! My name is Swirl and I'll be your host today! Please sign in. If you've been here before please use the same name as you did then. If you are new, call yourself something unique.")
@@ -107,10 +107,10 @@ welcome.default <- function(e, ...){
   return(readline("What shall I call you? "))
 }
 
-#' Presents preliminary information to a new user
-#' 
-#' @param e persistent environment used here only for its class attribute
-#' 
+# Presents preliminary information to a new user
+# 
+# @param e persistent environment used here only for its class attribute
+# 
 housekeeping.default <- function(e){
   swirl_out()
   swirl_out(paste0("Thanks, ", e$usr,". Let's cover a couple of quick housekeeping items before we begin our first lesson. First off, you should know that when you see '...', that means you should press Enter when you are done reading and ready to continue."))
@@ -127,10 +127,10 @@ housekeeping.default <- function(e){
   readline("\n...")
 }
 
-#' Development version; does nothing
+# Development version; does nothing
 housekeeping.dev <- function(e){}
 
-#' A stub. Eventually this should be a full menu
+# A stub. Eventually this should be a full menu
 inProgressMenu.default <- function(e, choices){
   nada <- "No. Let me start something new."
   swirl_out("Would you like to continue with one of these modules?")
@@ -140,13 +140,13 @@ inProgressMenu.default <- function(e, choices){
   return(selection)
 }
 
-#' A stub. Eventually this should be a full menu
+# A stub. Eventually this should be a full menu
 courseMenu.default <- function(e, choices){
   swirl_out("Please choose a course, or type 0 to exit swirl.")
   return(select.list(choices, graphics=FALSE))
 }
 
-#' A stub. Eventually this should be a full menu
+# A stub. Eventually this should be a full menu
 moduleMenu.default <- function(e, choices){
   swirl_out("Please choose a module, or type 0 to return to course menu.")
   return(select.list(choices, graphics=FALSE))
@@ -228,9 +228,9 @@ courseDir.dev <- function(e){
 }
 
 
-#' Provided the path to a directory, chooseFile() presents a "pretty" list of all
-#' files and directories in that directory. The user selects their desired
-#' file or directory and the function returns the full path to it.
+# Provided the path to a directory, chooseFile() presents a "pretty" list of all
+# files and directories in that directory. The user selects their desired
+# file or directory and the function returns the full path to it.
 
 chooseFile <- function(path2Dir) {
   allFiles <- list.files(path2Dir)
@@ -240,7 +240,7 @@ chooseFile <- function(path2Dir) {
   path2Choice <- file.path(path2Dir, allFiles[which(cleanNames==chosenFile)])
 }
 
-#' Gets desired course and module from user, then returns full path to module.
+# Gets desired course and module from user, then returns full path to module.
 getModPath <- function() {
   swirl_out("Please select a course: ")
   courseDir <- chooseFile(file.path("inst", "Courses"))
@@ -249,6 +249,6 @@ getModPath <- function() {
   modulePath <- chooseFile(courseDir)
 }
 
-#' Default for determining the user
+# Default for determining the user
 getUser <- function()UseMethod("getUser")
 getUser.default <- function()"swirladmin"

@@ -1,10 +1,48 @@
-#' Creates an environment, e, defines a function, cb, and registers
-#' cb as a callback with data argument, e. The callback retains a
-#' reference to the environment in which it was created, environment(cb),
-#' hence that environment, which also contains e, persists as long
-#' as cb remains registered. Thus e can be used to store infomation
-#' between invocations of cb. 
+#' An interactive learning environment for R and statistics
+#' 
+#' This function presents a choice of course modules and interactively
+#' tutors a user through them. A user may be asked to watch a video, to
+#' answer a multiple-choice or fill-in-the-blanks question, or to
+#' enter a command in the R console precisely as if he or she were 
+#' using R in practice. Emphasis is on the last, interacting with the
+#' R console. User responses are tested for correctness and hints are
+#' given if appropriate. Progress is automatically saved so that a user
+#' may quit at any time and later resume without losing work.
+#' 
+#' The usual way to exit swirl is to type bye() in the R console.
+#' A user may return to the R console at any time by pressing the Esc
+#' key. The Esc key alone, however, does not cause swirl to exit. A
+#' user must type bye() in addition. Swirl will print a goodbye message
+#' whenever it exits to signal that it is no longer in operation. 
+#' 
+#' While swirl is in operation, it may be controlled by entering special
+#' commands in the R console, using the Esc key to return to the R console
+#' if necessary. One of the special commands is bye() as discussed above.
+#' Others are play(), nxt(), skip(), and info(). The parentheses are
+#' important.
+#' 
+#' Sometimes a user will want to play around in the R console without
+#' interference or commentary from swirl. This can be accomplished by
+#' using the special command, play(). Swirl will remain in operation,
+#' silently, until the special command nxt() is entered. In general,
+#' nxt() can always be used to display the upcoming question.
+#' 
+#' The special command, skip(), can be used to skip a question if 
+#' necessary. Swirl will enter the correct answer and notify the
+#' user of the names of any new variables which it may have created
+#' in doing so. These may be needed for subsequent questions.
+#' 
+#' Finally, info() may be used to display a list of the special commands
+#' themselves with brief explanations of what they do.
+#' @param resume.class for development only; please accept the default.
+#' @export
 swirl <- function(resume.class="default"){
+  # Creates an environment, e, defines a function, cb, and registers
+  # cb as a callback with data argument, e. The callback retains a
+  # reference to the environment in which it was created, environment(cb),
+  # hence that environment, which also contains e, persists as long
+  # as cb remains registered. Thus e can be used to store infomation
+  # between invocations of cb.
   bye()
   # e lives here, in the environment created when swirl() is run
   e <- new.env(globalenv())
@@ -28,17 +66,48 @@ swirl <- function(resume.class="default"){
 
 ## SPECIAL COMMANDS
 
+#' Exit swirl.
+#' 
+#' Swirl operates by installing a callback function which responds
+#' to commands entered in the R console. This is how it captures
+#' and tests answers given by the user in the R console. Swirl will
+#' remain in operation until this callback is removed, which is
+#' what bye() does.
+#' @export
 bye <- function(){
   removeTaskCallback("mini")
   invisible()
 }
 
+#' Begin the upcoming question or unit of instruction.
+#' 
+#' This is the way to regain swirl's attention after viewing
+#' a video or play()'ing around in the console. 
+#' @export
 nxt <- function(){invisible()}
 
+#' Skip the current unit of instruction
+#' 
+#' Swirl will enter the correct answer and notify the
+#' user of the names of any new variables which it may have created
+#' in doing so. These may be needed for subsequent questions.
+#' @export
 skip <- function(){invisible()}
 
+#' Tell swirl to ignore console input for a while
+#' 
+#' It is somethimes useful to play around in the R console out of
+#' curiosity or to solidify a concept. This command will cause
+#' swirl to remain idle, allowing the user to experiment at will,
+#' until the command nxt() is entered. 
+#' @export
 play <- function(){invisible()}
 
+#' Display a list of special commands.
+#' 
+#' Display a list of the special commands, bye(), play(), nxt(),
+#' skip(), and info().
+#' @export
 info <- function(){
   swirl_out()
   swirl_out(" When you are in the R console:")
@@ -60,13 +129,13 @@ info <- function(){
 
 resume <- function(...)UseMethod("resume")
 
-#' Default method resume implements a finite state (or virtual) machine. 
-#' It runs a fixed "program" consisting of three "instructions" which in 
-#' turn present information, capture a user's response, and test and retry 
-#' if necessary. The three instructions are themselves S3 methods which 
-#' depend on the class of the active row of the course module. The 
-#' instruction set is thus extensible. It can be found in R/instructionSet.R. 
-#' 
+# Default method resume implements a finite state (or virtual) machine. 
+# It runs a fixed "program" consisting of three "instructions" which in 
+# turn present information, capture a user's response, and test and retry 
+# if necessary. The three instructions are themselves S3 methods which 
+# depend on the class of the active row of the course module. The 
+# instruction set is thus extensible. It can be found in R/instructionSet.R. 
+# 
 resume.default <- function(e){
   # Trap special functions
   if(uses_func("info")(e$expr)[[1]]){
@@ -144,13 +213,13 @@ resume.default <- function(e){
   return(TRUE)
 }
 
-#' DEPRECATED method resume.depr implements a finite state (or virtual) machine. 
-#' It runs a fixed "program" consisting of three "instructions" which in 
-#' turn present information, capture a user's response, and test and retry 
-#' if necessary. The three instructions are themselves S3 methods which 
-#' depend on the class of the active row of the course module. The 
-#' instruction set is thus extensible. It can be found in R/instructionSet.R. 
-#' 
+# DEPRECATED method resume.depr implements a finite state (or virtual) machine. 
+# It runs a fixed "program" consisting of three "instructions" which in 
+# turn present information, capture a user's response, and test and retry 
+# if necessary. The three instructions are themselves S3 methods which 
+# depend on the class of the active row of the course module. The 
+# instruction set is thus extensible. It can be found in R/instructionSet.R. 
+# 
 resume.depr <- function(e){
   # This function is entered ONLY when the user has entered a
   # valid expression at the R prompt.

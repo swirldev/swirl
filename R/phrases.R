@@ -1,4 +1,4 @@
-#' Return random praise.
+# Return random praise.
 praise <- function() {
   phrases <- c("You got it!",
                "Nice work!",

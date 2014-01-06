@@ -1,8 +1,8 @@
-#' Instruction set for swirl.R's "virtual machine". 
+# Instruction set for swirl.R's "virtual machine". 
 
-#' All classes first Output, all in the same way, hence one method
-#' suffices.
-#' 
+# All classes first Output, all in the same way, hence one method
+# suffices.
+# 
 present <- function(current.row, e)UseMethod("present")
 
 present.default <- function(current.row, e){
@@ -10,9 +10,9 @@ present.default <- function(current.row, e){
   e$iptr <- 1 + e$iptr
 }
 
-#' All classes then wait for user response, in different ways, hence
-#' different methods are required. Text and video are both finished
-#' at this point.
+# All classes then wait for user response, in different ways, hence
+# different methods are required. Text and video are both finished
+# at this point.
 
 waitUser <- function(current.row, e)UseMethod("waitUser")
 
@@ -96,10 +96,10 @@ waitUser.cmd_question <- function(current.row, e){
   e$iptr <- 1 + e$iptr
 }
 
-#' Only the question classes enter a testing loop. Testing is the
-#' same in both cases. If the response is correct they indicate
-#' instruction should progress. If incorrect, they publish a hint
-#' and return to the previous step. 
+# Only the question classes enter a testing loop. Testing is the
+# same in both cases. If the response is correct they indicate
+# instruction should progress. If incorrect, they publish a hint
+# and return to the previous step. 
 testResponse <- function(current.row, e)UseMethod("testResponse")
 
 testResponse.default <- function(current.row, e){
