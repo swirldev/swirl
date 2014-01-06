@@ -19,17 +19,21 @@ Logical vectors can contain the values `TRUE`, `FALSE`, and `NA` (for "not avail
 
 First, create a numeric vector `num_vect` that contains the values 0.5, 55, -10, and 6.
 
-```{r}
+
+```r
 num_vect <- c(0.5, 55, -10, 6)
 ```
+
 
 ---
 
 Now, create a variable called `tf` that gets the result of `num_vect < 1`, which is read as "num_vect is less than 1".
 
-```{r}
+
+```r
 tf <- num_vect < 1
 ```
+
 
 ---
 
@@ -42,9 +46,15 @@ What do you think `tf` will look like?
 
 Print the contents of `tf` now.
 
-```{r}
+
+```r
 tf
 ```
+
+```
+## [1]  TRUE FALSE  TRUE FALSE
+```
+
 
 ---
 
@@ -58,9 +68,15 @@ The first element of `num_vect` is 0.5, which is less than 1 and therefore the s
 
 Let's try another. Type `num_vect >= 10` without assigning the result to a new variable.
 
-```{r}
+
+```r
 num_vect >= 6
 ```
+
+```
+## [1] FALSE  TRUE FALSE  TRUE
+```
+
 
 ---
 

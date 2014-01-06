@@ -41,7 +41,9 @@ rep()
 	- logical
 	- character
 
-
+- missing values
+	- NA and NaN
+	- is.na() and is.nan()
 
 
 
@@ -51,7 +53,7 @@ rep()
 
 
 	
-# Module2 (coersion)
+# Module4 (coersion)
 
 - motivation for dedicating entire module to coersion
 
@@ -62,7 +64,7 @@ rep()
 - have user guess automatic
 
 
-# Module3 (matrices, lists, factors, data frames, missing values, attributes)
+# Module5 (other data structures)
 
 - matrices 
 	- vectors with a dimension attribute
@@ -79,18 +81,18 @@ rep()
 	- special type of list where every element is same length
 	- typeof(df) # "list" vs. class(df) # "data.frame" -- see testing and coersion, data structures, hadley
 	- heterogeneous
-- missing values
-	- NA and NaN
-	- is.na() and is.nan()
 - attributes/names
 
 
-# Module4 (subsetting):
-
-# Module5 (vectorized operations):
+# Module6 (subsetting):
 
 # Module6 (control structures):
+
+
+
 
 TODO:
 
 - List of all functions used/introduced in each module
+
+- Introduce help files in first module!!!

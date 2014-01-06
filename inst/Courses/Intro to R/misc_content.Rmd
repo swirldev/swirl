@@ -126,3 +126,23 @@ str(trees)
 ---
 
 We'll discuss more ways of working with datasets in future lessons, but for now we're just going to use the data from the `Volume` variable of this dataset to practice 
+
+
+
+######################
+
+
+
+
+
+
+
+Let's create a simple logical vector and explore some of its properties. Assign the vector `c(TRUE, FALSE, TRUE, NA)` to a new variable called `log_vect`.
+
+```{r}
+log_vect <- c(TRUE, FALSE, TRUE, NA)
+```
+
+---
+
+
