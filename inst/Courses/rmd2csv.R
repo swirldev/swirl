@@ -1,4 +1,8 @@
-## Need to put unit class at top of each unit of content as comment so that I know how to parse different blocks differently?? How to deal with multiple choice, where the answer choices are each getting their own place in a vector (ex: output[[24]])
+# This script takes content authored in an Rmd file and puts it in a csv file.
+# This is a covenience for instructors who prefer to author content in Rmd format.
+# It will be refined over time as we revisit course authoring best practices.
+# NOTE: The csv will have the same name as the Rmd file and will be placed in the
+# same directory.
 
 clean_rmd <- function(rmd) {
   
@@ -42,6 +46,10 @@ parse_unit <- function(unit) {
     correct_ans <- NA
   }
   
+  # Remove answer choices for multiple choice questions until I figure out what
+  # to do with them
+  choice_ind <- grep("^[1-9][.]", output)
+  if(length(choice_ind) > 0) output <- output[-choice_ind]
   
   # Return output and correct answer
   list(output = output, correct_ans = correct_ans)
@@ -50,8 +58,11 @@ parse_unit <- function(unit) {
 # Load stringr package
 library(stringr)
 
+# Define file path, excluding extension (Rmd/csv)
+fp <- "./inst/Courses/Intro to R/module3/mod3_new"
+
 # Read Rmd file with output and correct answers only
-my_rmd <- readLines("./inst/Courses/Intro to R/module1/mod1_test.Rmd", n = 500)
+my_rmd <- readLines(paste0(fp, ".Rmd"), n = 500)
 
 # Remove title
 my_rmd <- my_rmd[-c(1, 2)]
@@ -70,7 +81,7 @@ output <- sapply(content, `[[`, 1)
 correct_ans <- sapply(content, `[[`, 2)
 
 # Organize in data frame
-df <- data.frame(output = output, correct_ans = correct_ans)
+df <- data.frame(Output = output, CorrectAnswer = correct_ans)
 
 # Write data frame to csv
-write.csv(df, file = "~/Desktop/mod1_testcsv.csv")
+write.csv(df, file = paste0(fp, ".csv"), row.names = FALSE)
