@@ -1,0 +1,4 @@
+Intro to R - Module 3
+========================================================
+
+In this module, we will explore some basic building blocks of the R programming language.

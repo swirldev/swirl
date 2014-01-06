@@ -129,7 +129,22 @@ There are several ways we could do this. One possibility is to combine the `:` o
 
 ---
 
-However, as is the case with many common tasks, R has a built-in function for this purpose called `seq_along()`. Type `seq_along(my_seq)` to see it in action.
+Another option is to use `seq(along = my_seq)`. Give that a try.
+
+
+```r
+seq(along = my_seq)
+```
+
+```
+##  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+## [24] 24 25 26 27 28 29 30
+```
+
+
+---
+
+However, as is the case with many common tasks, R has a separate built-in function for this purpose called `seq_along()`. Type `seq_along(my_seq)` to see it in action.
 
 
 ```r
@@ -144,11 +159,59 @@ seq_along(my_seq)
 
 ---
 
-There are often several approaches to solving the same problem, particularly in R. Simple approaches that involve less typing are generally best. It's also important for your code to be readable, so that you and others can figure out what's going on without too much trouble.
+As a side note, there are often several approaches to solving the same problem, particularly in R. Simple approaches that involve less typing are generally best. It's also important for your code to be readable, so that you and others can figure out what's going on without too much hassle.
 
 ---
 
-If R has a built-in function for a particular task, it's likely that function is highly optimized for that purpose and is your best option. As you become a more advanced R programmer, you'll want to design your own functions to perform tasks when there are no better options. We'll explore writing your own functions in future lessons.
+If R has a built-in function for a particular task, it's likely that function is highly optimized for that purpose and is your best option. As you become a more advanced R programmer, you'll design your own functions to perform tasks when there are no better options. We'll explore writing your own functions in future lessons.
+
+---
+
+One more function related to creating sequences of numbers is `rep()`, which stands for "replicate". Let's look at a few uses.
+
+---
+
+If we're interesting in creating a vector that contains 40 zeros, we can use `rep(0, times = 40)`. Try it out.
+
+
+```r
+rep(0, times = 40)
+```
+
+```
+##  [1] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+## [36] 0 0 0 0 0
+```
+
+
+---
+
+If instead we want our vector to contain 10 repetitions of the vector (0, 1, 2), we can do `rep(c(0, 1, 2), times = 10)`. Go ahead.
+
+
+```r
+rep(c(0, 1, 2), times = 20)
+```
+
+```
+##  [1] 0 1 2 0 1 2 0 1 2 0 1 2 0 1 2 0 1 2 0 1 2 0 1 2 0 1 2 0 1 2 0 1 2 0 1
+## [36] 2 0 1 2 0 1 2 0 1 2 0 1 2 0 1 2 0 1 2 0 1 2 0 1 2
+```
+
+
+---
+
+Finally, let's say that rather than repeating the vector (0, 1, 2) over and over again, we want our vector to contain 10 zeros, then 10 ones, then 10 twos. We can do this with the `each` argument. Try `rep(c(0, 1, 2), each = 10)`.
+
+
+```r
+rep(c(0, 1, 2), each = 10)
+```
+
+```
+##  [1] 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2
+```
+
 
 ---
 

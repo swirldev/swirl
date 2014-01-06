@@ -1,11 +1,7 @@
 ### Intro to R - Content Outline ###
-#######################################
+####################################
 
-# Keep modules to less than 50 rows
-
-#######################################
-
-# Module1 (assignment, atomic vectors, data types):
+# Module1 (assignment, numeric vectors, vector arithmetic):
 
 - R as a calculator
 
@@ -19,41 +15,41 @@
 
 - vector recycling
 
-#######################################
+####################################
 
-# Module2 (sequencing and subsetting)
+# Module2 (sequences)
 
 `:`
 seq()
 seq_along()
 length()
+rep()
 
-`[`
-subset()
-which()
+####################################
 
+# Module3 (other types of vectors)
 
-
-
-
-
-
-
-
-
-- define data structures vs. data types
-
-- most common data structure in R is the vector
+- simplest, most common data structure in R is the vector
 
 - 2 flavors of vectors
 	- atomic vectors: only one data type
 	- lists: many data types
+
+- numeric vector is a type of atomic vector
 	
-- 4 common types of atomic vectors (have user create one of each)
-	- integer
-	- double (numeric)
+- other most common types of atomic vectors
 	- logical
 	- character
+
+
+
+
+
+
+
+
+
+
 	
 # Module2 (coersion)
 
