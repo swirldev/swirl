@@ -72,11 +72,11 @@ FUTURE MODULES:
 
 
 	
-# Module4 (coersion)
+# Module4 (coercion)
 
-- motivation for dedicating entire module to coersion
+- motivation for dedicating entire module to coercion
 
-- automatic vs. explicit coersion
+- automatic vs. explicit coercion
 
 - start with explicit examples
 

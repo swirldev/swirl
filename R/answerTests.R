@@ -192,7 +192,7 @@ runTest.trick <- function(keyphrase,e){
  } 
 }
 
-## TESTS AND KEYPHRASES BASED ON PACKAGE EXPECTTHAT
+## TESTS AND KEYPHRASES BASED ON PACKAGE TESTTHAT
 # These tests will print diagnostics in "dev" mode
 # but not in user (default) mode.
 
