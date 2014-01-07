@@ -37,7 +37,19 @@ It counted backwards in increments of 1! It's unlikely we'd want this behavior, 
 
 ---
 
-Generally, we'll desire more control over a sequence we're creating. The `seq()` function serves this purpose.
+Remember that if you have questions about a particular R function, you can access its documentation at any time with `?function_name_here`. However, in the case of an operator like `:` used above, you must enclose the symbol in backticks like this: ?`:`. (NOTE: The backtick (`) key is generally located in the top left corner of a keyboard, above the Tab key.)
+
+---
+
+Pull up the documentation for `:` now.
+
+```{r}
+?`:`
+```
+
+---
+
+Often, we'll desire more control over a sequence we're creating than what the `:` operator gives us. The `seq()` function serves this purpose.
 
 ---
 

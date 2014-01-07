@@ -5,6 +5,10 @@ In this module, we will explore some basic building blocks of the R programming 
 
 ---
 
+If at any point you'd like more information on a particular topic related to R, you can type `help.start()`, which will open a menu of resources (either within RStudio or your default web browser, depending on your setup). Alternatively, a simple web search often yields the answer you desire.
+
+---
+
 In it's simplest form, R can be used as an interactive calculator. Type `5 + 7` and press Enter.
 
 ```{r}
@@ -72,6 +76,14 @@ The easiest way to create a vector is with the `c()` function, which stands for 
 
 ```{r}
 z <- c(1.1, 9, 3.14)
+```
+
+---
+
+Anytime you have questions about a particular function, you can access R's built-in help files via the `?` command. For example, if you want more information on the `c()` function, type `?c` without the parentheses that normally follow a function name. Give it a try.
+
+```{r}
+?c
 ```
 
 ---

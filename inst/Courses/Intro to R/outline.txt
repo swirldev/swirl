@@ -18,6 +18,10 @@ TODO:
 
 - numeric vector = simplest data type in R
 
+- c()
+
+- `?` function
+
 - vector arithmetic
 
 - vector recycling
@@ -27,6 +31,8 @@ TODO:
 # Module2 (sequences)
 
 - `:`
+
+- `?` function for operators
 
 - seq() 
 	- by, length arguments

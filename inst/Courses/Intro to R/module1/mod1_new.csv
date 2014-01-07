@@ -1,5 +1,6 @@
 "Class","Output","CorrectAnswer","AnswerChoices","AnswerTests","Hint","Figure","VideoLink","Tag"
 "text","In this module, we will explore some basic building blocks of the R programming language.",NA,NA,NA,NA,NA,NA,NA
+"text","If at any point you'd like more information on a particular topic related to R, you can type `help.start()`, which will open a menu of resources (either within RStudio or your default web browser, depending on your setup). Alternatively, a simple web search often yields the answer you desire.",NA,NA,NA,NA,NA,NA,NA
 "cmd_question","In it's simplest form, R can be used as an interactive calculator. Type `5 + 7` and press Enter.","5 + 7",NA,NA,NA,NA,NA,NA
 "text","R simply prints the result of 12 by default. However, R is a programming language and often the reason we use a programming language as opposed to a calculator is to automate some process or avoid unnecessary repetition.",NA,NA,NA,NA,NA,NA,NA
 "text","In this case, we may want to use our result from above in a second calculation. Instead of retyping `5 + 7` every time we need it, we can just create a new variable that stores the result.",NA,NA,NA,NA,NA,NA,NA
@@ -12,6 +13,7 @@
 "cmd_question","What is the value of `y`? Type `y` to find out.","y",NA,NA,NA,NA,NA,NA
 "text","Now, let's create a small collection of numbers called a vector. Any object that contains data is called a data structure and numeric vectors are the simplest type of data structure in R. In fact, even a single number is considered a vector of length one.",NA,NA,NA,NA,NA,NA,NA
 "cmd_question","The easiest way to create a vector is with the `c()` function, which stands for ""concatenate"" or ""combine"". To create a vector containing the numbers 1.1, 9, and 3.14, type `c(1.1, 9, 3.14)`. Try it now and store the result in a variable called `z`.","z <- c(1.1, 9, 3.14)",NA,NA,NA,NA,NA,NA
+"cmd_question","Anytime you have questions about a particular function, you can access R's built-in help files via the `?` command. For example, if you want more information on the `c()` function, type `?c` without the parentheses that normally follow a function name. Give it a try.","?c",NA,NA,NA,NA,NA,NA
 "cmd_question","Type `z` to view it's contents. Notice that there are no commas separating the values in the output.","z",NA,NA,NA,NA,NA,NA
 "cmd_question","You can combine vectors to make a new vector. Create a new vector that contains z, 555, then z again in that order. Don't assign this vector to a new variable, so that we can just see the result immediately.","c(z, 555, z)",NA,NA,NA,NA,NA,NA
 "cmd_question","Numeric vectors can be used in arithmetic expressions. Type the following to see what happens: `z * 2 + 100`.","z * 2 + 100",NA,NA,NA,NA,NA,NA

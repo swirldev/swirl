@@ -149,7 +149,7 @@ It seems that we're missing something.... Ah, yes! Your name!
 
 ---
 
-To add (or "concatinate") your name to the end of `my_char`, use the `c()` function like this: `c(my_char, "your_name_here")`. Place your name in double quotes where I've put "your_name_here". Try it now, storing the result in a new variable called `my_name`.
+To add (or "concatenate") your name to the end of `my_char`, use the `c()` function like this: `c(my_char, "your_name_here")`. Place your name in double quotes where I've put "your_name_here". Try it now, storing the result in a new variable called `my_name`.
 
 ```{r}
 my_name <- c(my_char, "Nick")
@@ -197,7 +197,7 @@ What do you think will happen if our vectors are of different length? (Hint: we 
 
 ---
 
-Vector recyling! Try `paste(LETTERS, 1:4, sep = "-")`, where `LETTERS` is a predefined variable in R containing a character vector of all 26 letters in the English alphabet.
+Vector recycling! Try `paste(LETTERS, 1:4, sep = "-")`, where `LETTERS` is a predefined variable in R containing a character vector of all 26 letters in the English alphabet.
 
 ```{r}
 paste(LETTERS, 1:4, sep = "-")
@@ -213,4 +213,4 @@ Also worth noting is that the numeric vector `1:4` gets "coerced" into a charact
 
 ---
 
-We'll discuss coersion in another lesson, but all it really means that the numbers 1, 2, 3, and 4 in the output above are no longer numbers to R, but rather characters "1", "2", "3", and "4".
+We'll discuss coercion in another lesson, but all it really means that the numbers 1, 2, 3, and 4 in the output above are no longer numbers to R, but rather characters "1", "2", "3", and "4".
