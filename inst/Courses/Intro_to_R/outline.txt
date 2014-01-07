@@ -1,3 +1,10 @@
+TODO:
+
+- List of all functions used/introduced in each module
+
+- Introduce help files in first module!!!
+
+
 ### Intro to R - Content Outline ###
 ####################################
 
@@ -11,6 +18,10 @@
 
 - numeric vector = simplest data type in R
 
+- c()
+
+- `?` function
+
 - vector arithmetic
 
 - vector recycling
@@ -19,11 +30,19 @@
 
 # Module2 (sequences)
 
-`:`
-seq()
-seq_along()
-length()
-rep()
+- `:`
+
+- `?` function for operators
+
+- seq() 
+	- by, length arguments
+
+- seq_along()
+
+- length()
+
+- rep()
+	- times, each arguments
 
 ####################################
 
@@ -47,17 +66,17 @@ rep()
 
 
 
+--------------------------------------
 
-
-
+FUTURE MODULES:
 
 
 	
-# Module4 (coersion)
+# Module4 (coercion)
 
-- motivation for dedicating entire module to coersion
+- motivation for dedicating entire module to coercion
 
-- automatic vs. explicit coersion
+- automatic vs. explicit coercion
 
 - start with explicit examples
 
@@ -87,12 +106,3 @@ rep()
 # Module6 (subsetting):
 
 # Module6 (control structures):
-
-
-
-
-TODO:
-
-- List of all functions used/introduced in each module
-
-- Introduce help files in first module!!!

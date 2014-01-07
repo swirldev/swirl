@@ -1,11 +1,17 @@
 "Class","Output","CorrectAnswer","AnswerChoices","AnswerTests","Hint","Figure","VideoLink","Tag"
-"text","In this module, you'll learn how to create sequences of numbers in R. Then, you'll apply that knowledge to take subsets of vectors.",NA,NA,NA,NA,NA,NA,NA
+"text","In this module, you'll learn how to create sequences of numbers in R.",NA,NA,NA,NA,NA,NA,NA
 "cmd_question","The simplest way to create a sequence of numbers in R is by using the `:` operator. Type `1:20` to see how it works.","1:20",NA,NA,NA,NA,NA,NA
 "cmd_question","That gave us every integer between (and including) 1 and 20. We could also use it to create a sequence of real numbers. For example, try `pi:10`.","pi:10",NA,NA,NA,NA,NA,NA
 "text","The result is a vector of real numbers starting with pi (3.142...) and increasing in increments of 1. The upper limit of 10 is never reached, since the next number in our sequence would be greater than 10.",NA,NA,NA,NA,NA,NA,NA
 "cmd_question","What happens if we do this: `15:1`? Give it a try to find out.","15:1",NA,NA,NA,NA,NA,NA
 "text","It counted backwards in increments of 1! It's unlikely we'd want this behavior, but nonetheless it's good to know how it could happen.",NA,NA,NA,NA,NA,NA,NA
-"text","Generally, we'll desire more control over a sequence we're creating. The `seq()` function serves this purpose.",NA,NA,NA,NA,NA,NA,NA
+<<<<<<< HEAD
+"text","Remember that if you have questions about a particular R function, you can access its documentation at any time with `?function_name_here`. However, in the case of an operator like `:` used above, you must enclose the symbol in backticks like this: ?`:`. (NOTE: The backtick (`) key is generally located in the top left corner of a keyboard, above the Tab key.)",NA,NA,NA,NA,NA,NA,NA
+=======
+"text","Remember that if you have questions about a particular R function, you can access its documentation at any time with `?function_name_here`. However, in the case of an operator like `:` used above, you must enclose the symbol in backticks like this: ?`:`. (NOTE: The backtick (`) key is generally located in the top lefthand corner of a keyboard, above the Tab key.)",NA,NA,NA,NA,NA,NA,NA
+>>>>>>> 6bc8c18cdc654305ee10b58e1a50c6f2d2b86cc7
+"cmd_question","Pull up the documentation for `:` now.","?`:`",NA,NA,NA,NA,NA,NA
+"text","Often, we'll desire more control over a sequence we're creating than what the `:` operator gives us. The `seq()` function serves this purpose.",NA,NA,NA,NA,NA,NA,NA
 "cmd_question","The most basic use of `seq()` does exactly the same thing as the `:` operator. Try `seq(1, 20)` to see this.","seq(1, 20)",NA,NA,NA,NA,NA,NA
 "cmd_question","This gives us the same output as `1:20`. However, let's say that instead we want a vector of numbers ranging from 0 to 10, incremented by 0.5. `seq(0, 10, by=0.5)` does just that. Try it out.","seq(0, 10, by=0.5)",NA,NA,NA,NA,NA,NA
 "cmd_question","Or maybe we don't care what the increment is and we just want a sequence of 30 numbers between 5 and 10. `seq(5, 10, length=30)` does the trick. Give it shot now and store the result in a new variable called `my_seq`.","my_seq <- seq(5, 10, length=30)",NA,NA,NA,NA,NA,NA
