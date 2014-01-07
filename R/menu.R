@@ -50,6 +50,15 @@ mainMenu.default <- function(e){
       # Else load a new module.
       # Let user choose the course.
       coursesU <- dir(courseDir(e))
+      # Eliminate empty directories
+      idx <- sapply(coursesU, 
+                    function(x)length(dir(file.path(courseDir(e),x)))>0)
+      coursesU <- coursesU[idx]
+      # If no courses are available, exit
+      if(length(coursesU)==0){
+        swirl_out("No courses are available. Try again using swirl() with no parameter.")
+        return(FALSE)
+      }
       # path cosmetics
       coursesR <- gsub("_", " ", coursesU)
       module <- ""
