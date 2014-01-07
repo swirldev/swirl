@@ -9,7 +9,7 @@ Vectors come in two different flavors: atomic vectors and lists. An atomic vecto
 
 ---
 
-In the last lesson, we dealt entirely with numeric vectors, which are one type of atomic vector. Other types of atomic vectors include logical, character, integer, and complex. In this lesson, we'll take a closer look at logical and character vectors.
+In previous lessons, we dealt entirely with numeric vectors, which are one type of atomic vector. Other types of atomic vectors include logical, character, integer, and complex. In this lesson, we'll take a closer look at logical and character vectors.
 
 ---
 
@@ -193,7 +193,7 @@ paste(1:3, c("X", "Y", "Z"), sep = "")
 
 ---
 
-What do you think will happen if our vectors are of different length? (Hint: we talked about this in the last lesson.)
+What do you think will happen if our vectors are of different length? (Hint: we talked about this in a previous lesson.)
 
 ---
 

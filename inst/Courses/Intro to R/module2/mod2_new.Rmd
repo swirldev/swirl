@@ -1,7 +1,7 @@
 Intro to R - Module 2
 ========================================================
 
-In this module, you'll learn how to create sequences of numbers in R. Then, you'll apply that knowledge to take subsets of vectors.
+In this module, you'll learn how to create sequences of numbers in R.
 
 ---
 

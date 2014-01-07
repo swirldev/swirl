@@ -1,3 +1,10 @@
+TODO:
+
+- List of all functions used/introduced in each module
+
+- Introduce help files in first module!!!
+
+
 ### Intro to R - Content Outline ###
 ####################################
 
@@ -19,11 +26,17 @@
 
 # Module2 (sequences)
 
-`:`
-seq()
-seq_along()
-length()
-rep()
+- `:`
+
+- seq() 
+	- by, length arguments
+
+- seq_along()
+
+- length()
+
+- rep()
+	- times, each arguments
 
 ####################################
 
@@ -47,9 +60,9 @@ rep()
 
 
 
+--------------------------------------
 
-
-
+FUTURE MODULES:
 
 
 	
@@ -87,12 +100,3 @@ rep()
 # Module6 (subsetting):
 
 # Module6 (control structures):
-
-
-
-
-TODO:
-
-- List of all functions used/introduced in each module
-
-- Introduce help files in first module!!!
