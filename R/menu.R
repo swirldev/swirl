@@ -51,8 +51,8 @@ mainMenu.default <- function(e){
       # Let user choose the course.
       coursesU <- dir(courseDir(e))
       # Eliminate empty directories
-      idx <- sapply(coursesU, 
-                    function(x)length(dir(file.path(courseDir(e),x)))>0)
+      idx <- unlist(sapply(coursesU, 
+                    function(x)length(dir(file.path(courseDir(e),x)))>0))
       coursesU <- coursesU[idx]
       # If no courses are available, exit
       if(length(coursesU)==0){
