@@ -25,3 +25,4 @@ Collate:
   'initSwirl.R'
   'progress.R'
   'utilities.R'
+  'rmd2csv.R'
