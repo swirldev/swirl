@@ -305,8 +305,10 @@ runTest.in_range <- function(keyphrase, e){
 # given in the keyphrase.
 # keyphrase: "expr_identical=<correct expression>"
 runTest.expr_identical <- function(keyphrase, e){
-  correct <- as.call(parse(text=rightside(keyphrase))[[1]])
-  results <- expectThat(e$expr, is_identical_to(correct))
+  correct <- parse(text=rightside(keyphrase))[[1]]
+  expr <- e$expr
+  if(is.expression(expr))expr <- expr[[1]]
+  results <- expectThat(expr, is_identical_to(correct))
   if( is(e, "dev") && !results$passed)swirl_out(results$message) 
   return(results$passed)
 }
