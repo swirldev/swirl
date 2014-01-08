@@ -58,7 +58,8 @@ get_ans_tests.default <- function(unit) {
 get_ans_tests.cmd_question <- function(unit) {
   ans_tests_ind <- grep("*** .ans_tests", unit, fixed = TRUE) + 1
   if(length(ans_tests_ind) == 0) {
-    stop("You forgot to specify answer tests!")
+    warning("No answer tests specified for a command question!")
+    return(paste0("expr_identical=", get_corr_ans(unit)))
   }
   unit[ans_tests_ind]
 }
@@ -121,7 +122,12 @@ into_units <- function(rmd) {
 }
 
 get_unit_class <- function(unit) {
-  str_split_fixed(unit[1], "&", 2)[2]
+  cl <- str_split_fixed(unit[1], "&", 2)[2]
+  valid_classes <- c("text",
+                     "cmd_question",
+                     "mult_question")
+  if(!cl %in% valid_classes) stop("Invalid unit class used!")
+  cl
 }
 
 collapse_choices <- function(choices) {
