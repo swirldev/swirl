@@ -313,6 +313,20 @@ runTest.expr_identical <- function(keyphrase, e){
   return(results$passed)
 }
 
+# Test the the length of e$val is that given in the keyphrase
+# keyphrase: "val_length=<integer>"
+runTest.val_length <- function(keyphrase, e){
+  try(n <- as.integer(rightside(keyphrase)), silent=TRUE)
+  if(is.na(n)){
+    stop(message=paste("BUG: right side of", keyphrase,
+                                 "is not an integer."))
+  }
+  results <- expectThat(length(e$val), equals(n, label=n), 
+                        label=paste0("length(c(", toString(e$val), "))"))                                                   
+  if( is(e, "dev") && !results$passed)swirl_out(results$message) 
+  return(results$passed)
+}
+
 ### HELPER FUNCTIONS
 
 rightside <- function(keyphrase){
