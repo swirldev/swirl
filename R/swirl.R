@@ -142,10 +142,12 @@ resume.default <- function(e){
     return(TRUE)
   }
   if(uses_func("nxt")(e$expr)[[1]]){
+    swirl_out("Resuming lesson...")
     e$playing <- FALSE
     e$iptr <- 1
   }
   if(uses_func("play")(e$expr)[[1]]){
+    swirl_out("Entering play mode. Experiment as you please, then type nxt() when you are ready to resume the lesson.", skip_after=TRUE)
     e$playing <- TRUE
   }
   # If the user is playing, ignore console input,
