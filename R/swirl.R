@@ -141,6 +141,7 @@ resume.default <- function(e){
   on.exit(if(esc_flag)swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE))
   # Trap special functions
   if(uses_func("info")(e$expr)[[1]]){
+    esc_flag <- FALSE
     return(TRUE)
   }
   if(uses_func("nxt")(e$expr)[[1]]){
@@ -154,7 +155,10 @@ resume.default <- function(e){
   }
   # If the user is playing, ignore console input,
   # but remain in operation.
-  if(exists("playing", envir=e, inherits=FALSE) && e$playing)return(TRUE)
+  if(exists("playing", envir=e, inherits=FALSE) && e$playing){
+    esc_flag <- FALSE
+    return(TRUE)
+  }
   # If the user wants to skip the current question, do the bookkeeping.
   if(uses_func("skip")(e$expr)[[1]]){
     # Increment a skip count kept in e.
@@ -182,6 +186,8 @@ resume.default <- function(e){
   temp <- mainMenu(e)
   # If menu returns FALSE, the user wants to exit.
   if(is.logical(temp) && !isTRUE(temp)){
+    swirl_out("Leaving swirl now...")
+    esc_flag <- FALSE # To supress double notification
     return(FALSE)
   }
   # Execute instructions until a return to the prompt is necessary
@@ -203,6 +209,8 @@ resume.default <- function(e){
       temp <- mainMenu(e)
       # if menu returns FALSE, user wants to quit.
       if(is.logical(temp) && !isTRUE(temp)){
+        swirl_out("Leaving swirl now...")
+        esc_flag <- FALSE # to supress double notification
         return(FALSE)
     }
     }
