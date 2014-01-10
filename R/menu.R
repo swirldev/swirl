@@ -124,7 +124,7 @@ housekeeping.default <- function(e){
   swirl_out("Also, when you see 'ANSWER:', or when you see the R prompt (>), or when you are asked to select from a list, that means it's your turn to enter a response, then press Enter to continue.")
   select.list(c("Continue.", "Proceed.", "Let's get going!"),
               title="\nSelect 1, 2, or 3 and press Enter", graphics=FALSE)
-  swirl_out("You can return to the R console (>) at any time by pressing the Esc key; this doesn't exit, so swirl remains in operation.")
+  swirl_out("You can exit swirl and return to the R prompt (>) at any time by pressing the Esc key. If you are already at the prompt (>), type bye() to exit and save your progress.")
   info()
   swirl_out("Let's get started!", skip_before=FALSE)
   readline("\n...")

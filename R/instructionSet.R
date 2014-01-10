@@ -119,7 +119,7 @@ testResponse.default <- function(current.row, e){
     e$iptr <- 1
     e$row <- 1 + e$row
   } else {
-    swirl_out(tryAgain())
+    swirl_out(paste(tryAgain(), "Or, type info() for more options."))
     temp <- current.row[,"Hint"]
     if (!is.na(temp)) swirl_out(current.row[,"Hint"], skip_after=TRUE)
     e$iptr <- e$iptr -1
