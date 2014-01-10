@@ -110,10 +110,8 @@ welcome.dev <- function(e, ...){
 
 # Default version.
 welcome.default <- function(e, ...){
-  swirl_out()
   swirl_out("Welcome! My name is Swirl and I'll be your host today! Please sign in. If you've been here before please use the same name as you did then. If you are new, call yourself something unique.")
-  swirl_out()
-  return(readline("What shall I call you? "))
+  return(readline("\nWhat shall I call you? "))
 }
 
 # Presents preliminary information to a new user
@@ -121,15 +119,11 @@ welcome.default <- function(e, ...){
 # @param e persistent environment used here only for its class attribute
 # 
 housekeeping.default <- function(e){
-  swirl_out()
   swirl_out(paste0("Thanks, ", e$usr,". Let's cover a couple of quick housekeeping items before we begin our first lesson. First off, you should know that when you see '...', that means you should press Enter when you are done reading and ready to continue."))
   readline("\n...  <-- That's your cue to press Enter to continue")
-  swirl_out()
   swirl_out("Also, as you've probably figured out, when you see 'ANSWER:', or when you see the R prompt (>), or when you are asked to select from a list, that means it's your turn to enter a response, then press Enter to continue.")
-  swirl_out()
   select.list(c("Continue.", "Proceed.", "Let's get going!"),
-              title="Select 1, 2, or 3 and press Enter", graphics=FALSE)
-  swirl_out()
+              title="\nSelect 1, 2, or 3 and press Enter", graphics=FALSE)
   swirl_out("You can return to the R console (>) at any time by pressing the Esc key; this doesn't exit so swirl remains in operation.")
   info()
   swirl_out("Let's get started!")

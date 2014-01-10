@@ -110,19 +110,18 @@ play <- function(){invisible()}
 #' skip(), and info().
 #' @export
 info <- function(){
-  swirl_out()
-  swirl_out(" When you are in the R console:")
-  swirl_out()
-  swirl_out("-- Typing skip() allows you to skip the current question.")
-  swirl_out()
-  swirl_out("-- Typing play() lets you experiment with R on your own; swirl will ignore what you do...")
-  swirl_out("-- UNTIL you type nxt() which will regain swirl's attention.")
-  swirl_out()
-  swirl_out("-- Typing bye() causes swirl to exit. Your progress will be saved.")
-  swirl_out()
-  swirl_out("-- Typing info() displays these options again.")  
+  swirl_out("When you are in the R console:")
+  
+  swirl_out("-- Typing skip() allows you to skip the current question.", skip_before=FALSE)
+  
+  swirl_out("-- Typing play() lets you experiment with R on your own; swirl will ignore what you do...", skip_before=FALSE)
+  swirl_out("-- UNTIL you type nxt() which will regain swirl's attention.", skip_before=FALSE)
+  
+  swirl_out("-- Typing bye() causes swirl to exit. Your progress will be saved.", skip_before=FALSE)
+  
+  swirl_out("-- Typing info() displays these options again.", skip_before=FALSE)  
 
-  swirl_out()
+  
   invisible()
 }
 
@@ -164,7 +163,7 @@ resume.default <- function(e){
     # Evaluate it in the global environment
     eval(e$expr, globalenv())
     # Inform the user, but don't expose the actual answer.
-    swirl_out()
+    
     swirl_out("I've entered the correct answer for you.")
     temp <- new.env()
     eval(e$expr, temp)
@@ -173,7 +172,7 @@ resume.default <- function(e){
       swirl_out(paste0("In doing so, I've created the variable(s) ", 
                        temp, ", which you may need later."))
     }
-    swirl_out()
+    
   }
   # Method menu initializes or reinitializes e if necessary.
   temp <- mainMenu(e)
