@@ -137,6 +137,8 @@ resume <- function(...)UseMethod("resume")
 # instruction set is thus extensible. It can be found in R/instructionSet.R. 
 # 
 resume.default <- function(e){
+  esc_flag <- TRUE
+  on.exit(if(esc_flag)swirl_out("Leaving swirl. Type swirl() to resume."))
   # Trap special functions
   if(uses_func("info")(e$expr)[[1]]){
     return(TRUE)
@@ -218,5 +220,6 @@ resume.default <- function(e){
     e$instr[[e$iptr]](e$current.row, e)
   }
   e$prompt <- FALSE
+  esc_flag <- FALSE
   return(TRUE)
 }
