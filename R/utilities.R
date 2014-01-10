@@ -1,7 +1,10 @@
-swirl_out <- function(...) {
+swirl_out <- function(..., skip_before=TRUE, skip_after=FALSE) {
   wrapped <- strwrap(str_c(..., sep = " "),
                      width = getOption("width") - 2)
-  message(str_c("| ", wrapped, collapse = "\n"))
+  mes <- str_c("| ", wrapped, collapse = "\n")
+  if(skip_before) mes <- paste0("\n", mes)
+  if(skip_after) mes <- paste0(mes, "\n")
+  message(mes)
 }
 
 xfer <- function(env1, env2){

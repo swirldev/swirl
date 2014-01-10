@@ -6,7 +6,7 @@
 present <- function(current.row, e)UseMethod("present")
 
 present.default <- function(current.row, e){
-  swirl_out(current.row[, "Output"])
+  swirl_out(current.row[, "Output"], skip_after=TRUE)
   e$iptr <- 1 + e$iptr
 }
 
@@ -120,9 +120,8 @@ testResponse.default <- function(current.row, e){
     e$row <- 1 + e$row
   } else {
     swirl_out(tryAgain())
-    swirl_out()
     temp <- current.row[,"Hint"]
-    if (!is.na(temp)) swirl_out(current.row[,"Hint"])
+    if (!is.na(temp)) swirl_out(current.row[,"Hint"], skip_after=TRUE)
     e$iptr <- e$iptr -1
   }
 }
