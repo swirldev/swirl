@@ -113,7 +113,7 @@ testResponse.default <- function(current.row, e){
     tests <- str_trim(unlist(strsplit(tests,";")))
     results <- lapply(tests, function(keyphrase){testMe(keyphrase,e)})
   }
-  correct <- !(FALSE %in% results)
+  correct <- !(FALSE %in% unlist(results))
   if(correct){
     swirl_out(praise())
     e$iptr <- 1
