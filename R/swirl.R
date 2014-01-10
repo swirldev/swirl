@@ -119,7 +119,7 @@ info <- function(){
   
   swirl_out("-- Typing bye() causes swirl to exit. Your progress will be saved.", skip_before=FALSE)
   
-  swirl_out("-- Typing info() displays these options again.", skip_before=FALSE)  
+  swirl_out("-- Typing info() displays these options again.", skip_before=FALSE, skip_after=TRUE)  
 
   
   invisible()
