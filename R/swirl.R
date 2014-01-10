@@ -9,23 +9,20 @@
 #' given if appropriate. Progress is automatically saved so that a user
 #' may quit at any time and later resume without losing work.
 #' 
-#' The usual way to exit swirl is to type bye() in the R console.
-#' A user may return to the R console at any time by pressing the Esc
-#' key. The Esc key alone, however, does not cause swirl to exit. A
-#' user must type bye() in addition. Swirl will print a goodbye message
-#' whenever it exits to signal that it is no longer in operation. 
+#' There are several ways to exit swirl: by typing bye() while in the R
+#' console, by hitting the Esc key while not in the R console, or by
+#' entering 0 from the swirl course menu. Swirl will print a goodbye 
+#' message whenever it exits. 
 #' 
 #' While swirl is in operation, it may be controlled by entering special
-#' commands in the R console, using the Esc key to return to the R console
-#' if necessary. One of the special commands is bye() as discussed above.
-#' Others are play(), nxt(), skip(), and info(). The parentheses are
-#' important.
+#' commands in the R console. One of the special commands is bye() 
+#' as discussed above. Others are play(), nxt(), skip(), and info(). 
+#' The parentheses are important.
 #' 
 #' Sometimes a user will want to play around in the R console without
 #' interference or commentary from swirl. This can be accomplished by
 #' using the special command, play(). Swirl will remain in operation,
-#' silently, until the special command nxt() is entered. In general,
-#' nxt() can always be used to display the upcoming question.
+#' silently, until the special command nxt() is entered.
 #' 
 #' The special command, skip(), can be used to skip a question if 
 #' necessary. Swirl will enter the correct answer and notify the
