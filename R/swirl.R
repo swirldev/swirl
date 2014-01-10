@@ -203,7 +203,8 @@ resume.default <- function(e){
       # recognized as an active progress file.
       new_path <- paste(e$progress,".done", sep="")
       # rename the progress file to indicate completion
-      if(!file.exists(new_path))file.rename(e$progress, new_path)
+      if(file.exists(new_path))file.remove(new_path)
+      file.rename(e$progress, new_path)
       rm(mod, envir=e)
       # let the user select another course module
       temp <- mainMenu(e)
