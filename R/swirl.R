@@ -76,7 +76,7 @@ swirl <- function(resume.class="default"){
 #' @export
 bye <- function(){
   removeTaskCallback("mini")
-  swirl_out("Leaving swirl now...")
+  swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE)
   invisible()
 }
 
@@ -110,7 +110,7 @@ play <- function(){invisible()}
 #' skip(), and info().
 #' @export
 info <- function(){
-  swirl_out("When you are in the R console:")
+  swirl_out("When you are at the R prompt (>):")
   
   swirl_out("-- Typing skip() allows you to skip the current question.", skip_before=FALSE)
   
@@ -138,7 +138,7 @@ resume <- function(...)UseMethod("resume")
 # 
 resume.default <- function(e){
   esc_flag <- TRUE
-  on.exit(if(esc_flag)swirl_out("Leaving swirl. Type swirl() to resume."))
+  on.exit(if(esc_flag)swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE))
   # Trap special functions
   if(uses_func("info")(e$expr)[[1]]){
     esc_flag <- FALSE
