@@ -142,6 +142,12 @@ resume.default <- function(e){
     return(TRUE)
   }
   if(uses_func("nxt")(e$expr)[[1]]){
+    
+    ## Using the stored list of "official" swirl variables and values,
+    #  assign variables of the same names in the global environment
+    #  their "official" values, in case the user has changed them
+    #  while playing.
+    
     swirl_out("Resuming lesson...")
     e$playing <- FALSE
     e$iptr <- 1
@@ -176,8 +182,7 @@ resume.default <- function(e){
     if(length(temp) > 0){
       swirl_out(paste0("In doing so, I've created the variable(s) ", 
                        temp, ", which you may need later."))
-    }
-    
+    }  
   }
   # Method menu initializes or reinitializes e if necessary.
   temp <- mainMenu(e)
@@ -187,6 +192,13 @@ resume.default <- function(e){
     esc_flag <- FALSE # To supress double notification
     return(FALSE)
   }
+  
+  # TODO: if e$expr is NOT nxt(), the user has just responded to
+  # a question at the command line. Compare the current global
+  # environment with the current snapshot, taken just prior to
+  # the user's response, to determine the variables created or
+  # changed by the user's response. Store a list of changes in e.
+  
   # Execute instructions until a return to the prompt is necessary
   while(!e$prompt){
     # If the module is complete, save progress, remove the current
@@ -214,6 +226,13 @@ resume.default <- function(e){
     }
     # If we are ready for a new row, prepare it
     if(e$iptr == 1){
+      
+      ## TODO: Any variables changed or created during the previous
+      #  question must have been correct or we would not be about
+      #  to advance to a new row. Incorporate these in the list
+      #  of swirl's "official" names and values.
+      #  It should be safe to remove the current snapshot here.
+      
       saveProgress(e)
       e$current.row <- e$mod[e$row,]
       # Prepend the row's swirl class to its class attribute
@@ -223,6 +242,11 @@ resume.default <- function(e){
     # Execute the current instruction
     e$instr[[e$iptr]](e$current.row, e)
   }
+  
+  ## TODO: Take a snapshot of the global environment here for
+  #  comparison after the user has responded to a question at
+  #  the command line. Store it in e.
+  
   e$prompt <- FALSE
   esc_flag <- FALSE
   return(TRUE)

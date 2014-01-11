@@ -74,6 +74,8 @@ runTest.word_many <- function(keyphrase,e){
 
 # Tests if the user has just created one new variable. If so, assigns 
 # e$newVar its value and returns TRUE.
+## TODO: Alter this test to use list of new variables created
+#  by snapshot strategy.
 runTest.newVar <- function(keyphrase, e){
   eval(e$expr)
   newVars <- setdiff(ls(),c("keyphrase", "e"))
@@ -89,6 +91,8 @@ runTest.newVar <- function(keyphrase, e){
 
 # Tests if the user has just created one new variable of correct name. If so, 
 # returns TRUE.
+## TODO: Alter this test to use list of new variables created
+#  by snapshot strategy.
 runTest.correctName <- function(keyphrase, e){
   correctName <- rightside(keyphrase)
   eval(e$expr)
@@ -247,9 +251,12 @@ runTest.equivalent <- function(keyphrase,e) {
   if(is(e,"dev") && !results$passed)swirl_out(results$message)
   return(results$passed)
 }
+
 # Tests if the user has just created one new variable (of correct name
 # if given.) If so, returns TRUE.
 # keyphrase: creates_var or creates_var=correctName
+## TODO: Alter this test to use list of new variables created
+#  by snapshot strategy.
 runTest.creates_var <- function(keyphrase, e){
   correctName <- rightside(keyphrase)
   if(is.na(correctName)){
@@ -269,7 +276,9 @@ runTest.creates_var <- function(keyphrase, e){
 
 # Tests the result of a computation such as mean(newVar) applied
 # to a specific variable created in a previous question.
-# keyphrase: equals=correctExpression,variable 
+# keyphrase: equals=correctExpression,variable
+## TODO: Alter this test to use list of new variables created
+#  by snapshot strategy.
 runTest.equals <- function(keyphrase, e){
   temp <- strsplit(rightside(keyphrase),",")[[1]]
   correctExprLabel <- temp[1]

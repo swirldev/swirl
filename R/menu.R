@@ -160,12 +160,22 @@ loadModule.default <- function(e, courseU, module){
   modPath <- file.path(courseDir(e), courseU, module)
   len <- str_length(module)
   shortname <- paste0(substr(module,1,3),substr(module,len,len),"_new.csv",collapse=NULL)
-  dataName <- file.path(modPath,shortname)     
+  dataName <- file.path(modPath,shortname)
+  
+  ## TODO: Before initinalizing the module, take a snapshot of 
+  #  the global environment.
+  
   #initialize course module, assigning module-specific variables
   initFile <- file.path(modPath,"initModule.R")
   if (file.exists(initFile)){
     source(initFile)
   }
+  
+  ## TODO: After initializing, compare a current snapshot of the 
+  #  global environment with the previous to detect any variables
+  #  created or changed by initialization. Add these to the list
+  #  of "official" swirl names and values.
+  
   instructor <- courseU # default
   instructorFile <- file.path(modPath,"instructor.txt")
   if(file.exists(instructorFile)){
@@ -181,9 +191,17 @@ restoreUserProgress.default <- function(e, selection){
   temp <- readRDS(file.path(e$udat, selection))
   # transfer its contents to e
   xfer(temp, e)
+  
+  ## TODO: Omit sourcing the initModule. It will have been sourced,
+  #  and any variables thus created saved, in swirl's "official" list.
+  # 
   # source the initModule.R file if it exists (fixes swirlfancy #28)
   initf <- file.path(e$path, "initModule.R")
   if(file.exists(initf))source(initf)
+  
+  ## TODO: Instead of the following, transfer swirl's "official" list
+  #  of names and values to the global environment.
+  # 
   # eval retrieved user expr's in global env, but don't include
   # call to swirl (the first entry)
   if(length(e$usrexpr) > 1){
