@@ -192,6 +192,13 @@ restoreUserProgress.default <- function(e, selection){
       eval(expr, globalenv())
     }
   }
+  # Restore figures which precede current row (Issue #44)
+  idx <- 1:(e$row - 1)
+  figs <- na.omit(e$mod[idx,"Figure"])
+  if(length(figs)>0){
+    figs <- file.path(e$path, figs)
+    lapply(figs, source)
+  }
 }
 
 loadInstructions.default <- function(e){
