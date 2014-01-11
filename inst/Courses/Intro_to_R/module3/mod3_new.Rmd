@@ -224,7 +224,7 @@ In this example, we used the `paste()` function to collapse the elements of a si
 
 --- &cmd_question
 
-In the simplest case, we can join two character vectors that are each of length 1 (i.e. join two words). Try `paste("Hello", world!", sep = " ")`, where the `sep` argument tells R that we want to separate the joined elements with a single space.
+In the simplest case, we can join two character vectors that are each of length 1 (i.e. join two words). Try `paste("Hello", "world!", sep = " ")`, where the `sep` argument tells R that we want to separate the joined elements with a single space.
 
 ```{r}
 paste("Hello", "world!", sep = " ")

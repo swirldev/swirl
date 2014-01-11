@@ -202,8 +202,9 @@ runTest.is_a <- function(keyphrase, e) {
   temp <- strsplit(rightside(keyphrase),",")[[1]]
   class <-  str_trim(temp[1])
   variable <- str_trim(temp[2])
-  label <- deparse(get(variable,e))
-  results <- expectThat(get(variable, e), is_a(class), label=label)
+  label <- deparse(try(get(variable,e), silent=TRUE))
+  results <- expectThat(try(get(variable, e), silent=TRUE), 
+                        is_a(class), label=label)
   if(is(e,"dev") && !results$passed)swirl_out(results$message)
   return(results$passed)
 }
@@ -386,7 +387,10 @@ creates_var <- function(expected=NULL, label = NULL){
     eval(expr)
     newVars <- setdiff(ls(),"expr")
     creates <- length(newVars) == 1
-    asNamed <- is.null(expected) || identical(expected, newVars[1])
+    # Need to use == here instead of identical() to compare expected and
+    # newVars[1] since expected has a "class" attribute and newVars[1]
+    # does not. identical() compares attributes as well as values.
+    asNamed <- is.null(expected) || (expected == newVars[1])
     message <- str_c("does not create a variable ")
     if(!is.null(expected)) message <- str_c(message, "named ", expected)
     expectation(identical(creates&&asNamed, TRUE), message)
