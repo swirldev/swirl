@@ -147,7 +147,9 @@ resume.default <- function(e){
     #  assign variables of the same names in the global environment
     #  their "official" values, in case the user has changed them
     #  while playing.
-    
+    for(x in ls(e$official)){
+      assign(x,e$official[[x]],globalenv())
+    }
     swirl_out("Resuming lesson...")
     e$playing <- FALSE
     e$iptr <- 1
@@ -193,11 +195,16 @@ resume.default <- function(e){
     return(FALSE)
   }
   
-  # TODO: if e$expr is NOT nxt(), the user has just responded to
+  # if e$expr is NOT nxt(), the user has just responded to
   # a question at the command line. Compare the current global
   # environment with the current snapshot, taken just prior to
   # the user's response, to determine the variables created or
   # changed by the user's response. Store a list of changes in e.
+ if(!uses_func("nxt")(e$expr)[[1]]){
+   ge <- as.list(globalenv())
+   idx <- !(ge %in% e$snapshot)
+   e$delta <- ge[idx]
+ }
   
   # Execute instructions until a return to the prompt is necessary
   while(!e$prompt){
@@ -227,12 +234,12 @@ resume.default <- function(e){
     # If we are ready for a new row, prepare it
     if(e$iptr == 1){
       
-      ## TODO: Any variables changed or created during the previous
+      #  Any variables changed or created during the previous
       #  question must have been correct or we would not be about
       #  to advance to a new row. Incorporate these in the list
       #  of swirl's "official" names and values.
       #  It should be safe to remove the current snapshot here.
-      
+      e$official <- mergeLists(e$delta,e$official)
       saveProgress(e)
       e$current.row <- e$mod[e$row,]
       # Prepend the row's swirl class to its class attribute
@@ -243,10 +250,10 @@ resume.default <- function(e){
     e$instr[[e$iptr]](e$current.row, e)
   }
   
-  ## TODO: Take a snapshot of the global environment here for
+  # Take a snapshot of the global environment here for
   #  comparison after the user has responded to a question at
   #  the command line. Store it in e.
-  
+  e$snapshot <- as.list(globalenv())
   e$prompt <- FALSE
   esc_flag <- FALSE
   return(TRUE)

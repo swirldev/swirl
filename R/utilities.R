@@ -1,10 +1,7 @@
-swirl_out <- function(..., skip_before=TRUE, skip_after=FALSE) {
+swirl_out <- function(...) {
   wrapped <- strwrap(str_c(..., sep = " "),
                      width = getOption("width") - 2)
-  mes <- str_c("| ", wrapped, collapse = "\n")
-  if(skip_before) mes <- paste0("\n", mes)
-  if(skip_after) mes <- paste0(mes, "\n")
-  message(mes)
+  message(str_c("| ", wrapped, collapse = "\n"))
 }
 
 xfer <- function(env1, env2){
@@ -19,4 +16,11 @@ cleanAdmin <- function(){
   udat <- file.path(find.package("swirl"), "user_data", "swirladmin")
   file.remove(dir(udat, pattern="*[.]rda", full.names=TRUE))
   invisible()
+}
+
+mergeLists <- function(sourceList, destList){
+ for (n in ls(sourceList)){
+   destList[[n]] <- sourceList[[n]]
+ }
+ return(destList)
 }

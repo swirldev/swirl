@@ -162,20 +162,23 @@ loadModule.default <- function(e, courseU, module){
   shortname <- paste0(substr(module,1,3),substr(module,len,len),"_new.csv",collapse=NULL)
   dataName <- file.path(modPath,shortname)
   
-  ## TODO: Before initinalizing the module, take a snapshot of 
+  # Before initinalizing the module, take a snapshot of 
   #  the global environment.
-  
+  snapshot <- as.list(globalenv())
   #initialize course module, assigning module-specific variables
   initFile <- file.path(modPath,"initModule.R")
   if (file.exists(initFile)){
     source(initFile)
   }
   
-  ## TODO: After initializing, compare a current snapshot of the 
+  #  After initializing, compare a current snapshot of the 
   #  global environment with the previous to detect any variables
   #  created or changed by initialization. Add these to the list
   #  of "official" swirl names and values.
-  
+  e$snapshot <- as.list(globalenv())
+  idx <- !(e$snapshot %in% snapshot)
+  e$official <- e$snapshot[idx]
+    
   instructor <- courseU # default
   instructorFile <- file.path(modPath,"instructor.txt")
   if(file.exists(instructorFile)){
@@ -192,25 +195,33 @@ restoreUserProgress.default <- function(e, selection){
   # transfer its contents to e
   xfer(temp, e)
   
-  ## TODO: Omit sourcing the initModule. It will have been sourced,
+  #  Omit sourcing the initModule. It will have been sourced,
   #  and any variables thus created saved, in swirl's "official" list.
   # 
   # source the initModule.R file if it exists (fixes swirlfancy #28)
   
-  initf <- file.path(e$path, "initModule.R")
-  if(file.exists(initf))source(initf)
+  #initf <- file.path(e$path, "initModule.R")
+  #if(file.exists(initf))source(initf)
   
-  ## TODO: Instead of the following, transfer swirl's "official" list
+  
+  #  Instead of the following, transfer swirl's "official" list
   #  of names and values to the global environment.
   # 
+  
+  for (x in ls(e$official)){
+    assign(x,e$official[[x]], globalenv())
+  }
+    
+  
   # eval retrieved user expr's in global env, but don't include
   # call to swirl (the first entry)
-  if(length(e$usrexpr) > 1){
-    for(n in 2:length(e$usrexpr)){
-      expr <- e$usrexpr[[n]]
-      eval(expr, globalenv())
-    }
-  }
+#   if(length(e$usrexpr) > 1){
+#     for(n in 2:length(e$usrexpr)){
+#       expr <- e$usrexpr[[n]]
+#       eval(expr, globalenv())
+#     }
+#   }
+  
   # Restore figures which precede current row (Issue #44)
   idx <- 1:(e$row - 1)
   figs <- na.omit(e$mod[idx,"Figure"])
