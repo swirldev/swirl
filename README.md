@@ -1,4 +1,4 @@
-# Swirl 2.0.0.
+# Swirl 2.0.0
 
 [Swirl](http://swirlstats.com/) is a platform for learning (and teaching) statistics and R simultaneously and interactively. It presents a choice of course modules and interactively tutors a user through them. A user may be asked to watch a video, to answer a multiple-choice or fill-in-the-blanks question, or to enter a command in the R console precisely as if he or she were using R in practice. Emphasis is on the last, interacting with the R console. User responses are tested for correctness and hints are given if appropriate. Progress is automatically saved so that a user may quit at any time and later resume without losing work.
 
