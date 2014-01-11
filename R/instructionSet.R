@@ -119,7 +119,11 @@ testResponse.default <- function(current.row, e){
     e$iptr <- 1
     e$row <- 1 + e$row
   } else {
-    swirl_out(paste(tryAgain(), "Or, type info() for more options."))
+    mes <- tryAgain()
+    if(is(current.row, "cmd_question")) {
+      mes <- paste(mes, "Or, type info() for more options.")
+    }
+    swirl_out(mes)
     temp <- current.row[,"Hint"]
     if (!is.na(temp)) swirl_out(current.row[,"Hint"], skip_after=TRUE)
     e$iptr <- e$iptr -1

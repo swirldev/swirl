@@ -70,14 +70,14 @@ The first element of `num_vect` is 0.5, which is less than 1 and therefore the s
 
 --- &cmd_question
 
-Let's try another. Type `num_vect >= 10` without assigning the result to a new variable.
+Let's try another. Type `num_vect >= 6` without assigning the result to a new variable.
 
 ```{r}
 num_vect >= 6
 ```
 
 *** .hint
-Don't create a new variable on this one. We just want to see the result of `num_vect >= 10`. Make sure there is no space between the `>` and `=` symbols. Think of them as one symbol representing "greater than or equal to".
+Don't create a new variable on this one. We just want to see the result of `num_vect >= 6`. Make sure there is no space between the `>` and `=` symbols. Think of them as one symbol representing "greater than or equal to".
 
 --- &text
 
@@ -139,7 +139,7 @@ Character vectors are also very common in R. Double quotes are used to distingui
 
 --- &cmd_question
 
-Create a character vector that contains the following words: "My", "name", "is". Remember to enclose each word in it's own set of double quotes, so that R knows they are character strings. Store the vector in a variable called my_char
+Create a character vector that contains the following words: "My", "name", "is". Remember to enclose each word in it's own set of double quotes, so that R knows they are character strings. Store the vector in a variable called `my_char`.
 
 ```{r}
 my_char <- c("My", "name", "is")
@@ -224,7 +224,7 @@ In this example, we used the `paste()` function to collapse the elements of a si
 
 --- &cmd_question
 
-In the simplest case, we can join two character vectors that are each of length 1 (i.e. join two words). Try `paste("Hello", world!", sep = " ")`, where the `sep` argument tells R that we want to separate the joined elements with a single space.
+In the simplest case, we can join two character vectors that are each of length 1 (i.e. join two words). Try `paste("Hello", "world!", sep = " ")`, where the `sep` argument tells R that we want to separate the joined elements with a single space.
 
 ```{r}
 paste("Hello", "world!", sep = " ")

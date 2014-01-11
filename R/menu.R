@@ -25,7 +25,7 @@ mainMenu.default <- function(e){
   # Welcome the user if necessary and set up progress tracking
   if(!exists("usr",e,inherits = FALSE)){
     e$usr <- welcome(e)
-    udat <- file.path(find.package("swirlfancy"), "user_data", e$usr)
+    udat <- file.path(find.package("swirl"), "user_data", e$usr)
     if(!file.exists(udat)){
       housekeeping(e)
       dir.create(udat, recursive=TRUE)
@@ -110,7 +110,7 @@ welcome.dev <- function(e, ...){
 
 # Default version.
 welcome.default <- function(e, ...){
-  swirl_out("Welcome! My name is Swirl and I'll be your host today! Please sign in. If you've been here before, use the same name as you did then. If you are new, call yourself something unique.", skip_after=TRUE)
+  swirl_out("Welcome to swirl! Please sign in. If you've been here before, use the same name as you did then. If you are new, call yourself something unique.", skip_after=TRUE)
   return(readline("What shall I call you? "))
 }
 
@@ -121,10 +121,10 @@ welcome.default <- function(e, ...){
 housekeeping.default <- function(e){
   swirl_out(paste0("Thanks, ", e$usr,". Let's cover a couple of quick housekeeping items before we begin our first lesson. First off, you should know that when you see '...', that means you should press Enter when you are done reading and ready to continue."))
   readline("\n...  <-- That's your cue to press Enter to continue")
-  swirl_out("Also, when you see 'ANSWER:', or when you see the R prompt (>), or when you are asked to select from a list, that means it's your turn to enter a response, then press Enter to continue.")
+  swirl_out("Also, when you see 'ANSWER:', the R prompt (>), or when you are asked to select from a list, that means it's your turn to enter a response, then press Enter to continue.")
   select.list(c("Continue.", "Proceed.", "Let's get going!"),
               title="\nSelect 1, 2, or 3 and press Enter", graphics=FALSE)
-  swirl_out("You can exit swirl and return to the R prompt (>) at any time by pressing the Esc key. If you are already at the prompt (>), type bye() to exit and save your progress.")
+  swirl_out("You can exit swirl and return to the R prompt (>) at any time by pressing the Esc key. If you are already at the prompt, type bye() to exit and save your progress. When you exit properly, you'll see a short message letting know you've done so.")
   info()
   swirl_out("Let's get started!", skip_before=FALSE)
   readline("\n...")
@@ -145,7 +145,7 @@ inProgressMenu.default <- function(e, choices){
 
 # A stub. Eventually this should be a full menu
 courseMenu.default <- function(e, choices){
-  swirl_out("Please choose a course, or type 0 to exit swirl.")
+  swirl_out("Please choose a course, or type 0 to exit swirl. We recommend Intro to R, which is the only course we are actively developing.")
   return(select.list(choices, graphics=FALSE))
 }
 
@@ -196,6 +196,7 @@ restoreUserProgress.default <- function(e, selection){
   #  and any variables thus created saved, in swirl's "official" list.
   # 
   # source the initModule.R file if it exists (fixes swirlfancy #28)
+  
   initf <- file.path(e$path, "initModule.R")
   if(file.exists(initf))source(initf)
   
@@ -247,7 +248,7 @@ completed <- function(e){
 
 courseDir.default <- function(e){
   # e's only role is to determine the method used
-  file.path(find.package("swirlfancy"), "Courses")
+  file.path(find.package("swirl"), "Courses")
 }
 
 courseDir.dev <- function(e){
