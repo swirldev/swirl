@@ -7,18 +7,18 @@ In this module, we will explore some basic building blocks of the R programming 
 
 --- &text
 
-If at any point you'd like more information on a particular topic related to R, you can type `help.start()`, which will open a menu of resources (either within RStudio or your default web browser, depending on your setup). Alternatively, a simple web search often yields the answer you desire.
+If at any point you'd like more information on a particular topic related to R, you can type `help.start()` at the prompt, which will open a menu of resources (either within RStudio or your default web browser, depending on your setup). Alternatively, a simple web search often yields the answer you're looking for.
 
 --- &cmd_question
 
-In it's simplest form, R can be used as an interactive calculator. Type `5 + 7` and press Enter.
+In it's simplest form, R can be used as an interactive calculator. Type `5 + 7` and press Enter. Don't include the backticks (``) in your input. They are only there to denote an R command.
 
 ```{r}
 5 + 7
 ```
 
 *** .hint
-Just type `5 + 7` and press Enter. Don't include the backticks (``) in your input. They are only there to denote an R command.
+Just type `5 + 7` (without the backticks) and press Enter.
 
 --- &text
 
@@ -151,7 +151,7 @@ First, R multiplied each of the three elements in `z` by 2. Then it added 100 to
 
 Other common arithmetic operators are `+`, `-`, `/`, and `^` (where `x^2` means "x squared"). To take the square root, use the `sqrt()` function and to take the absolute value, use the `abs()` function.
 
---- &text
+--- &cmd_question
 
 Take the square root of `z - 1` and assign it to a new variable called `mySqrt`.
 
