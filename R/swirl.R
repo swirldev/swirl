@@ -200,10 +200,11 @@ resume.default <- function(e){
   # environment with the current snapshot, taken just prior to
   # the user's response, to determine the variables created or
   # changed by the user's response. Store a list of changes in e.
- if(!uses_func("nxt")(e$expr)[[1]]){
+ if(!uses_func("swirl")(e$expr)[[1]] && !uses_func("nxt")(e$expr)[[1]]){
    ge <- as.list(globalenv())
    idx <- !(ge %in% e$snapshot)
-   e$delta <- ge[idx]
+   safe <-safeEval(e$expr)
+   e$delta <- mergeLists(ge[idx],safe)
  }
   
   # Execute instructions until a return to the prompt is necessary
@@ -239,7 +240,10 @@ resume.default <- function(e){
       #  to advance to a new row. Incorporate these in the list
       #  of swirl's "official" names and values.
       #  It should be safe to remove the current snapshot here.
-      e$official <- mergeLists(e$delta,e$official)
+      if (!is.null(e$delta)){
+        e$official <- mergeLists(e$delta,e$official)
+      }
+      e$delta <- list()
       saveProgress(e)
       e$current.row <- e$mod[e$row,]
       # Prepend the row's swirl class to its class attribute

@@ -74,14 +74,11 @@ runTest.word_many <- function(keyphrase,e){
 
 # Tests if the user has just created one new variable. If so, assigns 
 # e$newVar its value and returns TRUE.
-## TODO: Alter this test to use list of new variables created
+# Alter this test to use list of new variables created
 #  by snapshot strategy.
 runTest.newVar <- function(keyphrase, e){
-  eval(e$expr)
-  newVars <- setdiff(ls(),c("keyphrase", "e"))
-  if (length(newVars)==1){
-    eval(e$expr,e)
-    e$newVar <- e$val
+  if (length(e$delta)==1){
+    e$newVar <- e$delta[[1]]
     return(TRUE)
   }
   else {
@@ -91,13 +88,12 @@ runTest.newVar <- function(keyphrase, e){
 
 # Tests if the user has just created one new variable of correct name. If so, 
 # returns TRUE.
-## TODO: Alter this test to use list of new variables created
+#  Alter this test to use list of new variables created
 #  by snapshot strategy.
 runTest.correctName <- function(keyphrase, e){
   correctName <- rightside(keyphrase)
-  eval(e$expr)
-  newVars <- setdiff(ls(),c("keyphrase", "e"))
-  if ((length(newVars)==1) && (identical(newVars,correctName))) {
+  if ((length(e$delta)==1) && (identical(e$delta[[1]],correctName))) {
+    e$newVar <- e$delta[[1]]
     return(TRUE)
   }
   else {
@@ -238,26 +234,9 @@ runTest.matches <- function(keyphrase, e) {
   return(results$passed)
 }
 
-# Returns TRUE if as.expression
-# (e$expr) matches the expression indicated to the right
-# of "=" in keyphrase
-# keyphrase:equivalent=expression
-runTest.equivalent <- function(keyphrase,e) {
-  correctExpr <- parse(text=rightside(keyphrase))
-  userExpr <- as.expression(e$expr)
-  results <- expectThat(userExpr,
-                        is_equivalent_to(correctExpr,deparse(correctExpr)),
-                        label=deparse(userExpr))
-                        
-  if(is(e,"dev") && !results$passed)swirl_out(results$message)
-  return(results$passed)
-}
-
-# Tests if the user has just created one new variable (of correct name
-# if given.) If so, returns TRUE.
-# keyphrase: creates_var or creates_var=correctName
-## TODO: Alter this test to use list of new variables created
-#  by snapshot strategy.
+# returns TRUE if user has created a variable of the given 
+# name (if there is one)
+# keyphrase: creates_var, creates_var=correctName
 runTest.creates_var <- function(keyphrase, e){
   correctName <- rightside(keyphrase)
   if(is.na(correctName)){
@@ -275,23 +254,38 @@ runTest.creates_var <- function(keyphrase, e){
   return(results$passed)
 }
 
-# Tests the result of a computation such as mean(newVar) applied
-# to a specific variable created in a previous question.
-# keyphrase: equals=correctExpression,variable
-## TODO: Alter this test to use list of new variables created
-#  by snapshot strategy.
+#keyphrase: equals=expr,variable
 runTest.equals <- function(keyphrase, e){
   temp <- strsplit(rightside(keyphrase),",")[[1]]
   correctExprLabel <- temp[1]
   variable <- str_trim(temp[2])
   correctExpr <- gsub(variable, paste0("e$",variable), correctExprLabel)
+  correctAns <- safeEval(parse(text=correctExpr))
+  if(length(correctAns) != 1)return(FALSE)
   results <- expectThat(e$var, 
-                        equals(eval(parse(text=correctExpr)), 
+                        equals(correctAns[[1]], 
                                label=correctExprLabel), 
                         label=deparse(e$expr))
   if(is(e, "dev") && !results$passed)swirl_out(results$message)
   return(results$passed)
 }
+
+# Returns TRUE if as.expression
+# (e$expr) matches the expression indicated to the right
+# of "=" in keyphrase
+# keyphrase:equivalent=expression
+runTest.equivalent <- function(keyphrase,e) {
+  correctExpr <- parse(text=rightside(keyphrase))
+  userExpr <- as.expression(e$expr)
+  results <- expectThat(userExpr,
+                        is_equivalent_to(correctExpr,deparse(correctExpr)),
+                        label=deparse(userExpr))
+                        
+  if(is(e,"dev") && !results$passed)swirl_out(results$message)
+  return(results$passed)
+}
+
+
 
 # Tests that a value just entered at the R prompt is within
 # the given range
@@ -393,8 +387,7 @@ uses_func <- function(expected, label = NULL, ...){
 
 creates_var <- function(expected=NULL, label = NULL){
   function(expr){
-    eval(expr)
-    newVars <- setdiff(ls(),"expr")
+    newVars <- names(safeEval(expr))
     creates <- length(newVars) == 1
     # Need to use == here instead of identical() to compare expected and
     # newVars[1] since expected has a "class" attribute and newVars[1]

@@ -22,8 +22,24 @@ cleanAdmin <- function(){
 }
 
 mergeLists <- function(sourceList, destList){
- for (n in ls(sourceList)){
+ for (n in names(sourceList)){
    destList[[n]] <- sourceList[[n]]
  }
  return(destList)
+}
+
+# we evaluate user's expression in a safe environment
+# whose parent is the global environment
+# substitutes global values of any variables thus
+# created in case they are different as in rng
+# returns list of names and values
+safeEval <- function(expr){
+  e1 <- new.env(parent=globalenv())
+  ans <- list()
+  eval(expr,e1,NULL)
+  for (x in ls(e1)){
+    if(exists(x,globalenv()))
+      ans[[x]] <- get(x,globalenv())
+  }
+  return(ans)
 }
