@@ -6,4 +6,4 @@ swirl leans heavily on exercising a student's use of the R console. A callback m
 
 Course material fairly awkward to produce at the moment. Practical authoring tools are under consideration. More information should appear at [the swirl site](http://swirlstats.com/instructors.html) in the near future.
 
-The main function is swirl(). Functions which control swirl's behavior include bye() to quit, skip() to skip a question, play() to allow experimentation in the R console without interference from swirl, nxt() to resume interacting with swirl, and info() to display a help menu.
+The main function is `swirl()`. Functions which control swirl's behavior include `bye()` to quit, `skip()` to skip a question, `play()` to allow experimentation in the R console without interference from swirl, `nxt()` to resume interacting with swirl, and `info()` to display a help menu.
