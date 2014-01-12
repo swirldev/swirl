@@ -194,11 +194,11 @@ restoreUserProgress.default <- function(e, selection){
   }
   # Restore figures which precede current row (Issue #44)
   idx <- 1:(e$row - 1)
-  figs <- na.omit(e$mod[idx,"Figure"])
-  if(length(figs)>0){
-    figs <- file.path(e$path, figs)
-    lapply(figs, source)
-  }
+  figs <- e$mod[idx,"Figure"]
+  # Check for missing Figure column (Issue #47) and omit NA's 
+  if(is.null(figs) || length(figs) == 0)return()
+  figs <- file.path(e$path, figs)
+  lapply(figs, source)
 }
 
 loadInstructions.default <- function(e){
