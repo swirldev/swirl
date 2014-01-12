@@ -12,4 +12,6 @@
 
 * The answer tests operate on the R expression entered by the user, as opposed to the string representation of it (see swirl 1.0). This avoids marking a user incorrect for stylistic discrepancies such as including single spaces between function arguments, etc.
 
+* Makes heavy use of R's S3 object oriented programming dialect to promote an easily extensible architecture. Incorporating new functionality simply requires writing new methods for existing "core" functions.
+
 * Instructors can now author content in an R Markdown (.Rmd) file, then use `rmd2csv()` to create the CSV file from which swirl reads content. This is an experimental feature based on syntax employed by [slidify](https://github.com/ramnathv/slidify), an R package designed by Ramnath Vaidyanathan for creating interactive web presentations.
