@@ -43,3 +43,11 @@ safeEval <- function(expr){
   }
   return(ans)
 }
+
+cleanEnv <- function(snapshot){
+  # clone of previous environment
+  pe <- as.environment(as.list(snapshot))
+  parent.env(pe) <- parent.env(globalenv())
+  # return new environment whose parent is pe
+  return(new.env(parent=pe))
+}
