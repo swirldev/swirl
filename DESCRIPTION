@@ -12,7 +12,7 @@ Depends:
   plotrix,
   pwr,
   testthat
-Description: swirl is a platform for learning statistics and R simultaneously and interactively.
+Description: swirl is a platform for learning (and teaching) statistics and R simultaneously and interactively.
 URL: http://swirlstats.com
 Collate: 
   'menu.R'
