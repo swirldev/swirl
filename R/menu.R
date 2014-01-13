@@ -197,6 +197,7 @@ restoreUserProgress.default <- function(e, selection){
   figs <- e$mod[idx,"Figure"]
   # Check for missing Figure column (Issue #47) and omit NA's 
   if(is.null(figs) || length(figs) == 0)return()
+  figs <- figs[!is.na(figs)]
   figs <- file.path(e$path, figs)
   lapply(figs, source)
 }
