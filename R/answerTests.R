@@ -169,10 +169,7 @@ runTest.swirl1cmd <- function(keyphrase,e){
     return(TRUE)
   } else  
     if (ans.is.correct && !call.is.correct){
-      assign("uexpr",e$expr,globalenv())
-      assign("cexpr",correct.expr,globalenv())
       swirl_out("That's not the expression I expected but it works.")
-      #todo
       #following line is temporary fix to create correct vars for future ques if needed
       eval(correct.expr,globalenv())
       return(TRUE)
