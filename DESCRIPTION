@@ -8,7 +8,8 @@ Author: Nick Carchedi, Bill Bauer, and Gina Grdina, with significant
     contributions from Peter Schulam and Hadley Wickham
 Maintainer: Nick Carchedi <nick.carchedi@gmail.com>
 Depends:
-    R (>= 2.14),
+    R (>= 2.15)
+Imports:
     stringr,
     plotrix,
     pwr,
