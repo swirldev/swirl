@@ -1,2 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^.*.html$
+user_data/
+^NEWS.md$

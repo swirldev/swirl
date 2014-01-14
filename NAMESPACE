@@ -1,6 +1,6 @@
-export(swirl)
 export(bye)
+export(info)
 export(nxt)
 export(play)
 export(skip)
-export(info)
+export(swirl)
