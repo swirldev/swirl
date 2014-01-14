@@ -33,10 +33,10 @@ mergeLists <- function(sourceList, destList){
 # substitutes global values of any variables thus
 # created in case they are different as in rng
 # returns list of names and values
-safeEval <- function(expr){
-  e1 <- new.env(parent=globalenv())
+safeEval <- function(expr, e){
+  e1 <- cleanEnv(e$snapshot)
   ans <- list()
-  eval(expr,e1,NULL)
+  eval(expr,e1)
   for (x in ls(e1)){
     if(exists(x,globalenv()))
       ans[[x]] <- get(x,globalenv())
