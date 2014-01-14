@@ -141,8 +141,7 @@ resume.default <- function(e){
     esc_flag <- FALSE
     return(TRUE)
   }
-  if(uses_func("nxt")(e$expr)[[1]]){
-    
+  if(uses_func("nxt")(e$expr)[[1]]){    
     ## Using the stored list of "official" swirl variables and values,
     #  assign variables of the same names in the global environment
     #  their "official" values, in case the user has changed them
@@ -169,21 +168,27 @@ resume.default <- function(e){
     # Increment a skip count kept in e.
     if(!exists("skips", e))e$skips <- 0
     e$skips <- 1 + e$skips
-    # Enter the correct answer for the user.
+    # Enter the correct answer for the user
+    # by simulating what the user should have done
+    #
+    # TODO: the newVar case. Problem is that the user
+    # may have created a variable whose name we have
+    # not tracked, and has now been asked to perform
+    # a computation with it. The correct answer will
+    # refer to the new variable as newVar or something.
+    # We'll have to track the associations of such pairs
+    # of names and use them here.
     correctAns <- e$current.row[,"CorrectAnswer"]
     e$expr <- parse(text=correctAns)[[1]]
-    e$val <- eval(e$expr)
-    # Evaluate it in the global environment
-    eval(e$expr, globalenv())
-    # Inform the user, but don't expose the actual answer.
-    
+    ce <- cleanEnv(e$snapshot)
+    e$val <- eval(e$expr, ce)
+    ce <- as.list(ce)
+    for(nm in names(ce))assign(nm, ce[[nm]], globalenv())
+    # Inform the user, but don't expose the actual answer.    
     swirl_out("I've entered the correct answer for you.")
-    temp <- new.env()
-    eval(e$expr, temp)
-    temp <- ls(temp)
     if(length(temp) > 0){
       swirl_out(paste0("In doing so, I've created the variable(s) ", 
-                       temp, ", which you may need later."))
+                       names(ce), ", which you may need later."))
     }  
   }
   # Method menu initializes or reinitializes e if necessary.
@@ -200,6 +205,7 @@ resume.default <- function(e){
   # environment with the current snapshot, taken just prior to
   # the user's response, to determine the variables created or
   # changed by the user's response. Store a list of changes in e.
+  # TODO: wouldn't safe alone suffice?
  if(!uses_func("swirl")(e$expr)[[1]] && !uses_func("nxt")(e$expr)[[1]]){
    ge <- as.list(globalenv())
    idx <- !(ge %in% e$snapshot)

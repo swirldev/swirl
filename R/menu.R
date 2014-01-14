@@ -93,6 +93,7 @@ mainMenu.default <- function(e){
       # path to file 
       e$progress <- file.path(e$udat, fname)
       # list to hold expressions entered by the user
+      # TODO: usrexpr is obsolete
       e$usrexpr <- list()
       # indicator that swirl is not reacting to console input
       e$playing <- FALSE
@@ -194,39 +195,17 @@ restoreUserProgress.default <- function(e, selection){
   temp <- readRDS(file.path(e$udat, selection))
   # transfer its contents to e
   xfer(temp, e)
-  
-  #  Omit sourcing the initModule. It will have been sourced,
-  #  and any variables thus created saved, in swirl's "official" list.
-  # 
-  # source the initModule.R file if it exists (fixes swirlfancy #28)
-  
-  #initf <- file.path(e$path, "initModule.R")
-  #if(file.exists(initf))source(initf)
-  
-  
-  #  Instead of the following, transfer swirl's "official" list
-  #  of names and values to the global environment.
-  # 
-  
+  # transfer swirl's "official" list of variables to the
+  # global environment.
   for (x in ls(e$official)){
     assign(x,e$official[[x]], globalenv())
   }
-    
-  
-  # eval retrieved user expr's in global env, but don't include
-  # call to swirl (the first entry)
-#   if(length(e$usrexpr) > 1){
-#     for(n in 2:length(e$usrexpr)){
-#       expr <- e$usrexpr[[n]]
-#       eval(expr, globalenv())
-#     }
-#   }
-  
   # Restore figures which precede current row (Issue #44)
   idx <- 1:(e$row - 1)
   figs <- e$mod[idx,"Figure"]
   # Check for missing Figure column (Issue #47) and omit NA's 
   if(is.null(figs) || length(figs) == 0)return()
+  figs <- figs[!is.na(figs)]
   figs <- file.path(e$path, figs)
   lapply(figs, source)
 }

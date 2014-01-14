@@ -231,9 +231,9 @@ runTest.matches <- function(keyphrase, e) {
   return(results$passed)
 }
 
-# returns TRUE if user has created a variable of the given 
-# name (if there is one)
-# keyphrase: creates_var, creates_var=correctName
+# Tests if the user has just created one new variable (of correct name
+# if given.) If so, returns TRUE.
+# keyphrase: creates_var or creates_var=correctName
 runTest.creates_var <- function(keyphrase, e){
   correctName <- rightside(keyphrase)
   if(is.na(correctName)){
@@ -251,7 +251,9 @@ runTest.creates_var <- function(keyphrase, e){
   return(results$passed)
 }
 
-#keyphrase: equals=expr,variable
+# Tests the result of a computation such as mean(newVar) applied
+# to a specific variable created in a previous question.
+# keyphrase: equals=correctExpression,variable 
 runTest.equals <- function(keyphrase, e){
   temp <- strsplit(rightside(keyphrase),",")[[1]]
   correctExprLabel <- temp[1]
