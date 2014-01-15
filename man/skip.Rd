@@ -1,12 +1,24 @@
 \name{skip}
 \alias{skip}
-\title{Skip the current unit of instruction}
+\title{Skip the current unit of instruction.}
 \usage{
 skip()
 }
 \description{
-Swirl will enter the correct answer and notify the user of
+swirl will enter the correct answer and notify the user of
 the names of any new variables which it may have created in
 doing so. These may be needed for subsequent questions.
+}
+\examples{
+\dontrun{
+
+| Create a new variable called `y` that contains the number 8.
+
+> skip()
+
+| I've entered the correct answer for you.
+
+| In doing so, I've created the variable(s) y, which you may need later.
+}
 }
 

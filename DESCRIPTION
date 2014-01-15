@@ -4,23 +4,16 @@ Type: Package
 Title: Statistics with Interactive R Learning
 Date: 2014-01-13
 License: GPL-2
-Author: Nick Carchedi, Bill Bauer, and Gina Grdina, with significant contributions from Peter Schulam and Hadley Wickham
+Author: Nick Carchedi, Bill Bauer, and Gina Grdina, with significant
+    contributions from Peter Schulam and Hadley Wickham
 Maintainer: Nick Carchedi <nick.carchedi@gmail.com>
-Depends: 
-  R (>= 2.14),
-  stringr,
-  plotrix,
-  pwr,
-  testthat
-Description: swirl is a platform for learning (and teaching) statistics and R simultaneously and interactively.
+Depends:
+    R (>= 2.15)
+Imports:
+    stringr,
+    plotrix,
+    pwr,
+    testthat
+Description: swirl is a platform for learning (and teaching) statistics and R
+    simultaneously and interactively.
 URL: http://swirlstats.com
-Collate: 
-  'menu.R'
-  'modConstructor.R'
-  'phrases.R'
-  'answerTests.R'
-  'swirl.R'
-  'instructionSet.R'
-  'progress.R'
-  'utilities.R'
-  'rmd2csv.R'
