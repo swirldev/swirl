@@ -49,6 +49,7 @@ waitUser.video <- function(current.row, e){
   if(tolower(response) %in% c("y", "yes")){
     swirl_out("Type nxt() to continue")
     e$prompt <- TRUE
+    e$playing <- TRUE
     browseURL(current.row[,"VideoLink"])
   }
   e$row <- 1 + e$row
