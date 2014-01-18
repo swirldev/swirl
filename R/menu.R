@@ -92,9 +92,6 @@ mainMenu.default <- function(e){
       fname <- progressName(attr(e$mod,"courseName"), attr(e$mod,"modName"))
       # path to file 
       e$progress <- file.path(e$udat, fname)
-      # list to hold expressions entered by the user
-      # TODO: usrexpr is obsolete
-      e$usrexpr <- list()
       # indicator that swirl is not reacting to console input
       e$playing <- FALSE
       # create the file

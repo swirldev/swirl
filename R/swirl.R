@@ -260,14 +260,13 @@ resume.default <- function(e){
     # Enter the correct answer for the user
     # by simulating what the user should have done
     #
-    # TODO: the newVar case. Problem is that the user
-    # may have created a variable whose name we have
-    # not tracked, and has now been asked to perform
-    # a computation with it. The correct answer will
-    # refer to the new variable as newVar or something.
-    # We'll have to track the associations of such pairs
-    # of names and use them here.
     correctAns <- e$current.row[,"CorrectAnswer"]
+    # In case correctAns refers to newVar, add it
+    # to the snapshot AND the global environment
+    if(exists("newVar",e)){
+      e$snapshot$newVar <- e$newVar
+      assign("newVar", e$newVar, globalenv())
+    }
     e$expr <- parse(text=correctAns)[[1]]
     ce <- cleanEnv(e$snapshot)
     e$val <- eval(e$expr, ce)
@@ -275,7 +274,7 @@ resume.default <- function(e){
     for(nm in names(ce))assign(nm, ce[[nm]], globalenv())
     # Inform the user, but don't expose the actual answer.    
     swirl_out("I've entered the correct answer for you.")
-    if(length(temp) > 0){
+    if(length(names(ce)) > 0){
       swirl_out(paste0("In doing so, I've created the variable(s) ", 
                        names(ce), ", which you may need later."))
     }  
@@ -290,16 +289,11 @@ resume.default <- function(e){
   }
   
   # if e$expr is NOT nxt(), the user has just responded to
-  # a question at the command line. Compare the current global
-  # environment with the current snapshot, taken just prior to
-  # the user's response, to determine the variables created or
-  # changed by the user's response. Store a list of changes in e.
-  # TODO: wouldn't safe alone suffice?
+  # a question at the command line. Simulate evaluation of the
+  # user's expression and save any variables changed or created
+  # in e$delta.
  if(!uses_func("swirl")(e$expr)[[1]] && !uses_func("nxt")(e$expr)[[1]]){
-   ge <- as.list(globalenv())
-   idx <- !(ge %in% e$snapshot)
-   safe <-safeEval(e$expr)
-   e$delta <- mergeLists(ge[idx],safe)
+   e$delta <- safeEval(e$expr, e)
  }
   
   # Execute instructions until a return to the prompt is necessary

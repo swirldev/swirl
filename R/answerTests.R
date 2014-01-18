@@ -88,11 +88,10 @@ runTest.newVar <- function(keyphrase, e){
 
 # Tests if the user has just created one new variable of correct name. If so, 
 # returns TRUE.
-#  Alter this test to use list of new variables created
-#  by snapshot strategy.
+# keyphrase: correctName=<correct name>
 runTest.correctName <- function(keyphrase, e){
   correctName <- rightside(keyphrase)
-  if ((length(e$delta)==1) && (identical(e$delta[[1]],correctName))) {
+  if ((length(e$delta)==1) && (identical(names(e$delta)[1],correctName))) {
     e$newVar <- e$delta[[1]]
     return(TRUE)
   }
@@ -237,11 +236,15 @@ runTest.matches <- function(keyphrase, e) {
 runTest.creates_var <- function(keyphrase, e){
   correctName <- rightside(keyphrase)
   if(is.na(correctName)){
-    results <- expectThat(e$expr, creates_var(), label=deparse(e$expr))
+    results <- expectThat(length(e$delta), equals(1), 
+                          label=paste(deparse(e$expr), 
+                                      "does not create a variable."))
   } else {
-    results <- expectThat(e$expr, 
-                          creates_var(correctName, label=correctName), 
-                          label=deparse(e$expr))
+    results <- expectThat(names(e$delta), 
+                          is_equivalent_to(correctName, label=correctName), 
+                          label=paste(deparse(e$expr),
+                                      "does not create a variable named",
+                                      correctName))
   }
   if(results$passed){
     e$newVar <- e$val
@@ -381,20 +384,6 @@ uses_func <- function(expected, label = NULL, ...){
       expected %in% flatten(expr)
     expectation(identical(uses, TRUE),
                 str_c("does not use ", label))
-  }
-}
-
-creates_var <- function(expected=NULL, label = NULL){
-  function(expr){
-    newVars <- names(safeEval(expr))
-    creates <- length(newVars) == 1
-    # Need to use == here instead of identical() to compare expected and
-    # newVars[1] since expected has a "class" attribute and newVars[1]
-    # does not. identical() compares attributes as well as values.
-    asNamed <- is.null(expected) || (expected == newVars[1])
-    message <- str_c("does not create a variable ")
-    if(!is.null(expected)) message <- str_c(message, "named ", expected)
-    expectation(identical(creates&&asNamed, TRUE), message)
   }
 }
 
