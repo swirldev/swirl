@@ -79,6 +79,7 @@ runTest.word_many <- function(keyphrase,e){
 runTest.newVar <- function(keyphrase, e){
   if (length(e$delta)==1){
     e$newVar <- e$delta[[1]]
+    e$newVarName <- names(e$delta)[1]
     return(TRUE)
   }
   else {
@@ -93,6 +94,7 @@ runTest.correctName <- function(keyphrase, e){
   correctName <- rightside(keyphrase)
   if ((length(e$delta)==1) && (identical(names(e$delta)[1],correctName))) {
     e$newVar <- e$delta[[1]]
+    e$newVarName <- names(e$delta)[1]
     return(TRUE)
   }
   else {
@@ -248,6 +250,7 @@ runTest.creates_var <- function(keyphrase, e){
   }
   if(results$passed){
     e$newVar <- e$val
+    e$newVarName <- names(e$delta)[1]
   } else if(is(e,"dev")){
     swirl_out(results$message)
   }

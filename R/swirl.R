@@ -263,9 +263,8 @@ resume.default <- function(e){
     correctAns <- e$current.row[,"CorrectAnswer"]
     # In case correctAns refers to newVar, add it
     # to the snapshot AND the global environment
-    if(exists("newVar",e)){
-      e$snapshot$newVar <- e$newVar
-      assign("newVar", e$newVar, globalenv())
+    if(exists("newVarName",e)){
+      correctAns <- gsub("newVar", e$newVarName, correctAns)
     }
     e$expr <- parse(text=correctAns)[[1]]
     ce <- cleanEnv(e$snapshot)
