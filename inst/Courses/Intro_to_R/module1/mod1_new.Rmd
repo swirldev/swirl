@@ -49,7 +49,7 @@ Type `x <- 5 + 7`, without the backticks. It's important to include a single spa
 
 --- &text
 
-You'll notice that R did not print the result of 13 this time. When you use the assignment operator, R assumes that you don't want to see the result immediately, but rather that you intend to use the result for something else later on.
+You'll notice that R did not print the result of 12 this time. When you use the assignment operator, R assumes that you don't want to see the result immediately, but rather that you intend to use the result for something else later on.
 
 --- &cmd_question
 
