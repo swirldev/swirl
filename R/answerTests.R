@@ -194,15 +194,20 @@ runTest.trick <- function(keyphrase,e){
 # These tests will print diagnostics in "dev" mode
 # but not in user (default) mode.
 
-# Returns TRUE if e$expr is of the given class
-# keyphrase: is_a=class,variable
+# Returns TRUE if e$var or (if it exists) the given 
+# global variable is of the given class
+# keyphrase: is_a=class or is_a=class,variable
 runTest.is_a <- function(keyphrase, e) {
   temp <- strsplit(rightside(keyphrase),",")[[1]]
   class <-  str_trim(temp[1])
   variable <- str_trim(temp[2])
-  label <- deparse(try(get(variable,e), silent=TRUE))
-  results <- expectThat(try(get(variable, e), silent=TRUE), 
-                        is_a(class), label=label)
+  if(!is.na(variable) && exists(variable, globalenv())){
+    val <- get(variable, globalenv())
+  } else {
+    val <- e$val
+  }
+  label <- val
+  results <- expectThat(val, is_a(class), label=label)
   if(is(e,"dev") && !results$passed)swirl_out(results$message)
   return(results$passed)
 }
