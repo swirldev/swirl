@@ -317,7 +317,9 @@ runTest.expr_identical <- function(keyphrase, e){
   correct <- parse(text=rightside(keyphrase))[[1]]
   expr <- e$expr
   if(is.expression(expr))expr <- expr[[1]]
-  results <- expectThat(expr, is_identical_to(correct))
+  results <- expectThat(expr, 
+                        is_identical_to(correct, label=rightside(keyphrase)),
+                        label=deparse(expr))
   if( is(e, "dev") && !results$passed)swirl_out(results$message) 
   return(results$passed)
 }
