@@ -1,0 +1,39 @@
+---
+CourseName:         Your course name goes here
+ModuleName:         Your module name goes here
+ModuleDescription:  A brief description of your module goes here
+---
+
+## START READ-AND-DELETE
+## Here are some instructions to you, the instructor.
+## And here are some more, in case that wasn't enough.
+## END READ-AND-DELETE
+
+--- &text
+
+Some text goes here about how to do arithmetic in R.
+
+--- &cmd_question
+
+Now, add 3 and 7 using the `+` operator.
+
+```{r}
+3 + 7
+```
+
+*** .hint
+This should be obvious, but type `3 + 7`.
+
+*** .ans_tests
+expr_identical=3 + 7
+
+--- &mult_question
+
+Which function also sums 2 or more numbers?
+
+_1. `sum()`_
+2. `mean()`
+3. `abs()`
+
+*** .hint
+What function corresponds with addition?
