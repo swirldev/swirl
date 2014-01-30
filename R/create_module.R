@@ -3,26 +3,25 @@
 #' R Markdown file for the instructor to begin editing.
 create_module = function(module_name, course_name, ...) {
   
-  # Convert module name and course name to more desirable file path formats
+  # Convert module name and course name to more desirable file path formats.
   mod_filename <- make_pathname(module_name)
   crs_dirname <- make_pathname(course_name)
   
-  # Create full path for course and module. Note that current directory
-  # structures in swirl require each module to have its own subdirectory
-  # within the course directory.
-  path2course <- file.path(path.package("swirl"), "Courses", crs_dirname)
+  # Create directory for course in current working directory.
+  path2course <- file.path(getwd(), "my_swirl_courses", crs_dirname)
   path2mod <- file.path(path2course, mod_filename, paste0(mod_filename, ".Rmd"))
   
+  # Copy course template into course directory.
   message("Preparing module template ...\n")
   scaffold <- system.file("skeleton", package = "swirl")
   copy_dir(scaffold, file.path(path2course, mod_filename))
   
-  # If successful, then rename file appropriately
+  # If successful, then rename file appropriately.
   if(file.exists(file.path(path2course, mod_filename, "index.Rmd"))) {
     file.rename(file.path(path2course, mod_filename, "index.Rmd"), path2mod)
   }
   
-  # Open R Markdown file for new module
+  # Open R Markdown file for new module.
   message("Opening module (", mod_filename, ".Rmd) for editing ...\n")
   file.edit(path2mod)
   
@@ -31,7 +30,7 @@ create_module = function(module_name, course_name, ...) {
 
 ## UTILS
 
-# Takes a plain English name and turns it into a more proper file/directory name
+# Takes a plain English name and turns it into a more proper file/directory name.
 make_pathname <- function(name) {
   gsub(" ", "_", str_trim(name))
 }
