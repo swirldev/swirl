@@ -2,15 +2,14 @@
 
 install_course_zip <- function(path){
   # Unzip file into courses
-  file.copy(path, file.path(path.package("swirl"), "Courses"))
-  zip_name <- basename(path)
   unzip(path, exdir=file.path(path.package("swirl"), "Courses"))
 }
 
 # Install a course from a directory which contains modules
 
 install_course_directory <- function(path){
-  
+  # Copy files
+  file.copy(path, file.path(path.package("swirl"), "Courses"), recursive=T)
 }
 
 # Must use the httr package
@@ -51,4 +50,21 @@ install_course_github <- function(github.username, course.name, branch="master")
   unlink(path)
 }
 
-install_course_github("seankross", "test_course")
+# install_course_github("seankross", "test_course")
+
+# Install a course from a url that points to a zip file
+#This needs to be tested
+
+install_course_url <- function(url){
+  # Send GET request
+  response <- GET(url)
+  
+  # Write the response as a zip
+  writeBin(content(response, "raw"), path)
+  
+  # Unzip downloaded file
+  unzip(path,  exdir=file.path(path.package("swirl"), "Courses"))
+  
+  # Delete downloaded zip
+  unlink(path)
+}
