@@ -135,7 +135,7 @@ collapse_choices <- function(choices) {
   paste(no_num, collapse = "; ")
 }
 
-rmd2csv <- function(rmd_path) {
+rmd2csv <- function(rmd_path, csv_path) {
   my_rmd <- readLines(rmd_path)
   cleaned <- clean_me(my_rmd)
   units <- into_units(cleaned)
@@ -145,7 +145,7 @@ rmd2csv <- function(rmd_path) {
   df <- as.data.frame(t(rows))
   
   # Write content data frame to csv file with same name as rmd
-  csv_path <- sub("[.][R|r]md", ".csv", rmd_path)
+  # csv_path <- sub("[.][R|r]md", ".csv", rmd_path)
   write.csv(df, file = csv_path, row.names = FALSE)
 }
 
