@@ -1,7 +1,17 @@
-#' Takes full name of lesson and course as input, creates the appropriate course
-#' and lesson subdirectories in the swirl package directory, then opens an
-#' R Markdown file for the instructor to begin editing.
-author_lesson = function(lesson_name, course_name, ...) {
+#' Author a swirl lesson.
+#' 
+#' Takes full names of lesson and course as input, creates the appropriate 
+#' subdirectories in the swirl package directory, then opens a lesson template
+#' in an R Markdown file for the instructor to begin editing.
+#' @param lesson_name Full name of the lesson being authored
+#' @param course_name Full name of the course to which this lesson belongs
+#' @export
+#' @examples
+#' \dontrun{
+#' 
+#' author_lesson("Example Lesson Name", "Example Course Name")
+#' }
+author_lesson = function(lesson_name, course_name) {
   
   # Convert lesson name and course name to more desirable file path formats.
   les_filename <- make_pathname(lesson_name)
