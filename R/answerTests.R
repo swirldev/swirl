@@ -362,13 +362,34 @@ expectThat <- function(object, condition, info=NULL, label=NULL){
   if (is.null(label)) {
     label <- findExpr("object")
   }
-  results <- condition(object)
+  results <- swirlExpectation(condition(object))
   results$message <- str_c(label, " ", results$message)
   if (!is.null(info)) {
     results$message <- str_c(results$message, "\n", info)
   }
   return(results)
 }
+
+# Patch for slight incompatibility of testthat versions
+swirlExpectation <- function(testthat_expectation){
+  passed <- testthat_expectation$passed
+  error <- testthat_expectation$error
+  if(exists("failure_msg", testthat_expectation)){
+    message <- failure_msg <- testthat_expectation$failure_msg
+    success_msg <- testthat_expectation$success_msg
+  } else {
+    failure_msg <- message <- testthat_expectation$message
+    success_msg <- "unknown"
+  }
+  structure(
+    list(
+      passed = passed, error = error, message = message,
+      failure_msg = failure_msg, success_msg = success_msg
+    ),
+    class = c("swirl_expectation", "expectation")
+  )
+}
+
 
 ## CUSTOM EXPECTATIONS FOR ANSWER TESTS 
 
