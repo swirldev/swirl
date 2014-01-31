@@ -1,29 +1,29 @@
-#' Takes full name of module and course as input, creates the appropriate course
-#' and module subdirectories in the swirl package directory, then opens an
+#' Takes full name of lesson and course as input, creates the appropriate course
+#' and lesson subdirectories in the swirl package directory, then opens an
 #' R Markdown file for the instructor to begin editing.
-create_module = function(module_name, course_name, ...) {
+author_lesson = function(lesson_name, course_name, ...) {
   
-  # Convert module name and course name to more desirable file path formats.
-  mod_filename <- make_pathname(module_name)
+  # Convert lesson name and course name to more desirable file path formats.
+  les_filename <- make_pathname(lesson_name)
   crs_dirname <- make_pathname(course_name)
   
   # Create directory for course in current working directory.
   path2course <- file.path(getwd(), "my_swirl_courses", crs_dirname)
-  path2mod <- file.path(path2course, mod_filename, paste0(mod_filename, ".Rmd"))
+  path2les <- file.path(path2course, les_filename, paste0(les_filename, ".Rmd"))
   
   # Copy course template into course directory.
-  message("Preparing module template ...\n")
+  message("Preparing lesson template ...\n")
   scaffold <- system.file("skeleton", package = "swirl")
-  copy_dir(scaffold, file.path(path2course, mod_filename))
+  copy_dir(scaffold, file.path(path2course, les_filename))
   
   # If successful, then rename file appropriately.
-  if(file.exists(file.path(path2course, mod_filename, "index.Rmd"))) {
-    file.rename(file.path(path2course, mod_filename, "index.Rmd"), path2mod)
+  if(file.exists(file.path(path2course, les_filename, "index.Rmd"))) {
+    file.rename(file.path(path2course, les_filename, "index.Rmd"), path2les)
   }
   
-  # Open R Markdown file for new module.
-  message("Opening module (", mod_filename, ".Rmd) for editing ...\n")
-  file.edit(path2mod)
+  # Open R Markdown file for new lesson.
+  message("Opening lesson (", les_filename, ".Rmd) for editing ...\n")
+  file.edit(path2les)
   
   invisible()
 }

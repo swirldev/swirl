@@ -1,39 +1,49 @@
----
-CourseName:         Your course name goes here
-ModuleName:         Your module name goes here
-ModuleDescription:  A brief description of your module goes here
----
-
-## START READ-AND-DELETE
-## Here are some instructions to you, the instructor.
-## And here are some more, in case that wasn't enough.
-## END READ-AND-DELETE
+Module Name:  The name of this module goes here
+Course Name:  The name of the course to which this module belongs goes here
+Author:       Your name goes here
+Organization: The name of your organization goes here (optional)
+================================================================
 
 --- &text
 
-Some text goes here about how to do arithmetic in R.
+This is a block of text, denoted above by "--- &text". Blocks of text will be displayed to the user and do not require any input other than pressing Return to continue to the next block.
 
 --- &cmd_question
 
-Now, add 3 and 7 using the `+` operator.
+This is a command question, denoted above by "--- &cmd_question". Command questions require the user to enter a valid R expression at the prompt. As an example, let's have the user store the result of `3 + 7` in a new variable called `z`.
 
 ```{r}
-3 + 7
+z <- 3 + 7  # This is an R expression that will answer the question correctly
 ```
 
 *** .hint
-This should be obvious, but type `3 + 7`.
+This is a hint, which the user will see if he or she answers the question incorrectly. In this case, we might be kind and suggest that they type `z <- 3 + 7`.
 
 *** .ans_tests
-expr_identical=3 + 7
+Answer tests go here. If omitted, the default answer test requires the user to enter the same R expression you specified in the code chunk above. See swirl documentation for more details about answer testing.
 
 --- &mult_question
 
-Which function also sums 2 or more numbers?
+This is a multiple choice question, denoted by "--- &mult_question". Here we might ask which function can be used to compute the sum of 2 or more numbers.
 
 _1. `sum()`_
 2. `mean()`
 3. `abs()`
 
 *** .hint
-What function corresponds with addition?
+This is a hint, which will be displayed after an incorrect response to the question. In this example, we could tell the user that the function name is synonymous with "addition".
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
