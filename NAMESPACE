@@ -1,3 +1,4 @@
+export(author_lesson)
 export(bye)
 export(info)
 export(nxt)
