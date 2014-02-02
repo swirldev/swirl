@@ -287,13 +287,13 @@ resume.default <- function(e){
     return(FALSE)
   }
   
-  # if e$expr is NOT nxt(), the user has just responded to
-  # a question at the command line. Simulate evaluation of the
-  # user's expression and save any variables changed or created
-  # in e$delta.
- if(!uses_func("swirl")(e$expr)[[1]] && !uses_func("nxt")(e$expr)[[1]]){
-   e$delta <- safeEval(e$expr, e)
- }
+#   # if e$expr is NOT nxt(), the user has just responded to
+#   # a question at the command line. Simulate evaluation of the
+#   # user's expression and save any variables changed or created
+#   # in e$delta.
+#  if(!uses_func("swirl")(e$expr)[[1]] && !uses_func("nxt")(e$expr)[[1]]){
+#    e$delta <- safeEval(e$expr, e)
+#  }
   
   # Execute instructions until a return to the prompt is necessary
   while(!e$prompt){
