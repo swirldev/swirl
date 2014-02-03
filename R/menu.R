@@ -199,7 +199,7 @@ restoreUserProgress.default <- function(e, selection){
   if(is.null(figs) || length(figs) == 0)return()
   figs <- figs[!is.na(figs)]
   figs <- file.path(e$path, figs)
-  lapply(figs, source)
+  lapply(figs, function(x)source(file=x, local=TRUE))
 }
 
 loadInstructions.default <- function(e){
