@@ -18,7 +18,7 @@ author_lesson = function(lesson_name, course_name) {
   crs_dirname <- make_pathname(course_name)
   
   # Create directory for course in current working directory.
-  path2course <- file.path(getwd(), "my_swirl_courses", crs_dirname)
+  path2course <- file.path(getwd(), crs_dirname)
   path2les <- file.path(path2course, les_filename, paste0(les_filename, ".Rmd"))
   
   # Copy course template into course directory.
