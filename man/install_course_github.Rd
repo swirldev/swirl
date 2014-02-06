@@ -2,8 +2,7 @@
 \alias{install_course_github}
 \title{Install a course from a GitHub repository}
 \usage{
-  install_course_github(github.username, course.name,
-    branch = "master")
+install_course_github(github.username, course.name, branch = "master")
 }
 \arguments{
   \item{github.username}{The username that owns the course
@@ -16,7 +15,7 @@
   course. The default branch is \code{"master"}.}
 }
 \description{
-  Install a course from a GitHub repository
+Install a course from a GitHub repository
 }
 \examples{
 install_course_github("bcaffo", "Linear_Regression")

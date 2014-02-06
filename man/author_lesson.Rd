@@ -2,7 +2,7 @@
 \alias{author_lesson}
 \title{Author a swirl lesson.}
 \usage{
-  author_lesson(lesson_name, course_name)
+author_lesson(lesson_name, course_name)
 }
 \arguments{
   \item{lesson_name}{Full name of the lesson being
@@ -12,10 +12,10 @@
   lesson belongs}
 }
 \description{
-  Takes full names of lesson and course as input, creates
-  the appropriate subdirectories in the swirl package
-  directory, then opens a lesson template in an R Markdown
-  file for the instructor to begin editing.
+Takes full names of lesson and course as input, creates the
+appropriate subdirectories in the swirl package directory,
+then opens a lesson template in an R Markdown file for the
+instructor to begin editing.
 }
 \examples{
 \dontrun{
