@@ -16,18 +16,6 @@ Imports:
     testthat,
     openintro,
     httr
-Description: NA
-URL: NA
-Collate:
-    'answerTests.R'
-    'author_lesson.R'
-    'courseTools.R'
-    'install_course.R'
-    'instructionSet.R'
-    'menu.R'
-    'modConstructor.R'
-    'phrases.R'
-    'progress.R'
-    'rmd2csv.R'
-    'swirl.R'
-    'utilities.R'
+Description: swirl is a platform for learning (and teaching) statistics and R
+    simultaneously and interactively.
+URL: http://swirlstats.com

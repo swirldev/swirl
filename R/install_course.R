@@ -68,6 +68,7 @@ install_course_google_drive <- function(url){
 #' 
 #' @param url URL that points to a zipped course directory
 #' @export
+#' @importFrom httr GET
 #' @examples
 #' install_course_url("http://www.biostat.jhsph.edu/~rpeng/File_Hash_Course.zip")
 install_course_url <- function(url, type="url", course.name=""){
@@ -81,7 +82,7 @@ install_course_url <- function(url, type="url", course.name=""){
   writeBin(content(response, "raw"), path)
   
   # Unzip downloaded file
-  unzip(path,  exdir=file.path(path.package("swirl"), "Courses"))
+  install_course_zip(path)
 
   # Clean up GitHub directory name
   if(type=="github"){
