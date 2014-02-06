@@ -136,5 +136,12 @@ testMe <- function(keyphrase, e){
   # the substring left of its first "=".
   attr(keyphrase, "class") <- c(class(keyphrase),
                                 strsplit(keyphrase, "=")[[1]][1])
-  return(runTest(keyphrase, e))
+  # patch to accommodate old-style tests
+  if(attr(e$mod, "courseName") %in% c("Data_Analysis", 
+                                      "Mathematical_Biostatistics_Boot_Camp",
+                                      "Open_Intro")){
+    return(runTest(keyphrase, e))
+  } else {
+    return(eval(parse(text=keyphrase)))
+  }
 }
