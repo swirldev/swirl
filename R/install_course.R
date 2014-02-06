@@ -28,7 +28,7 @@ install_course_directory <- function(path){
 #' @export
 #' @examples
 #' install_course_github("bcaffo", "Linear_Regression")
-#' install_course_github("jtleek", "Twiiter_Map", "geojson")
+#' install_course_github("jtleek", "Twitter_Map", "geojson")
 install_course_github <- function(github.username, course.name, branch="master"){
   
   # Construct url to the zip file

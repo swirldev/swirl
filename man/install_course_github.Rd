@@ -20,6 +20,6 @@
 }
 \examples{
 install_course_github("bcaffo", "Linear_Regression")
-install_course_github("jtleek", "Twiiter_Map", "geojson")
+install_course_github("jtleek", "Twitter_Map", "geojson")
 }
 
