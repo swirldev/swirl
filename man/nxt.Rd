@@ -2,11 +2,11 @@
 \alias{nxt}
 \title{Begin the upcoming question or unit of instruction.}
 \usage{
-nxt()
+  nxt()
 }
 \description{
-This is the way to regain swirl's attention after viewing a
-video or \code{play()}'ing around in the console.
+  This is the way to regain swirl's attention after viewing
+  a video or \code{play()}'ing around in the console.
 }
 \examples{
 \dontrun{
