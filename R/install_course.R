@@ -6,7 +6,13 @@
 #' install_course_zip("~/Desktop/my_course.zip")
 install_course_zip <- function(path){
   # Unzip file into courses
-  unzip(path, exdir=file.path(path.package("swirl"), "Courses"))
+  file_list <- unzip(path, exdir=file.path(path.package("swirl"), "Courses"))
+  
+  # If __MACOSX exists, delete it.
+  unlink(file.path(path.package("swirl"), "Courses", "__MACOSX"), recursive=T, force=T)
+  
+  # Compile course
+  suppressWarnings(invisible(sapply(file_list, compile_csv)))
 }
 
 #' Install a course from a course directory
@@ -18,6 +24,11 @@ install_course_zip <- function(path){
 install_course_directory <- function(path){
   # Copy files
   file.copy(path, file.path(path.package("swirl"), "Courses"), recursive=T)
+  
+  # Compile course
+  suppressWarnings(invisible(sapply(
+    list.files(file.path(path.package("swirl"), "Courses", basename(path)), recursive=T, full.names=T),
+    compile_csv)))
 }
 
 #' Install a course from a GitHub repository
@@ -58,7 +69,6 @@ install_course_dropbox <- function(url){
 #' install_course_google_drive("https://drive.google.com/file/d/F3fveiu873hfjZZj/edit?usp=sharing")
 install_course_google_drive <- function(url){
   # Construct url to the zip file
-  first_sub <- sub("/edit\\?usp=sharing", "", url)
   zip_url <- sub("file/d/", "uc?export=download&id=", sub("/edit\\?usp=sharing", "", url))
   
   install_course_url(zip_url)
@@ -68,7 +78,7 @@ install_course_google_drive <- function(url){
 #' 
 #' @param url URL that points to a zipped course directory
 #' @export
-#' @importFrom httr GET
+#' @importFrom httr GET content
 #' @examples
 #' install_course_url("http://www.biostat.jhsph.edu/~rpeng/File_Hash_Course.zip")
 install_course_url <- function(url, type="url", course.name=""){
@@ -98,5 +108,12 @@ install_course_url <- function(url, type="url", course.name=""){
   }
   
   # Delete downloaded zip
-  unlink(path)
+  unlink(path, force=T)
+}
+
+# Converts .Rmd to .csv so swirl can interpret content
+compile_csv <- function(path){
+  if(grepl(".[r|R][m|M][d|D]$", path)){
+    rmd2csv(path, sub(".[r|R][m|M][d|D]$", ".csv", path))
+  }
 }

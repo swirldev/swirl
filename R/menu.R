@@ -48,7 +48,7 @@ mainMenu.default <- function(e){
       restoreUserProgress(e, response)
     } else {
       # Else load a new module.
-      message(sean_sean())
+      # message(sean_sean())
       # Let user choose the course.
       coursesU <- dir(courseDir(e))
       # Eliminate empty directories
