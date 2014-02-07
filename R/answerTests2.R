@@ -10,6 +10,69 @@
 # var_is_a, expr_uses, expr_creates_var, and val_has_length.
 # 
 # One additional test, expr_is_a, was needed for the test modules.
+#
+# Omnitest is an aggregate of more basic tests and is meant to cover
+# many of the questions which have appeared in lessons so far.
+# CAVEAT: Omnitest is completely untested. We will have to write
+# a small module for the purpose.
+ 
+# Omnitest can test for a correct expression, a correct value,
+# or both. In the case of values it is limited to testing for 
+# character or numerical vectors of length 1.
+# 
+# Examples:
+# 
+#   1. To test that a user has chosen a correct menu item
+#    omnitest(correctVal='Men in a college dorm.')
+#   2. To test that a user has entered a correct number at the
+#   command line
+#    omnitest(correctVal=19)
+#   3. To test that a user has entered a particular command
+#    omnitest('myVar <- c(3, 5, 7)')
+#   4. To test that a user has entered a command which computes
+#   a specific value but perhaps in a different manner than anticipated
+#    omnitest('sd(x)^2', 5.95)
+#   If the user enters sd(x)*sd(x), rather than sd(x)^2, a notification
+#   will be issued, but the test will not fail.
+#   5. To test that a user has entered a command which computes
+#   a specific value in a particular way
+#    omnitest('sd(x)^2', 5.95, strict=TRUE)
+#   In this case, if the user enters sd(x)*sd(x) the test will fail.
+omnitest <- function(correctExpr=NULL, correctVal=NULL, strict=FALSE){
+  e <- get("e", parent.frame())
+  # Trivial case
+  if(is.null(correctExpr) && is.null(correctVal))return(TRUE)
+  # Testing for correct expression only
+  if(!is.null(correctExpr) && is.null(correctVal)){
+    return(expr_identical_to(correctExpr))
+  }
+  # Testing for both correct expression and correct value
+  # Value must be character or single number
+  valResults <- NULL
+  if(!is.null(correctVal)){
+    if(is.character(e$val)){
+      valResults <- val_matches(correctVal)
+    } else if(!is.na(e$val) && is.numeric(e$val) && length(e$val) == 1){
+      cval <- try(as.numeric(correctVal), silent=TRUE)
+      valResults <- expectThat(e$val, 
+                            equals(cval, label=correctVal),
+                            label=toString(e$val))
+    }
+    if(is(e, "dev") && !valResults$passed)swirl_out(valResults$message)
+  }
+  valGood <- valResults$passed
+  exprGood <- expr_identical_to(correctExpr)
+  if(valGood && exprGood){
+    return(TRUE)
+  } else if (valGood && !exprGood && !strict){
+      swirl_out("That's not the expression I expected but it works.")
+      swirl_out("I've executed the correct expression in case the result is needed in an upcoming question.")
+      eval(parse(text=correctExpr),globalenv())
+      return(TRUE)
+    } else {
+      return(FALSE)
+    }
+}
 
 # Test that the user has entered an expression identical to that
 # given as the first argument.
