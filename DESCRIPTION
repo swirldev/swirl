@@ -1,8 +1,8 @@
 Package: swirl
-Version: 2.0.1
+Version: 2.0.2
 Type: Package
 Title: Statistics with Interactive R Learning
-Date: 2014-01-15
+Date: 2014-02-06
 License: GPL-2
 Author: Nick Carchedi, Bill Bauer, and Gina Grdina, with significant
     contributions from Peter Schulam and Hadley Wickham
@@ -14,7 +14,8 @@ Imports:
     plotrix,
     pwr,
     testthat,
-    openintro
+    openintro,
+    httr
 Description: swirl is a platform for learning (and teaching) statistics and R
     simultaneously and interactively.
 URL: http://swirlstats.com
