@@ -1,3 +1,16 @@
+#' Uninstall a course
+#' 
+#' @param course_name Name of course to be uninstalled
+#' @export
+#' @examples
+#' uninstall_course("Linear Regression")
+uninstall_course <- function(course_name){
+  path <- file.path(path.package("swirl"), "Courses", sub(" ", "_", course_name))
+  if(file.exists(path)){
+    unlink(path, recursive=T, force=T)
+  }
+}
+
 #' Install a course from a zipped course folder
 #' 
 #' @param path The path to the zipped course.
@@ -22,6 +35,17 @@ install_course_zip <- function(path){
 #' @examples
 #' install_course_directory("~/Desktop/my_course")
 install_course_directory <- function(path){
+  # Check for size of directory to prevent copying a huge directory into swirl/Courses
+  garbage_result <- tryCatch(
+    {setTimeLimit(elapsed=1); list.files(path, recursive=T)},
+    finally = {setTimeLimit(elapsed=Inf)}
+  )
+  
+  # Check to make sure there are fewer than 1000 files in course directory
+  if(length(garbage_result) > 1000){
+    stop("Course directory is too large to install")
+  }
+  
   # Copy files
   file.copy(path, file.path(path.package("swirl"), "Courses"), recursive=T)
   
