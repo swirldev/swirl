@@ -10,16 +10,11 @@
 # var_is_a, expr_uses, expr_creates_var, and val_has_length.
 # 
 # One additional test, expr_is_a, was needed for the test modules.
-# 
-# There are at least two syntactical issues. The first is that test
-# specifications involve commas, hence must be surrounded by quotes
-# in a csv file. The second is that e must be specified.
-# E.g., "expr_creates_var(e, myVar); expr_uses_func(e,'c')"
-# 
 
 # Test that the user has entered an expression identical to that
 # given as the first argument.
-expr_identical_to <- function(e, correct_expression){
+expr_identical_to <- function(correct_expression){
+  e <- get("e", parent.frame())
   expr <- e$expr
   if(is.expression(expr))expr <- expr[[1]]
   results <- expectThat(expr, 
@@ -31,7 +26,8 @@ expr_identical_to <- function(e, correct_expression){
 
 # Returns TRUE if as.character(e$val) matches the regular
 # expression given as the first argument.
-val_matches <- function(e, regular_expression) {
+val_matches <- function(regular_expression) {
+  e <- get("e", parent.frame())
   userVal <- str_trim(as.character(e$val))
   results <- expectThat(userVal, 
                         matches(regular_expression), 
@@ -43,7 +39,8 @@ val_matches <- function(e, regular_expression) {
 
 # Returns TRUE if a variable of the given name exists
 # in the global environment and is of the given class.
-var_is_a <- function(e, class, var_name) {
+var_is_a <- function(class, var_name) {
+  e <- get("e", parent.frame())
   class <-  str_trim(class)
   var_name <- str_trim(var_name)
   if(exists(var_name, globalenv())){
@@ -59,7 +56,8 @@ var_is_a <- function(e, class, var_name) {
 }
 
 # Returns TRUE if e$expr is of the given class
-expr_is_a <- function(e, class) {
+expr_is_a <- function(class) {
+  e <- get("e", parent.frame())
   class <-  str_trim(class)
   expr <- e$expr
   label <- deparse(e$expr)
@@ -70,7 +68,8 @@ expr_is_a <- function(e, class) {
 
 # Returns TRUE if the e$expr uses the function whose
 # name is given as the first argument.
-expr_uses_func <- function(e, func) {
+expr_uses_func <- function(func) {
+  e <- get("e", parent.frame())
   func <- str_trim(func)
   results <- expectThat(e$expr,
                         uses_func(func, label=func), 
@@ -81,7 +80,8 @@ expr_uses_func <- function(e, func) {
 
 # Tests if the e$expr creates one new variable (of correct name
 # if given.) If so, returns TRUE.
-expr_creates_var <- function(e, correctName=NULL){
+expr_creates_var <- function(correctName=NULL){
+  e <- get("e", parent.frame())
   if(is.null(correctName)){
     results <- expectThat(e$expr, creates_var(), label=deparse(e$expr))
   } else {
@@ -98,7 +98,8 @@ expr_creates_var <- function(e, correctName=NULL){
 }
 
 # Test the the length of e$val is that given by the first argument
-val_has_length <- function(e, len){
+val_has_length <- function(len){
+  e <- get("e", parent.frame())
   try(n <- as.integer(len), silent=TRUE)
   if(is.na(n)){
     stop(message=paste("BUG: specified length", len,
@@ -113,7 +114,8 @@ val_has_length <- function(e, len){
 # Tests the result of a computation such as mean(newVar) applied
 # to a specific variable created in a previous question and
 # saved as e$newVar.
-func_of_newvar_equals <- function(e, correct_expression){
+func_of_newvar_equals <- function(correct_expression){
+  e <- get("e", parent.frame())
   correctExpr <- gsub("newVar", paste0("e$","newVar"), correct_expression)
   results <- expectThat(e$val, 
                         equals(eval(parse(text=correctExpr)), 
