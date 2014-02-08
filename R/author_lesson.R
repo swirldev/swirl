@@ -5,30 +5,50 @@
 #' in an R Markdown file for the instructor to begin editing.
 #' @param lesson_name Full name of the lesson being authored
 #' @param course_name Full name of the course to which this lesson belongs
+#' @param new_course Boolean (TRUE or FALSE). Is this a new course?
 #' @export
 #' @examples
 #' \dontrun{
 #' 
-#' author_lesson("Example Lesson Name", "Example Course Name")
+#' author_lesson("Example Lesson Name", "Example Course Name", new_course=TRUE)
 #' }
-author_lesson = function(lesson_name, course_name) {
+author_lesson = function(lesson_name, course_name, new_course) {
   
   # Convert lesson name and course name to more desirable file path formats.
   les_filename <- make_pathname(lesson_name)
   crs_dirname <- make_pathname(course_name)
   
-  # Create directory for course in current working directory.
+  # Create path for course directory in current working directory.
   path2course <- file.path(getwd(), crs_dirname)
+  
+  # User specifies new course but course dir already exists
+  if(file.exists(path2course) && new_course) {
+    stop(paste0("Course directory for \'", course_name, 
+               "\' already exists in the current working directory!\n"))
+  }
+  
+  # User specifies existing course but course dir does not exist
+  if(!file.exists(path2course) && !new_course) {
+    stop(paste0("Course directory for \'", course_name, 
+               "\' not found in the current working directory!"))
+  }
+  
+  # Create path for lesson within lesson subdirectory
   path2les <- file.path(path2course, les_filename, paste0(les_filename, ".Rmd"))
   
-  # Copy course template into course directory.
-  message("Preparing lesson template ...\n")
-  scaffold <- system.file("skeleton", package = "swirl")
-  copy_dir(scaffold, file.path(path2course, les_filename))
-  
-  # If successful, then rename file appropriately.
-  if(file.exists(file.path(path2course, les_filename, "index.Rmd"))) {
-    file.rename(file.path(path2course, les_filename, "index.Rmd"), path2les)
+  # Deals with case when user specifies lesson that already exists
+  if(file.exists(path2les)) {
+    message(paste0("A lesson called \'", lesson_name, "\' already exists in course \'", course_name, "\'!"))
+  } else {
+    # Copy course template into course directory.
+    message("Preparing lesson template ...\n")
+    scaffold <- system.file("skeleton", package = "swirl")
+    copy_dir(scaffold, file.path(path2course, les_filename))
+    
+    # If successful, then rename file appropriately.
+    if(file.exists(file.path(path2course, les_filename, "index.Rmd"))) {
+      file.rename(file.path(path2course, les_filename, "index.Rmd"), path2les)
+    }
   }
   
   # Open R Markdown file for new lesson.
