@@ -6,3 +6,4 @@ data/saved.RData
 *.html
 ^user_data/.+/rda$
 user_data/
+.DS_Store
