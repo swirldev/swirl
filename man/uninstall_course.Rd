@@ -1,0 +1,19 @@
+\name{uninstall_course}
+\alias{uninstall_course}
+\title{Uninstall a course}
+\usage{
+uninstall_course(course_name)
+}
+\arguments{
+  \item{course_name}{Name of course to be uninstalled}
+}
+\description{
+Uninstall a course
+}
+\examples{
+\dontrun{
+
+uninstall_course("Linear Regression")
+}
+}
+

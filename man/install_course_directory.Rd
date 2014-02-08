@@ -1,0 +1,19 @@
+\name{install_course_directory}
+\alias{install_course_directory}
+\title{Install a course from a course directory}
+\usage{
+install_course_directory(path)
+}
+\arguments{
+  \item{path}{The path to the course directory.}
+}
+\description{
+Install a course from a course directory
+}
+\examples{
+\dontrun{
+
+install_course_directory("~/Desktop/my_course")
+}
+}
+

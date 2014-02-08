@@ -2,7 +2,7 @@
 \alias{author_lesson}
 \title{Author a swirl lesson.}
 \usage{
-author_lesson(lesson_name, course_name)
+author_lesson(lesson_name, course_name, new_course)
 }
 \arguments{
   \item{lesson_name}{Full name of the lesson being
@@ -10,6 +10,9 @@ author_lesson(lesson_name, course_name)
 
   \item{course_name}{Full name of the course to which this
   lesson belongs}
+
+  \item{new_course}{Boolean (TRUE or FALSE). Is this a new
+  course?}
 }
 \description{
 Takes full names of lesson and course as input, creates the
@@ -20,7 +23,7 @@ instructor to begin editing.
 \examples{
 \dontrun{
 
-author_lesson("Example Lesson Name", "Example Course Name")
+author_lesson("Example Lesson Name", "Example Course Name", new_course=TRUE)
 }
 }
 
