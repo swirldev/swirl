@@ -2,13 +2,13 @@
 \alias{install_course_github}
 \title{Install a course from a GitHub repository}
 \usage{
-install_course_github(github.username, course.name, branch = "master")
+install_course_github(github_username, course_name, branch = "master")
 }
 \arguments{
-  \item{github.username}{The username that owns the course
+  \item{github_username}{The username that owns the course
   repository.}
 
-  \item{course.name}{The name of the repository which
+  \item{course_name}{The name of the repository which
   should be the name of the course.}
 
   \item{branch}{The branch of the repository containing the
