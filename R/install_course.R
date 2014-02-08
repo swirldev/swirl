@@ -5,7 +5,7 @@
 #' @examples
 #' uninstall_course("Linear Regression")
 uninstall_course <- function(course_name){
-  path <- file.path(path.package("swirl"), "Courses", sub(" ", "_", course_name))
+  path <- file.path(path.package("swirl"), "Courses", make_pathname(course_name))
   if(file.exists(path)){
     unlink(path, recursive=T, force=T)
   }
@@ -57,19 +57,19 @@ install_course_directory <- function(path){
 
 #' Install a course from a GitHub repository
 #' 
-#' @param github.username The username that owns the course repository.
-#' @param course.name The name of the repository which should be the name of the course.
+#' @param github_username The username that owns the course repository.
+#' @param course_name The name of the repository which should be the name of the course.
 #' @param branch The branch of the repository containing the course. The default branch is \code{"master"}.
 #' @export
 #' @examples
 #' install_course_github("bcaffo", "Linear_Regression")
 #' install_course_github("jtleek", "Twitter_Map", "geojson")
-install_course_github <- function(github.username, course.name, branch="master"){
+install_course_github <- function(github_username, course_name, branch="master"){
   
   # Construct url to the zip file
-  zip_url <- paste0("http://github.com/", github.username, "/", course.name,"/zipball/", branch)
+  zip_url <- paste0("http://github.com/", github_username, "/", course_name,"/zipball/", branch)
 
-  install_course_url(zip_url, type="github", course.name=course.name)
+  install_course_url(zip_url, type="github", course_name=course_name)
 }
 
 #' Install a course from a zipped course directory shared on Dropbox
@@ -105,7 +105,7 @@ install_course_google_drive <- function(url){
 #' @importFrom httr GET content
 #' @examples
 #' install_course_url("http://www.biostat.jhsph.edu/~rpeng/File_Hash_Course.zip")
-install_course_url <- function(url, type="url", course.name=""){
+install_course_url <- function(url, course_name, type="url"){
   # Send GET request
   response <- GET(url)
   
@@ -128,7 +128,7 @@ install_course_url <- function(url, type="url", course.name=""){
     
     # Rename unzipped directory
     file.rename(file.path(path.package("swirl"), "Courses", old_name), 
-                file.path(path.package("swirl"), "Courses", course.name))
+                file.path(path.package("swirl"), "Courses", course_name))
   }
   
   # Delete downloaded zip
