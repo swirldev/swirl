@@ -132,16 +132,49 @@ testResponse.default <- function(current.row, e){
 }
 
 testMe <- function(keyphrase, e){
-  # Add a new class attribute to the keyphrase using
-  # the substring left of its first "=".
-  attr(keyphrase, "class") <- c(class(keyphrase),
-                                strsplit(keyphrase, "=")[[1]][1])
   # patch to accommodate old-style tests
   if(attr(e$mod, "courseName") %in% c("Data_Analysis", 
                                       "Mathematical_Biostatistics_Boot_Camp",
                                       "Open_Intro")){
+    # Add a new class attribute to the keyphrase using
+    # the substring left of its first "=".
+    attr(keyphrase, "class") <- c(class(keyphrase),
+                                  strsplit(keyphrase, "=")[[1]][1])
     return(runTest(keyphrase, e))
   } else {
     return(eval(parse(text=keyphrase)))
   }
+}
+
+# CUSTOM TEST SUPPORT. An environment for custom tests is inserted
+# "between" function testMe and the swirl namespace. That is,  
+# an environment, customTests, is created with parent swirl
+# and child testMe. Code evaluated within testMe will thus search
+# for functions first in customTests, and then in the swirl namespace.
+#
+# Custom tests must be defined in a file named "customTests.R" in the
+# lesson (module) directory. Tests in such files are loaded into environment 
+# customTests when a lesson is first loaded or progress is restored. 
+# The environment is cleared between lessons.
+
+# An environment with parent swirl to hold custom tests.
+customTests <- new.env(parent=environment(testMe))
+# Make customTests the parent of testMe.
+environment(testMe) <- customTests
+
+# Function to load custom tests from a source file.
+loadCustomTests <- function(modpath){
+  cfile <- file.path(modpath,"customTests.R")
+  if(file.exists(cfile)){
+    source(cfile, local=TRUE)
+    nms <- setdiff(ls(), c("modpath", "cfile"))
+    for(x in nms){
+      assign(x, get(x, envir=environment()), envir=customTests)
+    }
+  }
+}
+
+# Function to remove everything from environment customTests
+clearCustomTests <- function(){
+  remove(list=ls(customTests), envir=customTests)
 }

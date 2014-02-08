@@ -161,11 +161,14 @@ loadModule.default <- function(e, courseU, module){
   len <- str_length(module)
   shortname <- paste0(substr(module,1,3),substr(module,len,len),"_new.csv",collapse=NULL)
   dataName <- file.path(modPath,shortname)     
-  #initialize course module, assigning module-specific variables
+  # initialize course module, assigning module-specific variables
   initFile <- file.path(modPath,"initModule.R")
   if (file.exists(initFile)){
     source(initFile)
   }
+  # load any custom tests
+  clearCustomTests()
+  loadCustomTests(modPath)
   instructor <- courseU # default
   instructorFile <- file.path(modPath,"instructor.txt")
   if(file.exists(instructorFile)){
@@ -183,6 +186,9 @@ restoreUserProgress.default <- function(e, selection){
   xfer(temp, e)
   # source the initModule.R file if it exists
   initf <- file.path(e$path, "initModule.R")
+  # load any custom tests
+  clearCustomTests()
+  loadCustomTests(e$path)
   if(file.exists(initf))source(initf)
   # eval retrieved user expr's in global env, but don't include
   # call to swirl (the first entry)
