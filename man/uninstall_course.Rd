@@ -11,6 +11,9 @@ uninstall_course(course_name)
 Uninstall a course
 }
 \examples{
+\dontrun{
+
 uninstall_course("Linear Regression")
+}
 }
 

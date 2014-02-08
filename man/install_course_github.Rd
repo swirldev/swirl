@@ -18,7 +18,10 @@ install_course_github(github_username, course_name, branch = "master")
 Install a course from a GitHub repository
 }
 \examples{
+\dontrun{
+
 install_course_github("bcaffo", "Linear_Regression")
 install_course_github("jtleek", "Twitter_Map", "geojson")
+}
 }
 

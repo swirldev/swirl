@@ -11,6 +11,9 @@ install_course_directory(path)
 Install a course from a course directory
 }
 \examples{
+\dontrun{
+
 install_course_directory("~/Desktop/my_course")
+}
 }
 

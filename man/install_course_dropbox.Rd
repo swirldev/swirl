@@ -12,6 +12,9 @@ Install a course from a zipped course directory shared on
 Dropbox
 }
 \examples{
+\dontrun{
+
 install_course_dropbox("https://www.dropbox.com/s/xttkmuvu7hh72vu/my_course.zip")
+}
 }
 
