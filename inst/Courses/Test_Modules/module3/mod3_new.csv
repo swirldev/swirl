@@ -1,0 +1,8 @@
+"Class","Output","CorrectAnswer","AnswerChoices","AnswerTests","Hint","Figure","FigureType","VideoLink"
+"text","This is test module for function omnitest. Omnitest can test for a correct expression, a correct value, or both. In the case of values it is limited to testing for character or numerical vectors of length 1.",NA,NA,NA,NA,NA,NA,NA
+"mult_question","Testing for a correct e$val given a multiple choice question. Which movie involve Pierce Brosnan in a singing role?","Mamma Mia!","Mamma Mia!;Guys and Dolls;Once is Not Enough","omnitest(correctVal='Mamma Mia!')",NA,NA,NA,NA
+"exact_question","Testing for an exact numerical answer entered at the command line. How many Stooges are there?","3",NA,"omnitest(correctVal=3)","This one should be obvious! Nyuk, Nyuk, Nyuk!",NA,NA,NA
+"cmd_question","Testing that a user has entered a particular command. Enter myVar <- c(3, 5, 7)","myVar <- c(3, 5, 7)",NA,"omnitest(correctExpr='myVar <- c(3, 5, 7)')","Enter myVar <- c(3, 5, 7)",NA,NA,NA
+"cmd_question","Testing that a user has entered a command which computes a specific value but perhaps in a different manner than anticipated. The correct expression is 3^2, but enter 3*3.","3^2",NA,"omnitest(correctExpr='3^2', correctVal=9)","Enter 3^2",NA,NA,NA
+"cmd_question","Testing that a user has entered a command which computes a specific value in a particular way. The correct expression is 3^2. Entering 3*3 should fail.","3^2",NA,"omnitest(correctExpr='3^2', correctVal=9, strict=TRUE)","Enter 3^2",NA,NA,NA
+"text","That completes the omnitest test. Thank you.",NA,NA,NA,NA,NA,NA,NA

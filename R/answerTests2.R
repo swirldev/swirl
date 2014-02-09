@@ -48,20 +48,20 @@ omnitest <- function(correctExpr=NULL, correctVal=NULL, strict=FALSE){
   }
   # Testing for both correct expression and correct value
   # Value must be character or single number
-  valResults <- NULL
+  valGood <- NULL
   if(!is.null(correctVal)){
     if(is.character(e$val)){
-      valResults <- val_matches(correctVal)
+      valGood <- val_matches(correctVal)
     } else if(!is.na(e$val) && is.numeric(e$val) && length(e$val) == 1){
       cval <- try(as.numeric(correctVal), silent=TRUE)
       valResults <- expectThat(e$val, 
                             equals(cval, label=correctVal),
                             label=toString(e$val))
+      if(is(e, "dev") && !valResults$passed)swirl_out(valResults$message)
+      valGood <- valResults$passed
     }
-    if(is(e, "dev") && !valResults$passed)swirl_out(valResults$message)
   }
-  valGood <- valResults$passed
-  exprGood <- expr_identical_to(correctExpr)
+  exprGood <- ifelse(is.null(correctExpr), TRUE, expr_identical_to(correctExpr))
   if(valGood && exprGood){
     return(TRUE)
   } else if (valGood && !exprGood && !strict){
@@ -80,8 +80,9 @@ expr_identical_to <- function(correct_expression){
   e <- get("e", parent.frame())
   expr <- e$expr
   if(is.expression(expr))expr <- expr[[1]]
+  correct <- parse(text=correct_expression)[[1]]
   results <- expectThat(expr, 
-                        is_identical_to(correct, label=rightside(keyphrase)),
+                        is_identical_to(correct, label=correct_expression),
                         label=deparse(expr))
   if( is(e, "dev") && !results$passed)swirl_out(results$message) 
   return(results$passed)
