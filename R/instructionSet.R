@@ -133,15 +133,20 @@ testResponse.default <- function(current.row, e){
 
 testMe <- function(keyphrase, e){
   # patch to accommodate old-style tests
-  if(attr(e$mod, "courseName") %in% c("Data_Analysis", 
-                                      "Mathematical_Biostatistics_Boot_Camp",
-                                      "Open_Intro")){
+  oldcourse <- attr(e$mod, "courseName") %in% 
+    c("Data_Analysis", "Mathematical_Biostatistics_Boot_Camp",
+      "Open_Intro")
+  oldmod <- (attr(e$mod, "courseName") == "Intro_to_R") &&
+    (attr(e$mod, "modName") %in% c("module1", "module2", "module3"))
+  if(oldcourse || oldmod){
+    # Use old test syntax
     # Add a new class attribute to the keyphrase using
     # the substring left of its first "=".
     attr(keyphrase, "class") <- c(class(keyphrase),
                                   strsplit(keyphrase, "=")[[1]][1])
     return(runTest(keyphrase, e))
   } else {
+    # Use new test syntax
     return(eval(parse(text=keyphrase)))
   }
 }
