@@ -159,8 +159,7 @@ loadModule.default <- function(e, courseU, module){
   len <- str_length(module)
   shortname <- paste0(substr(module,1,3),substr(module,len,len),"_new.csv",collapse=NULL)
   dataName <- file.path(modPath,shortname)
-  
-  # Before initinalizing the module, take a snapshot of 
+  # Before initializing the module, take a snapshot of 
   #  the global environment.
   snapshot <- as.list(globalenv())
   #initialize course module, assigning module-specific variables
@@ -168,7 +167,6 @@ loadModule.default <- function(e, courseU, module){
   if (file.exists(initFile)){
     source(initFile)
   }
-  
   #  After initializing, compare a current snapshot of the 
   #  global environment with the previous to detect any variables
   #  created or changed by initialization. Add these to the list
@@ -176,7 +174,9 @@ loadModule.default <- function(e, courseU, module){
   e$snapshot <- as.list(globalenv())
   idx <- !(e$snapshot %in% snapshot)
   e$official <- e$snapshot[idx]
-    
+  # load any custom tests
+  clearCustomTests()
+  loadCustomTests(modPath)
   instructor <- courseU # default
   instructorFile <- file.path(modPath,"instructor.txt")
   if(file.exists(instructorFile)){
@@ -196,6 +196,20 @@ restoreUserProgress.default <- function(e, selection){
   # global environment.
   for (x in ls(e$official)){
     assign(x,e$official[[x]], globalenv())
+  }
+  # source the initModule.R file if it exists
+  initf <- file.path(e$path, "initModule.R")
+  # load any custom tests
+  clearCustomTests()
+  loadCustomTests(e$path)
+  if(file.exists(initf))source(initf)
+  # eval retrieved user expr's in global env, but don't include
+  # call to swirl (the first entry)
+  if(length(e$usrexpr) > 1){
+    for(n in 2:length(e$usrexpr)){
+      expr <- e$usrexpr[[n]]
+      eval(expr, globalenv())
+    }
   }
   # Restore figures which precede current row (Issue #44)
   idx <- 1:(e$row - 1)
@@ -245,4 +259,4 @@ courseDir.dev <- function(e){
 
 # Default for determining the user
 getUser <- function()UseMethod("getUser")
-getUser.default <- function()"swirladmin"
+getUser.default <- function(){"swirladmin"}
