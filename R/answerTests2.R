@@ -16,28 +16,48 @@
 # CAVEAT: Omnitest is completely untested. We will have to write
 # a small module for the purpose.
  
-# Omnitest can test for a correct expression, a correct value,
-# or both. In the case of values it is limited to testing for 
-# character or numerical vectors of length 1.
-# 
-# Examples:
-# 
-#   1. To test that a user has chosen a correct menu item
-#    omnitest(correctVal='Men in a college dorm.')
-#   2. To test that a user has entered a correct number at the
-#   command line
-#    omnitest(correctVal=19)
-#   3. To test that a user has entered a particular command
-#    omnitest('myVar <- c(3, 5, 7)')
-#   4. To test that a user has entered a command which computes
-#   a specific value but perhaps in a different manner than anticipated
-#    omnitest('sd(x)^2', 5.95)
-#   If the user enters sd(x)*sd(x), rather than sd(x)^2, a notification
-#   will be issued, but the test will not fail.
-#   5. To test that a user has entered a command which computes
-#   a specific value in a particular way
-#    omnitest('sd(x)^2', 5.95, strict=TRUE)
-#   In this case, if the user enters sd(x)*sd(x) the test will fail.
+#' Test for a correct expression, a correct value, or both.
+#' 
+#' Omnitest can test for a correct expression, a correct value,
+#' or both. In the case of values it is limited to testing for 
+#' character or numerical vectors of length 1. For course authors
+#' only, omnitest is not exported.
+#' @param correctExpr the correct or expected expression as a string
+#' @param correctVal the correct value (numeric or character)
+#' @param strict a logical value indicating that the expression should be as expected even if the value is correct. If FALSE (the default) a correct value will pass the test even if the expression is not as expected, but a notification will be issued.
+#' @examples
+#' \dontrun{
+#' 
+#'   # Test that a user has chosen a correct menu item
+#'   #
+#'   omnitest(correctVal='Men in a college dorm.')
+#'    
+#'   # Test that a user has entered a correct number at the
+#'   # command line
+#'   #
+#'   omnitest(correctVal=19)
+#'    
+#'   # Test that a user has entered a particular command
+#'   #
+#'   omnitest('myVar <- c(3, 5, 7)')
+#'    
+#'   # Test that a user has entered a command which computes
+#'   # a specific value but perhaps in a different manner 
+#'   # than anticipated
+#'   #
+#'   omnitest('sd(x)^2', 5.95)
+#'   #
+#'   # If the user enters sd(x)*sd(x), rather than sd(x)^2, a notification
+#'   # will be issued, but the test will not fail.
+#'   
+#'   # Test that a user has entered a command which computes
+#'   # a specific value in a particular way
+#'   #
+#'   omnitest('sd(x)^2', 5.95, strict=TRUE)
+#'   #
+#'   # In this case, if the user enters sd(x)*sd(x) the test will fail.
+#'   
+#'   }
 omnitest <- function(correctExpr=NULL, correctVal=NULL, strict=FALSE){
   e <- get("e", parent.frame())
   # Trivial case
