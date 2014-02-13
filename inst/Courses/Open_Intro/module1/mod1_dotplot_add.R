@@ -1,1 +1,0 @@
-abline(v=c(min(cars$price), max(cars$price)), col="red", lwd=3)
