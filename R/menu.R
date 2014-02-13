@@ -67,7 +67,9 @@ mainMenu.default <- function(e){
         if(course=="")return(FALSE)
         # reverse path cosmetics
         courseU <- coursesU[course == coursesR]
-        modules <- dir(file.path(courseDir(e), courseU), pattern="module")
+        #rgr TODO remove pattern parameter
+        #modules <- dir(file.path(courseDir(e), courseU), pattern="module")
+        modules <- dir(file.path(courseDir(e), courseU))
         # Let user choose the module.
         module <- moduleMenu(e, modules)
       }
@@ -159,7 +161,9 @@ loadModule.default <- function(e, courseU, module){
   # Load the content file
   modPath <- file.path(courseDir(e), courseU, module)
   len <- str_length(module)
-  shortname <- paste0(substr(module,1,3),substr(module,len,len),"_new.csv",collapse=NULL)
+  # rgr TODO replase this with lesson.csv
+  #shortname <- paste0(substr(module,1,3),substr(module,len,len),"_new.csv",collapse=NULL)
+  shortname <- "lesson.csv"
   dataName <- file.path(modPath,shortname)     
   # initialize course module, assigning module-specific variables
   initFile <- file.path(modPath,"initModule.R")
