@@ -67,15 +67,14 @@ mainMenu.default <- function(e){
         if(course=="")return(FALSE)
         # reverse path cosmetics
         courseU <- coursesU[course == coursesR]
-        #rgr TODO remove pattern parameter
-        #lessons <- dir(file.path(courseDir(e), courseU), pattern="lesson")
         lessons <- dir(file.path(courseDir(e), courseU))
         # Clean up lesson names
         lessons_clean <- gsub("_", " ", lessons)
         # Let user choose the lesson.
         lesson_choice <- lessonMenu(e, lessons_clean)
         # reverse path cosmetics
-        lesson <- lessons[lesson_choice == lessons_clean]
+        lesson <- ifelse(lesson_choice=="", "",
+                         lessons[lesson_choice == lessons_clean])
       }
       # Load the lesson and intialize everything
       e$mod <- loadLesson(e, courseU, lesson)
