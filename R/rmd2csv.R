@@ -109,13 +109,17 @@ clean_me <- function(rmd) {
   # Remove empty lines
   rmd_clean <- rmd_clean[which(rmd_clean != "")]
   
-  # Remove title
-  rmd_clean[-c(1, 2)]
+  # Find index of end of YAML
+  yaml_end <- min(grep("=======", rmd_clean, value=FALSE))
+  
+  # Remove YAML until we know what to do with it
+  # TODO: figure out how to handle YAML more intelligently
+  rmd_clean[-seq(1, yaml_end)]
 }
 
 into_units <- function(rmd) {
   # Separate rmd into groups based on units of instruction
-  unit_num <- cumsum(str_detect(rmd, fixed("---")))
+  unit_num <- cumsum(str_detect(rmd, "^---"))
   
   # Return list of units
   split(rmd, unit_num)
