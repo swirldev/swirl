@@ -73,7 +73,9 @@ mainMenu.default <- function(e){
         # Clean up lesson names
         lessons_clean <- gsub("_", " ", lessons)
         # Let user choose the lesson.
-        lesson <- lessonMenu(e, lessons_clean)
+        lesson_choice <- lessonMenu(e, lessons_clean)
+        # reverse path cosmetics
+        lesson <- lessons[lesson_choice == lessons_clean]
       }
       # Load the lesson and intialize everything
       e$mod <- loadLesson(e, courseU, lesson)
