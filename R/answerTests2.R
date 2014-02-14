@@ -71,7 +71,12 @@ omnitest <- function(correctExpr=NULL, correctVal=NULL, strict=FALSE){
   valGood <- NULL
   if(!is.null(correctVal)){
     if(is.character(e$val)){
-      valGood <- val_matches(correctVal)
+      valResults <- expectThat(e$val,
+                               is_equivalent_to(correctVal, label=correctVal),
+                               label=(e$val))
+      if(is(e, "dev") && !valResults$passed)swirl_out(valResults$message)
+      valGood <- valResults$passed
+      # valGood <- val_matches(correctVal)
     } else if(!is.na(e$val) && is.numeric(e$val) && length(e$val) == 1){
       cval <- try(as.numeric(correctVal), silent=TRUE)
       valResults <- expectThat(e$val, 
