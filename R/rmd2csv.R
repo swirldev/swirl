@@ -59,13 +59,13 @@ get_ans_tests.cmd_question <- function(unit) {
   ans_tests_ind <- grep("*** .ans_tests", unit, fixed = TRUE) + 1
   if(length(ans_tests_ind) == 0) {
     warning("No answer tests specified for a command question!")
-    return(paste0("expr_identical=", get_corr_ans(unit)))
+    return(paste0("omnitest(correctExpr=\'", get_corr_ans(unit), "\')"))
   }
   unit[ans_tests_ind]
 }
 
 get_ans_tests.mult_question <- function(unit) {
-  paste0("word=", get_corr_ans(unit))
+  paste0("omnitest(correctVal=\'", get_corr_ans(unit), "\')")
 }
 
 ## GET HINT -- GENERIC AND METHODS

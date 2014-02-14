@@ -2,6 +2,7 @@ Lesson Name:  The name of this lesson goes here
 Course Name:  The name of the course to which this lesson belongs goes here
 Author:       Your name goes here
 Organization: The name of your organization goes here (optional)
+Version:      Output from packageVersion("swirl")
 ================================================================
 
 --- &text
