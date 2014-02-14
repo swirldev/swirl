@@ -137,7 +137,7 @@ testMe <- function(keyphrase, e){
     c("Data_Analysis", "Mathematical_Biostatistics_Boot_Camp",
       "Open_Intro")
   oldmod <- (attr(e$mod, "courseName") == "Intro_to_R") &&
-    (attr(e$mod, "modName") %in% c("module1", "module2", "module3"))
+    (attr(e$mod, "modName") %in% c("Basic_Building_Blocks", "Sequences_of_Numbers", "Vectors"))
   if(oldcourse || oldmod){
     # Use old test syntax
     # Add a new class attribute to the keyphrase using

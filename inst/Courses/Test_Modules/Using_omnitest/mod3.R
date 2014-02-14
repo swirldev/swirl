@@ -1,7 +1,7 @@
-modpath <- "inst/Courses/Test_Modules/module3/mod3_new.csv"
+modpath <- "inst/Courses/Test_Modules/Using_omnitest/lesson.csv"
 
 savemod <- function(){
-  write.csv(module, modpath, row.names=FALSE)
+  write.csv(lesson, modpath, row.names=FALSE)
 }
 
 newrow <- function(Class=NA, Output=NA, CorrectAnswer=NA, 
@@ -13,15 +13,15 @@ newrow <- function(Class=NA, Output=NA, CorrectAnswer=NA,
                      VideoLink=VideoLink)
 }
 
-module <- newrow(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)
+lesson <- newrow(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)
 
 # just text, no question
-module <- rbind(module, newrow(
+lesson <- rbind(lesson, newrow(
   Class="text", 
   Output="This is a brief demonstration of function omnitest. Omnitest can grade student answers for a correct expression, a correct value, or both. In the case of values it is limited to testing for character or numerical vectors of length 1. Omnitest's general signature is: omnitest(correctExpr=NULL, correctVal=NULL, strict=FALSE)"
   ))
 # multiple choice question
-module <- rbind(module, newrow(
+lesson <- rbind(lesson, newrow(
   Class="mult_question",
   Output="First, I'll use omnitest(correctVal='Mamma Mia!') for the answer to a multiple choice question: Which movie involves Pierce Brosnan in a singing role?",
   AnswerChoices="Mamma Mia!;Guys and Dolls;Once is Not Enough",
@@ -31,7 +31,7 @@ module <- rbind(module, newrow(
   ))
 
 # User must give an exact, numerical answer
-module <- rbind(module, newrow(
+lesson <- rbind(lesson, newrow(
   Class="exact_question",
   Output="Next, I'll use omnitest(correctVal=3) for an exact numerical answer entered at the command line: How many Stooges are there?",
   CorrectAnswer=3,
@@ -40,7 +40,7 @@ module <- rbind(module, newrow(
   ))
 
 # requires user to enter a command
-module <- rbind(module, newrow(
+lesson <- rbind(lesson, newrow(
   Class="cmd_question",
   Output="Now I'll use omnitest(correctExpr='scooby <- c(1969, 2013)') to test that a user has entered a particular command: Enter scooby <- c(1969, 2013)",
   CorrectAnswer="scooby <- c(1969, 2013)",
@@ -49,7 +49,7 @@ module <- rbind(module, newrow(
   ))
 
 # requires user to enter a command
-module <- rbind(module, newrow(
+lesson <- rbind(lesson, newrow(
   Class="cmd_question",
   Output="Omnitest has strict and casual modes. I'll demonstrate casual, the default, by using omnitest(correctExpr='3^2', correctVal=9) to test that a user has entered a command which computes a specific value but perhaps in a different manner than anticipated. The correct expression is 3^2, but enter 3*3.",
   CorrectAnswer="3^2",
@@ -58,7 +58,7 @@ module <- rbind(module, newrow(
   ))
 
 # requires user to enter a command
-module <- rbind(module, newrow(
+lesson <- rbind(lesson, newrow(
   Class="cmd_question",
   Output="Finally, I'll demonstrate strict mode for same question, using omnitest(correctExpr='3^2', correctVal=9, strict=TRUE) to test that a user has entered a command which computes a specific value in a particular way. The correct expression is 3^2. Entering 3*3 should fail.",
   CorrectAnswer="3^2",
@@ -67,7 +67,7 @@ module <- rbind(module, newrow(
 ))
 
 # just text, no question
-module <- rbind(module, newrow(
+lesson <- rbind(lesson, newrow(
   Class="text", 
   Output="That completes the omnitest demo. Thank you."
   ))
