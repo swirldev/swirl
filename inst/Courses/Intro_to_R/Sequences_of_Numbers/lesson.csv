@@ -1,5 +1,5 @@
 "Class","Output","CorrectAnswer","AnswerChoices","AnswerTests","Hint","Figure","FigureType","VideoLink"
-"text","In this module, you'll learn how to create sequences of numbers in R.",NA,NA,NA,NA,NA,NA,NA
+"text","In this lesson, you'll learn how to create sequences of numbers in R.",NA,NA,NA,NA,NA,NA,NA
 "cmd_question","The simplest way to create a sequence of numbers in R is by using the `:` operator. Type `1:20` to see how it works.","1:20",NA,"expr_identical=1:20","Type `1:20` with no spaces. Make sure to use a regular colon and NOT a semi-colon.",NA,NA,NA
 "cmd_question","That gave us every integer between (and including) 1 and 20. We could also use it to create a sequence of real numbers. For example, try `pi:10`.","pi:10",NA,"expr_identical=pi:10","Enter `pi:10` and see what happens. `pi` is a predefined constant in R that takes on the value 3.1415....",NA,NA,NA
 "text","The result is a vector of real numbers starting with pi (3.142...) and increasing in increments of 1. The upper limit of 10 is never reached, since the next number in our sequence would be greater than 10.",NA,NA,NA,NA,NA,NA,NA

@@ -1,6 +1,6 @@
 #' An interactive learning environment for R and statistics.
 #' 
-#' This function presents a choice of course modules and interactively
+#' This function presents a choice of course lessons and interactively
 #' tutors a user through them. A user may be asked to watch a video, to
 #' answer a multiple-choice or fill-in-the-blanks question, or to
 #' enter a command in the R console precisely as if he or she were 
@@ -219,7 +219,7 @@ resume <- function(...)UseMethod("resume")
 # It runs a fixed "program" consisting of three "instructions" which in 
 # turn present information, capture a user's response, and test and retry 
 # if necessary. The three instructions are themselves S3 methods which 
-# depend on the class of the active row of the course module. The 
+# depend on the class of the active row of the course lesson. The 
 # instruction set is thus extensible. It can be found in R/instructionSet.R. 
 # 
 resume.default <- function(e){
@@ -297,8 +297,8 @@ resume.default <- function(e){
   
   # Execute instructions until a return to the prompt is necessary
   while(!e$prompt){
-    # If the module is complete, save progress, remove the current
-    # module from e, and invoke the top level menu method.
+    # If the lesson is complete, save progress, remove the current
+    # lesson from e, and invoke the top level menu method.
     if(e$row > nrow(e$mod)){
       saveProgress(e)
       # form a new path for the progress file
@@ -310,10 +310,10 @@ resume.default <- function(e){
       # rename the progress file to indicate completion
       if(file.exists(new_path))file.remove(new_path)
       file.rename(e$progress, new_path)
-      # remove the current module and any custom tests
+      # remove the current lesson and any custom tests
       rm("mod", envir=e)
       clearCustomTests()
-      # let the user select another course module
+      # let the user select another course lesson
       temp <- mainMenu(e)
       # if menu returns FALSE, user wants to quit.
       if(is.logical(temp) && !isTRUE(temp)){

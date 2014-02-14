@@ -1,5 +1,5 @@
 "Class","Output","CorrectAnswer","AnswerChoices","AnswerTests","Hint","Figure","FigureType","VideoLink"
-"text","In this module, we will explore some basic building blocks of the R programming language.",NA,NA,NA,NA,NA,NA,NA
+"text","In this lesson, we will explore some basic building blocks of the R programming language.",NA,NA,NA,NA,NA,NA,NA
 "text","If at any point you'd like more information on a particular topic related to R, you can type `help.start()` at the prompt, which will open a menu of resources (either within RStudio or your default web browser, depending on your setup). Alternatively, a simple web search often yields the answer you're looking for.",NA,NA,NA,NA,NA,NA,NA
 "cmd_question","In it's simplest form, R can be used as an interactive calculator. Type `5 + 7` and press Enter. Don't include the backticks (``) in your input. They are only there to denote an R command.","5 + 7",NA,"expr_identical=5 + 7","Just type `5 + 7` (without the backticks) and press Enter.",NA,NA,NA
 "text","R simply prints the result of 12 by default. However, R is a programming language and often the reason we use a programming language as opposed to a calculator is to automate some process or avoid unnecessary repetition.",NA,NA,NA,NA,NA,NA,NA

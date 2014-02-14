@@ -1,9 +1,9 @@
-Intro to R - Module 1
+Intro to R - Lesson 1
 ========================================================
 
 --- &text
 
-In this module, we will explore some basic building blocks of the R programming language.
+In this lesson, we will explore some basic building blocks of the R programming language.
 
 --- &text
 

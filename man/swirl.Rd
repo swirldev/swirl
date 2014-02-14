@@ -9,7 +9,7 @@ swirl(resume.class = "default")
   the default.}
 }
 \description{
-This function presents a choice of course modules and
+This function presents a choice of course lessons and
 interactively tutors a user through them. A user may be
 asked to watch a video, to answer a multiple-choice or
 fill-in-the-blanks question, or to enter a command in the R

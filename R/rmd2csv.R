@@ -17,8 +17,15 @@ get_corr_ans.cmd_question <- function(unit) {
     stop("You forgot to specify the correct answer on a command question!")
   }
   
-  # Return everything in between (exclusive)
-  unit[seq(beg_chunk + 1, end_chunk - 1)]
+  # Capture everything in between (exclusive)
+  corr_ans <- unit[seq(beg_chunk + 1, end_chunk - 1)]
+  
+  # Check for comments
+  if(any(grepl("#", corr_ans))) {
+    stop("No comments allowed in correct answer!")
+  }
+  # Return correct answer
+  corr_ans
 }
 
 get_corr_ans.mult_question <- function(unit) {
@@ -59,13 +66,13 @@ get_ans_tests.cmd_question <- function(unit) {
   ans_tests_ind <- grep("*** .ans_tests", unit, fixed = TRUE) + 1
   if(length(ans_tests_ind) == 0) {
     warning("No answer tests specified for a command question!")
-    return(paste0("expr_identical=", get_corr_ans(unit)))
+    return(paste0("omnitest(correctExpr=\'", get_corr_ans(unit), "\')"))
   }
   unit[ans_tests_ind]
 }
 
 get_ans_tests.mult_question <- function(unit) {
-  paste0("word=", get_corr_ans(unit))
+  paste0("omnitest(correctVal=\'", get_corr_ans(unit), "\')")
 }
 
 ## GET HINT -- GENERIC AND METHODS
@@ -109,13 +116,17 @@ clean_me <- function(rmd) {
   # Remove empty lines
   rmd_clean <- rmd_clean[which(rmd_clean != "")]
   
-  # Remove title
-  rmd_clean[-c(1, 2)]
+  # Find index of end of YAML
+  yaml_end <- min(grep("=======", rmd_clean, value=FALSE))
+  
+  # Remove YAML until we know what to do with it
+  # TODO: figure out how to handle YAML more intelligently
+  rmd_clean[-seq(1, yaml_end)]
 }
 
 into_units <- function(rmd) {
   # Separate rmd into groups based on units of instruction
-  unit_num <- cumsum(str_detect(rmd, fixed("---")))
+  unit_num <- cumsum(str_detect(rmd, "^---"))
   
   # Return list of units
   split(rmd, unit_num)

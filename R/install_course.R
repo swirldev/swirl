@@ -78,7 +78,7 @@ install_course_github <- function(github_username, course_name, branch="master")
   # Construct url to the zip file
   zip_url <- paste0("http://github.com/", github_username, "/", course_name,"/zipball/", branch)
 
-  install_course_url(zip_url, type="github", course_name=course_name)
+  install_course_url(zip_url)
 }
 
 #' Install a course from a zipped course directory shared on Dropbox
@@ -116,16 +116,15 @@ install_course_google_drive <- function(url){
 #' Install a course from a url that points to a zip file
 #' 
 #' @param url URL that points to a zipped course directory
-#' @param course_name name of course
-#' @param type optional parameter, either \code{"url"} or \code{"github"}, specifying whether download is from an arbitrary URL or a GitHub repository, respectively. Default is \code{"url"}.
 #' @export
 #' @importFrom httr GET content
+#' @importFrom stringr str_extract perl
 #' @examples
 #' \dontrun{
 #' 
 #' install_course_url("http://www.biostat.jhsph.edu/~rpeng/File_Hash_Course.zip")
 #' }
-install_course_url <- function(url, course_name, type="url"){
+install_course_url <- function(url){
   # Send GET request
   response <- GET(url)
   
@@ -139,12 +138,15 @@ install_course_url <- function(url, course_name, type="url"){
   install_course_zip(path)
 
   # Clean up GitHub directory name
-  if(type=="github"){
+  if(grepl("github.com", url)){
     # Get paths of every file in zip that will be extracted
     file_names <- dirname(unzip(path,  list = T)$Name)
     
     # Find subset of those names which is not equal to root, then get the shortest string from that subset
     old_name <- head( sort( file_names[which(file_names != ".")] ) , 1)
+    
+    # Extract course name
+    course_name <- sub("/zipball", "", str_extract(url, perl("[^/]+/{1}zipball")) )
     
     # Rename unzipped directory
     file.rename(file.path(path.package("swirl"), "Courses", old_name), 

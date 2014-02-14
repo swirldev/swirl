@@ -6,18 +6,18 @@ housekeeping <- function(e, ...)UseMethod("housekeeping")
 inProgressMenu <- function(e, choices, ...)UseMethod("inProgressMenu")
 courseMenu <- function(e, courses)UseMethod("courseMenu")
 courseDir <- function(e)UseMethod("courseDir")
-moduleMenu <- function(e, choices)UseMethod("moduleMenu")
+lessonMenu <- function(e, choices)UseMethod("lessonMenu")
 restoreUserProgress <- function(e, selection)UseMethod("restoreUserProgress")
-loadModule <- function(e, ...)UseMethod("loadModule")
+loadLesson <- function(e, ...)UseMethod("loadLesson")
 loadInstructions <- function(e, ...)UseMethod("loadInstructions")
 
-# Default course and module navigation logic
+# Default course and lesson navigation logic
 # 
-# This method implements default course and module navigation logic, 
+# This method implements default course and lesson navigation logic, 
 # decoupling menu presentation from internal processing of user
 # selections. It relies on several methods for menu presentation,
-# namely welcome(e), housekeeping(e), inProgressMenu(e, modules),
-# courseMenu(e, courses), and moduleMenu(e, modules). Defaults 
+# namely welcome(e), housekeeping(e), inProgressMenu(e, lessons),
+# courseMenu(e, courses), and lessonMenu(e, lessons). Defaults 
 # are provided.
 # 
 # @param e persistent environment accessible to the callback
@@ -32,9 +32,9 @@ mainMenu.default <- function(e){
     }
     e$udat <- udat
   }
-  # If there is no active module, obtain one.
+  # If there is no active lesson, obtain one.
   if(!exists("mod",e,inherits = FALSE)){
-    # First, allow user to continue unfinished modules
+    # First, allow user to continue unfinished lessons
     # if there are any
     pfiles <- inProgress(e)
     response <- ""
@@ -47,7 +47,7 @@ mainMenu.default <- function(e){
       response <- paste0(response,"_.rda")
       restoreUserProgress(e, response)
     } else {
-      # Else load a new module.
+      # Else load a new lesson.
       # Let user choose the course.
       coursesU <- dir(courseDir(e))
       # Eliminate empty directories
@@ -61,20 +61,26 @@ mainMenu.default <- function(e){
       }
       # path cosmetics
       coursesR <- gsub("_", " ", coursesU)
-      module <- ""
-      while(module == ""){
+      lesson <- ""
+      while(lesson == ""){
         course <- courseMenu(e, coursesR)
         if(course=="")return(FALSE)
         # reverse path cosmetics
         courseU <- coursesU[course == coursesR]
-        modules <- dir(file.path(courseDir(e), courseU), pattern="module")
-        # Let user choose the module.
-        module <- moduleMenu(e, modules)
+        #rgr TODO remove pattern parameter
+        #lessons <- dir(file.path(courseDir(e), courseU), pattern="lesson")
+        lessons <- dir(file.path(courseDir(e), courseU))
+        # Clean up lesson names
+        lessons_clean <- gsub("_", " ", lessons)
+        # Let user choose the lesson.
+        lesson_choice <- lessonMenu(e, lessons_clean)
+        # reverse path cosmetics
+        lesson <- lessons[lesson_choice == lessons_clean]
       }
-      # Load the module and intialize everything
-      e$mod <- loadModule(e, courseU, module)
+      # Load the lesson and intialize everything
+      e$mod <- loadLesson(e, courseU, lesson)
       # expr, val, ok, and vis should have been set by the callback.
-      # The module's current row
+      # The lesson's current row
       e$row <- 1
       # The current row's instruction pointer
       e$iptr <- 1
@@ -86,9 +92,9 @@ mainMenu.default <- function(e){
       # An identifier for the active row
       e$current.row <- NULL
       # For sourcing files which construct figures etc
-      e$path <- file.path(courseDir(e), courseU, module)
+      e$path <- file.path(courseDir(e), courseU, lesson)
       # Set up paths and files to save user progress
-      # Make file path from module info
+      # Make file path from lesson info
       fname <- progressName(attr(e$mod,"courseName"), attr(e$mod,"modName"))
       # path to file 
       e$progress <- file.path(e$udat, fname)
@@ -134,7 +140,7 @@ housekeeping.dev <- function(e){}
 # A stub. Eventually this should be a full menu
 inProgressMenu.default <- function(e, choices){
   nada <- "No. Let me start something new."
-  swirl_out("Would you like to continue with one of these modules?")
+  swirl_out("Would you like to continue with one of these lessons?")
   selection <- select.list(c(choices, nada), graphics=FALSE)
   # return a blank if the user rejects all choices
   if(identical(selection, nada))selection <- ""
@@ -148,22 +154,22 @@ courseMenu.default <- function(e, choices){
 }
 
 # A stub. Eventually this should be a full menu
-moduleMenu.default <- function(e, choices){
-  swirl_out("Please choose a module, or type 0 to return to course menu.")
+lessonMenu.default <- function(e, choices){
+  swirl_out("Please choose a lesson, or type 0 to return to course menu.")
   return(select.list(choices, graphics=FALSE))
 }
 
-loadModule.default <- function(e, courseU, module){
+loadLesson.default <- function(e, courseU, lesson){
   # Load the content file
-  modPath <- file.path(courseDir(e), courseU, module)
-  len <- str_length(module)
-  shortname <- paste0(substr(module,1,3),substr(module,len,len),"_new.csv",collapse=NULL)
-  dataName <- file.path(modPath,shortname)
+  modPath <- file.path(courseDir(e), courseU, lesson)
+  len <- str_length(lesson)
+  shortname <- "lesson.csv"
+  dataName <- file.path(modPath,shortname)     
   # Before initializing the module, take a snapshot of 
   #  the global environment.
   snapshot <- as.list(globalenv())
-  #initialize course module, assigning module-specific variables
-  initFile <- file.path(modPath,"initModule.R")
+  # initialize course lesson, assigning lesson-specific variables
+  initFile <- file.path(modPath,"initLesson.R")
   if (file.exists(initFile)){
     source(initFile)
   }
@@ -182,9 +188,9 @@ loadModule.default <- function(e, courseU, module){
   if(file.exists(instructorFile)){
     instructor <- readLines(instructorFile)[1]
   }
-  # Return the course module, using Nick's constructor which 
+  # Return the course lesson, using Nick's constructor which 
   # adds attributes identifying the course and indicating dependencies.
-  return(module(read.csv(dataName, as.is=TRUE),module, courseU, instructor))
+  return(lesson(read.csv(dataName, as.is=TRUE),lesson, courseU, instructor))
 }
 
 restoreUserProgress.default <- function(e, selection){
@@ -197,8 +203,8 @@ restoreUserProgress.default <- function(e, selection){
   for (x in ls(e$official)){
     assign(x,e$official[[x]], globalenv())
   }
-  # source the initModule.R file if it exists
-  initf <- file.path(e$path, "initModule.R")
+  # source the initLesson.R file if it exists
+  initf <- file.path(e$path, "initLesson.R")
   # load any custom tests
   clearCustomTests()
   loadCustomTests(e$path)

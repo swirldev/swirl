@@ -15,7 +15,7 @@
 author_lesson = function(lesson_name, course_name, new_course) {
   
   # Convert lesson name and course name to more desirable file path formats.
-  les_filename <- make_pathname(lesson_name)
+  les_dirname <- make_pathname(lesson_name)
   crs_dirname <- make_pathname(course_name)
   
   # Create path for course directory in current working directory.
@@ -34,7 +34,7 @@ author_lesson = function(lesson_name, course_name, new_course) {
   }
   
   # Create path for lesson within lesson subdirectory
-  path2les <- file.path(path2course, les_filename, paste0(les_filename, ".Rmd"))
+  path2les <- file.path(path2course, les_dirname, "lesson.Rmd")
   
   # Deals with case when user specifies lesson that already exists
   if(file.exists(path2les)) {
@@ -43,16 +43,11 @@ author_lesson = function(lesson_name, course_name, new_course) {
     # Copy course template into course directory.
     message("Preparing lesson template ...\n")
     scaffold <- system.file("skeleton", package = "swirl")
-    copy_dir(scaffold, file.path(path2course, les_filename))
-    
-    # If successful, then rename file appropriately.
-    if(file.exists(file.path(path2course, les_filename, "index.Rmd"))) {
-      file.rename(file.path(path2course, les_filename, "index.Rmd"), path2les)
-    }
+    copy_dir(scaffold, file.path(path2course, les_dirname))
   }
   
   # Open R Markdown file for new lesson.
-  message("Opening lesson (", les_filename, ".Rmd) for editing ...\n")
+  message("Opening lesson for editing ...\n")
   file.edit(path2les)
   
   invisible()
