@@ -17,8 +17,15 @@ get_corr_ans.cmd_question <- function(unit) {
     stop("You forgot to specify the correct answer on a command question!")
   }
   
-  # Return everything in between (exclusive)
-  unit[seq(beg_chunk + 1, end_chunk - 1)]
+  # Capture everything in between (exclusive)
+  corr_ans <- unit[seq(beg_chunk + 1, end_chunk - 1)]
+  
+  # Check for comments
+  if(any(grepl("#", corr_ans))) {
+    stop("No comments allowed in correct answer!")
+  }
+  # Return correct answer
+  corr_ans
 }
 
 get_corr_ans.mult_question <- function(unit) {
