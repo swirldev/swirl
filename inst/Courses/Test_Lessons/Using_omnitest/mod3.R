@@ -1,4 +1,4 @@
-modpath <- "inst/Courses/Test_Modules/Using_omnitest/lesson.csv"
+modpath <- "inst/Courses/Test_Lessons/Using_omnitest/lesson.csv"
 
 savemod <- function(){
   write.csv(lesson, modpath, row.names=FALSE)
