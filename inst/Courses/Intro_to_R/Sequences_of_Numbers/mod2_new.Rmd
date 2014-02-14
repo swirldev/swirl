@@ -1,9 +1,9 @@
-Intro to R - Module 2
+Intro to R - Lesson 2
 ========================================================
 
 --- &text
 
-In this module, you'll learn how to create sequences of numbers in R.
+In this lesson, you'll learn how to create sequences of numbers in R.
 
 --- &cmd_question
 

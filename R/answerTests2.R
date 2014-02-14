@@ -9,12 +9,12 @@
 # To cover the exception, four additional tests were necessary: 
 # var_is_a, expr_uses, expr_creates_var, and val_has_length.
 # 
-# One additional test, expr_is_a, was needed for the test modules.
+# One additional test, expr_is_a, was needed for the test lessons.
 #
 # Omnitest is an aggregate of more basic tests and is meant to cover
 # many of the questions which have appeared in lessons so far.
 # CAVEAT: Omnitest is completely untested. We will have to write
-# a small module for the purpose.
+# a small lesson for the purpose.
  
 #' Test for a correct expression, a correct value, or both.
 #' 
@@ -128,7 +128,7 @@ var_is_a <- function(class, var_name) {
   class <-  str_trim(class)
   var_name <- str_trim(var_name)
   if(exists(var_name, globalenv())){
-    val <- get(variable, globalenv())
+    val <- get(var_name, globalenv())
     label <- val
     results <- expectThat(val, is_a(class), label=label)
     if(is(e,"dev") && !results$passed)swirl_out(results$message)

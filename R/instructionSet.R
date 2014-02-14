@@ -137,7 +137,7 @@ testMe <- function(keyphrase, e){
     c("Data_Analysis", "Mathematical_Biostatistics_Boot_Camp",
       "Open_Intro")
   oldmod <- (attr(e$mod, "courseName") == "Intro_to_R") &&
-    (attr(e$mod, "modName") %in% c("module1", "module2", "module3"))
+    (attr(e$mod, "modName") %in% c("Basic_Building_Blocks", "Sequences_of_Numbers", "Vectors"))
   if(oldcourse || oldmod){
     # Use old test syntax
     # Add a new class attribute to the keyphrase using
@@ -158,7 +158,7 @@ testMe <- function(keyphrase, e){
 # for functions first in customTests, and then in the swirl namespace.
 #
 # Custom tests must be defined in a file named "customTests.R" in the
-# lesson (module) directory. Tests in such files are loaded into environment 
+# lesson directory. Tests in such files are loaded into environment 
 # customTests when a lesson is first loaded or progress is restored. 
 # The environment is cleared between lessons.
 
