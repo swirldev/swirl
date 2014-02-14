@@ -128,7 +128,7 @@ var_is_a <- function(class, var_name) {
   class <-  str_trim(class)
   var_name <- str_trim(var_name)
   if(exists(var_name, globalenv())){
-    val <- get(variable, globalenv())
+    val <- get(var_name, globalenv())
     label <- val
     results <- expectThat(val, is_a(class), label=label)
     if(is(e,"dev") && !results$passed)swirl_out(results$message)

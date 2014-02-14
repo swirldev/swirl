@@ -70,8 +70,10 @@ mainMenu.default <- function(e){
         #rgr TODO remove pattern parameter
         #lessons <- dir(file.path(courseDir(e), courseU), pattern="lesson")
         lessons <- dir(file.path(courseDir(e), courseU))
+        # Clean up lesson names
+        lessons_clean <- gsub("_", " ", lessons)
         # Let user choose the lesson.
-        lesson <- lessonMenu(e, lessons)
+        lesson <- lessonMenu(e, lessons_clean)
       }
       # Load the lesson and intialize everything
       e$mod <- loadLesson(e, courseU, lesson)
