@@ -14,7 +14,8 @@ Imports:
     pwr,
     testthat,
     openintro,
-    httr
+    httr,
+    whisker
 Description: swirl is a platform for learning (and teaching) statistics and R
     simultaneously and interactively.
 URL: http://swirlstats.com
