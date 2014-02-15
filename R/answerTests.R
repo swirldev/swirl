@@ -77,7 +77,9 @@ runTest.word_many <- function(keyphrase,e){
 # Alter this test to use list of new variables created
 #  by snapshot strategy.
 runTest.newVar <- function(keyphrase, e){
-  e$delta <- safeEval(e$expr, e)
+  # TODO: Eventually make auto-detection of new variables an option.
+  # AUTO_DETECT_NEWVAR is currently hardcoded TRUE. (See utilities.R.)
+  if(!AUTO_DETECT_NEWVAR)e$delta <- safeEval(e$expr, e)
   if (length(e$delta)==1){
     e$newVar <- e$delta[[1]]
     e$newVarName <- names(e$delta)[1]
@@ -92,7 +94,9 @@ runTest.newVar <- function(keyphrase, e){
 # returns TRUE.
 # keyphrase: correctName=<correct name>
 runTest.correctName <- function(keyphrase, e){
-  e$delta <- safeEval(e$expr, e)
+  # TODO: Eventually make auto-detection of new variables an option.
+  # AUTO_DETECT_NEWVAR is currently hardcoded TRUE. (See utilities.R.)
+  if(!AUTO_DETECT_NEWVAR)e$delta <- safeEval(e$expr, e)
   correctName <- rightside(keyphrase)
   if ((length(e$delta)==1) && (identical(names(e$delta)[1],correctName))) {
     e$newVar <- e$delta[[1]]
@@ -243,7 +247,9 @@ runTest.matches <- function(keyphrase, e) {
 # if given.) If so, returns TRUE.
 # keyphrase: creates_var or creates_var=correctName
 runTest.creates_var <- function(keyphrase, e){
-  e$delta <- safeEval(e$expr, e)
+  # TODO: Eventually make auto-detection of new variables an option.
+  # AUTO_DETECT_NEWVAR is currently hardcoded TRUE. (See utilities.R.)
+  if(!AUTO_DETECT_NEWVAR)e$delta <- safeEval(e$expr, e)
   correctName <- rightside(keyphrase)
   if(is.na(correctName)){
     results <- expectThat(length(e$delta), equals(1), 
