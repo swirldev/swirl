@@ -67,15 +67,14 @@ mainMenu.default <- function(e){
         if(course=="")return(FALSE)
         # reverse path cosmetics
         courseU <- coursesU[course == coursesR]
-        #rgr TODO remove pattern parameter
-        #lessons <- dir(file.path(courseDir(e), courseU), pattern="lesson")
         lessons <- dir(file.path(courseDir(e), courseU))
         # Clean up lesson names
         lessons_clean <- gsub("_", " ", lessons)
         # Let user choose the lesson.
         lesson_choice <- lessonMenu(e, lessons_clean)
         # reverse path cosmetics
-        lesson <- lessons[lesson_choice == lessons_clean]
+        lesson <- ifelse(lesson_choice=="", "",
+                         lessons[lesson_choice == lessons_clean])
       }
       # Load the lesson and intialize everything
       e$mod <- loadLesson(e, courseU, lesson)
@@ -98,8 +97,6 @@ mainMenu.default <- function(e){
       fname <- progressName(attr(e$mod,"courseName"), attr(e$mod,"modName"))
       # path to file 
       e$progress <- file.path(e$udat, fname)
-      # list to hold expressions entered by the user
-      e$usrexpr <- list()
       # indicator that swirl is not reacting to console input
       e$playing <- FALSE
       # create the file
@@ -165,15 +162,23 @@ loadLesson.default <- function(e, courseU, lesson){
   # Load the content file
   modPath <- file.path(courseDir(e), courseU, lesson)
   len <- str_length(lesson)
-  # rgr TODO replase this with lesson.csv
-  #shortname <- paste0(substr(lesson,1,3),substr(lesson,len,len),"_new.csv",collapse=NULL)
   shortname <- "lesson.csv"
   dataName <- file.path(modPath,shortname)     
+  # Before initializing the module, take a snapshot of 
+  #  the global environment.
+  snapshot <- as.list(globalenv())
   # initialize course lesson, assigning lesson-specific variables
   initFile <- file.path(modPath,"initLesson.R")
   if (file.exists(initFile)){
     source(initFile)
   }
+  #  After initializing, compare a current snapshot of the 
+  #  global environment with the previous to detect any variables
+  #  created or changed by initialization. Add these to the list
+  #  of "official" swirl names and values.
+  e$snapshot <- as.list(globalenv())
+  idx <- !(e$snapshot %in% snapshot)
+  e$official <- e$snapshot[idx]
   # load any custom tests
   clearCustomTests()
   loadCustomTests(modPath)
@@ -192,6 +197,11 @@ restoreUserProgress.default <- function(e, selection){
   temp <- readRDS(file.path(e$udat, selection))
   # transfer its contents to e
   xfer(temp, e)
+  # transfer swirl's "official" list of variables to the
+  # global environment.
+  for (x in ls(e$official)){
+    assign(x,e$official[[x]], globalenv())
+  }
   # source the initLesson.R file if it exists
   initf <- file.path(e$path, "initLesson.R")
   # load any custom tests
@@ -254,4 +264,4 @@ courseDir.dev <- function(e){
 
 # Default for determining the user
 getUser <- function()UseMethod("getUser")
-getUser.default <- function()"swirladmin"
+getUser.default <- function(){"swirladmin"}

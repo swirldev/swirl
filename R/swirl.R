@@ -230,7 +230,14 @@ resume.default <- function(e){
     esc_flag <- FALSE
     return(TRUE)
   }
-  if(uses_func("nxt")(e$expr)[[1]]){
+  if(uses_func("nxt")(e$expr)[[1]]){    
+    ## Using the stored list of "official" swirl variables and values,
+    #  assign variables of the same names in the global environment
+    #  their "official" values, in case the user has changed them
+    #  while playing.
+    for(x in ls(e$official)){
+      assign(x,e$official[[x]],globalenv())
+    }
     swirl_out("Resuming lesson...")
     e$playing <- FALSE
     e$iptr <- 1
@@ -250,23 +257,26 @@ resume.default <- function(e){
     # Increment a skip count kept in e.
     if(!exists("skips", e))e$skips <- 0
     e$skips <- 1 + e$skips
-    # Enter the correct answer for the user.
+    # Enter the correct answer for the user
+    # by simulating what the user should have done
+    #
     correctAns <- e$current.row[,"CorrectAnswer"]
-    e$expr <- parse(text=correctAns)[[1]]
-    e$val <- eval(e$expr)
-    # Evaluate it in the global environment
-    eval(e$expr, globalenv())
-    # Inform the user, but don't expose the actual answer.
-    
-    swirl_out("I've entered the correct answer for you.")
-    temp <- new.env()
-    eval(e$expr, temp)
-    temp <- ls(temp)
-    if(length(temp) > 0){
-      swirl_out(paste0("In doing so, I've created the variable(s) ", 
-                       temp, ", which you may need later."))
+    # In case correctAns refers to newVar, add it
+    # to the snapshot AND the global environment
+    if(exists("newVarName",e)){
+      correctAns <- gsub("newVar", e$newVarName, correctAns)
     }
-    
+    e$expr <- parse(text=correctAns)[[1]]
+    ce <- cleanEnv(e$snapshot)
+    e$val <- eval(e$expr, ce)
+    ce <- as.list(ce)
+    for(nm in names(ce))assign(nm, ce[[nm]], globalenv())
+    # Inform the user, but don't expose the actual answer.    
+    swirl_out("I've entered the correct answer for you.")
+    if(length(names(ce)) > 0){
+      swirl_out(paste0("In doing so, I've created the variable(s) ", 
+                       names(ce), ", which you may need later."))
+    }  
   }
   # Method menu initializes or reinitializes e if necessary.
   temp <- mainMenu(e)
@@ -276,6 +286,19 @@ resume.default <- function(e){
     esc_flag <- FALSE # To supress double notification
     return(FALSE)
   }
+  
+  # if e$expr is NOT swirl() or nxt(), the user has just responded to
+  # a question at the command line. Simulate evaluation of the
+  # user's expression and save any variables changed or created
+  # in e$delta. 
+  # TODO: Eventually make auto-detection of new variables an option.
+  # AUTO_DETECT_NEWVAR is currently hardcoded TRUE. (See utilities.R.)
+  if(!uses_func("swirl")(e$expr)[[1]] && 
+       !uses_func("nxt")(e$expr)[[1]] &&
+       AUTO_DETECT_NEWVAR){
+    e$delta <- safeEval(e$expr, e)
+  }
+  
   # Execute instructions until a return to the prompt is necessary
   while(!e$prompt){
     # If the lesson is complete, save progress, remove the current
@@ -305,6 +328,16 @@ resume.default <- function(e){
     }
     # If we are ready for a new row, prepare it
     if(e$iptr == 1){
+      
+      #  Any variables changed or created during the previous
+      #  question must have been correct or we would not be about
+      #  to advance to a new row. Incorporate these in the list
+      #  of swirl's "official" names and values.
+      #  It should be safe to remove the current snapshot here.
+      if (!is.null(e$delta)){
+        e$official <- mergeLists(e$delta,e$official)
+      }
+      e$delta <- list()
       saveProgress(e)
       e$current.row <- e$mod[e$row,]
       # Prepend the row's swirl class to its class attribute
@@ -314,6 +347,11 @@ resume.default <- function(e){
     # Execute the current instruction
     e$instr[[e$iptr]](e$current.row, e)
   }
+  
+  # Take a snapshot of the global environment here for
+  #  comparison after the user has responded to a question at
+  #  the command line. Store it in e.
+  e$snapshot <- as.list(globalenv())
   e$prompt <- FALSE
   esc_flag <- FALSE
   return(TRUE)

@@ -24,22 +24,16 @@ waitUser.default <- function(current.row, e){
 
 waitUser.text_question <- function(current.row, e){
   e$val <- str_trim(unlist(strsplit(readline("ANSWER: "),",")))
-#   e$row <- 1 + e$row
-#   e$iptr <- 1
   e$iptr <- 1 + e$iptr
 }
 
 waitUser.text_many_question <- function(current.row, e){
   e$val <- str_trim(unlist(strsplit(readline("ANSWER: "),",")))
-#   e$row <- 1 + e$row
-#   e$iptr <- 1
   e$iptr <- 1 + e$iptr
 }
 
 waitUser.text_order_question <- function(current.row, e){
   e$val <- str_trim(unlist(strsplit(readline("ANSWER: "),",")))
-#   e$row <- 1 + e$row
-#   e$iptr <- 1
   e$iptr <- 1 + e$iptr
 }
 
@@ -120,6 +114,12 @@ testResponse.default <- function(current.row, e){
     e$iptr <- 1
     e$row <- 1 + e$row
   } else {
+    # Restore the previous global environment from the snapshot
+    # in case the user has garbled it, e.g., has typed x <- 3*x
+    # instead of x <- 2*x by mistake. The hint might say to type
+    # x <- 2*x, which would result in 6 times the original value
+    # of x unless the original value is restored.
+    for(nm in names(e$snapshot))assign(nm, e$snapshot[[nm]], globalenv())
     mes <- tryAgain()
     if(is(current.row, "cmd_question")) {
       mes <- paste(mes, "Or, type info() for more options.")

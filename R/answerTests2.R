@@ -171,15 +171,23 @@ expr_uses_func <- function(func) {
 # if given.) If so, returns TRUE.
 expr_creates_var <- function(correctName=NULL){
   e <- get("e", parent.frame())
+  # TODO: Eventually make auto-detection of new variables an option.
+  # AUTO_DETECT_NEWVAR is currently hardcoded TRUE. (See utilities.R.)
+  if(!AUTO_DETECT_NEWVAR)e$delta <- safeEval(e$expr, e)
   if(is.null(correctName)){
-    results <- expectThat(e$expr, creates_var(), label=deparse(e$expr))
+    results <- expectThat(length(e$delta), equals(1), 
+                          label=paste(deparse(e$expr), 
+                                      "does not create a variable."))  
   } else {
-    results <- expectThat(e$expr, 
-                          creates_var(correctName, label=correctName), 
-                          label=deparse(e$expr))
+    results <- expectThat(names(e$delta), 
+                          is_equivalent_to(correctName, label=correctName), 
+                          label=paste(deparse(e$expr),
+                                      "does not create a variable named",
+                                      correctName))
   }
   if(results$passed){
     e$newVar <- e$val
+    e$newVarName <- names(e$delta)[1]
   } else if(is(e,"dev")){
     swirl_out(results$message)
   }
@@ -205,10 +213,13 @@ val_has_length <- function(len){
 # saved as e$newVar.
 func_of_newvar_equals <- function(correct_expression){
   e <- get("e", parent.frame())
-  correctExpr <- gsub("newVar", paste0("e$","newVar"), correct_expression)
+  e1 <- cleanEnv(e$snapshot)
+  assign(e$newVarName, e$newVar, e1)
+  correctExpr <- gsub("newVar", e$newVarName, correct_expression)
+  ans <- eval(parse(text=correctExpr), e1)
   results <- expectThat(e$val, 
-                        equals(eval(parse(text=correctExpr)), 
-                               label=correct_expression), 
+                        equals(ans, 
+                               label=correctExpr), 
                         label=deparse(e$expr))
   if(is(e, "dev") && !results$passed)swirl_out(results$message)
   return(results$passed)
