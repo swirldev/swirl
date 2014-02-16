@@ -26,11 +26,19 @@ zip_course <- function(path, dest=NULL){
   # Push current directory
   curr_dir <- getwd()
   
+  # Create directory in which to zip
+  zip_dir <- paste0(dest, "/", "swirl_zip_creator_TEMP")
+  dir.create(zip_dir)
+  file.copy(path, zip_dir, recursive=T)
+  
   # Change directory to folder to be zipped
-  setwd(path)
+  setwd(zip_dir)
   
   # Zip-A-Dee-Doo-Dah
   zip(paste0(dest, "/", basename(path), ".zip"), list.files(getwd(), recursive=T))
+  
+  # Delete temporary directory
+  unlink(zip_dir, recursive=T, force=T)
   
   # Pop the old directory
   setwd(curr_dir)
