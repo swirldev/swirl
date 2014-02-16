@@ -12,7 +12,16 @@
   * `uninstall_course()`: Uninstall a course
   * `zip_course()`: Zip a course directory
   
+* Course authors can add custom tests for student repsonses.
+  * Custom tests may be defined in the lesson directory in file named customTests.R.
+  * Custom tests run in the same environment as tests provided with the package.
+  
 * Revised suite of answer tests (contained in answerTests2.R) using a more natural function call syntax
+
+* Revised user progress tracking and restoration.
+  * Improved tracking by taking environmental "snapshots."
+  * Keep a list of variables created or modified by correct responses.
+  * Restore list to global environment after a lesson is suspended and resumed.
 
 * Miscellaneous big fixes
 
