@@ -6,6 +6,7 @@
 #' @param lesson_name Full name of the lesson being authored
 #' @param course_name Full name of the course to which this lesson belongs
 #' @param new_course Boolean (TRUE or FALSE). Is this a new course?
+#' @importFrom whisker whisker.render
 #' @export
 #' @examples
 #' \dontrun{
@@ -33,17 +34,29 @@ author_lesson = function(lesson_name, course_name, new_course) {
                "\' not found in the current working directory!"))
   }
   
+  # Create path to lesson directory
+  path2les_dir <- file.path(path2course, les_dirname)
   # Create path for lesson within lesson subdirectory
-  path2les <- file.path(path2course, les_dirname, "lesson.Rmd")
+  path2les <- file.path(path2les_dir, "lesson.Rmd")
   
   # Deals with case when user specifies lesson that already exists
   if(file.exists(path2les)) {
     message(paste0("A lesson called \'", lesson_name, "\' already exists in course \'", course_name, "\'!"))
   } else {
-    # Copy course template into course directory.
-    message("Preparing lesson template ...\n")
-    scaffold <- system.file("skeleton", package = "swirl")
-    copy_dir(scaffold, file.path(path2course, les_dirname))
+    # Read in course template and add custom YAML
+    message("Customizing lesson template ...\n")
+    path2temp <- file.path(path.package("swirl"), "templates", "lesson.Rmd")
+    temp <- readLines(path2temp, warn=FALSE)
+    dat <- list(lesson_name = lesson_name,
+                 course_name = course_name,
+                 swirl_version = packageVersion("swirl")
+                 )
+    out <- whisker.render(temp, dat)
+    # Create lesson directory
+    dir.create(path2les_dir, recursive=TRUE)
+    # Write customized template to new lesson file in lesson directory
+    message(paste("Writing lesson template to", path2les, "...\n"))
+    writeLines(out, path2les)
   }
   
   # Open R Markdown file for new lesson.
@@ -55,16 +68,7 @@ author_lesson = function(lesson_name, course_name, new_course) {
 
 ## UTILS
 
-# Takes a plain English name and turns it into a more proper file/directory name.
+# Takes a plain English name and turns it into a more proper file/directory name
 make_pathname <- function(name) {
   gsub(" ", "_", str_trim(name))
-}
-
-# Copies the contents of one directory to another. Copied directly from slidify.
-copy_dir <- function(from, to){
-  if (!(file.exists(to))){
-    dir.create(to, recursive = TRUE)
-    message('Copying file(s) to ', to, ' ...\n')
-    file.copy(list.files(from, full.names = T), to, recursive = TRUE)
-  }
 }

@@ -1,8 +1,8 @@
-Lesson Name:  The name of this lesson goes here
-Course Name:  The name of the course to which this lesson belongs goes here
+Lesson Name:  {{lesson_name}}
+Course Name:  {{course_name}}
 Author:       Your name goes here
 Organization: The name of your organization goes here (optional)
-Version:      Output from packageVersion("swirl")
+Version:      {{swirl_version}}
 ================================================================
 
 --- &text
@@ -33,18 +33,3 @@ _1. `sum()`_
 
 *** .hint
 This is a hint, which will be displayed after an incorrect response to the question. In this example, we could tell the user that the function name is synonymous with "addition".
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
