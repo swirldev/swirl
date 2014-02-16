@@ -1,6 +1,6 @@
 \name{zip_course}
 \alias{zip_course}
-\title{Zip a course file}
+\title{Zip a course directory}
 \usage{
 zip_course(path, dest = NULL)
 }
@@ -13,7 +13,7 @@ zip_course(path, dest = NULL)
   the directory specified in \code{path}.}
 }
 \description{
-Zip a course file
+Zip a course directory
 }
 \examples{
 \dontrun{

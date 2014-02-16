@@ -1,3 +1,21 @@
+# swirl 2.1
+
+* `author_lesson()` function creates and opens a customized lesson template for authoring content
+
+* Suite of functions for installing (and uninstalling) swirl courses:
+  * `install_course_directory()`: Install a course from a course directory
+  * `install_course_dropbox()`: Install a course from a zipped course directory shared on Dropbox
+  * `install_course_github()`: Install a course from a GitHub repository
+  * `install_course_google_drive()`: Install a course from a zipped course directory shared on Google Drive
+  * `install_course_url()`:	Install a course from a url that points to a zip file
+  * `install_course_zip()`:	Install a course from a zipped course folder
+  * `uninstall_course()`: Uninstall a course
+  * `zip_course()`: Zip a course directory
+  
+* Revised suite of answer tests (contained in answerTests2.R) using a more natural function call syntax
+
+* Miscellaneous big fixes
+
 # swirl 2.0
 
 * Uses `addTaskCallback()` as a mechanism to capture user input directly from the R prompt.
