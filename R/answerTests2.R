@@ -1,7 +1,8 @@
 # The following tests probably won't survive in their current form,
 # as we are still trying to work out a syntax which is both brief
 # and comprehensive. These tests apply to all courses except
-# Data Analysis, Mathematical Biostatistics Boot Camp, and Open Intro.
+# Data Analysis, Mathematical Biostatistics Boot Camp, Open Intro,
+# and the the first three lessons of Intro to R.
 # 
 # The first two tests, expr_identical_to and val_matches cover
 # all questions in Intro to R except one.
@@ -13,8 +14,6 @@
 #
 # Omnitest is an aggregate of more basic tests and is meant to cover
 # many of the questions which have appeared in lessons so far.
-# CAVEAT: Omnitest is completely untested. We will have to write
-# a small lesson for the purpose.
  
 #' Test for a correct expression, a correct value, or both.
 #' 
