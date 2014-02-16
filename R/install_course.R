@@ -1,3 +1,41 @@
+#' Zip a course directory
+#' 
+#' @param path Path to the course directory to be zipped.
+#' @param dest Path to directory in which the \code{.zip} shoud be saved. The
+#'    default value is \code{NULL}, which will cause the \code{.zip} to be
+#'    created one level above the directory specified in \code{path}.
+#' @export
+#' @examples
+#' \dontrun{
+#' 
+#' zip_course("~/Desktop/LOESS_Modeling")
+#' zip_course("~/Desktop/SNA_Tutorial", "~/tutorials")
+#' }
+zip_course <- function(path, dest=NULL){
+  # Cleanse the path of the trailing slash
+  path <- sub("/$", "", path)
+  
+  # Get highest directory if necessary
+  if(is.null(dest)){
+    dest <- sub(basename(path), "", path)
+  }
+  
+  # Cleanse dest of the trailing slash
+  dest <- sub("/$", "", dest)
+  
+  # Push current directory
+  curr_dir <- getwd()
+  
+  # Change directory to folder to be zipped
+  setwd(path)
+  
+  # Zip-A-Dee-Doo-Dah
+  zip(paste0(dest, "/", basename(path), ".zip"), list.files(getwd(), recursive=T))
+  
+  # Pop the old directory
+  setwd(curr_dir)
+}
+
 #' Uninstall a course
 #' 
 #' @param course_name Name of course to be uninstalled
