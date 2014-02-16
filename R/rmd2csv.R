@@ -147,7 +147,7 @@ collapse_choices <- function(choices) {
 }
 
 rmd2csv <- function(rmd_path, csv_path) {
-  my_rmd <- readLines(rmd_path)
+  my_rmd <- readLines(rmd_path, warn=FALSE)
   cleaned <- clean_me(my_rmd)
   units <- into_units(cleaned)
   classes <- lapply(units, get_unit_class)

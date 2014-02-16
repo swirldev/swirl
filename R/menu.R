@@ -67,9 +67,17 @@ mainMenu.default <- function(e){
         if(course=="")return(FALSE)
         # reverse path cosmetics
         courseU <- coursesU[course == coursesR]
-        #rgr TODO remove pattern parameter
-        #lessons <- dir(file.path(courseDir(e), courseU), pattern="lesson")
-        lessons <- dir(file.path(courseDir(e), courseU))
+        course_dir <- file.path(courseDir(e), courseU)
+        # Get all files/folders from course dir, excluding MANIFEST
+        lessons <- dir(course_dir)
+        lessons <- lessons[lessons != "MANIFEST"]
+        # If MANIFEST exists in course directory, then order courses
+        man_path <- file.path(course_dir, "MANIFEST")
+        if(file.exists(man_path)) {
+          manifest <- get_manifest(course_dir)
+          lessons <- order_lessons(current_order=lessons, 
+                                   manifest_order=manifest)
+        }
         # Clean up lesson names
         lessons_clean <- gsub("_", " ", lessons)
         # Let user choose the lesson.
@@ -180,7 +188,7 @@ loadLesson.default <- function(e, courseU, lesson){
   instructor <- courseU # default
   instructorFile <- file.path(modPath,"instructor.txt")
   if(file.exists(instructorFile)){
-    instructor <- readLines(instructorFile)[1]
+    instructor <- readLines(instructorFile, warn=FALSE)[1]
   }
   # Return the course lesson, using Nick's constructor which 
   # adds attributes identifying the course and indicating dependencies.
@@ -240,6 +248,20 @@ completed <- function(e){
   pfiles <- gsub("[.]rda", "", pfiles)
   pfiles <- str_trim(gsub("_", " ", pfiles))
   return(pfiles)
+}
+
+get_manifest <- function(course_dir) {
+  man <- readLines(file.path(course_dir, "MANIFEST"), warn=FALSE)
+  # Remove leading and trailing whitespace
+  man <- str_trim(man)
+  # Remove empty lines
+  man <- man[which(man != "")]
+}
+
+# Take vector of lessons and return in order given by manifest.
+# Any courses not included in manifest are excluded!
+order_lessons <- function(current_order, manifest_order) {
+  current_order[match(manifest_order, current_order)]
 }
 
 courseDir.default <- function(e){

@@ -46,7 +46,7 @@ author_lesson = function(lesson_name, course_name, new_course) {
     # Read in course template and add custom YAML
     message("Customizing lesson template ...\n")
     path2temp <- file.path(path.package("swirl"), "templates", "lesson.Rmd")
-    temp <- readLines(path2temp)
+    temp <- readLines(path2temp, warn=FALSE)
     dat <- list(lesson_name = lesson_name,
                  course_name = course_name,
                  swirl_version = packageVersion("swirl")
