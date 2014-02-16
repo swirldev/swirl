@@ -1,0 +1,25 @@
+\name{zip_course}
+\alias{zip_course}
+\title{Zip a course file}
+\usage{
+zip_course(path, dest = NULL)
+}
+\arguments{
+  \item{path}{Path to the course directory to be zipped.}
+
+  \item{dest}{Path to directory in which the \code{.zip}
+  shoud be saved. The default value is \code{NULL}, which
+  will cause the \code{.zip} to be created one level above
+  the directory specified in \code{path}.}
+}
+\description{
+Zip a course file
+}
+\examples{
+\dontrun{
+
+zip_course("~/Desktop/LOESS_Modeling")
+zip_course("~/Desktop/SNA_Tutorial", "~/tutorials")
+}
+}
+
