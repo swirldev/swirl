@@ -171,8 +171,7 @@ lessonMenu.default <- function(e, choices){
 loadLesson.default <- function(e, courseU, lesson){
   # Load the content file
   modPath <- file.path(courseDir(e), courseU, lesson)
-  len <- str_length(lesson)
-  shortname <- "lesson.csv"
+  shortname <- find_lesson(modPath)
   dataName <- file.path(modPath,shortname)     
   # Before initializing the module, take a snapshot of 
   #  the global environment.
@@ -197,9 +196,13 @@ loadLesson.default <- function(e, courseU, lesson){
   if(file.exists(instructorFile)){
     instructor <- readLines(instructorFile, warn=FALSE)[1]
   }
+  
+  # Attached class to content based on file extension
+  class(dataName) <- get_content_class(dataName)
+  
   # Return the course lesson, using Nick's constructor which 
   # adds attributes identifying the course and indicating dependencies.
-  return(lesson(read.csv(dataName, as.is=TRUE),lesson, courseU, instructor))
+  return(lesson(parse_content(dataName),lesson, courseU, instructor))
 }
 
 restoreUserProgress.default <- function(e, selection){

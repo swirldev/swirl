@@ -146,21 +146,14 @@ collapse_choices <- function(choices) {
   paste(no_num, collapse = "; ")
 }
 
-rmd2csv <- function(rmd_path, csv_path) {
+rmd2df <- function(rmd_path, csv_path) {
   my_rmd <- readLines(rmd_path, warn=FALSE)
   cleaned <- clean_me(my_rmd)
   units <- into_units(cleaned)
   classes <- lapply(units, get_unit_class)
   units_with_class <- mapply(`class<-`, units, classes)
   rows <- sapply(units_with_class, make_row)
-  df <- as.data.frame(t(rows))
   
-  # Write content data frame to csv file with same name as rmd
-  # csv_path <- sub("[.][R|r]md", ".csv", rmd_path)
-  write.csv(df, file = csv_path, row.names = FALSE)
+  # Return data frame
+  as.data.frame(t(rows))
 }
-
-## Execute?
-
-#rmd_path <- "~/Desktop/my_test_mod.Rmd"
-#rmd2csv(rmd_path)
