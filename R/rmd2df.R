@@ -109,6 +109,21 @@ make_row <- function(unit) {
 
 ## UTILITIES
 
+# Return indices of YAML
+yaml_ind <- function(rmd) {
+  yaml_end <- min(grep("=======", rmd, value=FALSE))
+  seq(1:yaml_end)
+}
+
+#' @importFrom yaml yaml.load
+get_yaml <- function(rmd) {
+  # Find index of end of YAML
+  yaml_end <- max(yaml_ind(rmd))
+  
+  # Return lesson metadata
+  sapply(seq(1, yaml_end - 1), function(i) yaml.load(rmd[i]))
+}
+
 clean_me <- function(rmd) {
   # Remove leading and trailing whitespace
   rmd_clean <- str_trim(rmd)
@@ -116,12 +131,8 @@ clean_me <- function(rmd) {
   # Remove empty lines
   rmd_clean <- rmd_clean[which(rmd_clean != "")]
   
-  # Find index of end of YAML
-  yaml_end <- min(grep("=======", rmd_clean, value=FALSE))
-  
-  # Remove YAML until we know what to do with it
-  # TODO: figure out how to handle YAML more intelligently
-  rmd_clean[-seq(1, yaml_end)]
+  # Get rid of yaml
+  rmd_clean[-yaml_ind(rmd_clean)]
 }
 
 into_units <- function(rmd) {
@@ -146,14 +157,21 @@ collapse_choices <- function(choices) {
   paste(no_num, collapse = "; ")
 }
 
-rmd2df <- function(rmd_path, csv_path) {
+rmd2df <- function(rmd_path) {
   my_rmd <- readLines(rmd_path, warn=FALSE)
+  # Get metadata from yaml - set as lesson attributes below
+  meta <- get_yaml(my_rmd)
   cleaned <- clean_me(my_rmd)
   units <- into_units(cleaned)
   classes <- lapply(units, get_unit_class)
   units_with_class <- mapply(`class<-`, units, classes)
   rows <- sapply(units_with_class, make_row)
   
-  # Return data frame
-  as.data.frame(t(rows))
+  # Assemble content data frame
+  df <- as.data.frame(t(rows))
+  
+  # Return object of class "lesson"
+  lesson(df, lesson_name=meta$`Lesson Name`, course_name=meta$`Course Name`,
+         author=meta$Author, type=meta$Type, organization=meta$Organization,
+         version=meta$Version)
 }

@@ -191,18 +191,12 @@ loadLesson.default <- function(e, courseU, lesson){
   # load any custom tests
   clearCustomTests()
   loadCustomTests(modPath)
-  instructor <- courseU # default
-  instructorFile <- file.path(modPath,"instructor.txt")
-  if(file.exists(instructorFile)){
-    instructor <- readLines(instructorFile, warn=FALSE)[1]
-  }
   
   # Attached class to content based on file extension
   class(dataName) <- get_content_class(dataName)
   
-  # Return the course lesson, using Nick's constructor which 
-  # adds attributes identifying the course and indicating dependencies.
-  return(lesson(parse_content(dataName),lesson, courseU, instructor))
+  # Parse content, returning object of class "lesson"
+  return(parse_content(dataName))
 }
 
 restoreUserProgress.default <- function(e, selection){
