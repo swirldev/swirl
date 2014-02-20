@@ -44,7 +44,7 @@ mainMenu.default <- function(e){
     if(response != "" ){
       # If the user has chosen to continue, restore progress
       response <- gsub(" ", "_", response)
-      response <- paste0(response,"_.rda")
+      response <- paste0(response,".rda")
       restoreUserProgress(e, response)
     } else {
       # Else load a new lesson.
@@ -104,7 +104,7 @@ mainMenu.default <- function(e){
       e$path <- file.path(courseDir(e), courseU, lesson)
       # Set up paths and files to save user progress
       # Make file path from lesson info
-      fname <- progressName(attr(e$mod,"courseName"), attr(e$mod,"modName"))
+      fname <- progressName(attr(e$mod,"course_name"), attr(e$mod,"lesson_name"))
       # path to file 
       e$progress <- file.path(e$udat, fname)
       # indicator that swirl is not reacting to console input
@@ -196,7 +196,7 @@ loadLesson.default <- function(e, courseU, lesson){
   class(dataName) <- get_content_class(dataName)
   
   # Parse content, returning object of class "lesson"
-  return(parse_content(dataName))
+  return(parse_content(dataName, e))
 }
 
 restoreUserProgress.default <- function(e, selection){
@@ -240,8 +240,9 @@ loadInstructions.default <- function(e){
 
 # UTILITIES
 
-progressName <- function(courseName, modName){
-  paste(courseName, modName, ".rda", sep="_")
+progressName <- function(courseName, lesName){
+  pn <- paste0(courseName, "_", lesName, ".rda")
+  gsub(" ", "_", pn)
 }
 
 inProgress <- function(e){

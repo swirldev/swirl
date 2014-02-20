@@ -65,7 +65,7 @@ get_ans_tests.default <- function(unit) {
 get_ans_tests.cmd_question <- function(unit) {
   ans_tests_ind <- grep("*** .ans_tests", unit, fixed = TRUE) + 1
   if(length(ans_tests_ind) == 0) {
-    warning("No answer tests specified for a command question!")
+    #warning("No answer tests specified for a command question!")
     return(paste0("omnitest(correctExpr=\'", get_corr_ans(unit), "\')"))
   }
   unit[ans_tests_ind]
@@ -168,7 +168,7 @@ rmd2df <- function(rmd_path) {
   rows <- sapply(units_with_class, make_row)
   
   # Assemble content data frame
-  df <- as.data.frame(t(rows))
+  df <- as.data.frame(t(rows), stringsAsFactors=FALSE)
   
   # Return object of class "lesson"
   lesson(df, lesson_name=meta$`Lesson Name`, course_name=meta$`Course Name`,

@@ -341,8 +341,8 @@ resume.default <- function(e){
       saveProgress(e)
       e$current.row <- e$mod[e$row,]
       # Prepend the row's swirl class to its class attribute
-      attr(e$current.row,"class") <- c(e$current.row[,"Class"], 
-                                       attr(e$current.row,"class"))
+      class(e$current.row) <- c(e$current.row[,"Class"], 
+                                       class(e$current.row))
     }
     # Execute the current instruction
     e$instr[[e$iptr]](e$current.row, e)

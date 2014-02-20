@@ -8,16 +8,18 @@ get_content_class <- function(file_name) {
   tolower(ext)
 }
 
-parse_content <- function(file) UseMethod("parse_content")
+### FUNCTIONS THAT RETURN LESSON OBJECT WITH ASSOCIATED ATTRIBUTES ###
 
-parse_content.default <- function(file) {
+parse_content <- function(file, e) UseMethod("parse_content")
+
+parse_content.default <- function(file, e) {
   stop("Incorrect content class!")
 }
 
-parse_content.csv <- function(file) {
-  read.csv(file, as.is=TRUE)
+parse_content.csv <- function(file, e) {
+  df <- read.csv(file, as.is=TRUE)
 }
 
-parse_content.rmd <- function(file) {
+parse_content.rmd <- function(file, e) {
   rmd2df(file)
 }
