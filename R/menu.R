@@ -87,7 +87,7 @@ mainMenu.default <- function(e){
                          lessons[lesson_choice == lessons_clean])
       }
       # Load the lesson and intialize everything
-      e$mod <- loadLesson(e, courseU, lesson)
+      e$les <- loadLesson(e, courseU, lesson)
       # expr, val, ok, and vis should have been set by the callback.
       # The lesson's current row
       e$row <- 1
@@ -104,7 +104,7 @@ mainMenu.default <- function(e){
       e$path <- file.path(courseDir(e), courseU, lesson)
       # Set up paths and files to save user progress
       # Make file path from lesson info
-      fname <- progressName(attr(e$mod,"course_name"), attr(e$mod,"lesson_name"))
+      fname <- progressName(attr(e$les,"course_name"), attr(e$les,"lesson_name"))
       # path to file 
       e$progress <- file.path(e$udat, fname)
       # indicator that swirl is not reacting to console input
@@ -225,7 +225,7 @@ restoreUserProgress.default <- function(e, selection){
   }
   # Restore figures which precede current row (Issue #44)
   idx <- 1:(e$row - 1)
-  figs <- e$mod[idx,"Figure"]
+  figs <- e$les[idx,"Figure"]
   # Check for missing Figure column (Issue #47) and omit NA's 
   if(is.null(figs) || length(figs) == 0)return()
   figs <- figs[!is.na(figs)]

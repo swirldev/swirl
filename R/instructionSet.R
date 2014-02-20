@@ -133,7 +133,7 @@ testResponse.default <- function(current.row, e){
 
 testMe <- function(keyphrase, e){
   # patch to accommodate old-style tests
-  oldcourse <- attr(e$mod, "course_name") %in% 
+  oldcourse <- attr(e$les, "course_name") %in% 
     c("Data Analysis", "Mathematical Biostatistics Boot Camp",
       "Open Intro")
   

@@ -303,7 +303,7 @@ resume.default <- function(e){
   while(!e$prompt){
     # If the lesson is complete, save progress, remove the current
     # lesson from e, and invoke the top level menu method.
-    if(e$row > nrow(e$mod)){
+    if(e$row > nrow(e$les)){
       saveProgress(e)
       # form a new path for the progress file
       # which indicates completion and doesn't
@@ -339,7 +339,7 @@ resume.default <- function(e){
       }
       e$delta <- list()
       saveProgress(e)
-      e$current.row <- e$mod[e$row,]
+      e$current.row <- e$les[e$row,]
       # Prepend the row's swirl class to its class attribute
       class(e$current.row) <- c(e$current.row[,"Class"], 
                                        class(e$current.row))
