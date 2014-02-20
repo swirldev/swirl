@@ -65,7 +65,7 @@ mainMenu.default <- function(e){
       while(lesson == ""){
         course <- courseMenu(e, coursesR)
         if(course=="")return(FALSE)
-        # Set e$les course_name since csv files don't carry attributes
+        # Set temp course name since csv files don't carry attributes
         e$temp_course_name <- course
         # reverse path cosmetics
         courseU <- coursesU[course == coursesR]
@@ -84,7 +84,7 @@ mainMenu.default <- function(e){
         lessons_clean <- gsub("_", " ", lessons)
         # Let user choose the lesson.
         lesson_choice <- lessonMenu(e, lessons_clean)
-        # Set temp lesson_name since csv files don't have lesson name attribute
+        # Set temp lesson name since csv files don't have lesson name attribute
         e$temp_lesson_name <- lesson_choice
         # reverse path cosmetics
         lesson <- ifelse(lesson_choice=="", "",
@@ -94,7 +94,7 @@ mainMenu.default <- function(e){
       e$les <- loadLesson(e, courseU, lesson)
       # Remove temp lesson name and course name vars, which were surrogates
       # for csv attributes -- they've been attached via lesson() by now
-      rm(temp_lesson_name, temp_course_name, envir=e)
+      rm(e$temp_lesson_name, e$temp_course_name)
       # expr, val, ok, and vis should have been set by the callback.
       # The lesson's current row
       e$row <- 1
