@@ -18,12 +18,8 @@ parse_content.default <- function(file, e) {
 
 parse_content.csv <- function(file, e) {
   df <- read.csv(file, as.is=TRUE)
-  # Get temp lesson info from e, then delete from e
-  temp_lesson_name <- e$temp_lesson_name
-  temp_course_name <- e$temp_course_name
-  rm(temp_lesson_name, temp_course_name, envir=e)
   # Return lesson object
-  lesson(df, lesson_name=temp_lesson_name, course_name=temp_course_name)
+  lesson(df, lesson_name=e$temp_lesson_name, course_name=e$temp_course_name)
 }
 
 parse_content.rmd <- function(file, e) {
