@@ -3,3 +3,4 @@
 ^.*.html$
 user_data/
 ^NEWS.md$
+^\.travis\.yml$
