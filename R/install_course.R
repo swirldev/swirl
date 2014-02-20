@@ -1,7 +1,7 @@
 #' Zip a course directory
 #' 
 #' @param path Path to the course directory to be zipped.
-#' @param dest Path to directory in which the \code{.zip} shoud be saved. The
+#' @param dest Path to directory in which the \code{.zip} should be saved. The
 #'    default value is \code{NULL}, which will cause the \code{.zip} to be
 #'    created one level above the directory specified in \code{path}.
 #' @export
@@ -26,14 +26,25 @@ zip_course <- function(path, dest=NULL){
   # Push current directory
   curr_dir <- getwd()
   
+  # Create directory in which to zip
+  zip_dir <- paste0(dest, "/", "swirl_zip_creator_TEMP")
+  dir.create(zip_dir)
+  file.copy(path, zip_dir, recursive=T)
+  
   # Change directory to folder to be zipped
-  setwd(path)
+  setwd(zip_dir)
   
   # Zip-A-Dee-Doo-Dah
   zip(paste0(dest, "/", basename(path), ".zip"), list.files(getwd(), recursive=T))
   
+  # Delete temporary directory
+  unlink(zip_dir, recursive=T, force=T)
+  
   # Pop the old directory
   setwd(curr_dir)
+  
+  message("Course directory was successfully zipped!")
+  invisible()
 }
 
 #' Uninstall a course
@@ -49,7 +60,11 @@ uninstall_course <- function(course_name){
   path <- file.path(path.package("swirl"), "Courses", make_pathname(course_name))
   if(file.exists(path)){
     unlink(path, recursive=T, force=T)
+    message("Course uninstalled successfully!")
+  } else {
+    stop("Course not found!")
   }
+  invisible()
 }
 
 #' Install a course from a zipped course folder
@@ -67,6 +82,9 @@ install_course_zip <- function(path){
   
   # Compile course
   suppressWarnings(invisible(sapply(file_list, compile_csv)))
+  
+  message("Course installed successfully!")
+  invisible()
 }
 
 #' Install a course from a course directory
@@ -97,6 +115,9 @@ install_course_directory <- function(path){
   suppressWarnings(invisible(sapply(
     list.files(file.path(path.package("swirl"), "Courses", basename(path)), recursive=T, full.names=T),
     compile_csv)))
+  
+  message("Course installed successfully!")
+  invisible()
 }
 
 #' Install a course from a GitHub repository
@@ -193,6 +214,8 @@ install_course_url <- function(url){
   
   # Delete downloaded zip
   unlink(path, force=T)
+  
+  invisible()
 }
 
 # Converts .Rmd to .csv so swirl can interpret content
