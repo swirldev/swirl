@@ -170,11 +170,7 @@ environment(testMe) <- customTests
 loadCustomTests <- function(lespath){
   cfile <- file.path(lespath,"customTests.R")
   if(file.exists(cfile)){
-    source(cfile, local=TRUE)
-    nms <- setdiff(ls(), c("lespath", "cfile"))
-    for(x in nms){
-      assign(x, get(x, envir=environment()), envir=customTests)
-    }
+    source(cfile, local=customTests)
   }
 }
 
