@@ -31,7 +31,7 @@ courseraCheck <- function(e){
   }
   writeLines(c(email, passwd), paste0(courseName,"_",lessonName,".txt"))
   swirl_out(paste0("If you would like to notify Coursera that you have completed this lesson, please upload",
-                   paste0(courseName,"_",lessonName,".txt"), " to Coursera manually.")
+                   courseName,"_",lessonName,".txt ", " to Coursera manually."))
 }
 
 getCreds <- function(e) {
