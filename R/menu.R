@@ -65,6 +65,8 @@ mainMenu.default <- function(e){
       while(lesson == ""){
         course <- courseMenu(e, coursesR)
         if(course=="")return(FALSE)
+        # Set e$les course_name since csv files don't carry attributes
+        e$temp_course_name <- course
         # reverse path cosmetics
         courseU <- coursesU[course == coursesR]
         course_dir <- file.path(courseDir(e), courseU)
@@ -82,8 +84,8 @@ mainMenu.default <- function(e){
         lessons_clean <- gsub("_", " ", lessons)
         # Let user choose the lesson.
         lesson_choice <- lessonMenu(e, lessons_clean)
-        # Set e$les lesson name since csv files don't have lesson name attribute
-        attr(e$les, "lesson_name") <- lesson_choice
+        # Set temp lesson_name since csv files don't have lesson name attribute
+        e$temp_lesson_name <- lesson_choice
         # reverse path cosmetics
         lesson <- ifelse(lesson_choice=="", "",
                          lessons[lesson_choice == lessons_clean])
