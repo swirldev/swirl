@@ -1,7 +1,7 @@
-modpath <- "inst/Courses/Test_Lessons/Using_omnitest/lesson.csv"
+lespath <- "inst/Courses/Test_Lessons/Using_omnitest/lesson.csv"
 
-savemod <- function(){
-  write.csv(lesson, modpath, row.names=FALSE)
+saveles <- function(){
+  write.csv(lesson, lespath, row.names=FALSE)
 }
 
 newrow <- function(Class=NA, Output=NA, CorrectAnswer=NA, 

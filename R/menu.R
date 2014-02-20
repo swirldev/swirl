@@ -33,7 +33,7 @@ mainMenu.default <- function(e){
     e$udat <- udat
   }
   # If there is no active lesson, obtain one.
-  if(!exists("mod",e,inherits = FALSE)){
+  if(!exists("les",e,inherits = FALSE)){
     # First, allow user to continue unfinished lessons
     # if there are any
     pfiles <- inProgress(e)
@@ -82,6 +82,8 @@ mainMenu.default <- function(e){
         lessons_clean <- gsub("_", " ", lessons)
         # Let user choose the lesson.
         lesson_choice <- lessonMenu(e, lessons_clean)
+        # Set e$les lesson name since csv files don't have lesson name attribute
+        attr(e$les, "lesson_name") <- lesson_choice
         # reverse path cosmetics
         lesson <- ifelse(lesson_choice=="", "",
                          lessons[lesson_choice == lessons_clean])
@@ -170,14 +172,14 @@ lessonMenu.default <- function(e, choices){
 
 loadLesson.default <- function(e, courseU, lesson){
   # Load the content file
-  modPath <- file.path(courseDir(e), courseU, lesson)
-  shortname <- find_lesson(modPath)
-  dataName <- file.path(modPath,shortname)     
+  lesPath <- file.path(courseDir(e), courseU, lesson)
+  shortname <- find_lesson(lesPath)
+  dataName <- file.path(lesPath,shortname)     
   # Before initializing the module, take a snapshot of 
   #  the global environment.
   snapshot <- as.list(globalenv())
   # initialize course lesson, assigning lesson-specific variables
-  initFile <- file.path(modPath,"initLesson.R")
+  initFile <- file.path(lesPath,"initLesson.R")
   if (file.exists(initFile)){
     source(initFile)
   }
@@ -190,7 +192,7 @@ loadLesson.default <- function(e, courseU, lesson){
   e$official <- e$snapshot[idx]
   # load any custom tests
   clearCustomTests()
-  loadCustomTests(modPath)
+  loadCustomTests(lesPath)
   
   # Attached class to content based on file extension
   class(dataName) <- get_content_class(dataName)

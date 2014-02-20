@@ -315,7 +315,7 @@ resume.default <- function(e){
       if(file.exists(new_path))file.remove(new_path)
       file.rename(e$progress, new_path)
       # remove the current lesson and any custom tests
-      rm("mod", envir=e)
+      rm("les", envir=e)
       clearCustomTests()
       # let the user select another course lesson
       temp <- mainMenu(e)

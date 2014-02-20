@@ -167,11 +167,11 @@ customTests <- new.env(parent=environment(testMe))
 environment(testMe) <- customTests
 
 # Function to load custom tests from a source file.
-loadCustomTests <- function(modpath){
-  cfile <- file.path(modpath,"customTests.R")
+loadCustomTests <- function(lespath){
+  cfile <- file.path(lespath,"customTests.R")
   if(file.exists(cfile)){
     source(cfile, local=TRUE)
-    nms <- setdiff(ls(), c("modpath", "cfile"))
+    nms <- setdiff(ls(), c("lespath", "cfile"))
     for(x in nms){
       assign(x, get(x, envir=environment()), envir=customTests)
     }
