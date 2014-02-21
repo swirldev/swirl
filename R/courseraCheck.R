@@ -1,26 +1,31 @@
 courseraCheck <- function(e){
-  modtype <- attr(e$mod, "Type")
-  courseName <- attr(e$mod, "courseName")
-  lessonName <- attr(e$mod, "modName")
+  modtype <- attr(e$les, "type")
+  course_name <- gsub(" ", "_", attr(e$les, "course_name"))
+  lesson_name <- gsub(" ", "_", attr(e$les, "lesson_name"))
   if(is.null(modtype) || modtype != "Coursera")return()
-  swirl_out("I can automatically notify Coursera that you have completed this lesson, provided you are currently connected to the internet. Should I attempt this now?")
-  if("Yes." == select.list(c("Yes.", "No."))){
-    challenge.url <- paste("http://class.coursera.org", courseName,
+ 
+  
+  swirl_out("Do you want Coursera credit for this lesson? (I'll need some info from you if you want credit.)")
+  choice <- select.list(c("Yes.","No.","Maybe later."))
+  if(choice=="No.")return()
+  # Get submission credentials
+  r <- getCreds(e)
+  email <- r["email"]
+  passwd <- r["passwd"]
+  if(choice=="Yes."){
+    swirl_out("I'll try to tell Coursera you've completed this lesson now.")
+    challenge.url <- paste("http://class.coursera.org", course_name,
                            "assignment/challenge", sep = "/")
-    submit.url <- paste("http://class.coursera.org", courseName,
+    submit.url <- paste("http://class.coursera.org", course_name,
                         "assignment/submit", sep = "/")
-    # Get submission credentials
-    r <- getCreds(e)
-    email <- r["email"]
-    passwd <- r["passwd"]
     ch <- try(getChallenge(email), silent=TRUE)
     # Continue only if the challenge has worked
     if(!is(ch, "try-error")){
       ch.resp <- challengeResponse(passwd, ch$ch.key)
-      results <- try(submitSolution(email, ch.resp, lessonName, "complete", ch$state))
+      results <- try(submitSolution(email, ch.resp, lesson_name, "complete", ch$state))
       if(!is(results, "try-error")){
-        swirl_out(paste0("I've notified Coursera that you have completed ", courseName, 
-                         ", ", lessonName,"."))
+        swirl_out(paste0("I've notified Coursera that you have completed ", course_name, 
+                         ", ", lesson_name,"."))
         return()
       } else {
         swirl_out("I'm sorry, something went wrong with automatic submission.")
@@ -28,19 +33,21 @@ courseraCheck <- function(e){
     } else {
       swirl_out("I'm sorry, something went wrong with establishing connection.")
     }
-  }
-  writeLines(c(email, passwd), paste0(courseName,"_",lessonName,".txt"))
-  swirl_out(paste0("If you would like to notify Coursera that you have completed this lesson, please upload",
-                   courseName,"_",lessonName,".txt ", " to Coursera manually."))
+  }#yes branch
+  writeLines(c(email, passwd), paste0(course_name,"_",lesson_name,".txt"))
+  swirl_out("To notify Coursera that you have completed this lesson, please upload ")
+  swirl_out(paste0(course_name,"_",lesson_name,".txt "))
+  swirl_out(" to Coursera manually.")
+  readline("...")
 }
 
 getCreds <- function(e) {
-  credfile <- file.path(e$udat, paste0(e$courseName,".txt"))
+  credfile <- file.path(e$udat, paste0(e$les$course_name,".txt"))
   if(!file.exists(credfile)){
-  email <- readline("Submission login (email): ")
-  passwd <- readline("Submission  password: ")
-  writeLines(credfile, c(email, passwd))
-  return(c(email = email, passwd = passwd))
+    email <- readline("Submission login (email): ")
+    passwd <- readline("Submission  password: ")
+    writeLines(c(email, passwd), credfile)
+    return(c(email = email, passwd = passwd))
   } else {
     r <- readLines(credfile)
     names(r) <- c("email", "passwd")
