@@ -33,7 +33,7 @@ mainMenu.default <- function(e){
     e$udat <- udat
   }
   # If there is no active lesson, obtain one.
-  if(!exists("mod",e,inherits = FALSE)){
+  if(!exists("les",e,inherits = FALSE)){
     # First, allow user to continue unfinished lessons
     # if there are any
     pfiles <- inProgress(e)
@@ -44,7 +44,7 @@ mainMenu.default <- function(e){
     if(response != "" ){
       # If the user has chosen to continue, restore progress
       response <- gsub(" ", "_", response)
-      response <- paste0(response,"_.rda")
+      response <- paste0(response,".rda")
       restoreUserProgress(e, response)
     } else {
       # Else load a new lesson.
@@ -65,6 +65,8 @@ mainMenu.default <- function(e){
       while(lesson == ""){
         course <- courseMenu(e, coursesR)
         if(course=="")return(FALSE)
+        # Set temp course name since csv files don't carry attributes
+        e$temp_course_name <- course
         # reverse path cosmetics
         courseU <- coursesU[course == coursesR]
         course_dir <- file.path(courseDir(e), courseU)
@@ -82,12 +84,17 @@ mainMenu.default <- function(e){
         lessons_clean <- gsub("_", " ", lessons)
         # Let user choose the lesson.
         lesson_choice <- lessonMenu(e, lessons_clean)
+        # Set temp lesson name since csv files don't have lesson name attribute
+        e$temp_lesson_name <- lesson_choice
         # reverse path cosmetics
         lesson <- ifelse(lesson_choice=="", "",
                          lessons[lesson_choice == lessons_clean])
       }
       # Load the lesson and intialize everything
-      e$mod <- loadLesson(e, courseU, lesson)
+      e$les <- loadLesson(e, courseU, lesson)
+      # Remove temp lesson name and course name vars, which were surrogates
+      # for csv attributes -- they've been attached via lesson() by now
+      rm(temp_lesson_name, temp_course_name, envir=e, inherits=FALSE)
       # expr, val, ok, and vis should have been set by the callback.
       # The lesson's current row
       e$row <- 1
@@ -104,7 +111,7 @@ mainMenu.default <- function(e){
       e$path <- file.path(courseDir(e), courseU, lesson)
       # Set up paths and files to save user progress
       # Make file path from lesson info
-      fname <- progressName(attr(e$mod,"courseName"), attr(e$mod,"modName"))
+      fname <- progressName(attr(e$les,"course_name"), attr(e$les,"lesson_name"))
       # path to file 
       e$progress <- file.path(e$udat, fname)
       # indicator that swirl is not reacting to console input
@@ -170,15 +177,14 @@ lessonMenu.default <- function(e, choices){
 
 loadLesson.default <- function(e, courseU, lesson){
   # Load the content file
-  modPath <- file.path(courseDir(e), courseU, lesson)
-  len <- str_length(lesson)
-  shortname <- "lesson.csv"
-  dataName <- file.path(modPath,shortname)     
+  lesPath <- file.path(courseDir(e), courseU, lesson)
+  shortname <- find_lesson(lesPath)
+  dataName <- file.path(lesPath,shortname)     
   # Before initializing the module, take a snapshot of 
   #  the global environment.
   snapshot <- as.list(globalenv())
   # initialize course lesson, assigning lesson-specific variables
-  initFile <- file.path(modPath,"initLesson.R")
+  initFile <- file.path(lesPath,"initLesson.R")
   if (file.exists(initFile)){
     source(initFile)
   }
@@ -191,15 +197,13 @@ loadLesson.default <- function(e, courseU, lesson){
   e$official <- e$snapshot[idx]
   # load any custom tests
   clearCustomTests()
-  loadCustomTests(modPath)
-  instructor <- courseU # default
-  instructorFile <- file.path(modPath,"instructor.txt")
-  if(file.exists(instructorFile)){
-    instructor <- readLines(instructorFile, warn=FALSE)[1]
-  }
-  # Return the course lesson, using Nick's constructor which 
-  # adds attributes identifying the course and indicating dependencies.
-  return(lesson(read.csv(dataName, as.is=TRUE),lesson, courseU, instructor))
+  loadCustomTests(lesPath)
+  
+  # Attached class to content based on file extension
+  class(dataName) <- get_content_class(dataName)
+  
+  # Parse content, returning object of class "lesson"
+  return(parse_content(dataName, e))
 }
 
 restoreUserProgress.default <- function(e, selection){
@@ -228,7 +232,7 @@ restoreUserProgress.default <- function(e, selection){
   }
   # Restore figures which precede current row (Issue #44)
   idx <- 1:(e$row - 1)
-  figs <- e$mod[idx,"Figure"]
+  figs <- e$les[idx,"Figure"]
   # Check for missing Figure column (Issue #47) and omit NA's 
   if(is.null(figs) || length(figs) == 0)return()
   figs <- figs[!is.na(figs)]
@@ -243,8 +247,9 @@ loadInstructions.default <- function(e){
 
 # UTILITIES
 
-progressName <- function(courseName, modName){
-  paste(courseName, modName, ".rda", sep="_")
+progressName <- function(courseName, lesName){
+  pn <- paste0(courseName, "_", lesName, ".rda")
+  gsub(" ", "_", pn)
 }
 
 inProgress <- function(e){

@@ -79,10 +79,7 @@ install_course_zip <- function(path){
   
   # If __MACOSX exists, delete it.
   unlink(file.path(path.package("swirl"), "Courses", "__MACOSX"), recursive=T, force=T)
-  
-  # Compile course
-  suppressWarnings(invisible(sapply(file_list, compile_csv)))
-  
+
   message("Course installed successfully!")
   invisible()
 }
@@ -110,11 +107,6 @@ install_course_directory <- function(path){
   
   # Copy files
   file.copy(path, file.path(path.package("swirl"), "Courses"), recursive=T)
-  
-  # Compile course
-  suppressWarnings(invisible(sapply(
-    list.files(file.path(path.package("swirl"), "Courses", basename(path)), recursive=T, full.names=T),
-    compile_csv)))
   
   message("Course installed successfully!")
   invisible()
@@ -216,11 +208,4 @@ install_course_url <- function(url){
   unlink(path, force=T)
   
   invisible()
-}
-
-# Converts .Rmd to .csv so swirl can interpret content
-compile_csv <- function(path){
-  if(grepl(".[r|R][m|M][d|D]$", path)){
-    rmd2csv(path, sub(".[r|R][m|M][d|D]$", ".csv", path))
-  }
 }

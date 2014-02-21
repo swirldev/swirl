@@ -303,7 +303,7 @@ resume.default <- function(e){
   while(!e$prompt){
     # If the lesson is complete, save progress, remove the current
     # lesson from e, and invoke the top level menu method.
-    if(e$row > nrow(e$mod)){
+    if(e$row > nrow(e$les)){
       saveProgress(e)
       # form a new path for the progress file
       # which indicates completion and doesn't
@@ -317,7 +317,7 @@ resume.default <- function(e){
       # coursera check
       courseraCheck(e)
       # remove the current lesson and any custom tests
-      rm("mod", envir=e)
+      rm("les", envir=e)
       clearCustomTests()
       # let the user select another course lesson
       temp <- mainMenu(e)
@@ -341,10 +341,10 @@ resume.default <- function(e){
       }
       e$delta <- list()
       saveProgress(e)
-      e$current.row <- e$mod[e$row,]
+      e$current.row <- e$les[e$row,]
       # Prepend the row's swirl class to its class attribute
-      attr(e$current.row,"class") <- c(e$current.row[,"Class"], 
-                                       attr(e$current.row,"class"))
+      class(e$current.row) <- c(e$current.row[,"Class"], 
+                                       class(e$current.row))
     }
     # Execute the current instruction
     e$instr[[e$iptr]](e$current.row, e)

@@ -2,7 +2,7 @@
 \alias{author_lesson}
 \title{Author a swirl lesson.}
 \usage{
-author_lesson(lesson_name, course_name, new_course)
+author_lesson(lesson_name, course_name, new_course, type = NULL)
 }
 \arguments{
   \item{lesson_name}{Full name of the lesson being
@@ -13,6 +13,9 @@ author_lesson(lesson_name, course_name, new_course)
 
   \item{new_course}{Boolean (TRUE or FALSE). Is this a new
   course?}
+
+  \item{type}{Optional argument used to specify special
+  purpose content}
 }
 \description{
 Takes full names of lesson and course as input, creates the

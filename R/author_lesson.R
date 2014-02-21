@@ -6,6 +6,7 @@
 #' @param lesson_name Full name of the lesson being authored
 #' @param course_name Full name of the course to which this lesson belongs
 #' @param new_course Boolean (TRUE or FALSE). Is this a new course?
+#' @param type Optional argument used to specify special purpose content
 #' @importFrom whisker whisker.render
 #' @export
 #' @examples
@@ -13,7 +14,7 @@
 #' 
 #' author_lesson("Example Lesson Name", "Example Course Name", new_course=TRUE)
 #' }
-author_lesson = function(lesson_name, course_name, new_course) {
+author_lesson = function(lesson_name, course_name, new_course, type=NULL) {
   
   # Convert lesson name and course name to more desirable file path formats.
   les_dirname <- make_pathname(lesson_name)
@@ -48,9 +49,10 @@ author_lesson = function(lesson_name, course_name, new_course) {
     path2temp <- file.path(path.package("swirl"), "templates", "lesson.Rmd")
     temp <- readLines(path2temp, warn=FALSE)
     dat <- list(lesson_name = lesson_name,
-                 course_name = course_name,
-                 swirl_version = packageVersion("swirl")
-                 )
+                course_name = course_name,
+                swirl_version = packageVersion("swirl"),
+                lesson_type = ifelse(is.null(type), "Standard", type)
+    )
     out <- whisker.render(temp, dat)
     # Create lesson directory
     dir.create(path2les_dir, recursive=TRUE)
