@@ -25,3 +25,25 @@ parse_content.csv <- function(file, e) {
 parse_content.rmd <- function(file, e) {
   rmd2df(file)
 }
+
+parse_content.yaml <- function(file, e){
+  newrow <- function(element){
+    temp <- data.frame(Class=NA, Output=NA, CorrectAnswer=NA,
+                       AnswerChoices=NA, AnswerTests=NA, 
+                       Hint=NA, Figure=NA, FigureType=NA, VideoLink=NA)
+    for(nm in names(element)){
+      temp[,nm] <- element[[nm]]
+    }
+    temp
+  }
+  raw_yaml <- yaml.load_file(file)
+  temp <- lapply(raw_yaml[-1], newrow)
+  df <- NULL
+  for(row in temp){
+    df <- rbind(df, row)
+  }
+  meta <- raw_yaml[[1]]
+  lesson(df, lesson_name=meta$Lesson, course_name=meta$Course,
+         author=meta$Author, type=meta$Type, organization=meta$Organization,
+         version=meta$Version)
+}
