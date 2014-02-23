@@ -6,7 +6,7 @@
 #' @examples
 #' \dontrun{
 #' 
-#' install_course_swirl("Set Theory")
+#' install_from_swirl("Set Theory")
 #' }
 install_from_swirl <- function(course_name){
   # make pathname from course_name

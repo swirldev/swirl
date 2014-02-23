@@ -14,7 +14,7 @@ Install a course from swirl's official list of courses
 \examples{
 \dontrun{
 
-install_course_swirl("Set Theory")
+install_from_swirl("Set Theory")
 }
 }
 
