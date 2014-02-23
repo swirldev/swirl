@@ -1,3 +1,56 @@
+#' Install a course from swirl's official list of courses
+#' 
+#' @param course_name The name of the course you wish to install.
+#' @export
+#' @importFrom httr GET content
+#' @examples
+#' \dontrun{
+#' 
+#' install_course_swirl("Set Theory")
+#' }
+install_from_swirl <- function(course_name){
+  # make pathname from course_name
+  course_name <- make_pathname(course_name)
+  
+  # Construct url to the zip file
+  url <- paste0("http://github.com/swirldev/swirl_courses/zipball/master")
+  
+  # Send GET request
+  response <- GET(url)
+  
+  # Construct path to Courses
+  path <- file.path(path.package("swirl"), "Courses", "temp.zip")
+  
+  # Write the response as a zip
+  writeBin(content(response, "raw"), path)
+  
+  # Find list of files not in top level directory
+  file_names <- unzip(path, list=T)$Name
+  
+  # Filter list and extract
+  unzip_list <- Filter(function(x){grepl(course_name, x)}, file_names)
+  unzip(path, exdir=file.path(path.package("swirl"), "Courses"), files=unzip_list)
+  
+  # Copy files from unzipped directory into Courses
+  top_dir <- file.path(path.package("swirl"), "Courses", sort(dirname(unzip_list))[1])
+  dirs_to_copy <- list.files(top_dir, full.names=T)
+  file.copy(dirs_to_copy, file.path(path.package("swirl"), "Courses"), recursive=T)
+  
+  # Delete unzipped directory
+  unlink(top_dir, recursive=T, force=T)
+  
+  # If __MACOSX exists, delete it.
+  unlink(file.path(path.package("swirl"), "Courses", "__MACOSX"), recursive=T, force=T)
+  
+  # Delete temp.zip
+  unlink(path, force=T)
+  
+  message("Course installed successfully!")
+  
+  invisible()
+}
+
+
 #' Zip a course directory
 #' 
 #' @param path Path to the course directory to be zipped.
