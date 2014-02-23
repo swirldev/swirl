@@ -2,7 +2,7 @@
 \alias{install_course_zip}
 \title{Install a course from a zipped course folder}
 \usage{
-install_course_zip(path, multi = F)
+install_course_zip(path, multi = FALSE)
 }
 \arguments{
   \item{path}{The path to the zipped course.}

@@ -2,7 +2,7 @@
 \alias{install_course_url}
 \title{Install a course from a url that points to a zip file}
 \usage{
-install_course_url(url, multi = F)
+install_course_url(url, multi = FALSE)
 }
 \arguments{
   \item{url}{URL that points to a zipped course directory}

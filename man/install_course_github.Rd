@@ -3,7 +3,7 @@
 \title{Install a course from a GitHub repository}
 \usage{
 install_course_github(github_username, course_name, branch = "master",
-  multi = F)
+  multi = FALSE)
 }
 \arguments{
   \item{github_username}{The username that owns the course

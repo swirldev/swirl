@@ -127,7 +127,7 @@ uninstall_course <- function(course_name){
 #' @export
 #' @examples
 #' install_course_zip("~/Desktop/my_course.zip")
-install_course_zip <- function(path, multi=F){
+install_course_zip <- function(path, multi=FALSE){
   if(multi){
     # Find list of files not in top level directory
     file_names <- unzip(path, list=T)$Name
@@ -197,7 +197,7 @@ install_course_directory <- function(path){
 #' install_course_github("bcaffo", "Linear_Regression")
 #' install_course_github("jtleek", "Twitter_Map", "geojson")
 #' }
-install_course_github <- function(github_username, course_name, branch="master", multi=F){
+install_course_github <- function(github_username, course_name, branch="master", multi=FALSE){
   
   # Construct url to the zip file
   zip_url <- paste0("http://github.com/", github_username, "/", course_name,"/zipball/", branch)
@@ -249,7 +249,7 @@ install_course_google_drive <- function(url){
 #' 
 #' install_course_url("http://www.biostat.jhsph.edu/~rpeng/File_Hash_Course.zip")
 #' }
-install_course_url <- function(url, multi=F){
+install_course_url <- function(url, multi=FALSE){
   # Send GET request
   response <- GET(url)
   
