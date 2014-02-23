@@ -26,6 +26,7 @@ parse_content.rmd <- function(file, e) {
   rmd2df(file)
 }
 
+#' @importFrom yaml yaml.load_file
 parse_content.yaml <- function(file, e){
   newrow <- function(element){
     temp <- data.frame(Class=NA, Output=NA, CorrectAnswer=NA,
