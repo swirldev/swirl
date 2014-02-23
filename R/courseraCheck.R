@@ -1,3 +1,4 @@
+#' @importFrom stringr str_detect
 courseraCheck <- function(e){
   modtype <- attr(e$les, "type")
   course_name <- gsub(" ", "_", attr(e$les, "course_name"))
@@ -18,15 +19,31 @@ courseraCheck <- function(e){
                            "assignment/challenge", sep = "/")
     submit.url <- paste("http://class.coursera.org", course_name,
                         "assignment/submit", sep = "/")
-    ch <- try(getChallenge(email), silent=TRUE)
+    ch <- try(getChallenge(email, challenge.url), silent=TRUE)
     # Continue only if the challenge has worked
     if(!is(ch, "try-error")){
       ch.resp <- challengeResponse(passwd, ch$ch.key)
-      results <- try(submitSolution(email, ch.resp, lesson_name, "complete", ch$state))
+      # If submit.url is invalid, submitSolution should return a try-error.
+      # However, that is not the only way it can fail; see below.
+      results <- submitSolution(email, submit.url, ch.resp, 
+                                    sid=lesson_name, output="complete",
+                                    signature=ch$state)
       if(!is(results, "try-error")){
-        swirl_out(paste0("I've notified Coursera that you have completed ",
-                         course_name, ", ", lesson_name,"."))
-        return()
+        # TODO: It would be best to detect success here, rather than
+        # failure, but as of Feb 23 2014, submit.url may not throw
+        # an error indicating failure but instead return an HTML
+        # notification beginning with the word, "Exception".
+        # Here we detect failure by the presence of this word.
+        # Server-side behavior could easily change and could easily
+        # be course dependent, so some standard handshake will have
+        # to be set up eventually.
+        swirl_out(results)
+        if(!str_detect(results, "[Ee]xception")){
+          swirl_out(paste0("I've notified Coursera that you have completed ",
+                           course_name, ", ", lesson_name,"."))
+          return()
+        }
+        swirl_out("I'm sorry, something went wrong with automatic submission.")
       } else {
         swirl_out("I'm sorry, something went wrong with automatic submission.")
       }
@@ -56,7 +73,7 @@ getCreds <- function(e) {
 }
 
 #' @importFrom RCurl getForm
-getChallenge <- function(email) {
+getChallenge <- function(email, challenge.url) {
   params <- list(email_address = email, response_encoding = "delim")
   result <- getForm(challenge.url, .params = params)
   s <- strsplit(result, "|", fixed = TRUE)[[1]]
@@ -70,8 +87,8 @@ challengeResponse <- function(password, ch.key) {
 }
 
 #' @importFrom RCurl postForm base64
-submitSolution <- function(email, ch.resp, sid, output, signature, src = "",
-                           http.version = NULL) {
+submitSolution <- function(email, submit.url, ch.resp, sid, output, 
+                           signature, src = "",http.version = NULL) {
   output <- as.character(base64(output))
   src <- as.character(base64(src))
   params <- list(assignment_part_sid = sid,
@@ -81,7 +98,11 @@ submitSolution <- function(email, ch.resp, sid, output, signature, src = "",
                  challenge_response = ch.resp,
                  state = signature)
   params <- lapply(params, URLencode)
-  result <- postForm(submit.url, .params = params)
-  s <- strsplit(result, "\\r\\n")[[1]]
-  tail(s, 1)
+  result <- try(postForm(submit.url, .params = params), silent=TRUE)
+  if(is(result,"try-error")){
+    return(result)
+  } else {
+    s <- strsplit(result, "\\r\\n")[[1]]
+    return(tail(s, 1))
+  }
 }
