@@ -16,7 +16,6 @@ Imports:
     openintro,
     httr,
     whisker,
-    RCurl,
     yaml
 Description: swirl is a platform for learning (and teaching) statistics and R
     simultaneously and interactively.
