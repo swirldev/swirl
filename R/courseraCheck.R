@@ -6,7 +6,7 @@ courseraCheck <- function(e){
  
   
   swirl_out("Do you want Coursera credit for this lesson? (I'll need some info from you if you want credit.)")
-  choice <- select.list(c("Yes.","No.","Maybe later."))
+  choice <- select.list(c("Yes.","No.","Maybe later."), graphics=FALSE)
   if(choice=="No.")return()
   # Get submission credentials
   r <- getCreds(e)
@@ -24,8 +24,8 @@ courseraCheck <- function(e){
       ch.resp <- challengeResponse(passwd, ch$ch.key)
       results <- try(submitSolution(email, ch.resp, lesson_name, "complete", ch$state))
       if(!is(results, "try-error")){
-        swirl_out(paste0("I've notified Coursera that you have completed ", course_name, 
-                         ", ", lesson_name,"."))
+        swirl_out(paste0("I've notified Coursera that you have completed ",
+                         course_name, ", ", lesson_name,"."))
         return()
       } else {
         swirl_out("I'm sorry, something went wrong with automatic submission.")
@@ -55,6 +55,7 @@ getCreds <- function(e) {
   }
 }
 
+#' @importFrom RCurl getForm
 getChallenge <- function(email) {
   params <- list(email_address = email, response_encoding = "delim")
   result <- getForm(challenge.url, .params = params)
@@ -62,11 +63,13 @@ getChallenge <- function(email) {
   list(ch.key = s[5], state = s[7])
 }
 
+#' @importFrom digest digest
 challengeResponse <- function(password, ch.key) {
   x <- paste(ch.key, password, sep = "")
   digest(x, algo = "sha1", serialize = FALSE)
 }
 
+#' @importFrom RCurl postForm base64
 submitSolution <- function(email, ch.resp, sid, output, signature, src = "",
                            http.version = NULL) {
   output <- as.character(base64(output))
