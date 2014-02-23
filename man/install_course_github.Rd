@@ -2,7 +2,8 @@
 \alias{install_course_github}
 \title{Install a course from a GitHub repository}
 \usage{
-install_course_github(github_username, course_name, branch = "master")
+install_course_github(github_username, course_name, branch = "master",
+  multi = F)
 }
 \arguments{
   \item{github_username}{The username that owns the course
@@ -13,6 +14,10 @@ install_course_github(github_username, course_name, branch = "master")
 
   \item{branch}{The branch of the repository containing the
   course. The default branch is \code{"master"}.}
+
+  \item{multi}{Set to \code{TRUE} if the repository
+  contains multiple courses. The default value is
+  \code{FALSE}.}
 }
 \description{
 Install a course from a GitHub repository
