@@ -1,6 +1,8 @@
 # swirl 2.1
 
-* `author_lesson()` function creates and opens a customized lesson template for authoring content
+* `parse_content()` now parses content (at runtime) in its original form (R Markdown, YAML, etc.), making conversion to CSV files unnecessary. The appropriate parsing method is called based on the extension of the lesson file. Creating a new course authoring format is as simple as writing a new method for `parse_content()` that accepts the content as input and returns a properly structured `lesson` object.
+
+* `author_lesson()` function creates and opens a customized lesson template for authoring content.
 
 * Suite of functions for installing (and uninstalling) swirl courses:
   * `install_course_directory()`: Install a course from a course directory
@@ -16,7 +18,7 @@
   * Custom tests may be defined in the lesson directory in file named customTests.R.
   * Custom tests run in the same environment as tests provided with the package.
   
-* Revised suite of answer tests (contained in answerTests2.R) using a more natural function call syntax
+* Revised suite of answer tests (contained in answerTests2.R) using a more natural function call syntax.
 
 * Revised user progress tracking and restoration.
   * Improved tracking by taking environmental "snapshots."
