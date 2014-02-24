@@ -1,6 +1,6 @@
 Lesson Name:  {{lesson_name}}
 Course Name:  {{course_name}}
-Type:  		    {{lesson_type}}
+Type:         {{lesson_type}}
 Author:       Your name goes here
 Organization: The name of your organization goes here (optional)
 Version:      {{swirl_version}}
