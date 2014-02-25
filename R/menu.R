@@ -94,7 +94,7 @@ mainMenu.default <- function(e){
       e$les <- loadLesson(e, courseU, lesson)
       # Remove temp lesson name and course name vars, which were surrogates
       # for csv attributes -- they've been attached via lesson() by now
-      rm(temp_lesson_name, temp_course_name, envir=e, inherits=FALSE)
+      rm("temp_lesson_name", "temp_course_name", envir=e, inherits=FALSE)
       # expr, val, ok, and vis should have been set by the callback.
       # The lesson's current row
       e$row <- 1

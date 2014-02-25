@@ -24,8 +24,14 @@
   * Improved tracking by taking environmental "snapshots."
   * Keep a list of variables created or modified by correct responses.
   * Restore list to global environment after a lesson is suspended and resumed.
+  
+* Message notifying the user when she's completed a lesson, just prior to returning to the main menu.
 
 * Miscellaneous big fixes
+
+# swirl 2.0.1
+
+* Fixed bug related to package dependencies (via imports)
 
 # swirl 2.0
 

@@ -319,6 +319,8 @@ resume.default <- function(e){
       # remove the current lesson and any custom tests
       rm("les", envir=e)
       clearCustomTests()
+      # Let user know lesson is complete
+      swirl_out("You've reached the end of this lesson! Returning to the main menu...")
       # let the user select another course lesson
       temp <- mainMenu(e)
       # if menu returns FALSE, user wants to quit.
