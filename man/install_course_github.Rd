@@ -15,9 +15,9 @@ install_course_github(github_username, course_name, branch = "master",
   \item{branch}{The branch of the repository containing the
   course. The default branch is \code{"master"}.}
 
-  \item{multi}{Set to \code{TRUE} if the repository
-  contains multiple courses. The default value is
-  \code{FALSE}.}
+  \item{multi}{The user should set to \code{TRUE} if the
+  repository contains multiple courses. The default value
+  is \code{FALSE}.}
 }
 \description{
 Install a course from a GitHub repository
