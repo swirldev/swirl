@@ -18,6 +18,7 @@ test_that("runTest.newVar and runTest.result can handle random vectors.", {
   e$expr <- quote(x <- c(runif(5), rnorm(5)))
   e$val <- x
   e$les <- "stub"
+  e$delta <- list(x=x)
   attr(e$les, "course_name") <- "Data Analysis"
   e$snapshot <- new.env()
   # runTest.newVar should return TRUE, indicating a new variable was
