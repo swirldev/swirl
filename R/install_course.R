@@ -189,7 +189,7 @@ install_course_directory <- function(path){
 #' @param github_username The username that owns the course repository.
 #' @param course_name The name of the repository which should be the name of the course.
 #' @param branch The branch of the repository containing the course. The default branch is \code{"master"}.
-#' @param multi Set to \code{TRUE} if the repository contains multiple courses. The default value is \code{FALSE}.
+#' @param multi The user should set to \code{TRUE} if the repository contains multiple courses. The default value is \code{FALSE}.
 #' @export
 #' @examples
 #' \dontrun{
@@ -208,39 +208,41 @@ install_course_github <- function(github_username, course_name, branch="master",
 #' Install a course from a zipped course directory shared on Dropbox
 #' 
 #' @param url URL of the shared file
+#' @param multi The user should set to \code{TRUE} if the zipped directory contains multiple courses. The default value is \code{FALSE}.
 #' @export
 #' @examples
 #' \dontrun{
 #' 
 #' install_course_dropbox("https://www.dropbox.com/s/xttkmuvu7hh72vu/my_course.zip")
 #' }
-install_course_dropbox <- function(url){
+install_course_dropbox <- function(url, multi=FALSE){
   # Construct url to the zip file
   zip_url <- paste0(sub("www.dropbox", "dl.dropboxusercontent", url), "?dl=1")
   
-  install_course_url(zip_url)
+  install_course_url(zip_url, multi=multi)
 }
 
 #' Install a course from a zipped course directory shared on Google Drive
 #' 
 #' @param url URL of the shared file
+#' @param multi The user should set to \code{TRUE} if the zipped directory contains multiple courses. The default value is \code{FALSE}.
 #' @export
 #' @examples
 #' \dontrun{
 #' 
 #' install_course_google_drive("https://drive.google.com/file/d/F3fveiu873hfjZZj/edit?usp=sharing")
 #' }
-install_course_google_drive <- function(url){
+install_course_google_drive <- function(url, multi=FALSE){
   # Construct url to the zip file
   zip_url <- sub("file/d/", "uc?export=download&id=", sub("/edit\\?usp=sharing", "", url))
   
-  install_course_url(zip_url)
+  install_course_url(zip_url, multi=multi)
 }
 
 #' Install a course from a url that points to a zip file
 #' 
 #' @param url URL that points to a zipped course directory
-#' @param multi Set to \code{TRUE} if the zipped directory contains multiple courses. The default value is \code{FALSE}.
+#' @param multi The user should set to \code{TRUE} if the zipped directory contains multiple courses. The default value is \code{FALSE}.
 #' @export
 #' @importFrom httr GET content
 #' @importFrom stringr str_extract perl
