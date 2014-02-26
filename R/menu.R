@@ -211,17 +211,16 @@ restoreUserProgress.default <- function(e, selection){
   temp <- readRDS(file.path(e$udat, selection))
   # transfer its contents to e
   xfer(temp, e)
-  # transfer swirl's "official" list of variables to the
-  # global environment.
-  for (x in ls(e$official)){
-    assign(x,e$official[[x]], globalenv())
-  }
+  # TODO: We probably shouldn't be doing this again.
   # source the initLesson.R file if it exists
   initf <- file.path(e$path, "initLesson.R")
+  if(file.exists(initf))source(initf)
+  # transfer swirl's "official" list of variables to the
+  # global environment.
+  xfer(as.environment(e$official), globalenv())
   # load any custom tests
   clearCustomTests()
   loadCustomTests(e$path)
-  if(file.exists(initf))source(initf)
   # eval retrieved user expr's in global env, but don't include
   # call to swirl (the first entry)
   if(length(e$usrexpr) > 1){

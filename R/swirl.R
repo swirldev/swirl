@@ -235,9 +235,7 @@ resume.default <- function(e){
     #  assign variables of the same names in the global environment
     #  their "official" values, in case the user has changed them
     #  while playing.
-    for(x in ls(e$official)){
-      assign(x,e$official[[x]],globalenv())
-    }
+    xfer(as.environment(e$official), globalenv())
     swirl_out("Resuming lesson...")
     e$playing <- FALSE
     e$iptr <- 1
@@ -269,8 +267,8 @@ resume.default <- function(e){
     e$expr <- parse(text=correctAns)[[1]]
     ce <- cleanEnv(e$snapshot)
     e$val <- eval(e$expr, ce)
+    xfer(ce, globalenv())
     ce <- as.list(ce)
-    for(nm in names(ce))assign(nm, ce[[nm]], globalenv())
     # Inform the user, but don't expose the actual answer.    
     swirl_out("I've entered the correct answer for you.")
     if(length(names(ce)) > 0){
