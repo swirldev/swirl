@@ -7,3 +7,4 @@ data/saved.RData
 ^user_data/.+/rda$
 user_data/
 .DS_Store
+yamlWriter.R
