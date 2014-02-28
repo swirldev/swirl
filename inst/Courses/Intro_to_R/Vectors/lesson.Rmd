@@ -196,7 +196,7 @@ my_name <- c(my_char, "swirl")
 ```
 
 *** .ans_tests
-is_a=character, my_name; uses_func=c; creates_var=my_name; val_length=4
+var_is_a("character", "my_name"); expr_uses_func("c"); expr_creates_var("my_name"); val_has_length(4)
 
 *** .hint
 Tack your name on to the end of the `my_char` vector using the `c()` function.  Be sure to assign the result to a new variable called `my_name`. If your name was "swirl", you would type `my_name <- c(my_char, "swirl")`.
