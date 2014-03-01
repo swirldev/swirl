@@ -168,10 +168,11 @@ environment(testMe) <- customTests
 
 # Function to load custom tests from a source file.
 loadCustomTests <- function(lespath){
+  customTests$AUTO_DETECT_NEWVAR <- AUTO_DETECT_NEWVAR
   cfile <- file.path(lespath,"customTests.R")
   if(file.exists(cfile)){
     source(cfile, local=customTests)
-  }
+   }
 }
 
 # Function to remove everything from environment customTests
