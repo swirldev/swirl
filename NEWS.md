@@ -1,3 +1,7 @@
+# swirl 2.1.1
+
+* Fixed a bug in the third lesson of Intro to R.
+
 # swirl 2.1
 
 * `parse_content()` now parses content (at runtime) in its original form (R Markdown, YAML, etc.), making conversion to CSV files unnecessary. The appropriate parsing method is called based on the extension of the lesson file. Creating a new course authoring format is as simple as writing a new method for `parse_content()` that accepts the content as input and returns a properly structured `lesson` object.
