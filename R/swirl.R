@@ -312,8 +312,6 @@ resume.default <- function(e){
       # rename the progress file to indicate completion
       if(file.exists(new_path))file.remove(new_path)
       file.rename(e$progress, new_path)
-      # coursera check
-      courseraCheck(e)
       # remove the current lesson and any custom tests
       rm("les", envir=e)
       clearCustomTests()
