@@ -79,7 +79,7 @@ get_ans_tests.mult_question <- function(unit) {
 
 get_hint <- function(unit) UseMethod("get_hint")
 
-get_hint.text <- function(unit) {
+get_hint.default <- function(unit) {
   NA
 }
 
@@ -95,15 +95,7 @@ get_hint.mult_question <- function(unit) {
   hint <- unit[hint_ind]
 }
 
-get_hint.video <- function(unit) {
-  NA
-}
-
-get_hint.figure <- function(unit) {
-  NA
-}
-
-### FIGURE
+## GET FIGURE FILENAME AND TYPE -- GENERIC AND METHODS
 
 get_fig_filename <- function(unit) UseMethod("get_fig_filename")
 
@@ -129,7 +121,7 @@ get_fig_type.figure <- function(unit) {
   figtype <- unit[figtype_ind]
 }
 
-### VIDEO
+## GET VIDEO URL -- GENERIC AND METHODS
 
 get_video_url <- function(unit) UseMethod("get_video_url")
 
