@@ -79,26 +79,51 @@ get_ans_tests.mult_question <- function(unit) {
 
 get_hint <- function(unit) UseMethod("get_hint")
 
-# TODO: Don't use this default method once add functionality for videos, etc.
-get_hint.default <- function(unit) {
+get_hint.text <- function(unit) {
+  NA
+}
+
+get_hint.cmd_question <- function(unit) {
   hint_ind <- grep("*** .hint", unit, fixed = TRUE) + 1
   if(length(hint_ind) == 0) stop("You forgot to specify a hint!")
   hint <- unit[hint_ind]
 }
 
-get_hint.text <- function(unit) {
+get_hint.mult_question <- function(unit) {
+  hint_ind <- grep("*** .hint", unit, fixed = TRUE) + 1
+  if(length(hint_ind) == 0) stop("You forgot to specify a hint!")
+  hint <- unit[hint_ind]
+}
+
+get_hint.video <- function(unit) {
+  NA
+}
+
+get_hint.figure <- function(unit) {
   NA
 }
 
 ### FIGURE
 
-get_fig_filename <- function(unit) {
+get_fig_filename <- function(unit) UseMethod("get_fig_filename")
+
+get_fig_filename.default <- function(unit) {
+  NA
+}
+
+get_fig_filename.figure <- function(unit) {
   fig_ind <- grep("*** .figure", unit, fixed = TRUE) + 1
   if(length(fig_ind) == 0) stop("You forgot to specify a figure filename!")
   fig <- unit[fig_ind]
 }
 
-get_fig_type <- function(unit) {
+get_fig_type <- function(unit) UseMethod("get_fig_type")
+
+get_fig_type.default <- function(unit) {
+  NA
+}
+
+get_fig_type.figure <- function(unit) {
   figtype_ind <- grep("*** .fig_type", unit, fixed = TRUE) + 1
   if(length(figtype_ind) == 0) stop("You forgot to specify a figure type!")
   figtype <- unit[figtype_ind]
@@ -106,7 +131,13 @@ get_fig_type <- function(unit) {
 
 ### VIDEO
 
-get_video_url <- function(unit) {
+get_video_url <- function(unit) UseMethod("get_video_url")
+
+get_video_url.default <- function(unit) {
+  NA
+}
+
+get_video_url.video <- function(unit) {
   vid_ind <- grep("*** .video_url", unit, fixed = TRUE) + 1
   if(length(vid_ind) == 0) stop("You forgot to specify a video URL!")
   vid <- unit[vid_ind]
