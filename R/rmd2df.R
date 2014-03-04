@@ -79,15 +79,60 @@ get_ans_tests.mult_question <- function(unit) {
 
 get_hint <- function(unit) UseMethod("get_hint")
 
-# TODO: Don't use this default method once add functionality for videos, etc.
 get_hint.default <- function(unit) {
+  NA
+}
+
+get_hint.cmd_question <- function(unit) {
   hint_ind <- grep("*** .hint", unit, fixed = TRUE) + 1
   if(length(hint_ind) == 0) stop("You forgot to specify a hint!")
   hint <- unit[hint_ind]
 }
 
-get_hint.text <- function(unit) {
+get_hint.mult_question <- function(unit) {
+  hint_ind <- grep("*** .hint", unit, fixed = TRUE) + 1
+  if(length(hint_ind) == 0) stop("You forgot to specify a hint!")
+  hint <- unit[hint_ind]
+}
+
+## GET FIGURE FILENAME AND TYPE -- GENERIC AND METHODS
+
+get_fig_filename <- function(unit) UseMethod("get_fig_filename")
+
+get_fig_filename.default <- function(unit) {
   NA
+}
+
+get_fig_filename.figure <- function(unit) {
+  fig_ind <- grep("*** .figure", unit, fixed = TRUE) + 1
+  if(length(fig_ind) == 0) stop("You forgot to specify a figure filename!")
+  fig <- unit[fig_ind]
+}
+
+get_fig_type <- function(unit) UseMethod("get_fig_type")
+
+get_fig_type.default <- function(unit) {
+  NA
+}
+
+get_fig_type.figure <- function(unit) {
+  figtype_ind <- grep("*** .fig_type", unit, fixed = TRUE) + 1
+  if(length(figtype_ind) == 0) stop("You forgot to specify a figure type!")
+  figtype <- unit[figtype_ind]
+}
+
+## GET VIDEO URL -- GENERIC AND METHODS
+
+get_video_url <- function(unit) UseMethod("get_video_url")
+
+get_video_url.default <- function(unit) {
+  NA
+}
+
+get_video_url.video <- function(unit) {
+  vid_ind <- grep("*** .video_url", unit, fixed = TRUE) + 1
+  if(length(vid_ind) == 0) stop("You forgot to specify a video URL!")
+  vid <- unit[vid_ind]
 }
 
 ## MAKE ROW
@@ -98,9 +143,9 @@ make_row <- function(unit) {
   ans_choices <- get_ans_choices(unit)
   ans_tests <- get_ans_tests(unit)
   hint <- get_hint(unit)
-  fig <- NA
-  fig_type <- NA
-  vid_link <- NA
+  fig <- get_fig_filename(unit)
+  fig_type <- get_fig_type(unit)
+  vid_link <- get_video_url(unit)
   
   c(Class = class(unit), Output = output, CorrectAnswer = corr_ans,
        AnswerChoices = ans_choices, AnswerTests = ans_tests, Hint = hint,
@@ -147,7 +192,9 @@ get_unit_class <- function(unit) {
   cl <- str_split_fixed(unit[1], "&", 2)[2]
   valid_classes <- c("text",
                      "cmd_question",
-                     "mult_question")
+                     "mult_question",
+                     "video",
+                     "figure")
   if(!cl %in% valid_classes) stop("Invalid unit class used!")
   cl
 }
