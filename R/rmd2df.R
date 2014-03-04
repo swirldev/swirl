@@ -90,6 +90,28 @@ get_hint.text <- function(unit) {
   NA
 }
 
+### FIGURE
+
+get_fig_filename <- function(unit) {
+  fig_ind <- grep("*** .figure", unit, fixed = TRUE) + 1
+  if(length(fig_ind) == 0) stop("You forgot to specify a figure filename!")
+  fig <- unit[fig_ind]
+}
+
+get_fig_type <- function(unit) {
+  figtype_ind <- grep("*** .fig_type", unit, fixed = TRUE) + 1
+  if(length(figtype_ind) == 0) stop("You forgot to specify a figure type!")
+  figtype <- unit[figtype_ind]
+}
+
+### VIDEO
+
+get_video_url <- function(unit) {
+  vid_ind <- grep("*** .video_url", unit, fixed = TRUE) + 1
+  if(length(vid_ind) == 0) stop("You forgot to specify a video URL!")
+  vid <- unit[vid_ind]
+}
+
 ## MAKE ROW
 
 make_row <- function(unit) {
@@ -98,9 +120,9 @@ make_row <- function(unit) {
   ans_choices <- get_ans_choices(unit)
   ans_tests <- get_ans_tests(unit)
   hint <- get_hint(unit)
-  fig <- NA
-  fig_type <- NA
-  vid_link <- NA
+  fig <- get_fig_filename(unit)
+  fig_type <- get_fig_type(unit)
+  vid_link <- get_video_url(unit)
   
   c(Class = class(unit), Output = output, CorrectAnswer = corr_ans,
        AnswerChoices = ans_choices, AnswerTests = ans_tests, Hint = hint,
@@ -147,7 +169,9 @@ get_unit_class <- function(unit) {
   cl <- str_split_fixed(unit[1], "&", 2)[2]
   valid_classes <- c("text",
                      "cmd_question",
-                     "mult_question")
+                     "mult_question",
+                     "video",
+                     "figure")
   if(!cl %in% valid_classes) stop("Invalid unit class used!")
   cl
 }
