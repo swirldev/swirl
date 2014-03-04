@@ -290,10 +290,10 @@ resume.default <- function(e){
   # user's expression and save any variables changed or created
   # in e$delta. 
   # TODO: Eventually make auto-detection of new variables an option.
-  # AUTO_DETECT_NEWVAR is currently hardcoded TRUE. (See utilities.R.)
+  # Currently it can be set in customTests.R
   if(!uses_func("swirl")(e$expr)[[1]] && 
        !uses_func("nxt")(e$expr)[[1]] &&
-       AUTO_DETECT_NEWVAR){
+       customTests$AUTO_DETECT_NEWVAR){
     e$delta <- safeEval(e$expr, e)
   }
   
@@ -312,8 +312,6 @@ resume.default <- function(e){
       # rename the progress file to indicate completion
       if(file.exists(new_path))file.remove(new_path)
       file.rename(e$progress, new_path)
-      # coursera check
-      courseraCheck(e)
       # remove the current lesson and any custom tests
       rm("les", envir=e)
       clearCustomTests()

@@ -19,22 +19,8 @@ test_that("runTest.newVar and runTest.result can handle random vectors.", {
   e$val <- x
   e$les <- "stub"
   e$delta <- list(x=x)
-  attr(e$les, "course_name") <- "Data Analysis"
+  attr(e$les, "course_name") <- "Test Lessons"
   e$snapshot <- new.env()
-  # runTest.newVar should return TRUE, indicating a new variable was
-  # created. To do so, it evaluates e$expr internally and checks if
-  # a new variable was created in its own runtime environment. Because
-  # the user has created a random vector, the internally created variable
-  # will differ in value from the user's. Luckily, runTest.newVar does not
-  # retain the internally generated value, but retains the user's value,
-  # e$val, instead.
-  expect_that(testMe(keyphrase="newVar", e=e), is_true())
-  # In a subsequent question the user is asked to find the
-  # mean of the variable created.
-  e$expr <- quote(mean(x))
-  e$val <- mean(x)
-  # mean(newVar) will equal mean(x), since newVar was given the value
-  # of x in the previous test.
-  expect_that(testMe(keyphrase="result=mean(newVar)", e=e), is_true())
+  expect_that(testMe(keyphrase="omnitest('x <- c(runif(5), rnorm(5))')", e=e), is_true())
   invisible()
 })
