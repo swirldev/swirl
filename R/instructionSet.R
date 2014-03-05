@@ -96,7 +96,8 @@ waitUser.cmd_question <- function(current.row, e){
 }
 
 waitUser.math <- function(current.row, e){
-  swirl_out("Press the button when you're ready to continue...")
+  swirl_out("Press the 'Continue!' button when you're ready to move on...",
+            skip_after=TRUE)
   display_math(current.row[, "Output"])
   e$row <- 1 + e$row
   e$iptr <- 1
