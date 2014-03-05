@@ -1,0 +1,15 @@
+Lesson Name:  Lesson 1
+Course Name:  Exploring Math Notation
+Type:         Standard
+Author:       Nick
+Organization: swirl
+Version:      2.1.1
+================================================================
+
+--- &text
+
+This is a demonstration of an experimental feature that allows you to display math notation using shiny.
+
+--- &math
+
+The formula for simple linear regression is as follows: $$y_i = \\beta_0 + \\beta_1 x_i$$

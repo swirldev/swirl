@@ -10,6 +10,10 @@ present.default <- function(current.row, e){
   e$iptr <- 1 + e$iptr
 }
 
+present.math <- function(current.row, e) {
+  e$iptr <- 1 + e$iptr
+}
+
 # All classes then wait for user response, in different ways, hence
 # different methods are required. Text and video are both finished
 # at this point.
@@ -90,6 +94,13 @@ waitUser.cmd_question <- function(current.row, e){
   e$prompt <- TRUE
   e$iptr <- 1 + e$iptr
 }
+
+waitUser.math <- function(current.row, e){
+  swirl_out("Press the button when you're ready to continue...")
+  display_math(current.row[, "Output"])
+  e$row <- 1 + e$row
+  e$iptr <- 1
+} 
 
 # Only the question classes enter a testing loop. Testing is the
 # same in both cases. If the response is correct they indicate
