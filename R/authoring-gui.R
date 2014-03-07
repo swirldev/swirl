@@ -25,6 +25,7 @@ newYaml <- function(course, lesson) {
              file.path(lessonDir, "initLesson.R"))
   writeLines("# Put custom tests in this file.", 
              file.path(lessonDir,"customTests.R"))
+  # TODO: If we add .yaml, the file won't open automatically
   lessonFile <- file.path(lessonDir, "lesson")
   writeLines(c("- Class: meta", 
                paste("  Course:", course),
