@@ -1,3 +1,4 @@
+export(author_gui)
 export(author_lesson)
 export(bye)
 export(info)
