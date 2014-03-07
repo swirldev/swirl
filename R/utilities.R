@@ -96,7 +96,3 @@ cleanEnv <- function(snapshot){
   # return new environment whose parent is pe
   return(new.env(parent=pe))
 }
-
-# TODO: Eventually make auto-detection of new variables an option.
-# AUTO_DETECT_NEWVAR is currently hardcoded TRUE.
-AUTO_DETECT_NEWVAR <- TRUE

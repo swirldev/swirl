@@ -8,7 +8,7 @@ swirl is a platform for learning (and teaching) statistics and R simultaneously 
 
 swirl leans heavily on exercising a student's use of the R console. A callback mechanism, suggested and first demonstrated for the purpose by Hadley Wickham, is used to capture student input and to provide immediate feedback relevant to the course material at hand.
 
-Course content is authored using a special flavor of [R Markdown](http://www.rstudio.com/ide/docs/r_markdown). Documentation for doing so is a bit lacking at present, but more information should appear at [the swirl site](http://swirlstats.com/instructors.html) in the near future.
+Course authoring is possible in a variety of formats including [R Markdown](http://www.rstudio.com/ide/docs/r_markdown), [YAML](http://en.wikipedia.org/wiki/YAML), and [CSV](http://en.wikipedia.org/wiki/Comma-separated_values). Documentation for authoring content in R Markdown can be found on the [Instructors page](http://swirlstats.com/instructors.html) of our website.
 
 The program is initiated with `swirl()`. Functions which control swirl's behavior include `bye()` to quit, `skip()` to skip a question, `play()` to allow experimentation in the R console without interference from swirl, `nxt()` to resume interacting with swirl, and `info()` to display a help menu.
 

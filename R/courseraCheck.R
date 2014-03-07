@@ -26,7 +26,7 @@ courseraCheck <- function(e){
       # If submit.url is invalid, submitSolution should return a try-error.
       # However, that is not the only way it can fail; see below.
       results <- submitSolution(email, submit.url, ch.resp, 
-                                    sid=lesson_name, output="complete",
+                                    sid=lesson_name, output=e$coursera,
                                     signature=ch$state)
       if(!is(results, "try-error")){
         # TODO: It would be best to detect success here, rather than
@@ -51,7 +51,8 @@ courseraCheck <- function(e){
       swirl_out("I'm sorry, something went wrong with establishing connection.")
     }
   }#yes branch
-  writeLines(c(email, passwd), paste0(course_name,"_",lesson_name,".txt"))
+  writeLines(c(email, passwd, as.character(base64(e$coursera))), 
+             paste0(course_name,"_",lesson_name,".txt"))
   swirl_out("To notify Coursera that you have completed this lesson, please upload ")
   swirl_out(paste0(course_name,"_",lesson_name,".txt "))
   swirl_out(" to Coursera manually.")
@@ -60,6 +61,7 @@ courseraCheck <- function(e){
 
 getCreds <- function(e) {
   credfile <- file.path(e$udat, paste0(e$les$course_name,".txt"))
+  e$coursera <- paste("complete", rep(" ", ifelse(is.null(e$skips), 0, e$skips)), collapse="")
   if(!file.exists(credfile)){
     email <- readline("Submission login (email): ")
     passwd <- readline("Submission  password: ")
