@@ -96,3 +96,22 @@ cleanEnv <- function(snapshot){
   # return new environment whose parent is pe
   return(new.env(parent=pe))
 }
+
+# Load lesson package dependencies quietly
+loadDependencies <- function(packages_as_chars) {
+  for(p in packages_as_chars) {
+    if(!suppressWarnings(require(p, character.only=TRUE))) {
+      yn <- select.list(choices=c("Yes", "No"), 
+                        title=paste("\nThis lesson requires the", p, 
+                                    "package. Would you like me to install it for you now?"),
+                        graphics=FALSE)
+      if(yn == "Yes") {
+        install.packages(p, quiet=TRUE)
+      } else {
+        message("\nPlease restart swirl and select another lesson.")
+        bye()
+        break
+      }
+    }
+  }
+}
