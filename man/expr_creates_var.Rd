@@ -1,0 +1,31 @@
+\name{expr_creates_var}
+\alias{expr_creates_var}
+\title{Tests if the e$expr creates one new variable (of correct name
+if given.) If so, returns TRUE.}
+\usage{
+expr_creates_var(correctName = NULL)
+}
+\arguments{
+  \item{correctName}{expected name of the new variable or
+  NULL}
+}
+\value{
+TRUE or FALSE
+}
+\description{
+Tests if the e$expr creates one new variable (of correct name
+if given.) If so, returns TRUE.
+}
+\examples{
+\dontrun{
+# Test if the user has entered an expression which creates
+# a new variable of any name.
+expr_creates_var()
+#
+# Test if the user has entered an expression which creates
+# a variable named 'myNum'
+#
+expr_creates_var('myNum')
+}
+}
+

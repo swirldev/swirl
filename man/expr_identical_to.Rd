@@ -1,0 +1,26 @@
+\name{expr_identical_to}
+\alias{expr_identical_to}
+\title{Test that the user has entered an expression identical to that
+given as the first argument.}
+\usage{
+expr_identical_to(correct_expression)
+}
+\arguments{
+  \item{correct_expression}{the correct or expected
+  expression as a string}
+}
+\value{
+TRUE or FALSE
+}
+\description{
+Test that the user has entered an expression identical to that
+given as the first argument.
+}
+\examples{
+\dontrun{
+  # Test that a user has entered a particular command
+  #
+  expr_identical_to('myVar <- c(3, 5, 7)')
+}
+}
+

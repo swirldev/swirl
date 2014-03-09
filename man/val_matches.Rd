@@ -1,0 +1,28 @@
+\name{val_matches}
+\alias{val_matches}
+\title{Returns TRUE if as.character(e$val) matches the regular
+expression given as the first argument.}
+\usage{
+val_matches(regular_expression)
+}
+\arguments{
+  \item{regular_expression}{a regular expression which user
+  value should match}
+}
+\value{
+TRUE or FALSE
+}
+\description{
+Returns TRUE if as.character(e$val) matches the regular
+expression given as the first argument.
+}
+\examples{
+\dontrun{
+  # Test that a user has entered a value matching
+  # '[Cc]ollege [Ss]tudents' or has selected it
+  # in a multiple choice question.
+  #
+  val_matches('[Cc]ollege [Ss]tudents')
+}
+}
+

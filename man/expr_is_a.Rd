@@ -1,0 +1,23 @@
+\name{expr_is_a}
+\alias{expr_is_a}
+\title{Returns TRUE if e$expr is of the given class}
+\usage{
+expr_is_a(class)
+}
+\arguments{
+  \item{class}{expected class of the given expression}
+}
+\value{
+TRUE or FALSE
+}
+\description{
+Returns TRUE if e$expr is of the given class
+}
+\examples{
+\dontrun{
+# Test if the expression entered by a user is an assignment
+#
+expr_is_a('<-')
+}
+}
+
