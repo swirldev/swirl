@@ -8,7 +8,7 @@ var_is_a(class, var_name)
 \arguments{
   \item{class}{expected class which the given variable}
 
-  \item{name}{of the variable}
+  \item{var_name}{name of the variable}
 }
 \value{
 TRUE or FALSE

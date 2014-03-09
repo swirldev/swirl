@@ -6,7 +6,7 @@ name is given as the first argument.}
 expr_uses_func(func)
 }
 \arguments{
-  \item{x}{explain}
+  \item{func}{name of the function expected to be used}
 }
 \value{
 TRUE or FALSE
@@ -17,6 +17,9 @@ name is given as the first argument.
 }
 \examples{
 \dontrun{
+# Test that the user has entered an expression using sd()
+#
+expr_uses_func('sd')
 }
 }
 

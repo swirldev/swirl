@@ -146,7 +146,7 @@ val_matches <- function(regular_expression) {
 #' Returns TRUE if a variable of the given name exists
 #' in the global environment and is of the given class.
 #' @param class expected class which the given variable
-#' @param name of the variable
+#' @param var_name name of the variable
 #' @return TRUE or FALSE
 #' @examples
 #' \dontrun{
@@ -190,10 +190,13 @@ expr_is_a <- function(class) {
 
 #' Returns TRUE if the e$expr uses the function whose
 #' name is given as the first argument.
-#' @param x explain
+#' @param func name of the function expected to be used
 #' @return TRUE or FALSE
 #' @examples
 #' \dontrun{
+#' # Test that the user has entered an expression using sd()
+#' #
+#' expr_uses_func('sd')
 #' }
 expr_uses_func <- function(func) {
   e <- get("e", parent.frame())
