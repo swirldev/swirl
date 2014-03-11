@@ -1,7 +1,8 @@
 #' @importFrom stringr str_detect
 courseraCheck <- function(e){
   modtype <- attr(e$les, "type")
-  course_name <- gsub(" ", "_", attr(e$les, "course_name"))
+  ### TODO: Remove hardcoding of course_name ###
+  course_name <- "rprog-001"
   lesson_name <- gsub(" ", "_", attr(e$les, "lesson_name"))
   if(is.null(modtype) || modtype != "Coursera")return()
  
@@ -61,7 +62,8 @@ courseraCheck <- function(e){
 
 getCreds <- function(e) {
   credfile <- file.path(e$udat, paste0(e$les$course_name,".txt"))
-  e$coursera <- paste("complete", rep(" ", ifelse(is.null(e$skips), 0, e$skips)), collapse="")
+  e$coursera <- paste0("complete", paste0(
+    rep(" ", ifelse(is.null(e$skips), 0, e$skips)), collapse=""))
   if(!file.exists(credfile)){
     email <- readline("Submission login (email): ")
     passwd <- readline("Submission password: ")
