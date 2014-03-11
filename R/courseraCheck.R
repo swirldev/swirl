@@ -6,7 +6,7 @@ courseraCheck <- function(e){
   if(is.null(modtype) || modtype != "Coursera")return()
  
   
-  swirl_out("Do you want Coursera credit for this lesson? (I'll need some info from you if you want credit.)")
+  swirl_out("Do you want Coursera credit for this lesson? (If so, I'll need some additional info from you.)")
   choice <- select.list(c("Yes.","No.","Maybe later."), graphics=FALSE)
   if(choice=="No.")return()
   # Get submission credentials
@@ -64,7 +64,7 @@ getCreds <- function(e) {
   e$coursera <- paste("complete", rep(" ", ifelse(is.null(e$skips), 0, e$skips)), collapse="")
   if(!file.exists(credfile)){
     email <- readline("Submission login (email): ")
-    passwd <- readline("Submission  password: ")
+    passwd <- readline("Submission password: ")
     writeLines(c(email, passwd), credfile)
     return(c(email = email, passwd = passwd))
   } else {
