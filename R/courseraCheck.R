@@ -29,6 +29,10 @@ courseraCheck <- function(e){
       results <- submitSolution(email, submit.url, ch.resp, 
                                     sid=lesson_name, output=e$coursera,
                                     signature=ch$state)
+      # If incorrect, empty string will be returned
+      if(!length(results)) {
+        results <- "Incorrect (or more than 1 skip)!"
+      }
       if(!is(results, "try-error")){
         # TODO: It would be best to detect success here, rather than
         # failure, but as of Feb 23 2014, submit.url may not throw
