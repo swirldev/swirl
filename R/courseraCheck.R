@@ -14,6 +14,7 @@ courseraCheck <- function(e){
   r <- getCreds(e)
   email <- r["email"]
   passwd <- r["passwd"]
+  output <- substr(e$coursera, 1, 16)
   if(choice=="Yes."){
     swirl_out("I'll try to tell Coursera you've completed this lesson now.")
     challenge.url <- paste("http://class.coursera.org", course_name,
@@ -27,8 +28,9 @@ courseraCheck <- function(e){
       # If submit.url is invalid, submitSolution should return a try-error.
       # However, that is not the only way it can fail; see below.
       results <- submitSolution(email, submit.url, ch.resp, 
-                                    sid=lesson_name, output=e$coursera,
-                                    signature=ch$state)
+                                sid=lesson_name, 
+                                output=output,
+                                signature=ch$state)
       # If incorrect, empty string will be returned
       if(!length(results)) {
         swirl_out("You skipped too many questions! You'll need to complete",
@@ -59,7 +61,7 @@ courseraCheck <- function(e){
       swirl_out("I'm sorry, something went wrong with establishing connection.")
     }
   }#yes branch
-  writeLines(c(email, passwd, as.character(base64(e$coursera))), 
+  writeLines(c(email, passwd, output), 
              paste0(course_name,"_",lesson_name,".txt"))
   swirl_out("To notify Coursera that you have completed this lesson, please upload ")
   swirl_out(paste0(course_name,"_",lesson_name,".txt "))
@@ -69,8 +71,9 @@ courseraCheck <- function(e){
 
 getCreds <- function(e) {
   credfile <- file.path(e$udat, paste0(e$les$course_name,".txt"))
-  e$coursera <- paste0("complete", paste0(
-    rep("_", ifelse(is.null(e$skips), 0, e$skips)), collapse=""))
+  e$coursera <- digest(paste0("complete", paste0(
+    rep("_", ifelse(is.null(e$skips), 0, e$skips)), collapse="")),
+    algo="sha1", serialize = FALSE)
   if(!file.exists(credfile)){
     email <- readline("Submission login (email): ")
     passwd <- readline("Submission password: ")
