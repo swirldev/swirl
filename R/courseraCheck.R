@@ -67,7 +67,7 @@ courseraCheck <- function(e){
 getCreds <- function(e) {
   credfile <- file.path(e$udat, paste0(e$les$course_name,".txt"))
   e$coursera <- paste0("complete", paste0(
-    rep(" ", ifelse(is.null(e$skips), 0, e$skips)), collapse=""))
+    rep("_", ifelse(is.null(e$skips), 0, e$skips)), collapse=""))
   if(!file.exists(credfile)){
     email <- readline("Submission login (email): ")
     passwd <- readline("Submission password: ")
