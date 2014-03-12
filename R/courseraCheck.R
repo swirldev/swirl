@@ -61,8 +61,7 @@ courseraCheck <- function(e){
       swirl_out("I'm sorry, something went wrong with establishing connection.")
     }
   }#yes branch
-  writeLines(c(email, passwd, output), 
-             paste0(course_name,"_",lesson_name,".txt"))
+  writeLines(output, paste0(course_name,"_",lesson_name,".txt"))
   swirl_out("To notify Coursera that you have completed this lesson, please upload ")
   swirl_out(paste0(course_name,"_",lesson_name,".txt "))
   swirl_out(" to Coursera manually.")
