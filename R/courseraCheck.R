@@ -31,7 +31,10 @@ courseraCheck <- function(e){
                                     signature=ch$state)
       # If incorrect, empty string will be returned
       if(!length(results)) {
-        results <- "Incorrect (or more than 1 skip)!"
+        swirl_out("You skipped too many questions! You'll need to complete",
+                  "this lesson again if you'd like to receive credit. Please",
+                  "don't skip more than one question next time.")
+        return()
       }
       if(!is(results, "try-error")){
         # TODO: It would be best to detect success here, rather than
