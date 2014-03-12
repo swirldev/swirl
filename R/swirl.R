@@ -266,7 +266,7 @@ resume.default <- function(e){
     }
     e$expr <- parse(text=correctAns)[[1]]
     ce <- cleanEnv(e$snapshot)
-    e$val <- eval(e$expr, ce)
+    e$val <- suppressMessages(suppressWarnings(eval(e$expr, ce)))
     xfer(ce, globalenv())
     ce <- as.list(ce)
     # Inform the user, but don't expose the actual answer.    
