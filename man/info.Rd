@@ -5,9 +5,8 @@
 info()
 }
 \description{
-Display a list of the special commands, \code{bye()},
-\code{play()}, \code{nxt()}, \code{skip()}, and
-\code{info()}.
+Display a list of the special commands, \code{bye()}, \code{play()},
+\code{nxt()}, \code{skip()}, and \code{info()}.
 }
 \examples{
 \dontrun{

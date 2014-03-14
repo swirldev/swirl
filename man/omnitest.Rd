@@ -18,10 +18,10 @@ omnitest(correctExpr = NULL, correctVal = NULL, strict = FALSE)
   notification will be issued.}
 }
 \description{
-Omnitest can test for a correct expression, a correct
-value, or both. In the case of values it is limited to
-testing for character or numerical vectors of length 1. For
-course authors only, omnitest is not exported.
+Omnitest can test for a correct expression, a correct value,
+or both. In the case of values it is limited to testing for
+character or numerical vectors of length 1. For course authors
+only, omnitest is not exported.
 }
 \examples{
 \dontrun{

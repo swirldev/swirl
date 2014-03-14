@@ -1,0 +1,26 @@
+\name{var_is_a}
+\alias{var_is_a}
+\title{Returns TRUE if a variable of the given name exists
+in the global environment and is of the given class.}
+\usage{
+var_is_a(class, var_name)
+}
+\arguments{
+  \item{class}{expected class which the given variable}
+
+  \item{var_name}{name of the variable}
+}
+\value{
+TRUE or FALSE
+}
+\description{
+Returns TRUE if a variable of the given name exists
+in the global environment and is of the given class.
+}
+\examples{
+\dontrun{
+# Test that a variable named "x" in the global environmentis numeric.
+var_is_a('numeric', 'x')
+}
+}
+

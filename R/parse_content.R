@@ -1,5 +1,6 @@
 find_lesson <- function(lesson_dir) {
-  grep("^lesson\\.[A-Za-z]+$", list.files(lesson_dir), value=TRUE)
+  # Find 'lesson' file with or without extension
+  grep("^lesson[.]?[A-Za-z]*$", list.files(lesson_dir), value=TRUE)
 }
 
 #' @importFrom tools file_ext
@@ -13,7 +14,8 @@ get_content_class <- function(file_name) {
 parse_content <- function(file, e) UseMethod("parse_content")
 
 parse_content.default <- function(file, e) {
-  stop("Incorrect content class!")
+  # If no extension on lesson file, then assume it's yaml
+  parse_content.yaml(file, e)
 }
 
 parse_content.csv <- function(file, e) {

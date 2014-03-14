@@ -1,18 +1,20 @@
 #' @importFrom stringr str_detect
 courseraCheck <- function(e){
   modtype <- attr(e$les, "type")
-  course_name <- gsub(" ", "_", attr(e$les, "course_name"))
+  ### TODO: Remove hardcoding of course_name ###
+  course_name <- "rprog-001"
   lesson_name <- gsub(" ", "_", attr(e$les, "lesson_name"))
   if(is.null(modtype) || modtype != "Coursera")return()
  
   
-  swirl_out("Do you want Coursera credit for this lesson? (I'll need some info from you if you want credit.)")
+  swirl_out("Do you want Coursera credit for this lesson? (If so, I'll need some additional info from you.)")
   choice <- select.list(c("Yes.","No.","Maybe later."), graphics=FALSE)
   if(choice=="No.")return()
   # Get submission credentials
   r <- getCreds(e)
   email <- r["email"]
   passwd <- r["passwd"]
+  output <- substr(e$coursera, 1, 16)
   if(choice=="Yes."){
     swirl_out("I'll try to tell Coursera you've completed this lesson now.")
     challenge.url <- paste("http://class.coursera.org", course_name,
@@ -26,8 +28,16 @@ courseraCheck <- function(e){
       # If submit.url is invalid, submitSolution should return a try-error.
       # However, that is not the only way it can fail; see below.
       results <- submitSolution(email, submit.url, ch.resp, 
-                                    sid=lesson_name, output=e$coursera,
-                                    signature=ch$state)
+                                sid=lesson_name, 
+                                output=output,
+                                signature=ch$state)
+      # If incorrect, empty string will be returned
+      if(!length(results)) {
+        swirl_out("You skipped too many questions! You'll need to complete",
+                  "this lesson again if you'd like to receive credit. Please",
+                  "don't skip more than one question next time.")
+        return()
+      }
       if(!is(results, "try-error")){
         # TODO: It would be best to detect success here, rather than
         # failure, but as of Feb 23 2014, submit.url may not throw
@@ -51,8 +61,7 @@ courseraCheck <- function(e){
       swirl_out("I'm sorry, something went wrong with establishing connection.")
     }
   }#yes branch
-  writeLines(c(email, passwd, as.character(base64(e$coursera))), 
-             paste0(course_name,"_",lesson_name,".txt"))
+  writeLines(output, paste0(course_name,"_",lesson_name,".txt"))
   swirl_out("To notify Coursera that you have completed this lesson, please upload ")
   swirl_out(paste0(course_name,"_",lesson_name,".txt "))
   swirl_out(" to Coursera manually.")
@@ -61,10 +70,12 @@ courseraCheck <- function(e){
 
 getCreds <- function(e) {
   credfile <- file.path(e$udat, paste0(e$les$course_name,".txt"))
-  e$coursera <- paste("complete", rep(" ", ifelse(is.null(e$skips), 0, e$skips)), collapse="")
+  e$coursera <- digest(paste0("complete", paste0(
+    rep("_", ifelse(is.null(e$skips), 0, e$skips)), collapse="")),
+    algo="sha1", serialize = FALSE)
   if(!file.exists(credfile)){
     email <- readline("Submission login (email): ")
-    passwd <- readline("Submission  password: ")
+    passwd <- readline("Submission password: ")
     writeLines(c(email, passwd), credfile)
     return(c(email = email, passwd = passwd))
   } else {

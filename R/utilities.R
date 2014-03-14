@@ -53,7 +53,7 @@ mergeLists <- function(sourceList, destList){
 safeEval <- function(expr, e){
   e1 <- cleanEnv(e$snapshot)
   ans <- list()
-  eval(expr,e1)
+  suppressMessages(suppressWarnings(eval(expr,e1)))
   for (x in ls(e1)){
     if(exists(x,globalenv()))
       ans[[x]] <- get(x,globalenv())

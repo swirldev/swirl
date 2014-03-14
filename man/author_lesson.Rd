@@ -18,10 +18,9 @@ author_lesson(lesson_name, course_name, new_course, type = NULL)
   purpose content}
 }
 \description{
-Takes full names of lesson and course as input, creates the
-appropriate subdirectories in the swirl package directory,
-then opens a lesson template in an R Markdown file for the
-instructor to begin editing.
+Takes full names of lesson and course as input, creates the appropriate
+subdirectories in the swirl package directory, then opens a lesson template
+in an R Markdown file for the instructor to begin editing.
 }
 \examples{
 \dontrun{

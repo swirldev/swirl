@@ -12,8 +12,7 @@ install_course_google_drive(url, multi = FALSE)
   value is \code{FALSE}.}
 }
 \description{
-Install a course from a zipped course directory shared on
-Google Drive
+Install a course from a zipped course directory shared on Google Drive
 }
 \examples{
 \dontrun{

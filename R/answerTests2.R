@@ -98,8 +98,16 @@ omnitest <- function(correctExpr=NULL, correctVal=NULL, strict=FALSE){
     }
 }
 
-# Test that the user has entered an expression identical to that
-# given as the first argument.
+#' Test that the user has entered an expression identical to that
+#' given as the first argument.
+#' @param correct_expression the correct or expected expression as a string
+#' @return TRUE or FALSE
+#' @examples
+#' \dontrun{
+#'   # Test that a user has entered a particular command
+#'   #
+#'   expr_identical_to('myVar <- c(3, 5, 7)')
+#' }
 expr_identical_to <- function(correct_expression){
   e <- get("e", parent.frame())
   expr <- e$expr
@@ -112,8 +120,18 @@ expr_identical_to <- function(correct_expression){
   return(results$passed)
 }
 
-# Returns TRUE if as.character(e$val) matches the regular
-# expression given as the first argument.
+#' Returns TRUE if as.character(e$val) matches the regular
+#' expression given as the first argument.
+#' @param regular_expression a regular expression which user value should match
+#' @return TRUE or FALSE
+#' @examples
+#' \dontrun{
+#'   # Test that a user has entered a value matching
+#'   # '[Cc]ollege [Ss]tudents' or has selected it 
+#'   # in a multiple choice question.
+#'   #
+#'   val_matches('[Cc]ollege [Ss]tudents')
+#' }
 val_matches <- function(regular_expression) {
   e <- get("e", parent.frame())
   userVal <- str_trim(as.character(e$val))
@@ -125,8 +143,16 @@ val_matches <- function(regular_expression) {
 }
 
 
-# Returns TRUE if a variable of the given name exists
-# in the global environment and is of the given class.
+#' Returns TRUE if a variable of the given name exists
+#' in the global environment and is of the given class.
+#' @param class expected class which the given variable
+#' @param var_name name of the variable
+#' @return TRUE or FALSE
+#' @examples
+#' \dontrun{
+#' # Test that a variable named "x" in the global environmentis numeric.
+#' var_is_a('numeric', 'x')
+#' }
 var_is_a <- function(class, var_name) {
   e <- get("e", parent.frame())
   class <-  str_trim(class)
@@ -143,7 +169,15 @@ var_is_a <- function(class, var_name) {
   }
 }
 
-# Returns TRUE if e$expr is of the given class
+#' Returns TRUE if e$expr is of the given class
+#' @param class expected class of the given expression
+#' @return TRUE or FALSE
+#' @examples
+#' \dontrun{
+#' # Test if the expression entered by a user is an assignment
+#' #
+#' expr_is_a('<-')
+#' }
 expr_is_a <- function(class) {
   e <- get("e", parent.frame())
   class <-  str_trim(class)
@@ -154,8 +188,16 @@ expr_is_a <- function(class) {
   return(results$passed)
 }
 
-# Returns TRUE if the e$expr uses the function whose
-# name is given as the first argument.
+#' Returns TRUE if the e$expr uses the function whose
+#' name is given as the first argument.
+#' @param func name of the function expected to be used
+#' @return TRUE or FALSE
+#' @examples
+#' \dontrun{
+#' # Test that the user has entered an expression using sd()
+#' #
+#' expr_uses_func('sd')
+#' }
 expr_uses_func <- function(func) {
   e <- get("e", parent.frame())
   func <- str_trim(func)
@@ -166,8 +208,21 @@ expr_uses_func <- function(func) {
   return(results$passed)
 }
 
-# Tests if the e$expr creates one new variable (of correct name
-# if given.) If so, returns TRUE.
+#' Tests if the e$expr creates one new variable (of correct name
+#' if given.) If so, returns TRUE.
+#' @param correctName expected name of the new variable or NULL
+#' @return TRUE or FALSE
+#' @examples
+#' \dontrun{
+#' # Test if the user has entered an expression which creates
+#' # a new variable of any name.
+#' expr_creates_var()
+#' #
+#' # Test if the user has entered an expression which creates
+#' # a variable named 'myNum'
+#' #
+#' expr_creates_var('myNum')
+#' }
 expr_creates_var <- function(correctName=NULL){
   e <- get("e", parent.frame())
   # TODO: Eventually make auto-detection of new variables an option.
@@ -193,7 +248,15 @@ expr_creates_var <- function(correctName=NULL){
   return(results$passed)
 }
 
-# Test the the length of e$val is that given by the first argument
+#' Test the the length of e$val is that given by the first argument
+#' @param len expected length of the variable created by a user
+#' @return TRUE or FALSE
+#' @examples
+#' \dontrun{
+#' # Test that the user has created a varible of length 10
+#' #
+#' val_has_length(10)
+#' }
 val_has_length <- function(len){
   e <- get("e", parent.frame())
   try(n <- as.integer(len), silent=TRUE)
@@ -207,9 +270,18 @@ val_has_length <- function(len){
   return(results$passed)
 }
 
-# Tests the result of a computation such as mean(newVar) applied
-# to a specific variable created in a previous question and
-# saved as e$newVar.
+#' Tests the result of a computation such as mean(newVar) applied
+#' to a specific variable created in a previous question and
+#' saved as e$newVar.
+#' @param correct_expression expression expected to be applied
+#' @return TRUE or FALSE
+#' @examples
+#' \dontrun{
+#' # Test if user has taken the mean of a variable created
+#' # in an earlier question.
+#' #
+#' func_of_newvar_equals('mean(newVar)')
+#' }
 func_of_newvar_equals <- function(correct_expression){
   e <- get("e", parent.frame())
   e1 <- cleanEnv(e$snapshot)

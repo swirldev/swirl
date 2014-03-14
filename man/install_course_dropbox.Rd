@@ -12,8 +12,7 @@ install_course_dropbox(url, multi = FALSE)
   value is \code{FALSE}.}
 }
 \description{
-Install a course from a zipped course directory shared on
-Dropbox
+Install a course from a zipped course directory shared on Dropbox
 }
 \examples{
 \dontrun{
