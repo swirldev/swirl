@@ -32,6 +32,7 @@
 #' Finally, \code{info()} may be used to display a list of the special commands
 #' themselves with brief explanations of what they do.
 #' @param resume.class for development only; please accept the default.
+#' @param ... arguments for special purposes only, such as lesson testing
 #' @export
 #' @importFrom stringr str_c str_trim str_split str_length 
 #' @importFrom stringr str_detect str_locate fixed str_split_fixed
@@ -45,7 +46,7 @@
 #' 
 #' swirl()
 #' }
-swirl <- function(resume.class="default"){
+swirl <- function(resume.class="default", ...){
   # Creates an environment, e, defines a function, cb, and registers
   # cb as a callback with data argument, e. The callback retains a
   # reference to the environment in which it was created, environment(cb),
@@ -67,7 +68,7 @@ swirl <- function(resume.class="default"){
     e$vis <- vis
     # This dummy object of class resume.class "tricks" the S3 system
     # into calling the proper resume method.
-    return(resume(structure(e,class=resume.class )))
+    return(resume(structure(e,class=resume.class), ...))
   }
   addTaskCallback(cb, name="mini")
   invisible()
@@ -222,7 +223,21 @@ resume <- function(...)UseMethod("resume")
 # depend on the class of the active row of the course lesson. The 
 # instruction set is thus extensible. It can be found in R/instructionSet.R. 
 # 
-resume.default <- function(e){
+resume.default <- function(e, ...){
+  # Check that if running in test mode, all necessary args are specified
+  if(is(e, "test")) {
+    # Capture ... args
+    targs <- list(...)
+    # Check if appropriately named args exist
+    if(is.null(targs$test_course) || is.null(targs$test_lesson)) {
+      stop("Must specify 'test_course' and 'test_lesson' to run in 'test' mode!")
+    } else {
+      # Make available for use in menu functions
+      e$test_lesson <- targs$test_lesson
+      e$test_course <- targs$test_course
+    }
+  }
+  
   esc_flag <- TRUE
   on.exit(if(esc_flag)swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE))
   # Trap special functions
