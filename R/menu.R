@@ -169,6 +169,10 @@ inProgressMenu.default <- function(e, choices){
   return(selection)
 }
 
+inProgressMenu.default <- function(e, choices) {
+  ""
+}
+
 # A stub. Eventually this should be a full menu
 courseMenu.default <- function(e, choices){
   swirl_out("Please choose a course, or type 0 to exit swirl.")
