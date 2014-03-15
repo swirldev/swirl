@@ -306,7 +306,8 @@ resume.default <- function(e, ...){
   # in e$delta. 
   # TODO: Eventually make auto-detection of new variables an option.
   # Currently it can be set in customTests.R
-  if(!uses_func("swirl")(e$expr)[[1]] && 
+  if(!uses_func("swirl")(e$expr)[[1]] &&
+       !uses_func("swirlify")(e$expr)[[1]] &&
        !uses_func("nxt")(e$expr)[[1]] &&
        customTests$AUTO_DETECT_NEWVAR){
     e$delta <- safeEval(e$expr, e)
