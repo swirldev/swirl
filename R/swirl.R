@@ -317,6 +317,12 @@ resume.default <- function(e, ...){
     # If the lesson is complete, save progress, remove the current
     # lesson from e, and invoke the top level menu method.
     if(e$row > nrow(e$les)){
+      # If in test mode, we don't want to run another lesson
+      if(is(e, "test")) {
+        swirl_out("Leaving swirl now...")
+        esc_flag <- FALSE # to supress double notification
+        return(FALSE)
+      }
       saveProgress(e)
       # form a new path for the progress file
       # which indicates completion and doesn't
