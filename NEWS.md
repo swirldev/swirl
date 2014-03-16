@@ -18,7 +18,7 @@
   * `uninstall_course()`: Uninstall a course
   * `zip_course()`: Zip a course directory
   
-* Course authors can add custom tests for student repsonses.
+* Course authors can add custom tests for student responses.
   * Custom tests may be defined in the lesson directory in file named customTests.R.
   * Custom tests run in the same environment as tests provided with the package.
   
