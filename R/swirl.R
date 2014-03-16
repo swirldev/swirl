@@ -320,7 +320,8 @@ resume.default <- function(e, ...){
     if(e$row > nrow(e$les)){
       # If in test mode, we don't want to run another lesson
       if(is(e, "test")) {
-        swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE)
+        swirl_out("Lesson complete! Exiting swirl now...",
+                  skip_after=TRUE)
         esc_flag <- FALSE # to supress double notification
         return(FALSE)
       }
