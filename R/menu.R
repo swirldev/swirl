@@ -174,7 +174,7 @@ inProgressMenu.default <- function(e, choices){
   return(selection)
 }
 
-inProgressMenu.default <- function(e, choices) {
+inProgressMenu.test <- function(e, choices) {
   ""
 }
 
