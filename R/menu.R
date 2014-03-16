@@ -133,6 +133,10 @@ welcome.dev <- function(e, ...){
   "swirladmin"
 }
 
+welcome.test <- function(e, ...){
+  "author"
+}
+
 # Default version.
 welcome.default <- function(e, ...){
   swirl_out("Welcome to swirl! Please sign in. If you've been here before, use the same name as you did then. If you are new, call yourself something unique.", skip_after=TRUE)
@@ -158,6 +162,8 @@ housekeeping.default <- function(e){
 # Development version; does nothing
 housekeeping.dev <- function(e){}
 
+housekeeping.test <- function(e){}
+
 # A stub. Eventually this should be a full menu
 inProgressMenu.default <- function(e, choices){
   nada <- "No. Let me start something new."
@@ -168,16 +174,28 @@ inProgressMenu.default <- function(e, choices){
   return(selection)
 }
 
+inProgressMenu.test <- function(e, choices) {
+  ""
+}
+
 # A stub. Eventually this should be a full menu
 courseMenu.default <- function(e, choices){
   swirl_out("Please choose a course, or type 0 to exit swirl.")
   return(select.list(choices, graphics=FALSE))
 }
 
+courseMenu.test <- function(e, choices) {
+  e$test_course
+}
+
 # A stub. Eventually this should be a full menu
 lessonMenu.default <- function(e, choices){
   swirl_out("Please choose a lesson, or type 0 to return to course menu.")
   return(select.list(choices, graphics=FALSE))
+}
+
+lessonMenu.test <- function(e, choices) {
+  e$test_lesson
 }
 
 loadLesson.default <- function(e, courseU, lesson){
