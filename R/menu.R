@@ -95,6 +95,11 @@ mainMenu.default <- function(e){
       # Remove temp lesson name and course name vars, which were surrogates
       # for csv attributes -- they've been attached via lesson() by now
       rm("temp_lesson_name", "temp_course_name", envir=e, inherits=FALSE)
+      
+      # Initialize the progress bar
+      e$pbar <- txtProgressBar(style=3)
+      e$pbar_seq <- seq(0, 1, length=nrow(e$les))
+      
       # expr, val, ok, and vis should have been set by the callback.
       # The lesson's current row
       e$row <- 1

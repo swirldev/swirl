@@ -329,7 +329,10 @@ resume.default <- function(e){
     }
     }
     # If we are ready for a new row, prepare it
-    if(e$iptr == 1){
+    if(e$iptr == 1){      
+      # Increment progress bar
+      cat("\n")
+      setTxtProgressBar(e$pbar, e$pbar_seq[e$row])
       
       #  Any variables changed or created during the previous
       #  question must have been correct or we would not be about
@@ -346,6 +349,7 @@ resume.default <- function(e){
       class(e$current.row) <- c(e$current.row[,"Class"], 
                                        class(e$current.row))
     }
+    
     # Execute the current instruction
     e$instr[[e$iptr]](e$current.row, e)
   }
