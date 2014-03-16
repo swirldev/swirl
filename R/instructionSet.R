@@ -6,7 +6,11 @@
 present <- function(current.row, e)UseMethod("present")
 
 present.default <- function(current.row, e){
-  swirl_out(current.row[, "Output"], skip_after=TRUE)
+  # Suppress extra space if multiple choice
+  is_mult <- is(e$current.row, "mult_question")
+  # Present output to user
+  swirl_out(current.row[, "Output"], skip_after=!is_mult)
+  # Increment pointer
   e$iptr <- 1 + e$iptr
 }
 
@@ -126,8 +130,10 @@ testResponse.default <- function(current.row, e){
     }
     swirl_out(mes)
     temp <- current.row[,"Hint"]
-    if (!is.na(temp)) swirl_out(current.row[,"Hint"], skip_after=TRUE)
-    e$iptr <- e$iptr -1
+    # Suppress extra space if multiple choice
+    is_mult <- is(e$current.row, "mult_question")
+    if (!is.na(temp)) swirl_out(current.row[,"Hint"], skip_after=!is_mult)
+    e$iptr <- e$iptr - 1
   }
 }
 

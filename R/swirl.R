@@ -295,7 +295,7 @@ resume.default <- function(e, ...){
   temp <- mainMenu(e)
   # If menu returns FALSE, the user wants to exit.
   if(is.logical(temp) && !isTRUE(temp)){
-    swirl_out("Leaving swirl now...")
+    swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE)
     esc_flag <- FALSE # To supress double notification
     return(FALSE)
   }
@@ -320,7 +320,7 @@ resume.default <- function(e, ...){
     if(e$row > nrow(e$les)){
       # If in test mode, we don't want to run another lesson
       if(is(e, "test")) {
-        swirl_out("Leaving swirl now...")
+        swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE)
         esc_flag <- FALSE # to supress double notification
         return(FALSE)
       }
@@ -345,7 +345,7 @@ resume.default <- function(e, ...){
       temp <- mainMenu(e)
       # if menu returns FALSE, user wants to quit.
       if(is.logical(temp) && !isTRUE(temp)){
-        swirl_out("Leaving swirl now...")
+        swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE)
         esc_flag <- FALSE # to supress double notification
         return(FALSE)
     }
