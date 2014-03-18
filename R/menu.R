@@ -56,6 +56,7 @@ mainMenu.default <- function(e){
       coursesU <- coursesU[idx]
       # If no courses are available, exit
       if(length(coursesU)==0){
+        # TODO: Instead, offer to install courses.
         swirl_out("No courses are available. Try again using swirl() with no parameter.")
         return(FALSE)
       }
@@ -128,11 +129,6 @@ mainMenu.default <- function(e){
   return(TRUE)
 }
 
-# Development version.
-welcome.dev <- function(e, ...){
-  "swirladmin"
-}
-
 welcome.test <- function(e, ...){
   "author"
 }
@@ -158,9 +154,6 @@ housekeeping.default <- function(e){
   swirl_out("Let's get started!", skip_before=FALSE)
   readline("\n...")
 }
-
-# Development version; does nothing
-housekeeping.dev <- function(e){}
 
 housekeeping.test <- function(e){}
 
@@ -306,11 +299,6 @@ order_lessons <- function(current_order, manifest_order) {
 courseDir.default <- function(e){
   # e's only role is to determine the method used
   file.path(find.package("swirl"), "Courses")
-}
-
-courseDir.dev <- function(e){
-  # e's only role is to determine the method used
-  file.path("inst", "Courses")
 }
 
 # Default for determining the user
