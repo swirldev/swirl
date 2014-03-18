@@ -66,6 +66,7 @@ mainMenu.default <- function(e){
         choices <- c(choices, "Don't install anything. I'll do it myself")
         choice <- select.list(choices)
         n <- which(choice == choices)
+        if(length(n) == 0)return(FALSE)
         if(n < length(choices)){
           temp <- try(eval(parse(text=suggestions[[n]]$Install)), silent=TRUE)
           if(is(temp, "try-error")){
