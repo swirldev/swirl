@@ -21,7 +21,6 @@ Imports:
     testthat,
     openintro,
     httr,
-    whisker,
     yaml,
     RCurl,
     digest

@@ -7,6 +7,12 @@ swirl_out <- function(..., skip_before=TRUE, skip_after=FALSE) {
   message(mes)
 }
 
+# Takes a plain English name and turns it into a more proper 
+# file or directory name
+make_pathname <- function(name) {
+  gsub(" ", "_", str_trim(name))
+}
+
 xfer <- function(env1, env2){
   lapply(ls(env1), function(var)getAssign(var, env1, env2))
 }

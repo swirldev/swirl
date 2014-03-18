@@ -21,6 +21,7 @@ loadInstructions <- function(e, ...)UseMethod("loadInstructions")
 # are provided.
 # 
 # @param e persistent environment accessible to the callback
+#'@importFrom yaml yaml.load_file
 mainMenu.default <- function(e){
   # Welcome the user if necessary and set up progress tracking
   if(!exists("usr",e,inherits = FALSE)){
@@ -54,10 +55,35 @@ mainMenu.default <- function(e){
       idx <- unlist(sapply(coursesU, 
                     function(x)length(dir(file.path(courseDir(e),x)))>0))
       coursesU <- coursesU[idx]
-      # If no courses are available, exit
+      # If no courses are available, offer to install one
       if(length(coursesU)==0){
-        swirl_out("No courses are available. Try again using swirl() with no parameter.")
-        return(FALSE)
+        suggestions <- yaml.load_file(file.path(courseDir(e), "suggested_courses.yaml"))
+        choices <- sapply(suggestions, function(x)paste0(x$Course, ": ", x$Description))
+        swirl_out("To begin, we must install a course or two. I can install a course
+                  from the internet, or I can send you to a web page which will
+                  provide course options and directions for installing courses
+                  yourself. (If you are not connected to the internet, type 0 to exit.)")
+        choices <- c(choices, "Don't install anything. I'll do it myself")
+        choice <- select.list(choices)
+        n <- which(choice == choices)
+        if(length(n) == 0)return(FALSE)
+        if(n < length(choices)){
+          temp <- try(eval(parse(text=suggestions[[n]]$Install)), silent=TRUE)
+          if(is(temp, "try-error")){
+            swirl_out(paste0("Sorry, but I'm unable to fetch ", choice, ". Perhaps
+                             your internet connection is down?"))
+            return(FALSE)
+          }
+          coursesU <- dir(courseDir(e))
+          # Eliminate empty directories
+          idx <- unlist(sapply(coursesU, 
+                               function(x)length(dir(file.path(courseDir(e),x)))>0))
+          coursesU <- coursesU[idx]
+        } else {
+          swirl_out("OK. I'm sending you to the swirl_courses web page.")
+          browseURL("https://github.com/swirldev/swirl_courses#swirl-courses")
+          return(FALSE)
+        }
       }
       # path cosmetics
       coursesR <- gsub("_", " ", coursesU)
@@ -128,11 +154,6 @@ mainMenu.default <- function(e){
   return(TRUE)
 }
 
-# Development version.
-welcome.dev <- function(e, ...){
-  "swirladmin"
-}
-
 welcome.test <- function(e, ...){
   "author"
 }
@@ -158,9 +179,6 @@ housekeeping.default <- function(e){
   swirl_out("Let's get started!", skip_before=FALSE)
   readline("\n...")
 }
-
-# Development version; does nothing
-housekeeping.dev <- function(e){}
 
 housekeeping.test <- function(e){}
 
@@ -306,11 +324,6 @@ order_lessons <- function(current_order, manifest_order) {
 courseDir.default <- function(e){
   # e's only role is to determine the method used
   file.path(find.package("swirl"), "Courses")
-}
-
-courseDir.dev <- function(e){
-  # e's only role is to determine the method used
-  file.path("inst", "Courses")
 }
 
 # Default for determining the user
