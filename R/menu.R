@@ -21,6 +21,7 @@ loadInstructions <- function(e, ...)UseMethod("loadInstructions")
 # are provided.
 # 
 # @param e persistent environment accessible to the callback
+#'@importFrom yaml yaml.load_file
 mainMenu.default <- function(e){
   # Welcome the user if necessary and set up progress tracking
   if(!exists("usr",e,inherits = FALSE)){
@@ -54,11 +55,25 @@ mainMenu.default <- function(e){
       idx <- unlist(sapply(coursesU, 
                     function(x)length(dir(file.path(courseDir(e),x)))>0))
       coursesU <- coursesU[idx]
-      # If no courses are available, exit
+      # If no courses are available, offer to install one
       if(length(coursesU)==0){
-        # TODO: Instead, offer to install courses.
-        swirl_out("No courses are available. Try again using swirl() with no parameter.")
-        return(FALSE)
+        suggestions <- yaml.load_file(file.path(courseDir(e), "suggested_courses.yaml"))
+        choices <- sapply(suggestions, function(x)paste0(x$Course, ": ", x$Description))
+        swirl_out("To begin, we must install a course or two. I can install a course
+                  from the menu below, or I can send you to a web page which will
+                  provide more options and simple directions for installing courses
+                  yourself.")
+        choices <- c(choices, "I'll do it myself")
+        choice <- select.list(choices)
+        n <- which(choice == choices)
+        if(n < length(choices)){
+          eval(parse(text=suggestions[[n]]$Install))
+          return(TRUE)
+        } else {
+          swirl_out("OK. I'm sending you to the swirl_courses web page.")
+          browserURL("https://github.com/swirldev/swirl_courses#swirl-courses")
+          return(FALSE)
+        }
       }
       # path cosmetics
       coursesR <- gsub("_", " ", coursesU)

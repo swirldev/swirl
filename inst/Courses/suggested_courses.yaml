@@ -1,0 +1,4 @@
+- Course: R Programming
+  Description: The basics of programming in R
+  Install: install_from_swirl('R_Programming')
+
