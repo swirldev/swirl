@@ -60,18 +60,27 @@ mainMenu.default <- function(e){
         suggestions <- yaml.load_file(file.path(courseDir(e), "suggested_courses.yaml"))
         choices <- sapply(suggestions, function(x)paste0(x$Course, ": ", x$Description))
         swirl_out("To begin, we must install a course or two. I can install a course
-                  from the menu below, or I can send you to a web page which will
-                  provide more options and simple directions for installing courses
-                  yourself.")
-        choices <- c(choices, "I'll do it myself")
+                  from the internet, or I can send you to a web page which will
+                  provide course options and directions for installing courses
+                  yourself. (If you are not connected to the internet, type 0 to exit.)")
+        choices <- c(choices, "Don't install anything. I'll do it myself")
         choice <- select.list(choices)
         n <- which(choice == choices)
         if(n < length(choices)){
-          eval(parse(text=suggestions[[n]]$Install))
-          return(TRUE)
+          temp <- try(eval(parse(text=suggestions[[n]]$Install)), silent=TRUE)
+          if(is(temp, "try-error")){
+            swirl_out(paste0("Sorry, but I'm unable to fetch ", choice, ". Perhaps
+                             your internet connection is down?"))
+            return(FALSE)
+          }
+          coursesU <- dir(courseDir(e))
+          # Eliminate empty directories
+          idx <- unlist(sapply(coursesU, 
+                               function(x)length(dir(file.path(courseDir(e),x)))>0))
+          coursesU <- coursesU[idx]
         } else {
           swirl_out("OK. I'm sending you to the swirl_courses web page.")
-          browserURL("https://github.com/swirldev/swirl_courses#swirl-courses")
+          browseURL("https://github.com/swirldev/swirl_courses#swirl-courses")
           return(FALSE)
         }
       }
