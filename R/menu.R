@@ -55,6 +55,7 @@ mainMenu.default <- function(e){
       idx <- unlist(sapply(coursesU, 
                     function(x)length(dir(file.path(courseDir(e),x)))>0))
       coursesU <- coursesU[idx]
+      
       # If no courses are available, offer to install one
       if(length(coursesU)==0){
         suggestions <- yaml.load_file(file.path(courseDir(e), "suggested_courses.yaml"))
