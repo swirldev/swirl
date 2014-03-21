@@ -201,7 +201,8 @@ loadDependencies <- function(packages_as_chars) {
                                     "package. Would you like me to install it for you now?"),
                         graphics=FALSE)
       if(yn == "Yes") {
-        install.packages(p, character.only=TRUE, quiet=TRUE)
+        swirl_out(paste0("Installing package ", p, ". Please wait."))
+        install.packages(p, quiet=TRUE)
       } else {
         return(FALSE)
       }
