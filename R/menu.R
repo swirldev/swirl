@@ -59,11 +59,13 @@ mainMenu.default <- function(e){
       if(length(coursesU)==0){
         suggestions <- yaml.load_file(file.path(courseDir(e), "suggested_courses.yaml"))
         choices <- sapply(suggestions, function(x)paste0(x$Course, ": ", x$Description))
-        swirl_out("To begin, we must install a course or two. I can install a course
-                  from the internet, or I can send you to a web page which will
-                  provide course options and directions for installing courses
-                  yourself. (If you are not connected to the internet, type 0 to exit.)")
-        choices <- c(choices, "Don't install anything. I'll do it myself")
+        swirl_out("To begin, you must install a course. I can install a",
+                  "course for you from the internet, or I can send you to a web page",
+                  "(https://github.com/swirldev/swirl_courses)",
+                  "which will provide course options and directions for", 
+                  "installing courses yourself.",
+                  "(If you are not connected to the internet, type 0 to exit.)")
+        choices <- c(choices, "Don't install anything for me. I'll do it myself.")
         choice <- select.list(choices)
         n <- which(choice == choices)
         if(length(n) == 0)return(FALSE)
