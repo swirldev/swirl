@@ -55,15 +55,18 @@ mainMenu.default <- function(e){
       idx <- unlist(sapply(coursesU, 
                     function(x)length(dir(file.path(courseDir(e),x)))>0))
       coursesU <- coursesU[idx]
+      
       # If no courses are available, offer to install one
       if(length(coursesU)==0){
         suggestions <- yaml.load_file(file.path(courseDir(e), "suggested_courses.yaml"))
         choices <- sapply(suggestions, function(x)paste0(x$Course, ": ", x$Description))
-        swirl_out("To begin, we must install a course or two. I can install a course
-                  from the internet, or I can send you to a web page which will
-                  provide course options and directions for installing courses
-                  yourself. (If you are not connected to the internet, type 0 to exit.)")
-        choices <- c(choices, "Don't install anything. I'll do it myself")
+        swirl_out("To begin, you must install a course. I can install a",
+                  "course for you from the internet, or I can send you to a web page",
+                  "(https://github.com/swirldev/swirl_courses)",
+                  "which will provide course options and directions for", 
+                  "installing courses yourself.",
+                  "(If you are not connected to the internet, type 0 to exit.)")
+        choices <- c(choices, "Don't install anything for me. I'll do it myself.")
         choice <- select.list(choices)
         n <- which(choice == choices)
         if(length(n) == 0)return(FALSE)
@@ -80,7 +83,7 @@ mainMenu.default <- function(e){
                                function(x)length(dir(file.path(courseDir(e),x)))>0))
           coursesU <- coursesU[idx]
         } else {
-          swirl_out("OK. I'm sending you to the swirl_courses web page.")
+          swirl_out("OK. I'm opening the swirl courses web page in your browser.")
           browseURL("https://github.com/swirldev/swirl_courses#swirl-courses")
           return(FALSE)
         }
@@ -90,6 +93,11 @@ mainMenu.default <- function(e){
       lesson <- ""
       while(lesson == ""){
         course <- courseMenu(e, coursesR)
+        if(!is.null(names(course)) && names(course)=="repo") {
+          swirl_out("OK. I'm opening the swirl courses web page in your browser.")
+          browseURL("https://github.com/swirldev/swirl_courses#swirl-courses")
+          return(FALSE)
+        }
         if(course=="")return(FALSE)
         # Set temp course name since csv files don't carry attributes
         e$temp_course_name <- course
@@ -205,6 +213,8 @@ inProgressMenu.test <- function(e, choices) {
 
 # A stub. Eventually this should be a full menu
 courseMenu.default <- function(e, choices){
+  repo_option <- "Take me to the swirl course repository! (https://github.com/swirldev/swirl_courses)"
+  choices <- c(choices, repo = repo_option)
   swirl_out("Please choose a course, or type 0 to exit swirl.")
   return(select.list(choices, graphics=FALSE))
 }
