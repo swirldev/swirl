@@ -82,7 +82,7 @@ mainMenu.default <- function(e){
                                function(x)length(dir(file.path(courseDir(e),x)))>0))
           coursesU <- coursesU[idx]
         } else {
-          swirl_out("OK. I'm sending you to the swirl_courses web page.")
+          swirl_out("OK. I'm opening the swirl courses web page in your browser.")
           browseURL("https://github.com/swirldev/swirl_courses#swirl-courses")
           return(FALSE)
         }
@@ -92,6 +92,11 @@ mainMenu.default <- function(e){
       lesson <- ""
       while(lesson == ""){
         course <- courseMenu(e, coursesR)
+        if(!is.null(names(course)) && names(course)=="repo") {
+          swirl_out("OK. I'm opening the swirl courses web page in your browser.")
+          browseURL("https://github.com/swirldev/swirl_courses#swirl-courses")
+          return(FALSE)
+        }
         if(course=="")return(FALSE)
         # Set temp course name since csv files don't carry attributes
         e$temp_course_name <- course
@@ -200,6 +205,8 @@ inProgressMenu.test <- function(e, choices) {
 
 # A stub. Eventually this should be a full menu
 courseMenu.default <- function(e, choices){
+  repo_option <- "Take me to the swirl course repository! (https://github.com/swirldev/swirl_courses)"
+  choices <- c(choices, repo = repo_option)
   swirl_out("Please choose a course, or type 0 to exit swirl.")
   return(select.list(choices, graphics=FALSE))
 }
