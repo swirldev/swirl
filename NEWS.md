@@ -1,3 +1,9 @@
+# swirl 2.2
+
+* Content is no longer shipped with swirl. Instead, it is located in our [course repo](https://github.com/swirldev/swirl_courses). When the user starts swirl, he or she is given the option to install the R Programming course automatically or be taken to the course repo page. Courses can also be installed with the `install_from_swirl()` function.
+
+* Content authoring tools have also been removed from the swirl package. We've created a new package called [swirlify](https://github.com/swirldev/swirlify), which is a comprehensive toolbox for swirl instructors. Instructions for authoring content are on the [Instructors page](http://swirlstats.com/instructors.html) of the swirl website.
+
 # swirl 2.1.1
 
 * Fixed a bug in the third lesson of Intro to R.
