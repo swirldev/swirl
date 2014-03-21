@@ -1,21 +1,25 @@
 #' @importFrom stringr str_detect
 courseraCheck <- function(e){
   modtype <- attr(e$les, "type")
-  ### TODO: Remove hardcoding of course_name ###
-  course_name <- "rprog-001"
   lesson_name <- gsub(" ", "_", attr(e$les, "lesson_name"))
   if(is.null(modtype) || modtype != "Coursera")return()
  
   
-  swirl_out("Do you want Coursera credit for this lesson? (If so, I'll need some additional info from you.)")
-  choice <- select.list(c("Yes.","No.","Maybe later."), graphics=FALSE)
-  if(choice=="No.")return()
+  swirl_out("Are you currently enrolled in the Coursera course associated with this lesson?")
+  yn <- select.list(c("Yes","No"), graphics=FALSE)
+  if(yn=="No")return()
+  
+  swirl_out("Would you like me to notify Coursera that you've completed this lesson?",
+            "If so, I'll need to get some more info from you.")
+  choice <- select.list(c("Yes","No","Maybe later"), graphics=FALSE)
+  if(choice=="No")return()
   # Get submission credentials
   r <- getCreds(e)
   email <- r["email"]
   passwd <- r["passwd"]
+  course_name <- r["courseid"]
   output <- substr(e$coursera, 1, 16)
-  if(choice=="Yes."){
+  if(choice=="Yes"){
     swirl_out("I'll try to tell Coursera you've completed this lesson now.")
     challenge.url <- paste("http://class.coursera.org", course_name,
                            "assignment/challenge", sep = "/")
@@ -62,9 +66,10 @@ courseraCheck <- function(e){
     }
   }#yes branch
   writeLines(output, paste0(course_name,"_",lesson_name,".txt"))
-  swirl_out("To notify Coursera that you have completed this lesson, please upload ")
-  swirl_out(paste0(course_name,"_",lesson_name,".txt "))
-  swirl_out(" to Coursera manually.")
+  swirl_out("To notify Coursera that you have completed this lesson, please upload",
+            sQuote(paste0(course_name,"_",lesson_name,".txt")),
+            "to Coursera manually. I've placed the file in the following directory:",
+            getwd(), skip_after=TRUE)
   readline("...")
 }
 
@@ -73,16 +78,21 @@ getCreds <- function(e) {
   e$coursera <- digest(paste0("complete", paste0(
     rep("_", ifelse(is.null(e$skips), 0, e$skips)), collapse="")),
     algo="sha1", serialize = FALSE)
+  swirl_out("The first item I need is your course ID. If the homepage for your",
+            "Coursera course is 'https://class.coursera.org/rprog-001',",
+            "then your course ID is 'rprog-001' (without the quotes).",
+            skip_after=TRUE)
+  courseid <- readline("Course ID: ")
   if(!file.exists(credfile)){
     email <- readline("Submission login (email): ")
     passwd <- readline("Submission password: ")
     writeLines(c(email, passwd), credfile)
-    return(c(email = email, passwd = passwd))
+    r <- c(email = email, passwd = passwd)
   } else {
     r <- readLines(credfile)
     names(r) <- c("email", "passwd")
-    return(r)
   }
+  return(c(r, courseid = courseid))
 }
 
 #' @importFrom RCurl getForm
