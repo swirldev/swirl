@@ -178,10 +178,40 @@ loadCustomTests <- function(lespath){
   cfile <- file.path(lespath,"customTests.R")
   if(file.exists(cfile)){
     source(cfile, local=customTests)
-   }
+  }
+  success <- TRUE
+  if(exists("dependson", customTests, inherits=FALSE)){
+    dependson <- get("dependson", customTests, inherits=FALSE)
+    success <- loadDependencies(dependson)
+  }
+  return(success)
 }
 
 # Function to remove everything from environment customTests
 clearCustomTests <- function(){
   remove(list=ls(customTests), envir=customTests)
+}
+
+# Load lesson package dependencies quietly
+loadDependencies <- function(packages_as_chars) {
+  for(p in packages_as_chars) {
+    if(!suppressWarnings(require(p, character.only=TRUE))) {
+      yn <- select.list(choices=c("Yes", "No"), 
+                        title=paste("\nThis lesson requires the", p, 
+                                    "package. Would you like me to install it for you now?"),
+                        graphics=FALSE)
+      if(yn == "Yes") {
+        install.packages(p, character.only=TRUE, quiet=TRUE)
+      } else {
+        return(FALSE)
+      }
+    }
+  }
+  for(p in packages_as_chars){
+    # Despite all these suppressions, 
+    suppressPackageStartupMessages(
+      suppressWarnings(
+        suppressMessages(library(p, character.only=TRUE, quietly=TRUE))))
+  }
+  return(TRUE)
 }

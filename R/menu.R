@@ -115,9 +115,16 @@ mainMenu.default <- function(e){
         # reverse path cosmetics
         lesson <- ifelse(lesson_choice=="", "",
                          lessons[lesson_choice == lessons_clean])
-      }
+   # hack   } 
       # Load the lesson and intialize everything
       e$les <- loadLesson(e, courseU, lesson)
+      # Return to the course menu if the lesson failed to load
+      if(is.logical(e$les) && !isTRUE(e$les)){
+        rm("les", envir=e, inherits=FALSE)
+        lesson <- ""
+        next()
+      }
+      } # hack
       # Remove temp lesson name and course name vars, which were surrogates
       # for csv attributes -- they've been attached via lesson() by now
       rm("temp_lesson_name", "temp_course_name", envir=e, inherits=FALSE)
@@ -148,7 +155,7 @@ mainMenu.default <- function(e){
       # indicator that swirl is not reacting to console input
       e$playing <- FALSE
       # create the file
-      saveRDS(e, e$progress)
+      suppressMessages(suppressWarnings(saveRDS(e, e$progress)))
     }
   }
   return(TRUE)
@@ -236,9 +243,9 @@ loadLesson.default <- function(e, courseU, lesson){
   e$snapshot <- as.list(globalenv())
   idx <- !(e$snapshot %in% snapshot)
   e$official <- e$snapshot[idx]
-  # load any custom tests
+  # load any custom tests, returning FALSE if they fail to load
   clearCustomTests()
-  loadCustomTests(lesPath)
+  if(!loadCustomTests(lesPath))return(FALSE)
   
   # Attached class to content based on file extension
   class(dataName) <- get_content_class(dataName)
@@ -261,6 +268,8 @@ restoreUserProgress.default <- function(e, selection){
   xfer(as.environment(e$official), globalenv())
   # load any custom tests
   clearCustomTests()
+  # Since custom tests will have successfully loaded once, 
+  # we don't check for failure here.
   loadCustomTests(e$path)
   # eval retrieved user expr's in global env, but don't include
   # call to swirl (the first entry)
