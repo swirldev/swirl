@@ -179,46 +179,10 @@ loadCustomTests <- function(lespath){
   if(file.exists(cfile)){
     source(cfile, local=customTests)
   }
-  success <- TRUE
-  if(exists("dependson", customTests, inherits=FALSE)){
-    dependson <- get("dependson", customTests, inherits=FALSE)
-    success <- loadDependencies(dependson)
-  }
-  return(success)
+  return(TRUE) # legacy
 }
 
 # Function to remove everything from environment customTests
 clearCustomTests <- function(){
   remove(list=ls(customTests), envir=customTests)
-}
-
-# Load lesson package dependencies quietly
-loadDependencies <- function(packages_as_chars) {
-  for(p in packages_as_chars) {
-    if(suppressPackageStartupMessages(
-      suppressWarnings(
-        suppressMessages(require(p, character.only=TRUE, quietly=TRUE))))) {
-      swirl_out("package", p, "loaded correctly")
-    } else {
-      swirl_out("This lesson requires the", p, 
-                "package. Would you like me to install it for you now?")
-      yn <- select.list(choices=c("Yes", "No"), graphics=FALSE)
-      if(yn == "Yes") {
-        swirl_out("trying to install package", p)
-        install.packages(p, quiet=TRUE)
-        if(suppressPackageStartupMessages(
-          suppressWarnings(
-            suppressMessages(require(p, character.only=TRUE, quietly=TRUE))))) {
-          swirl_out("package", p, "loaded correctly")
-        } else {
-          swirl_out("could not install package", p)
-          return(FALSE)
-        }
-      } else {
-        return(FALSE)
-      }
-    }
-  }
-  # If loop completes, then return TRUE
-  return(TRUE)
 }

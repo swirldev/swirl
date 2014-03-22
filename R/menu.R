@@ -236,7 +236,9 @@ loadLesson.default <- function(e, courseU, lesson){
   # Load the content file
   lesPath <- file.path(courseDir(e), courseU, lesson)
   shortname <- find_lesson(lesPath)
-  dataName <- file.path(lesPath,shortname)     
+  dataName <- file.path(lesPath,shortname)
+  # Handle dependencies
+  if(!loadDependencies(lesPath))return(FALSE)
   # Before initializing the module, take a snapshot of 
   #  the global environment.
   snapshot <- as.list(globalenv())
@@ -254,7 +256,7 @@ loadLesson.default <- function(e, courseU, lesson){
   e$official <- e$snapshot[idx]
   # load any custom tests, returning FALSE if they fail to load
   clearCustomTests()
-  if(!loadCustomTests(lesPath))return(FALSE)
+  loadCustomTests(lesPath)
   
   # Attached class to content based on file extension
   class(dataName) <- get_content_class(dataName)
@@ -268,6 +270,9 @@ restoreUserProgress.default <- function(e, selection){
   temp <- readRDS(file.path(e$udat, selection))
   # transfer its contents to e
   xfer(temp, e)
+  # Since loadDepencies will have worked once, we don't
+  # check for failure here. Perhaps we should.
+  loadDependencies(e$path)
   # TODO: We probably shouldn't be doing this again.
   # source the initLesson.R file if it exists
   initf <- file.path(e$path, "initLesson.R")
@@ -277,8 +282,6 @@ restoreUserProgress.default <- function(e, selection){
   xfer(as.environment(e$official), globalenv())
   # load any custom tests
   clearCustomTests()
-  # Since custom tests will have successfully loaded once, 
-  # we don't check for failure here.
   loadCustomTests(e$path)
   # eval retrieved user expr's in global env, but don't include
   # call to swirl (the first entry)

@@ -102,3 +102,43 @@ cleanEnv <- function(snapshot){
   # return new environment whose parent is pe
   return(new.env(parent=pe))
 }
+
+
+# LESSON PACKAGE DEPENDENCY SUPPORT
+
+# Load lesson package dependencies quietly
+loadDependencies <- function(lesson_dir) {
+  depends <- file.path(lesson_dir, "dependson.txt")
+  if(file.exists(depends)) {
+    packages_as_chars <- setdiff(readLines(depends), "")
+    for(p in packages_as_chars) {
+      if(suppressPackageStartupMessages(
+        suppressWarnings(
+          suppressMessages(require(p, character.only=TRUE, quietly=TRUE))))) {
+        swirl_out("package", p, "loaded correctly")
+      } else {
+        swirl_out("This lesson requires the", p, 
+                  "package. Would you like me to install it for you now?")
+        yn <- select.list(choices=c("Yes", "No"), graphics=FALSE)
+        if(yn == "Yes") {
+          swirl_out("trying to install package", p)
+          install.packages(p, quiet=TRUE)
+          if(suppressPackageStartupMessages(
+            suppressWarnings(
+              suppressMessages(require(p, 
+                                       character.only=TRUE, 
+                                       quietly=TRUE))))) {
+            swirl_out("package", p, "loaded correctly")
+          } else {
+            swirl_out("could not install package", p)
+            return(FALSE)
+          }
+        } else {
+          return(FALSE)
+        }
+      }
+    }
+  }
+  # If loop completes, then return TRUE
+  return(TRUE)
+}
