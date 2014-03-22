@@ -201,10 +201,9 @@ loadDependencies <- function(packages_as_chars) {
         suppressMessages(require(p, character.only=TRUE, quietly=TRUE))))) {
       swirl_out("package", p, "loaded correctly")
     } else {
-      yn <- select.list(choices=c("Yes", "No"), 
-                        title=paste("\nThis lesson requires the", p, 
-                                    "package. Would you like me to install it for you now?"),
-                        graphics=FALSE)
+      swirl_out("This lesson requires the", p, 
+                "package. Would you like me to install it for you now?")
+      yn <- select.list(choices=c("Yes", "No"), graphics=FALSE)
       if(yn == "Yes") {
         swirl_out("trying to install package", p)
         install.packages(p, quiet=TRUE)
