@@ -180,6 +180,7 @@ loadCustomTests <- function(lespath){
     source(cfile, local=customTests)
   }
   success <- TRUE
+  browser()
   if(exists("dependson", customTests, inherits=FALSE)){
     dependson <- get("dependson", customTests, inherits=FALSE)
     success <- loadDependencies(dependson)
@@ -195,24 +196,31 @@ clearCustomTests <- function(){
 # Load lesson package dependencies quietly
 loadDependencies <- function(packages_as_chars) {
   for(p in packages_as_chars) {
-    if(!suppressWarnings(require(p, character.only=TRUE))) {
+    if(suppressPackageStartupMessages(
+      suppressWarnings(
+        suppressMessages(require(p, character.only=TRUE, quietly=TRUE))))) {
+      swirl_out("package", p, "loaded correctly")
+    } else {
       yn <- select.list(choices=c("Yes", "No"), 
                         title=paste("\nThis lesson requires the", p, 
                                     "package. Would you like me to install it for you now?"),
                         graphics=FALSE)
       if(yn == "Yes") {
-        swirl_out(paste0("Installing package ", p, ". Please wait."))
+        swirl_out("trying to install package", p)
         install.packages(p, quiet=TRUE)
+        if(suppressPackageStartupMessages(
+          suppressWarnings(
+            suppressMessages(require(p, character.only=TRUE, quietly=TRUE))))) {
+          swirl_out("package", p, "loaded correctly")
+        } else {
+          swirl_out("could not install package", p)
+          return(FALSE)
+        }
       } else {
         return(FALSE)
       }
     }
   }
-  for(p in packages_as_chars){
-    # Despite all these suppressions, 
-    suppressPackageStartupMessages(
-      suppressWarnings(
-        suppressMessages(library(p, character.only=TRUE, quietly=TRUE))))
-  }
+  # If loop completes, then return TRUE
   return(TRUE)
 }
