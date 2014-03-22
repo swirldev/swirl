@@ -110,7 +110,7 @@ cleanEnv <- function(snapshot){
 loadDependencies <- function(lesson_dir) {
   depends <- file.path(lesson_dir, "dependson.txt")
   if(file.exists(depends)) {
-    packages_as_chars <- setdiff(readLines(depends), "")
+    packages_as_chars <- setdiff(readLines(depends, warn=FALSE), "")
     for(p in packages_as_chars) {
       if(suppressPackageStartupMessages(
         suppressWarnings(
