@@ -180,7 +180,6 @@ loadCustomTests <- function(lespath){
     source(cfile, local=customTests)
   }
   success <- TRUE
-  browser()
   if(exists("dependson", customTests, inherits=FALSE)){
     dependson <- get("dependson", customTests, inherits=FALSE)
     success <- loadDependencies(dependson)
