@@ -123,17 +123,16 @@ mainMenu.default <- function(e){
         # reverse path cosmetics
         lesson <- ifelse(lesson_choice=="", "",
                          lessons[lesson_choice == lessons_clean])
-   # hack   } 
-      # Load the lesson and intialize everything
-      e$les <- loadLesson(e, courseU, lesson)
-      # Return to the course menu if the lesson failed to load
-      if(is.logical(e$les) && !isTRUE(e$les)){
-        rm("les", envir=e, inherits=FALSE)
-        lesson <- ""
-        next()
+        # Load the lesson and intialize everything
+        e$les <- loadLesson(e, courseU, lesson)
+        # Return to the course menu if the lesson failed to load
+        if(is.logical(e$les) && !isTRUE(e$les)){
+          rm("les", envir=e, inherits=FALSE)
+          lesson <- ""
+          next()
+        }
       }
-      } # hack
-      # Remove temp lesson name and course name vars, which were surrogates
+   # Remove temp lesson name and course name vars, which were surrogates
       # for csv attributes -- they've been attached via lesson() by now
       rm("temp_lesson_name", "temp_course_name", envir=e, inherits=FALSE)
       
