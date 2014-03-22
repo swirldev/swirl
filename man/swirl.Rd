@@ -6,11 +6,9 @@
 swirl(resume.class = "default", ...)
 }
 \arguments{
-  \item{resume.class}{for development only; please accept
-  the default.}
+\item{resume.class}{for development only; please accept the default.}
 
-  \item{...}{arguments for special purposes only, such as
-  lesson testing}
+\item{...}{arguments for special purposes only, such as lesson testing}
 }
 \description{
 This function presents a choice of course lessons and interactively

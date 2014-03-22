@@ -7,8 +7,7 @@ given as the first argument.}
 expr_identical_to(correct_expression)
 }
 \arguments{
-  \item{correct_expression}{the correct or expected
-  expression as a string}
+\item{correct_expression}{the correct or expected expression as a string}
 }
 \value{
 TRUE or FALSE

@@ -7,8 +7,7 @@ if given.) If so, returns TRUE.}
 expr_creates_var(correctName = NULL)
 }
 \arguments{
-  \item{correctName}{expected name of the new variable or
-  NULL}
+\item{correctName}{expected name of the new variable or NULL}
 }
 \value{
 TRUE or FALSE

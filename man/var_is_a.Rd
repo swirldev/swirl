@@ -7,9 +7,9 @@ in the global environment and is of the given class.}
 var_is_a(class, var_name)
 }
 \arguments{
-  \item{class}{expected class which the given variable}
+\item{class}{expected class which the given variable}
 
-  \item{var_name}{name of the variable}
+\item{var_name}{name of the variable}
 }
 \value{
 TRUE or FALSE

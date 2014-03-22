@@ -6,11 +6,9 @@
 install_course_zip(path, multi = FALSE)
 }
 \arguments{
-  \item{path}{The path to the zipped course.}
+\item{path}{The path to the zipped course.}
 
-  \item{multi}{Set to \code{TRUE} if the zipped directory
-  contains multiple courses. The default value is
-  \code{FALSE}.}
+\item{multi}{Set to \code{TRUE} if the zipped directory contains multiple courses. The default value is \code{FALSE}.}
 }
 \description{
 Install a course from a zipped course folder

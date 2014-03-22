@@ -7,8 +7,7 @@ expression given as the first argument.}
 val_matches(regular_expression)
 }
 \arguments{
-  \item{regular_expression}{a regular expression which user
-  value should match}
+\item{regular_expression}{a regular expression which user value should match}
 }
 \value{
 TRUE or FALSE

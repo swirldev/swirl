@@ -6,11 +6,9 @@
 install_course_url(url, multi = FALSE)
 }
 \arguments{
-  \item{url}{URL that points to a zipped course directory}
+\item{url}{URL that points to a zipped course directory}
 
-  \item{multi}{The user should set to \code{TRUE} if the
-  zipped directory contains multiple courses. The default
-  value is \code{FALSE}.}
+\item{multi}{The user should set to \code{TRUE} if the zipped directory contains multiple courses. The default value is \code{FALSE}.}
 }
 \description{
 Install a course from a url that points to a zip file

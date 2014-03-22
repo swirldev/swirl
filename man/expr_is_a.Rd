@@ -6,7 +6,7 @@
 expr_is_a(class)
 }
 \arguments{
-  \item{class}{expected class of the given expression}
+\item{class}{expected class of the given expression}
 }
 \value{
 TRUE or FALSE

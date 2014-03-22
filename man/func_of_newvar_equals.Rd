@@ -8,8 +8,7 @@ saved as e$newVar.}
 func_of_newvar_equals(correct_expression)
 }
 \arguments{
-  \item{correct_expression}{expression expected to be
-  applied}
+\item{correct_expression}{expression expected to be applied}
 }
 \value{
 TRUE or FALSE

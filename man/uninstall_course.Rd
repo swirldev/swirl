@@ -6,7 +6,7 @@
 uninstall_course(course_name)
 }
 \arguments{
-  \item{course_name}{Name of course to be uninstalled}
+\item{course_name}{Name of course to be uninstalled}
 }
 \description{
 Uninstall a course

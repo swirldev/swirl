@@ -6,7 +6,7 @@
 install_course_directory(path)
 }
 \arguments{
-  \item{path}{The path to the course directory.}
+\item{path}{The path to the course directory.}
 }
 \description{
 Install a course from a course directory

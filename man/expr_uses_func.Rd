@@ -7,7 +7,7 @@ name is given as the first argument.}
 expr_uses_func(func)
 }
 \arguments{
-  \item{func}{name of the function expected to be used}
+\item{func}{name of the function expected to be used}
 }
 \value{
 TRUE or FALSE

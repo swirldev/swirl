@@ -6,8 +6,7 @@
 val_has_length(len)
 }
 \arguments{
-  \item{len}{expected length of the variable created by a
-  user}
+\item{len}{expected length of the variable created by a user}
 }
 \value{
 TRUE or FALSE
