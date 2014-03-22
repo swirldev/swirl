@@ -212,7 +212,7 @@ inProgressMenu.test <- function(e, choices) {
 
 # A stub. Eventually this should be a full menu
 courseMenu.default <- function(e, choices){
-  repo_option <- "Take me to the swirl course repository! (https://github.com/swirldev/swirl_courses)"
+  repo_option <- "Take me to the swirl course repository!"
   choices <- c(choices, repo = repo_option)
   swirl_out("Please choose a course, or type 0 to exit swirl.")
   return(select.list(choices, graphics=FALSE))
