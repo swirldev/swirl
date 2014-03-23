@@ -111,6 +111,9 @@ loadDependencies <- function(lesson_dir) {
   depends <- file.path(lesson_dir, "dependson.txt")
   if(file.exists(depends)) {
     packages_as_chars <- setdiff(readLines(depends, warn=FALSE), "")
+    # If the dependson file is empty, then proceed with lesson
+    if(length(packages_as_chars) == 0) return(TRUE)
+    swirl_out("Attemping to load lesson dependencies...")
     for(p in packages_as_chars) {
       if(suppressPackageStartupMessages(
         suppressWarnings(
@@ -139,6 +142,7 @@ loadDependencies <- function(lesson_dir) {
       }
     }
   }
-  # If loop completes, then return TRUE
+  # If loop completes, then print a blank line and return TRUE
+  cat("\n")
   return(TRUE)
 }
