@@ -1,4 +1,9 @@
-#' Install a course from swirl's official list of courses
+#' Install a course from the official course repository
+#' 
+#' We are currently maintaining a central repository of contributed
+#' swirl courses at \url{https://github.com/swirldev/swirl_courses}.
+#' This function provides the easiest method of installing a course
+#' form the repository.
 #' 
 #' @param course_name The name of the course you wish to install.
 #' @export
@@ -6,7 +11,11 @@
 #' @examples
 #' \dontrun{
 #' 
-#' install_from_swirl("Set Theory")
+#' install_from_swirl("R_Programming") # Directory name
+#' 
+#' ### OR ###
+#' 
+#' install_from_swirl("R Programming") # Course name
 #' }
 install_from_swirl <- function(course_name){
   # make pathname from course_name
