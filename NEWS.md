@@ -1,8 +1,20 @@
 # swirl 2.2
 
-* Content is no longer shipped with swirl. Instead, it is located in our [course repo](https://github.com/swirldev/swirl_courses). When the user starts swirl, he or she is given the option to install the R Programming course automatically or be taken to the course repo page. Courses can also be installed with the `install_from_swirl()` function.
+* Instructional content is no longer shipped with swirl. Instead, it is located in our [course repo](https://github.com/swirldev/swirl_courses). When the user starts swirl, he or she is given the option to install the R Programming course automatically or be taken to the course repo page. Courses can also be installed with the `install_from_swirl()` function.
 
 * Content authoring tools have also been removed from the swirl package. We've created a new package called [swirlify](https://github.com/swirldev/swirlify), which is a comprehensive toolbox for swirl instructors. Instructions for authoring content are on the [Instructors page](http://swirlstats.com/instructors.html) of the swirl website.
+
+* Package dependencies for a lesson are now managing by including a file called `dependson.txt` in the lesson directory, which lists required packages one line at a time. This strategy is mainly for backwards compatibility and will take a different form for new content in future releases. When the user begins a lesson with package dependencies, swirl attempts to load each package in turn and prompts the user to automatically install any packages not found.
+
+* Added help files for answer tests contained in `answerTests.R.`
+
+* Added progress bar feature using `utils::txtProgressBar()`.
+
+* Added `test` mode for compatibility with the [swirlify](https://github.com/swirldev/swirlify) package.
+
+* Integrated with Coursera API to allow enrolled students to receive credit for swirl lessons associated their Coursera course.
+
+* `rmd2df()` can finally handle `figure` and `video` units of instruction.
 
 # swirl 2.1.1
 
