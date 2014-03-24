@@ -38,9 +38,6 @@
 #' @importFrom stringr str_detect str_locate fixed str_split_fixed
 #' @importFrom testthat expectation equals is_equivalent_to 
 #' @importFrom testthat is_identical_to is_a matches
-#' @importFrom pwr pwr.norm.test pwr.t.test
-#' @importFrom plotrix draw.circle
-#' @import openintro
 #' @examples
 #' \dontrun{
 #' 

@@ -89,7 +89,7 @@ getCreds <- function(e) {
     writeLines(c(email, passwd), credfile)
     r <- c(email = email, passwd = passwd)
   } else {
-    r <- readLines(credfile)
+    r <- readLines(credfile, warn=FALSE)
     names(r) <- c("email", "passwd")
   }
   return(c(r, courseid = courseid))

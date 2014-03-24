@@ -178,7 +178,8 @@ loadCustomTests <- function(lespath){
   cfile <- file.path(lespath,"customTests.R")
   if(file.exists(cfile)){
     source(cfile, local=customTests)
-   }
+  }
+  return(TRUE) # legacy
 }
 
 # Function to remove everything from environment customTests

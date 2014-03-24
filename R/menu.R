@@ -123,10 +123,16 @@ mainMenu.default <- function(e){
         # reverse path cosmetics
         lesson <- ifelse(lesson_choice=="", "",
                          lessons[lesson_choice == lessons_clean])
+        # Load the lesson and intialize everything
+        e$les <- loadLesson(e, courseU, lesson)
+        # Return to the course menu if the lesson failed to load
+        if(is.logical(e$les) && !isTRUE(e$les)){
+          rm("les", envir=e, inherits=FALSE)
+          lesson <- ""
+          next()
+        }
       }
-      # Load the lesson and intialize everything
-      e$les <- loadLesson(e, courseU, lesson)
-      # Remove temp lesson name and course name vars, which were surrogates
+   # Remove temp lesson name and course name vars, which were surrogates
       # for csv attributes -- they've been attached via lesson() by now
       rm("temp_lesson_name", "temp_course_name", envir=e, inherits=FALSE)
       
@@ -156,7 +162,7 @@ mainMenu.default <- function(e){
       # indicator that swirl is not reacting to console input
       e$playing <- FALSE
       # create the file
-      saveRDS(e, e$progress)
+      suppressMessages(suppressWarnings(saveRDS(e, e$progress)))
     }
   }
   return(TRUE)
@@ -206,7 +212,7 @@ inProgressMenu.test <- function(e, choices) {
 
 # A stub. Eventually this should be a full menu
 courseMenu.default <- function(e, choices){
-  repo_option <- "Take me to the swirl course repository! (https://github.com/swirldev/swirl_courses)"
+  repo_option <- "Take me to the swirl course repository!"
   choices <- c(choices, repo = repo_option)
   swirl_out("Please choose a course, or type 0 to exit swirl.")
   return(select.list(choices, graphics=FALSE))
@@ -230,7 +236,9 @@ loadLesson.default <- function(e, courseU, lesson){
   # Load the content file
   lesPath <- file.path(courseDir(e), courseU, lesson)
   shortname <- find_lesson(lesPath)
-  dataName <- file.path(lesPath,shortname)     
+  dataName <- file.path(lesPath,shortname)
+  # Handle dependencies
+  if(!loadDependencies(lesPath))return(FALSE)
   # Before initializing the module, take a snapshot of 
   #  the global environment.
   snapshot <- as.list(globalenv())
@@ -246,7 +254,7 @@ loadLesson.default <- function(e, courseU, lesson){
   e$snapshot <- as.list(globalenv())
   idx <- !(e$snapshot %in% snapshot)
   e$official <- e$snapshot[idx]
-  # load any custom tests
+  # load any custom tests, returning FALSE if they fail to load
   clearCustomTests()
   loadCustomTests(lesPath)
   
@@ -262,6 +270,9 @@ restoreUserProgress.default <- function(e, selection){
   temp <- readRDS(file.path(e$udat, selection))
   # transfer its contents to e
   xfer(temp, e)
+  # Since loadDepencies will have worked once, we don't
+  # check for failure here. Perhaps we should.
+  loadDependencies(e$path)
   # TODO: We probably shouldn't be doing this again.
   # source the initLesson.R file if it exists
   initf <- file.path(e$path, "initLesson.R")

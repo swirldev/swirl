@@ -102,3 +102,47 @@ cleanEnv <- function(snapshot){
   # return new environment whose parent is pe
   return(new.env(parent=pe))
 }
+
+
+# LESSON PACKAGE DEPENDENCY SUPPORT
+
+# Load lesson package dependencies quietly
+loadDependencies <- function(lesson_dir) {
+  depends <- file.path(lesson_dir, "dependson.txt")
+  if(file.exists(depends)) {
+    packages_as_chars <- setdiff(readLines(depends, warn=FALSE), "")
+    # If the dependson file is empty, then proceed with lesson
+    if(length(packages_as_chars) == 0) return(TRUE)
+    swirl_out("Attemping to load lesson dependencies...")
+    for(p in packages_as_chars) {
+      if(suppressPackageStartupMessages(
+        suppressWarnings(
+          suppressMessages(require(p, character.only=TRUE, quietly=TRUE))))) {
+        swirl_out("Package", sQuote(p), "loaded correctly!")
+      } else {
+        swirl_out("This lesson requires the", sQuote(p), 
+                  "package. Would you like me to install it for you now?")
+        yn <- select.list(choices=c("Yes", "No"), graphics=FALSE)
+        if(yn == "Yes") {
+          swirl_out("Trying to install package", sQuote(p), "now...")
+          install.packages(p, quiet=TRUE)
+          if(suppressPackageStartupMessages(
+            suppressWarnings(
+              suppressMessages(require(p, 
+                                       character.only=TRUE, 
+                                       quietly=TRUE))))) {
+            swirl_out("Package", sQuote(p), "loaded correctly!")
+          } else {
+            swirl_out("Could not install package", paste0(sQuote(p), "!"))
+            return(FALSE)
+          }
+        } else {
+          return(FALSE)
+        }
+      }
+    }
+  }
+  # If loop completes, then print a blank line and return TRUE
+  cat("\n")
+  return(TRUE)
+}

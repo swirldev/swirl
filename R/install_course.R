@@ -1,4 +1,9 @@
-#' Install a course from swirl's official list of courses
+#' Install a course from the official course repository
+#' 
+#' We are currently maintaining a central repository of contributed
+#' swirl courses at \url{https://github.com/swirldev/swirl_courses}.
+#' This function provides the easiest method of installing a course
+#' form the repository.
 #' 
 #' @param course_name The name of the course you wish to install.
 #' @export
@@ -6,48 +11,60 @@
 #' @examples
 #' \dontrun{
 #' 
-#' install_from_swirl("Set Theory")
+#' install_from_swirl("R_Programming") # Directory name
+#' 
+#' ### OR ###
+#' 
+#' install_from_swirl("R Programming") # Course name
 #' }
 install_from_swirl <- function(course_name){
   # make pathname from course_name
   course_name <- make_pathname(course_name)
   
   # Construct url to the zip file
-  url <- paste0("http://github.com/swirldev/swirl_courses/zipball/master")
+  url <- "http://github.com/swirldev/swirl_courses/zipball/master"
   
   # Send GET request
   response <- GET(url)
   
   # Construct path to Courses
-  path <- file.path(system.file(package = "swirl"), "Courses", "temp.zip")
+  path <- file.path(system.file("Courses", package = "swirl"), "temp.zip")
   
   # Write the response as a zip
   writeBin(content(response, "raw"), path)
   
   # Find list of files not in top level directory
-  file_names <- unzip(path, list=T)$Name
+  file_names <- unzip(path, list=TRUE)$Name
   
-  # Filter list and extract
+  # Filter list
   unzip_list <- Filter(function(x){grepl(course_name, x)}, file_names)
+  
+  # Check if course exists
+  if(length(unzip_list) == 0) {
+    stop(paste0("Course '", course_name, "' not found in course repository! ",
+                "Make sure you've got the name exactly right, then try again."))
+  }
+  
+  # Extract
   unzip(path, exdir=file.path(system.file(package = "swirl"), "Courses"), 
         files=unzip_list)
   
   # Copy files from unzipped directory into Courses
   top_dir <- file.path(system.file(package = "swirl"), "Courses", 
                        sort(dirname(unzip_list))[1])
-  dirs_to_copy <- list.files(top_dir, full.names=T)
+  dirs_to_copy <- list.files(top_dir, full.names=TRUE)
   file.copy(dirs_to_copy, file.path(system.file(package = "swirl"), "Courses"),
-            recursive=T)
+            recursive=TRUE)
   
   # Delete unzipped directory
-  unlink(top_dir, recursive=T, force=T)
+  unlink(top_dir, recursive=TRUE, force=TRUE)
   
   # If __MACOSX exists, delete it.
   unlink(file.path(system.file(package = "swirl"), "Courses", "__MACOSX"),
-         recursive=T, force=T)
+         recursive=TRUE, force=TRUE)
   
   # Delete temp.zip
-  unlink(path, force=T)
+  unlink(path, force=TRUE)
   
   message("Course installed successfully!")
   
@@ -86,17 +103,17 @@ zip_course <- function(path, dest=NULL){
   # Create directory in which to zip
   zip_dir <- paste0(dest, "/", "swirl_zip_creator_TEMP")
   dir.create(zip_dir)
-  file.copy(path, zip_dir, recursive=T)
+  file.copy(path, zip_dir, recursive=TRUE)
   
   # Change directory to folder to be zipped
   setwd(zip_dir)
   
   # Zip-A-Dee-Doo-Dah
   zip(paste0(dest, "/", basename(path), ".zip"), 
-      list.files(getwd(), recursive=T))
+      list.files(getwd(), recursive=TRUE))
   
   # Delete temporary directory
-  unlink(zip_dir, recursive=T, force=T)
+  unlink(zip_dir, recursive=TRUE, force=TRUE)
   
   # Pop the old directory
   setwd(curr_dir)
@@ -118,7 +135,7 @@ uninstall_course <- function(course_name){
   path <- file.path(system.file(package = "swirl"), "Courses", 
                     make_pathname(course_name))
   if(file.exists(path)){
-    unlink(path, recursive=T, force=T)
+    unlink(path, recursive=TRUE, force=TRUE)
     message("Course uninstalled successfully!")
   } else {
     stop("Course not found!")
@@ -136,7 +153,7 @@ uninstall_course <- function(course_name){
 install_course_zip <- function(path, multi=FALSE){
   if(multi){
     # Find list of files not in top level directory
-    file_names <- unzip(path, list=T)$Name
+    file_names <- unzip(path, list=TRUE)$Name
     
     # Filter list and extract
     unzip_list <- Filter(function(x){grepl("/.+/", x)}, file_names)
@@ -146,12 +163,12 @@ install_course_zip <- function(path, multi=FALSE){
     # Copy files from unzipped directory into Courses
     top_dir <- file.path(system.file(package = "swirl"), "Courses", 
                          sort(dirname(unzip_list))[1])
-    dirs_to_copy <- list.files(top_dir, full.names=T)
+    dirs_to_copy <- list.files(top_dir, full.names=TRUE)
     file.copy(dirs_to_copy, file.path(system.file(package = "swirl"),
-                                      "Courses"), recursive=T)
+                                      "Courses"), recursive=TRUE)
     
     # Delete unzipped directory
-    unlink(top_dir, recursive=T, force=T)
+    unlink(top_dir, recursive=TRUE, force=TRUE)
     
   } else {
     # Unzip file into courses
@@ -161,7 +178,7 @@ install_course_zip <- function(path, multi=FALSE){
   
   # If __MACOSX exists, delete it.
   unlink(file.path(system.file(package = "swirl"), "Courses", "__MACOSX"),
-         recursive=T, force=T)
+         recursive=TRUE, force=TRUE)
 
   message("Course installed successfully!")
   invisible()
@@ -179,7 +196,7 @@ install_course_zip <- function(path, multi=FALSE){
 install_course_directory <- function(path){
   # Check for size of directory to prevent copying a huge directory into swirl/Courses
   garbage_result <- tryCatch(
-    {setTimeLimit(elapsed=1); list.files(path, recursive=T)},
+    {setTimeLimit(elapsed=1); list.files(path, recursive=TRUE)},
     finally = {setTimeLimit(elapsed=Inf)}
   )
   
@@ -190,7 +207,7 @@ install_course_directory <- function(path){
   
   # Copy files
   file.copy(path, file.path(system.file(package = "swirl"), "Courses"),
-            recursive=T)
+            recursive=TRUE)
   
   message("Course installed successfully!")
   invisible()
@@ -282,7 +299,7 @@ install_course_url <- function(url, multi=FALSE){
   # Clean up GitHub directory name
   if(grepl("github.com", url) && !multi){
     # Get paths of every file in zip that will be extracted
-    file_names <- dirname(unzip(path,  list = T)$Name)
+    file_names <- dirname(unzip(path,  list = TRUE)$Name)
     
     # Find subset of those names which is not equal to root, then get the shortest string from that subset
     old_name <- head( sort( file_names[which(file_names != ".")] ) , 1)
@@ -299,7 +316,7 @@ install_course_url <- function(url, multi=FALSE){
   }
   
   # Delete downloaded zip
-  unlink(path, force=T)
+  unlink(path, force=TRUE)
   
   invisible()
 }
