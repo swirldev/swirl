@@ -35,7 +35,11 @@ parse_content.yaml <- function(file, e){
                        AnswerChoices=NA, AnswerTests=NA, 
                        Hint=NA, Figure=NA, FigureType=NA, VideoLink=NA)
     for(nm in names(element)){
-      temp[,nm] <- element[[nm]]
+      # Only replace NA with value if value is not NULL, i.e. instructor
+      # provided a nonempty value
+      if(!is.null(element[[nm]])) {
+        temp[,nm] <- element[[nm]]
+      }
     }
     temp
   }
