@@ -51,7 +51,7 @@ mergeLists <- function(sourceList, destList){
 # values of variables which appear in the clean environment
 # are copied from the global environment.
 # 
-# For example, if the user enters x <- rnormal(100), then
+# For example, if the user enters x <- rnorm(100), then
 # evaluating the expression in a clean environment will create
 # a variable named x, but it will have a different value
 # than that created by the user.
