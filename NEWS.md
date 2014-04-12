@@ -1,3 +1,11 @@
+# swirl 2.2.2
+
+* Fix bug in old answer test caused by upgrade to R 3.1.0 and made evident in the Data Analysis course.
+
+# swirl 2.2.1
+
+* Check for missing entries in content YAML to prevent failure when loading a course.
+
 # swirl 2.2
 
 * Instructional content is no longer shipped with swirl. Instead, it is located in our [course repo](https://github.com/swirldev/swirl_courses). When the user starts swirl, he or she is given the option to install the R Programming course automatically or be taken to the course repo page. Courses can also be installed with the `install_from_swirl()` function.
