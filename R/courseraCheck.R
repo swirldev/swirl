@@ -85,6 +85,10 @@ getCreds <- function(e) {
   courseid <- readline("Course ID: ")
   if(!file.exists(credfile)){
     email <- readline("Submission login (email): ")
+    confirm <- readline("Confirm submission login (email): ")
+  if(email!=confirm){
+    swirl_out("Your emails do not match. Please re-enter this infomration.")
+    }
     passwd <- readline("Submission password: ")
     writeLines(c(email, passwd), credfile)
     r <- c(email = email, passwd = passwd)
