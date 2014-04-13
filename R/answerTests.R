@@ -294,8 +294,8 @@ runTest.equals <- function(keyphrase, e){
 # of "=" in keyphrase
 # keyphrase:equivalent=expression
 runTest.equivalent <- function(keyphrase,e) {
-  correctExpr <- parse(text=rightside(keyphrase))
-  userExpr <- as.expression(e$expr)
+  correctExpr <- as.list(parse(text=rightside(keyphrase)))
+  userExpr <- as.list(as.expression(e$expr))
   results <- expectThat(userExpr,
                         is_equivalent_to(correctExpr,deparse(correctExpr)),
                         label=deparse(userExpr))
