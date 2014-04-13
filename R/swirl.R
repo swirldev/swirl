@@ -282,11 +282,9 @@ resume.default <- function(e, ...){
     xfer(ce, globalenv())
     ce <- as.list(ce)
     # Inform the user, but don't expose the actual answer.    
-    swirl_out("I've entered the correct answer for you.")
-    if(length(names(ce)) > 0){
-      swirl_out(paste0("In doing so, I've created the variable(s) ", 
-                       names(ce), ", which you may need later."))
-    }  
+    swirl_out("Entering the following correct answer for you...",
+              skip_after=TRUE)
+    message("> ", e$current.row[, "CorrectAnswer"])
   }
   # Method menu initializes or reinitializes e if necessary.
   temp <- mainMenu(e)
