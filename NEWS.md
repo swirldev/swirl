@@ -1,3 +1,11 @@
+# swirl 2.2.3
+
+* Add confirmation step to Coursera submission process.
+
+* Stash Course ID along with other Coursera creds.
+
+* Display correct answer when user `skip()`s a question.
+
 # swirl 2.2.2
 
 * Fix bug in old answer test caused by upgrade to R 3.1.0 and made evident in the Data Analysis course.

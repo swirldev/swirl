@@ -69,30 +69,45 @@ courseraCheck <- function(e){
   swirl_out("To notify Coursera that you have completed this lesson, please upload",
             sQuote(paste0(course_name,"_",lesson_name,".txt")),
             "to Coursera manually. I've placed the file in the following directory:",
-            getwd(), skip_after=TRUE)
+            skip_after=TRUE)
+  message(getwd(), "\n")
   readline("...")
 }
 
 getCreds <- function(e) {
-  credfile <- file.path(e$udat, paste0(e$les$course_name,".txt"))
+  cn <- make_pathname(attr(e$les, "course_name"))
+  credfile <- file.path(e$udat, paste0(cn, ".txt"))
   e$coursera <- digest(paste0("complete", paste0(
     rep("_", ifelse(is.null(e$skips), 0, e$skips)), collapse="")),
     algo="sha1", serialize = FALSE)
-  swirl_out("The first item I need is your course ID. If the homepage for your",
-            "Coursera course is 'https://class.coursera.org/rprog-001',",
-            "then your course ID is 'rprog-001' (without the quotes).",
-            skip_after=TRUE)
-  courseid <- readline("Course ID: ")
-  if(!file.exists(credfile)){
-    email <- readline("Submission login (email): ")
-    passwd <- readline("Submission password: ")
-    writeLines(c(email, passwd), credfile)
-    r <- c(email = email, passwd = passwd)
-  } else {
-    r <- readLines(credfile, warn=FALSE)
-    names(r) <- c("email", "passwd")
+  
+  confirmed <- FALSE 
+  need2fix <- FALSE
+  while(!confirmed) {
+    if(!file.exists(credfile) || need2fix) {
+      swirl_out("The first item I need is your course ID. If the homepage for your",
+                "Coursera course is 'https://class.coursera.org/rprog-001',",
+                "then your course ID is 'rprog-001' (without the quotes).",
+                skip_after=TRUE)
+      courseid <- readline("Course ID: ")
+      email <- readline("Submission login (email): ")
+      passwd <- readline("Submission password: ")
+      writeLines(c(courseid, email, passwd), credfile)
+      r <- c(courseid = courseid, email = email, passwd = passwd)
+    } else {
+      r <- readLines(credfile, warn=FALSE)
+      names(r) <- c("courseid", "email", "passwd")
+    }
+    swirl_out("Is the following information correct?", skip_after=TRUE)
+    message("Course ID: ", r['courseid'],
+            "\nSubmission login (email): ", r['email'], 
+            "\nSubmission password: ", r['passwd'])
+    yn <- c("Yes, go ahead!", 
+            "No, I need to change something.")
+    confirmed <- identical(select.list(yn, graphics=FALSE), yn[1])
+    if(!confirmed) need2fix <- TRUE
   }
-  return(c(r, courseid = courseid))
+  return(r)
 }
 
 #' @importFrom RCurl getForm
