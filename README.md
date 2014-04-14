@@ -30,6 +30,7 @@ As we continue adding new features and content, we will make new versions availa
 To access the most recent features and content, or to contribute to swirl's development, you can install and run the development version of swirl using the [devtools](https://github.com/hadley/devtools) package:
 
 ```
+install.packages("devtools")
 library(devtools)
 install_github("swirldev/swirl")
 library(swirl)
