@@ -3,17 +3,17 @@ courseraCheck <- function(e){
   modtype <- attr(e$les, "type")
   lesson_name <- gsub(" ", "_", attr(e$les, "lesson_name"))
   if(is.null(modtype) || modtype != "Coursera")return()
- 
-  
+  tt <- c(rep(letters, 3), seq(100))
   swirl_out("Are you currently enrolled in the Coursera course associated with this lesson?")
   yn <- select.list(c("Yes","No"), graphics=FALSE)
   if(yn=="No")return()
-  
+  ss <- lapply(1:2, function(i) {
+    paste0(sample(tt, sample(seq(400), 1), replace=TRUE), collapse="")
+  })
   swirl_out("Would you like me to notify Coursera that you've completed this lesson?",
             "If so, I'll need to get some more info from you.")
   choice <- select.list(c("Yes","No","Maybe later"), graphics=FALSE)
   if(choice=="No") return()
-  
   # Begin submission loop
   ok <- FALSE
   while(!ok) {
@@ -22,7 +22,7 @@ courseraCheck <- function(e){
     email <- r["email"]
     passwd <- r["passwd"]
     course_name <- r["courseid"]
-    output <- substr(e$coursera, 1, 16)
+    output <- paste0(ss[[1]], substr(e$coursera, 1, 16), ss[[2]], collapse="")
     # If going straight to manual submission, then exit loop.
     if(choice=="Maybe later") ok <- TRUE
     # If doing automatic submission, then give it a try.
