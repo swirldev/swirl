@@ -63,7 +63,7 @@ courseraCheck <- function(e){
             swirl_out(paste0("I've notified Coursera that you have completed ",
                              course_name, ", ", lesson_name,"."))
             # Exit loop since submission successful
-            ok <- TRUE
+            return()
           }
           swirl_out("I'm sorry, something went wrong with automatic submission.")
           # Exit loop if user doesn't want to retry auto submission
@@ -78,8 +78,8 @@ courseraCheck <- function(e){
         # Exit loop if user doesn't want to retry auto submission
         ok <- !retry()
       }
-    }#yes branch
-  }
+    } # end of yes branch
+  } # end of while loop
   writeLines(output, paste0(course_name,"_",lesson_name,".txt"))
   swirl_out("To notify Coursera that you have completed this lesson, please upload",
             sQuote(paste0(course_name,"_",lesson_name,".txt")),
