@@ -12,66 +12,92 @@ courseraCheck <- function(e){
   swirl_out("Would you like me to notify Coursera that you've completed this lesson?",
             "If so, I'll need to get some more info from you.")
   choice <- select.list(c("Yes","No","Maybe later"), graphics=FALSE)
-  if(choice=="No")return()
-  # Get submission credentials
-  r <- getCreds(e)
-  email <- r["email"]
-  passwd <- r["passwd"]
-  course_name <- r["courseid"]
-  output <- substr(e$coursera, 1, 16)
-  if(choice=="Yes"){
-    swirl_out("I'll try to tell Coursera you've completed this lesson now.")
-    challenge.url <- paste("http://class.coursera.org", course_name,
-                           "assignment/challenge", sep = "/")
-    submit.url <- paste("http://class.coursera.org", course_name,
-                        "assignment/submit", sep = "/")
-    ch <- try(getChallenge(email, challenge.url), silent=TRUE)
-    # Continue only if the challenge has worked
-    if(!is(ch, "try-error")){
-      ch.resp <- challengeResponse(passwd, ch$ch.key)
-      # If submit.url is invalid, submitSolution should return a try-error.
-      # However, that is not the only way it can fail; see below.
-      results <- submitSolution(email, submit.url, ch.resp, 
-                                sid=lesson_name, 
-                                output=output,
-                                signature=ch$state)
-      # If incorrect, empty string will be returned
-      if(!length(results)) {
-        swirl_out("You skipped too many questions! You'll need to complete",
-                  "this lesson again if you'd like to receive credit. Please",
-                  "don't skip more than one question next time.")
-        return()
-      }
-      if(!is(results, "try-error")){
-        # TODO: It would be best to detect success here, rather than
-        # failure, but as of Feb 23 2014, submit.url may not throw
-        # an error indicating failure but instead return an HTML
-        # notification beginning with the word, "Exception".
-        # Here we detect failure by the presence of this word.
-        # Server-side behavior could easily change and could easily
-        # be course dependent, so some standard handshake will have
-        # to be set up eventually.
-        swirl_out(results)
-        if(!str_detect(results, "[Ee]xception")){
-          swirl_out(paste0("I've notified Coursera that you have completed ",
-                           course_name, ", ", lesson_name,"."))
+  if(choice=="No") return()
+  
+  # Begin submission loop
+  ok <- FALSE
+  while(!ok) {
+    # Get submission credentials
+    r <- getCreds(e)
+    email <- r["email"]
+    passwd <- r["passwd"]
+    course_name <- r["courseid"]
+    output <- substr(e$coursera, 1, 16)
+    # If going straight to manual submission, then exit loop.
+    if(choice=="Maybe later") ok <- TRUE
+    # If doing automatic submission, then give it a try.
+    if(choice=="Yes"){
+      swirl_out("I'll try to tell Coursera you've completed this lesson now.")
+      challenge.url <- paste("http://class.coursera.org", course_name,
+                             "assignment/challenge", sep = "/")
+      submit.url <- paste("http://class.coursera.org", course_name,
+                          "assignment/submit", sep = "/")
+      ch <- try(getChallenge(email, challenge.url), silent=TRUE)
+      # Continue only if the challenge has worked
+      if(!is(ch, "try-error")){
+        ch.resp <- challengeResponse(passwd, ch$ch.key)
+        # If submit.url is invalid, submitSolution should return a try-error.
+        # However, that is not the only way it can fail; see below.
+        results <- submitSolution(email, submit.url, ch.resp, 
+                                  sid=lesson_name, 
+                                  output=output,
+                                  signature=ch$state)
+        # If incorrect, empty string will be returned
+        if(!length(results)) {
+          swirl_out("You skipped too many questions! You'll need to complete",
+                    "this lesson again if you'd like to receive credit. Please",
+                    "don't skip more than one question next time.")
           return()
         }
-        swirl_out("I'm sorry, something went wrong with automatic submission.")
+        if(!is(results, "try-error")){
+          # TODO: It would be best to detect success here, rather than
+          # failure, but as of Feb 23 2014, submit.url may not throw
+          # an error indicating failure but instead return an HTML
+          # notification beginning with the word, "Exception".
+          # Here we detect failure by the presence of this word.
+          # Server-side behavior could easily change and could easily
+          # be course dependent, so some standard handshake will have
+          # to be set up eventually.
+          swirl_out(results)
+          if(!str_detect(results, "[Ee]xception")){
+            swirl_out(paste0("I've notified Coursera that you have completed ",
+                             course_name, ", ", lesson_name,"."))
+            # Exit loop since submission successful
+            ok <- TRUE
+          }
+          swirl_out("I'm sorry, something went wrong with automatic submission.")
+          # Exit loop if user doesn't want to retry auto submission
+          ok <- !retry()
+        } else {
+          swirl_out("I'm sorry, something went wrong with automatic submission.")
+          # Exit loop if user doesn't want to retry auto submission
+          ok <- !retry()
+        }
       } else {
-        swirl_out("I'm sorry, something went wrong with automatic submission.")
+        swirl_out("I'm sorry, something went wrong with establishing connection.")
+        # Exit loop if user doesn't want to retry auto submission
+        ok <- !retry()
       }
-    } else {
-      swirl_out("I'm sorry, something went wrong with establishing connection.")
-    }
-  }#yes branch
+    }#yes branch
+  }
   writeLines(output, paste0(course_name,"_",lesson_name,".txt"))
   swirl_out("To notify Coursera that you have completed this lesson, please upload",
             sQuote(paste0(course_name,"_",lesson_name,".txt")),
-            "to Coursera manually. I've placed the file in the following directory:",
+            "to Coursera manually. You may do so by visiting the Programming",
+            "Assignments page on your course website and selecting the Submit",
+            "button next to the appropriate swirl lesson.",
+            "I've placed the file in the following directory:",
             skip_after=TRUE)
   message(getwd(), "\n")
   readline("...")
+}
+
+# Returns TRUE if user would like to retry, FALSE if not
+retry <- function() {
+  swirl_out("Would you like to retry automatic submission or just submit manually?")
+  ans <- select.list(c("Retry automatic submission", "Submit manually"), graphics=FALSE)
+  # Return TRUE if user would like to retry
+  return(ans == "Retry automatic submission")
 }
 
 getCreds <- function(e) {
