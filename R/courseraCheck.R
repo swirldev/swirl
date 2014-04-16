@@ -100,6 +100,50 @@ retry <- function() {
   return(ans == "Retry automatic submission")
 }
 
+get_courseid <- function() {
+  swirl_out("The first item I need is your Course ID. For example, if the",
+            "homepage for your Coursera course was",
+            "'https://class.coursera.org/rprog-001',",
+            "then your course ID would be 'rprog-001' (without the quotes).",
+            skip_after=TRUE)
+  repeat {
+    courseid <- readline("Course ID: ")
+    # Set up test cases
+    is_url <- str_detect(courseid, "www[.]|http:|https:")
+    is_numbers <- str_detect(courseid, "^[0-9]+$")
+    is_example <- str_detect(courseid, fixed("rprog-001"))
+    
+    # Check if courseid is none of the bad things
+    if(!any(is_url, is_numbers, is_example)){
+      break
+    # courseid is one of the bad things
+    } else {
+      # Check if courseid is a url
+      if(is_url) {
+        swirl_out("It looks like you entered a web address, which is not what I'm",
+                  "looking for.")
+      }
+      # Check if courseid is all numbers
+      if(is_numbers) {
+        swirl_out("It looks like you entered a numeric ID, which is not what I'm",
+                  "looking for.")
+      }
+      # Check if the user stole the example courseid
+      if(is_example) {
+        swirl_out("It looks like you entered the Course ID that I used as an",
+                  "example, which is not what I'm looking for.")
+      }
+    }
+    swirl_out("Instead, I need your Course ID, which is the last",
+              "part of the web address for your Coursera course.",
+              "For example, if the homepage for your Coursera course was",
+              "'https://class.coursera.org/rprog-001',",
+              "then your course ID would be 'rprog-001' (without the quotes).",
+              skip_after=TRUE)
+  }
+  courseid
+}
+
 getCreds <- function(e) {
   cn <- make_pathname(attr(e$les, "course_name"))
   credfile <- file.path(e$udat, paste0(cn, ".txt"))
@@ -111,11 +155,7 @@ getCreds <- function(e) {
   need2fix <- FALSE
   while(!confirmed) {
     if(!file.exists(credfile) || need2fix) {
-      swirl_out("The first item I need is your course ID. If the homepage for your",
-                "Coursera course is 'https://class.coursera.org/rprog-001',",
-                "then your course ID is 'rprog-001' (without the quotes).",
-                skip_after=TRUE)
-      courseid <- readline("Course ID: ")
+      courseid <- get_courseid()
       email <- readline("Submission login (email): ")
       passwd <- readline("Submission password: ")
       writeLines(c(courseid, email, passwd), credfile)
