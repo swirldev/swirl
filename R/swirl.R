@@ -334,6 +334,8 @@ resume.default <- function(e, ...){
       courseraCheck(e)
       # remove the current lesson and any custom tests
       rm("les", envir=e)
+      # Reset skip count if it exists
+      if(exists("skips", e)) e$skips <- 0
       clearCustomTests()
       # Let user know lesson is complete
       swirl_out("You've reached the end of this lesson! Returning to the main menu...")
