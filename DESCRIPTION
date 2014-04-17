@@ -3,7 +3,7 @@ Title: Statistics with Interactive R Learning
 Description: swirl is a platform for learning (and teaching) statistics and R
     simultaneously and interactively.
 URL: http://swirlstats.com
-Version: 2.2.3
+Version: 2.2.4
 License: GPL-2
 Authors@R: c(
     person("Nick", "Carchedi", email = "nick.carchedi@gmail.com",
