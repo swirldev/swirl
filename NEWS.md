@@ -1,3 +1,7 @@
+# swirl 2.2.4
+
+* Bug fix related to `skip()` count not reseting upon lesson completion.
+
 # swirl 2.2.3
 
 * Add confirmation step to Coursera submission process.
