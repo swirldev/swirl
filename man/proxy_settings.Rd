@@ -1,0 +1,33 @@
+\name{proxy_settings}
+\alias{proxy_settings}
+\title{Configure proxy settings for retrieving courses}
+\usage{
+proxy_settings(url, port = NULL, username = NULL, password = NULL)
+}
+\arguments{
+  \item{url}{The url of the proxy.}
+
+  \item{port}{The port ot be used on the proxy.}
+
+  \item{username}{Login username for proxy (if necessary).}
+
+  \item{password}{Login password for proxy (if necessary).}
+}
+\description{
+This funciton should be used if a user requires the use of a proxy in order
+to download courses.
+}
+\examples{
+\dontrun{
+
+my_proxy <- proxy_settings("http://my.proxy.net", 8080, "JHopkins", "G0bluejays")
+install_from_swirl("R_Programming", proxy = my_proxy)
+
+### OR ###
+
+install_course_github("bcaffo", "Linear_Regression",
+   proxy = proxy_settings("128.220.159.25", 8080))
+
+}
+}
+
