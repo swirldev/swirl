@@ -61,17 +61,20 @@ install_from_swirl <- function(course_name, ...){
   url <- "http://github.com/swirldev/swirl_courses/zipball/master"
   
   # Send GET request
-  response <- ifelse(is.null(ellipses_args$proxy), GET(url), 
-                     GET(url, use_proxy(ellipses_args$proxy$url, 
-                                        ellipses_args$proxy$port,
-                                        ellipses_args$proxy$username,
-                                        ellipses_args$proxy$password)))
+  if(is.null(ellipses_args$proxy)) {
+    resp <- GET(url)
+  } else {
+    resp <- GET(url, use_proxy(ellipses_args$proxy$url, 
+                                   ellipses_args$proxy$port,
+                                   ellipses_args$proxy$username,
+                                   ellipses_args$proxy$password))
+  }
   
   # Construct path to Courses
   path <- file.path(system.file("Courses", package = "swirl"), "temp.zip")
   
   # Write the response as a zip
-  writeBin(content(response, "raw"), path)
+  writeBin(content(resp, "raw"), path)
   
   # Find list of files not in top level directory
   file_names <- unzip(path, list=TRUE)$Name
@@ -332,17 +335,20 @@ install_course_url <- function(url, multi=FALSE, ...){
   ellipses_args <- list(...)
   
   # Send GET request
-  response <- ifelse(is.null(ellipses_args$proxy), GET(url), 
-                     GET(url, use_proxy(ellipses_args$proxy$url, 
-                                        ellipses_args$proxy$port,
-                                        ellipses_args$proxy$username,
-                                        ellipses_args$proxy$password)))
+  if(is.null(ellipses_args$proxy)) {
+    resp <- GET(url)
+  } else {
+    resp <- GET(url, use_proxy(ellipses_args$proxy$url, 
+                               ellipses_args$proxy$port,
+                               ellipses_args$proxy$username,
+                               ellipses_args$proxy$password))
+  }
   
   # Construct path to Courses
   path <- file.path(system.file(package = "swirl"), "Courses", "temp.zip")
   
   # Write the response as a zip
-  writeBin(content(response, "raw"), path)
+  writeBin(content(resp, "raw"), path)
   
   # Unzip downloaded file
   install_course_zip(path, multi=multi)
