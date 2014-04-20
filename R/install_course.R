@@ -1,3 +1,35 @@
+#' Configure proxy settings for retrieving courses
+#' 
+#' This funciton should be used if a user requires the use of a proxy in order 
+#' to download courses.
+#' 
+#' @param url The url of the proxy.
+#' @param port The port ot be used on the proxy.
+#' @param username Login username for proxy (if necessary).
+#' @param password Login password for proxy (if necessary).
+#' @export
+#' @examples
+#' \dontrun{
+#' 
+#' my_proxy <- proxy_settings("http://my.proxy.net", 8080, "JHopkins", "G0bluejays")
+#' install_from_swirl("R_Programming", proxy = my_proxy)
+#' 
+#' ### OR ###
+#' 
+#' install_course_github("bcaffo", "Linear_Regression", 
+#'    proxy = proxy_settings("128.220.159.25", 8080))
+#' 
+#' }
+proxy_settings <- function(url, port = NULL, username = NULL, password = NULL){
+  use_proxy_args <- list()
+  use_proxy_args$url <- url
+  use_proxy_args$port <- port
+  use_proxy_args$username <- username
+  use_proxy_args$password <- password
+  use_proxy_args
+}
+
+
 #' Install a course from the official course repository
 #' 
 #' We are currently maintaining a central repository of contributed
@@ -6,8 +38,9 @@
 #' form the repository.
 #' 
 #' @param course_name The name of the course you wish to install.
+#' @param ... Other parameters like \code{proxy_settings()}.
 #' @export
-#' @importFrom httr GET content
+#' @importFrom httr GET content use_proxy
 #' @examples
 #' \dontrun{
 #' 
@@ -17,7 +50,10 @@
 #' 
 #' install_from_swirl("R Programming") # Course name
 #' }
-install_from_swirl <- function(course_name){
+install_from_swirl <- function(course_name, ...){
+  #capture ellipses args
+  ellipses_args <- list(...)
+  
   # make pathname from course_name
   course_name <- make_pathname(course_name)
   
@@ -25,7 +61,11 @@ install_from_swirl <- function(course_name){
   url <- "http://github.com/swirldev/swirl_courses/zipball/master"
   
   # Send GET request
-  response <- GET(url)
+  response <- ifelse(is.null(ellipses_args$proxy), GET(url), 
+                     GET(url, use_proxy(ellipses_args$proxy$url, 
+                                        ellipses_args$proxy$port,
+                                        ellipses_args$proxy$username,
+                                        ellipses_args$proxy$password)))
   
   # Construct path to Courses
   path <- file.path(system.file("Courses", package = "swirl"), "temp.zip")
@@ -219,6 +259,7 @@ install_course_directory <- function(path){
 #' @param course_name The name of the repository which should be the name of the course.
 #' @param branch The branch of the repository containing the course. The default branch is \code{"master"}.
 #' @param multi The user should set to \code{TRUE} if the repository contains multiple courses. The default value is \code{FALSE}.
+#' @param ... Other parameters like \code{proxy_settings()}.
 #' @export
 #' @examples
 #' \dontrun{
@@ -227,65 +268,75 @@ install_course_directory <- function(path){
 #' install_course_github("jtleek", "Twitter_Map", "geojson")
 #' }
 install_course_github <- function(github_username, course_name, 
-                                  branch="master", multi=FALSE){
+                                  branch="master", multi=FALSE, ...){
   
   # Construct url to the zip file
   zip_url <- paste0("http://github.com/", github_username, "/", 
                     course_name,"/zipball/", branch)
 
-  install_course_url(zip_url, multi=multi)
+  install_course_url(zip_url, multi=multi, ...)
 }
 
 #' Install a course from a zipped course directory shared on Dropbox
 #' 
 #' @param url URL of the shared file
 #' @param multi The user should set to \code{TRUE} if the zipped directory contains multiple courses. The default value is \code{FALSE}.
+#' @param ... Other parameters like \code{proxy_settings()}.
 #' @export
 #' @examples
 #' \dontrun{
 #' 
 #' install_course_dropbox("https://www.dropbox.com/s/xttkmuvu7hh72vu/my_course.zip")
 #' }
-install_course_dropbox <- function(url, multi=FALSE){
+install_course_dropbox <- function(url, multi=FALSE, ...){
   # Construct url to the zip file
   zip_url <- paste0(sub("www.dropbox", "dl.dropboxusercontent", url), "?dl=1")
   
-  install_course_url(zip_url, multi=multi)
+  install_course_url(zip_url, multi=multi, ...)
 }
 
 #' Install a course from a zipped course directory shared on Google Drive
 #' 
 #' @param url URL of the shared file
 #' @param multi The user should set to \code{TRUE} if the zipped directory contains multiple courses. The default value is \code{FALSE}.
+#' @param ... Other parameters like \code{proxy_settings()}.
 #' @export
 #' @examples
 #' \dontrun{
 #' 
 #' install_course_google_drive("https://drive.google.com/file/d/F3fveiu873hfjZZj/edit?usp=sharing")
 #' }
-install_course_google_drive <- function(url, multi=FALSE){
+install_course_google_drive <- function(url, multi=FALSE, ...){
   # Construct url to the zip file
   zip_url <- sub("file/d/", "uc?export=download&id=", 
                  sub("/edit\\?usp=sharing", "", url))
   
-  install_course_url(zip_url, multi=multi)
+  install_course_url(zip_url, multi=multi, ...)
 }
 
 #' Install a course from a url that points to a zip file
 #' 
 #' @param url URL that points to a zipped course directory
 #' @param multi The user should set to \code{TRUE} if the zipped directory contains multiple courses. The default value is \code{FALSE}.
+#' @param ... Other parameters like \code{proxy_settings()}.
 #' @export
-#' @importFrom httr GET content
+#' @importFrom httr GET content use_proxy
 #' @importFrom stringr str_extract perl
 #' @examples
 #' \dontrun{
 #' 
 #' install_course_url("http://www.biostat.jhsph.edu/~rpeng/File_Hash_Course.zip")
 #' }
-install_course_url <- function(url, multi=FALSE){
+install_course_url <- function(url, multi=FALSE, ...){
+  #capture ellipses args
+  ellipses_args <- list(...)
+  
   # Send GET request
-  response <- GET(url)
+  response <- ifelse(is.null(ellipses_args$proxy), GET(url), 
+                     GET(url, use_proxy(ellipses_args$proxy$url, 
+                                        ellipses_args$proxy$port,
+                                        ellipses_args$proxy$username,
+                                        ellipses_args$proxy$password)))
   
   # Construct path to Courses
   path <- file.path(system.file(package = "swirl"), "Courses", "temp.zip")
