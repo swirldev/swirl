@@ -215,6 +215,8 @@ info <- function(){
   
   swirl_out("-- Typing bye() causes swirl to exit. Your progress will be saved.", skip_before=FALSE)
   
+  swirl_out("-- Typing main() returns you to swirl's main menu.", skip_before=FALSE)
+  
   swirl_out("-- Typing info() displays these options again.", skip_before=FALSE, skip_after=TRUE)  
 
   
