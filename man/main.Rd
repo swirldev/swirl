@@ -10,7 +10,9 @@ Return to swirl's main menu
 }
 \examples{
 \dontrun{
+
 > main()
+
 }
 }
 
