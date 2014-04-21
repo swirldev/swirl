@@ -169,6 +169,18 @@ skip <- function(){invisible()}
 #' }
 play <- function(){invisible()}
 
+#' Return to swirl's main menu
+#' 
+#' Return to swirl's main menu
+#' @export
+#' @examples
+#' \dontrun{
+#' 
+#' > main()
+#' 
+#' }
+main <- function(){invisible()}
+
 #' Display a list of special commands.
 #' 
 #' Display a list of the special commands, \code{bye()}, \code{play()}, 
@@ -285,6 +297,13 @@ resume.default <- function(e, ...){
     swirl_out("Entering the following correct answer for you...",
               skip_after=TRUE)
     message("> ", e$current.row[, "CorrectAnswer"])
+  }
+  # If the user want to return to the main menu, do the bookkeeping
+  if(uses_func("main")(e$expr)[[1]]){
+    # Remove the current lesson. Progress has been saved already.
+    if(exists("les", e, inherits=FALSE)){
+      rm("les", envir=e, inherits=FALSE)
+    }
   }
   # Method menu initializes or reinitializes e if necessary.
   temp <- mainMenu(e)
