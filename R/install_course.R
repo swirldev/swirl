@@ -66,7 +66,7 @@ install_from_swirl <- function(course_name){
   # Delete temp.zip
   unlink(path, force=TRUE)
   
-  message("Course installed successfully!")
+  swirl_out("Course installed successfully!")
   
   invisible()
 }
@@ -203,7 +203,7 @@ install_course_zip <- function(path, multi=FALSE, which_course=NULL){
   unlink(file.path(system.file(package = "swirl"), "Courses", "__MACOSX"),
          recursive=TRUE, force=TRUE)
 
-  message("Course installed successfully!")
+  swirl_out("Course installed successfully!")
   invisible()
 }
 
@@ -232,7 +232,7 @@ install_course_directory <- function(path){
   file.copy(path, file.path(system.file(package = "swirl"), "Courses"),
             recursive=TRUE)
   
-  message("Course installed successfully!")
+  swirl_out("Course installed successfully!")
   invisible()
 }
 

@@ -71,11 +71,26 @@ mainMenu.default <- function(e){
         n <- which(choice == choices)
         if(length(n) == 0)return(FALSE)
         if(n < length(choices)){
-          temp <- try(eval(parse(text=suggestions[[n]]$Install)), silent=TRUE)
-          if(is(temp, "try-error")){
-            swirl_out(paste0("Sorry, but I'm unable to fetch ", choice, ". Perhaps
-                             your internet connection is down?"))
-            return(FALSE)
+          repeat {
+            temp <- try(eval(parse(text=suggestions[[n]]$Install)), silent=TRUE)
+            if(is(temp, "try-error")){
+              swirl_out("Sorry, but I'm unable to fetch ", sQuote(choice),
+                        "right now. Are you sure you have an internet connection?",
+                        "If so, would you like to try again or visit",
+                        "the course repository for instructions on how to",
+                        "install a course manually? Type 0 to exit.")
+              ch <- c("Try again!", 
+                      "Send me to the course repository for manually installation.")
+              resp <- select.list(ch, graphics=FALSE)
+              if(resp == "") return(FALSE)
+              if(resp == ch[2]) {
+                swirl_out("OK. I'm opening the swirl course respository in your browser.")
+                browseURL("https://github.com/swirldev/swirl_courses#swirl-courses")
+                return(FALSE)
+              }
+            } else {
+              break # Break repeat loop if install is successful
+            }
           }
           coursesU <- dir(courseDir(e))
           # Eliminate empty directories
@@ -83,7 +98,7 @@ mainMenu.default <- function(e){
                                function(x)length(dir(file.path(courseDir(e),x)))>0))
           coursesU <- coursesU[idx]
         } else {
-          swirl_out("OK. I'm opening the swirl courses web page in your browser.")
+          swirl_out("OK. I'm opening the swirl course respository in your browser.")
           browseURL("https://github.com/swirldev/swirl_courses#swirl-courses")
           return(FALSE)
         }
