@@ -80,12 +80,12 @@ mainMenu.default <- function(e){
                         "the course repository for instructions on how to",
                         "install a course manually? Type 0 to exit.")
               ch <- c("Try again!", 
-                      "Send me to the course repository for manually installation.")
+                      "Send me to the course repository for manual installation.")
               resp <- select.list(ch, graphics=FALSE)
               if(resp == "") return(FALSE)
               if(resp == ch[2]) {
                 swirl_out("OK. I'm opening the swirl course respository in your browser.")
-                browseURL("https://github.com/swirldev/swirl_courses#swirl-courses")
+                browseURL("https://github.com/swirldev/swirl_courses#install-and-run-a-course-manually")
                 return(FALSE)
               }
             } else {
