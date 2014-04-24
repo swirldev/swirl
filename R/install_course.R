@@ -147,10 +147,23 @@ uninstall_course <- function(course_name){
 #' 
 #' @param path The path to the zipped course.
 #' @param multi Set to \code{TRUE} if the zipped directory contains multiple courses. The default value is \code{FALSE}.
+#' @param which_course A vector of course names. Only for use when zip file contains multiple courses, but you don't want to install all of them.
 #' @export
 #' @examples
+#' \dontrun{
+#' 
 #' install_course_zip("~/Desktop/my_course.zip")
-install_course_zip <- function(path, multi=FALSE){
+#' 
+#' install_course_zip("~/Downloads/swirl_courses-master.zip", multi=TRUE,
+#'                    which_course=c("R Programming", "Data Analysis"))
+#' }
+install_course_zip <- function(path, multi=FALSE, which_course=NULL){
+  if(!is.logical(multi) || is.na(multi)) {
+    stop("Argument 'multi' must be either TRUE or FALSE.")
+  }
+  if(!multi && !is.null(which_course)) {
+    stop("Argument 'which_course' should only be specified when argument 'multi' is TRUE.")
+  }
   if(multi){
     # Find list of files not in top level directory
     file_names <- unzip(path, list=TRUE)$Name
@@ -164,6 +177,16 @@ install_course_zip <- function(path, multi=FALSE){
     top_dir <- file.path(system.file(package = "swirl"), "Courses", 
                          sort(dirname(unzip_list))[1])
     dirs_to_copy <- list.files(top_dir, full.names=TRUE)
+    # Subset desired courses if specified with which_courses arg
+    if(!is.null(which_course)) {
+      match_ind <- match(make_pathname(which_course), basename(dirs_to_copy),
+                   nomatch=-1)
+      nomatch <- match_ind < 0
+      if(any(nomatch)) {
+        stop("Course ", sQuote(which_course[nomatch][1]), " not in specified directory. Be careful, course names are case sensitive!")
+      }
+      dirs_to_copy <- dirs_to_copy[match_ind]
+    }
     file.copy(dirs_to_copy, file.path(system.file(package = "swirl"),
                                       "Courses"), recursive=TRUE)
     

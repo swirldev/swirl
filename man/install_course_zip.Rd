@@ -3,17 +3,25 @@
 \alias{install_course_zip}
 \title{Install a course from a zipped course folder}
 \usage{
-install_course_zip(path, multi = FALSE)
+install_course_zip(path, multi = FALSE, which_course = NULL)
 }
 \arguments{
 \item{path}{The path to the zipped course.}
 
 \item{multi}{Set to \code{TRUE} if the zipped directory contains multiple courses. The default value is \code{FALSE}.}
+
+\item{which_course}{A vector of course names. Only for use when zip file contains multiple courses, but you don't want to install all of them.}
 }
 \description{
 Install a course from a zipped course folder
 }
 \examples{
+\dontrun{
+
 install_course_zip("~/Desktop/my_course.zip")
+
+install_course_zip("~/Downloads/swirl_courses-master.zip", multi=TRUE,
+                   which_course=c("R Programming", "Data Analysis"))
+}
 }
 

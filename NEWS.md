@@ -1,3 +1,11 @@
+# swirl 2.2.5
+
+* Add `packageStartupMessage()` that detects a cluttered workspace and warns the user that this may cause swirl to run slowly.
+
+* Add `main()` function, which allows user to return to the main menu while a lesson is in progress.
+
+* Add `which_course` argument to `install_course_zip()` that will facilitate manual installation. In particular, if a student downloads a zip file from the swirl courses repo, it comes with all courses in it. This function will allow the user to install only those that she wants.
+
 # swirl 2.2.4
 
 * Bug fix related to `skip()` count not reseting upon lesson completion.
