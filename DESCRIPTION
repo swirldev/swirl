@@ -1,10 +1,11 @@
 Package: swirl
 Title: Statistics with Interactive R Learning
-Description: swirl is a platform for learning (and teaching) statistics and R
-    simultaneously and interactively.
+Description: swirl turns the R console into an interactive learning
+    environment. Users receive immediate feedback as they are guided through
+    self-paced lessons in data science and R programming.
 URL: http://swirlstats.com
 Version: 2.2.5
-License: GPL-2
+License: GPL-3
 Authors@R: c(
     person("Nick", "Carchedi", email = "nick.carchedi@gmail.com",
     role = c("aut", "cre")),
