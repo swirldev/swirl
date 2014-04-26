@@ -189,6 +189,8 @@ welcome.test <- function(e, ...){
 
 # Default version.
 welcome.default <- function(e, ...){
+  # TODO: Eventually a language question should go here. For now, we use the default.
+  loadMenuContent("en")
   swirl_out("Welcome to swirl! Please sign in. If you've been here before, use the same name as you did then. If you are new, call yourself something unique.", skip_after=TRUE)
   return(readline("What shall I call you? "))
 }
@@ -365,3 +367,19 @@ courseDir.default <- function(e){
 # Default for determining the user
 getUser <- function()UseMethod("getUser")
 getUser.default <- function(){"swirladmin"}
+
+# Environment to hold menu content in the appropriate language
+menuContent <- new.env(parent=asNamespace("swirl"))
+
+# Load menu content in the appropriate language
+#'@importFrom yaml yaml.load_file
+loadMenuContent <- function(lang="en"){
+  menuFile <- file.path(find.package("swirl"), "Languages", paste0(lang, ".yaml"))
+  # if the requested language file doesn't exist, load the default
+  if(!file.exists(menuFile)){
+    menuFile <- file.path(find.package("swirl"), "Languages", "en.yaml")
+  }
+  # parse the yaml file to get a named list and transfer the list items
+  # to the menuContent environment.
+  xfer(as.environment(yaml.load_file(menuFile)), menuContent)
+}

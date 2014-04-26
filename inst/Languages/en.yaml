@@ -1,0 +1,125 @@
+
+# AnswerTests.R
+
+"That's not the expression I expected...":
+ "That's not the expression I expected but it works."
+
+# install_courses.R
+
+"Course installed successfully!":
+ "Course installed successfully!"
+
+# swirl.R
+
+"Leaving swirl now...":
+ "Leaving swirl now. Type swirl() to resume."
+
+"When you are at the R prompt (>):":
+ "When you are at the R prompt (>):"
+
+"-- Typing skip()...":
+ "-- Typing skip() allows you to skip the current question."
+
+"-- Typing play()...":
+ "-- Typing play() lets you experiment with R on your own; swirl will ignore what you do..."
+
+"-- UNTIL you type nxt()...":
+ "-- UNTIL you type nxt() which will regain swirl's attention."
+
+"-- Typing bye()...":
+ "-- Typing bye() causes swirl to exit. Your progress will be saved."
+
+"-- Typing main()...":
+ "-- Typing main() returns you to swirl's main menu."
+
+"-- Typing info()...":
+ "-- Typing info() displays these options again."
+
+"Resuming lesson...":
+ "Resuming lesson..."
+
+"Entering play mode...":
+ "Entering play mode. Experiment as you please, then type nxt() when you are ready to resume the lesson."
+
+"Entering the following correct answer for you...":
+ "Entering the following correct answer for you..."
+
+"Returning to the main menu...":
+ "Returning to the main menu..."
+
+"Lesson complete! Exiting swirl now...":
+ "Lesson complete! Exiting swirl now..."
+
+"You've reached the end of this lesson...":
+ "You've reached the end of this lesson! Returning to the main menu..."
+
+# Coursera.R
+
+"Are you currently enrolled in the Coursera...":
+ "Are you currently enrolled in the Coursera course associated with this lesson?"
+
+"Would you like me to notify Coursera...":
+ "Would you like me to notify Coursera that you've completed this lesson?"
+
+"If so, I'll need to get some more info from you.":
+ "If so, I'll need to get some more info from you."
+
+"I'll try to tell Coursera...":
+ "I'll try to tell Coursera you've completed this lesson now."
+
+"You skipped too many questions!...":
+ "You skipped too many questions! You'll need to complete"
+
+"this lesson again...":
+ "this lesson again if you'd like to receive credit. Please"
+
+"don't skip more...":
+ "don't skip more than one question next time."
+
+"I've notified Coursera...":
+ "I've notified Coursera that you have completed "
+
+"I'm sorry, something went wrong with automatic submission.":
+ "I'm sorry, something went wrong with automatic submission."
+
+"I'm sorry, something went wrong with establishing connection.":
+ "I'm sorry, something went wrong with establishing a connection."
+
+"To notify Coursera...please upload":
+ "To notify Coursera that you have completed this lesson, please upload"
+
+"to Coursera manually...":
+ "to Coursera manually. You may do so by visiting the Programming Assignments page on your course website and selecting the Submit button next to the appropriate swirl lesson. I've placed the file in the following directory:"
+
+"Would you like to retry automatic submission...":
+ "Would you like to retry automatic submission or just submit manually?"
+
+"Retry automatic submission":
+ "Retry automatic submission"
+
+"Submit manually":
+ "Submit manually"
+
+"The first item I need is your Course ID...":
+ "The first item I need is your Course ID. For example, if the homepage for your Coursera course was 'https://class.coursera.org/rprog-001' then your course ID would be 'rprog-001' (without the quotes)."
+
+"It looks like you entered a web address...":
+ "It looks like you entered a web address, which is not what I'm looking for."
+
+"It looks like you entered a numeric ID...":
+ "It looks like you entered a numeric ID, which is not what I'm looking for."
+
+"It looks like you entered the Course ID...":
+ "It looks like you entered the Course ID that I used as an example, which is not what I'm looking for."
+
+"Instead, I need your Course ID, which is...":
+ "Instead, I need your Course ID, which is the last part of the web address for your Coursera course. For example, if the homepage for your Coursera course was 'https://class.coursera.org/rprog-001' then your course ID would be 'rprog-001' (without the quotes)."
+
+"Is the following information correct?":
+ "Is the following information correct?"
+
+"Yes, go ahead!":
+ "Yes, go ahead!"
+
+"No, I need to change something."
+ "No, I need to change something."
