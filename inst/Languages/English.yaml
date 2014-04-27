@@ -204,7 +204,7 @@
  ". Let's cover a couple of quick housekeeping items before we begin our first lesson. First off, you should know that when you see '...', that means you should press Enter when you are done reading and ready to continue."
 
 "That's your cue to press Enter to continue":
- "\n...  <-- That's your cue to press Enter to continue"
+ "...  <-- That's your cue to press Enter to continue"
 
 "Also, when you see 'ANSWER:'...":
  "Also, when you see 'ANSWER:', the R prompt (>), or when you are asked to select from a list, that means it's your turn to enter a response, then press Enter to continue."
@@ -219,7 +219,7 @@
  "Let's get going!"
 
 "Select 1, 2, or 3...":
- "\nSelect 1, 2, or 3 and press Enter"
+ "Select 1, 2, or 3 and press Enter"
 
 "You can exit swirl and return to the R prompt...":
  "You can exit swirl and return to the R prompt (>) at any time by pressing the Esc key. If you are already at the prompt, type bye() to exit and save your progress. When you exit properly, you'll see a short message letting know you've done so."
@@ -333,5 +333,5 @@
 "Not quite right, but keep trying.":
  "Not quite right, but keep trying."
 
-"You're close...I can feel it! Try it again."
+"You're close...I can feel it! Try it again.":
  "Not quite right, but keep trying."

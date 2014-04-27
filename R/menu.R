@@ -183,7 +183,8 @@ welcome.test <- function(e, ...){
 welcome.default <- function(e, ...){
   choices <- dir(file.path(find.package("swirl"), "Languages"))
   choices <- gsub("[.]yaml$", "", choices)
-  language <- select.list(choices, preselect="English", title="Language?")
+  swirl_out("Please select your preferred language:")
+  language <- select.list(choices, preselect="English", graphics=FALSE)
   loadNLang(language)
   swirl_out(NLang$"Welcome to swirl...", skip_after=TRUE)
   return(readline(NLang$"What shall I call you? "))
@@ -194,9 +195,9 @@ welcome.default <- function(e, ...){
 # @param e persistent environment used here only for its class attribute
 # 
 housekeeping.default <- function(e){
-  swirl_out(paste0(NLang$"Thanks, ", e$usr,NLang$"Let's cover a couple of quick housekeeping..."))
+  swirl_out(paste0(NLang$"Thanks, ", e$usr, NLang$"Let's cover a couple of quick housekeeping..."), skip_after=TRUE)
   readline(NLang$"That's your cue to press Enter to continue")
-  swirl_out(NLang$"Also, when you see 'ANSWER:'...")
+  swirl_out(NLang$"Also, when you see 'ANSWER:'...", skip_after=TRUE)
   select.list(c(NLang$"Continue.", NLang$"Proceed.", NLang$"Let's get going!"),
               title=NLang$"Select 1, 2, or 3...", graphics=FALSE)
   swirl_out(NLang$"You can exit swirl and return to the R prompt...")
