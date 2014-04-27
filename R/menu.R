@@ -181,8 +181,10 @@ welcome.test <- function(e, ...){
 
 # Default version.
 welcome.default <- function(e, ...){
-  # TODO: Eventually a language question should go here. For now, we use the default.
-  loadMenuContent("en")
+  choices <- dir(file.path(find.package("swirl"), "Languages"))
+  choices <- gsub("[.]yaml$", "", choices)
+  language <- select.list(choices, preselect="English", title="Language?")
+  loadMenuContent(language)
   swirl_out(menuContent$"Welcome to swirl...", skip_after=TRUE)
   return(readline(menuContent$"What shall I call you? "))
 }
@@ -199,7 +201,7 @@ housekeeping.default <- function(e){
               title=menuContent$"Select 1, 2, or 3...", graphics=FALSE)
   swirl_out(menuContent$"You can exit swirl and return to the R prompt...")
   info()
-  swirl_out("Let's get started!", skip_before=FALSE)
+  swirl_out(menuContent$"Let's get started!", skip_before=FALSE)
   readline("\n...")
 }
 
@@ -361,12 +363,11 @@ getUser <- function()UseMethod("getUser")
 getUser.default <- function(){"swirladmin"}
 
 # Environment to hold menu content in the appropriate language
-# REMARK: "menuo" is Esperanto for English "menu".
 menuContent <- new.env(parent=asNamespace("swirl"))
 
 # Load menu content in the appropriate language
 #'@importFrom yaml yaml.load_file
-loadMenuContent <- function(lang="en"){
+loadMenuContent <- function(lang="English"){
   menuFile <- file.path(find.package("swirl"), "Languages", paste0(lang, ".yaml"))
   # if the requested language file doesn't exist, load the default
   if(!file.exists(menuFile)){

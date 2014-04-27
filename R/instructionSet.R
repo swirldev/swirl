@@ -62,7 +62,6 @@ waitUser.figure <- function(current.row, e){
   e$iptr <- 1
 } 
 
-
 waitUser.mult_question <- function(current.row, e){
   # Use strsplit with split=";" to separate the choices
   # Use select.list to get the user's choice.

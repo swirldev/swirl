@@ -127,7 +127,7 @@
 "Yes, go ahead!":
  "Yes, go ahead!"
 
-"No, I need to change something."
+"No, I need to change something.":
  "No, I need to change something."
 
 "Yes":
@@ -158,12 +158,6 @@
 
 "Trying to install package":
  "Trying to install package"
-
-"Yes":
- "Yes"
-
-"No":
- "No"
 
 "now...":
  "now..."
