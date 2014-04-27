@@ -16,7 +16,7 @@
  "Curso instalado con éxito! "
 
 "Leaving swirl now..." :
- "Dejando remolino ahora. Tipo de swirl() para reanudar. "
+ "Dejando remolino ahora. Escribe swirl() para reanudar. "
 
 "When you are at the R prompt (>):" :
  "Cuando esté en el símbolo R >: "
@@ -246,6 +246,9 @@
 "yes" :
  "sí"
 
+"Or, type info() for more options." :
+ "O, escribe info() para más opciones."
+
 "You got it!" :
  "Ya lo tienes!"
 
@@ -289,7 +292,7 @@
  "Eso es un trabajo bien hecho!"
 
 "Almost! Try again." :
- "¡Casi! Try Again".
+ "¡Casi! Try Again"
 
 "You almost had it, but not quite. Try again." :
  "Casi lo tenía, pero no del todo. Inténtalo de nuevo."
@@ -298,7 +301,7 @@
  "Dale otra oportunidad."
 
 "Not quite! Try again." :
- "No del todo! Try Again".
+ "No del todo! Try Again"
 
 "Not exactly. Give it another go." :
  "No exactamente. Darle otra oportunidad."

@@ -125,7 +125,7 @@ testResponse.default <- function(current.row, e){
     xfer(as.environment(e$snapshot), globalenv())
     mes <- tryAgain()
     if(is(current.row, "cmd_question")) {
-      mes <- paste(mes, "Or, type info() for more options.")
+      mes <- paste(mes, NLang$"Or, type info() for more options.")
     }
     swirl_out(mes)
     temp <- current.row[,"Hint"]
