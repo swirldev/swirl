@@ -89,8 +89,8 @@ omnitest <- function(correctExpr=NULL, correctVal=NULL, strict=FALSE){
   if(valGood && exprGood){
     return(TRUE)
   } else if (valGood && !exprGood && !strict){
-      swirl_out(menuContent$"That's not the expression I expected...")
-      swirl_out(menuContent$"I've executed the correct expression in case...")
+      swirl_out(NLang$"That's not the expression I expected...")
+      swirl_out(NLang$"I've executed the correct expression in case...")
       eval(parse(text=correctExpr),globalenv())
       return(TRUE)
     } else {
@@ -164,7 +164,7 @@ var_is_a <- function(class, var_name) {
     if(is(e,"dev") && !results$passed)swirl_out(results$message)
     return(results$passed)
   } else {
-    if(is(e,"dev"))swirl_out(paste(var_name, menuContent$"does not exist."))
+    if(is(e,"dev"))swirl_out(paste(var_name, NLang$"does not exist."))
     return(FALSE)
   }
 }

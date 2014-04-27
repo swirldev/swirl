@@ -113,27 +113,27 @@ loadDependencies <- function(lesson_dir) {
     packages_as_chars <- setdiff(readLines(depends, warn=FALSE), "")
     # If the dependson file is empty, then proceed with lesson
     if(length(packages_as_chars) == 0) return(TRUE)
-    swirl_out(menuContent$"Attemping to load lesson dependencies...")
+    swirl_out(NLang$"Attemping to load lesson dependencies...")
     for(p in packages_as_chars) {
       if(suppressPackageStartupMessages(
         suppressWarnings(
           suppressMessages(require(p, character.only=TRUE, quietly=TRUE))))) {
-        swirl_out(menuContent$"Package", sQuote(p), menuContent$"loaded correctly!")
+        swirl_out(NLang$"Package", sQuote(p), NLang$"loaded correctly!")
       } else {
-        swirl_out(menuContent$"This lesson requires the", sQuote(p), 
-                  menuContent$"package. Would you...")
-        yn <- select.list(choices=c(menuContent$"Yes", menuContent$"No"), graphics=FALSE)
-        if(yn == menuContent$"Yes") {
-          swirl_out(menuContent$"Trying to install package", sQuote(p), menuContent$"now...")
+        swirl_out(NLang$"This lesson requires the", sQuote(p), 
+                  NLang$"package. Would you...")
+        yn <- select.list(choices=c(NLang$"Yes", NLang$"No"), graphics=FALSE)
+        if(yn == NLang$"Yes") {
+          swirl_out(NLang$"Trying to install package", sQuote(p), NLang$"now...")
           install.packages(p, quiet=TRUE)
           if(suppressPackageStartupMessages(
             suppressWarnings(
               suppressMessages(require(p, 
                                        character.only=TRUE, 
                                        quietly=TRUE))))) {
-            swirl_out(menuContent$"Package", sQuote(p), menuContent$"loaded correctly!")
+            swirl_out(NLang$"Package", sQuote(p), NLang$"loaded correctly!")
           } else {
-            swirl_out(menuContent$"Could not install package", paste0(sQuote(p), "!"))
+            swirl_out(NLang$"Could not install package", paste0(sQuote(p), "!"))
             return(FALSE)
           }
         } else {
