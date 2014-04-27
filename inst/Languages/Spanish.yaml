@@ -16,7 +16,7 @@
  "Curso instalado con éxito! "
 
 "Leaving swirl now..." :
- "Dejando remolino ahora. Escribe swirl() para reanudar. "
+ "Dejando remolino ahora. Tipo de swirl() para reanudar. "
 
 "When you are at the R prompt (>):" :
  "Cuando esté en el símbolo R >: "
@@ -245,3 +245,78 @@
 
 "yes" :
  "sí"
+
+"You got it!" :
+ "Ya lo tienes!"
+
+"Nice work!" :
+ "Buen trabajo!"
+
+"Keep up the great work!" :
+ "Sigan con el buen trabajo!"
+
+"You are doing so well!" :
+ "Lo estás haciendo muy bien!"
+
+"You nailed it! Good job!" :
+ "Usted lo clavó! ¡Buen trabajo!"
+
+"You're the best!" :
+ "¡Eres el mejor!"
+
+"You are amazing!" :
+ "Ustedes son increíbles!"
+
+"Great job!" :
+ "¡Buen trabajo!"
+
+"You are quite good my friend!" :
+ "Usted es bastante bueno mi amigo!"
+
+"You got it right!" :
+ "Usted ha hecho bien!"
+
+"That's correct!" :
+ "Eso es correcto!"
+
+"You are really on a roll!" :
+ "Usted está realmente en un rollo!"
+
+"Excellent job!" :
+ "Excelente trabajo!"
+
+"That's a job well done!" :
+ "Eso es un trabajo bien hecho!"
+
+"Almost! Try again." :
+ "¡Casi! Try Again".
+
+"You almost had it, but not quite. Try again." :
+ "Casi lo tenía, pero no del todo. Inténtalo de nuevo."
+
+"Give it another try." :
+ "Dale otra oportunidad."
+
+"Not quite! Try again." :
+ "No del todo! Try Again".
+
+"Not exactly. Give it another go." :
+ "No exactamente. Darle otra oportunidad."
+
+"That's not exactly what I'm looking for. Try again." :
+ "Eso no es exactamente lo que estoy buscando. Inténtalo de nuevo."
+
+"Nice try, but that's not exactly what I was hoping for. Try again." :
+ "Buen intento, pero eso no es exactamente lo que yo esperaba. Inténtelo de nuevo."
+
+"Keep trying!" :
+ "Sigue intentándolo!"
+
+"That's not the answer I was looking for, but try again." :
+ "Esa no es la respuesta que estaba buscando, pero vuelve a intentarlo."
+
+"Not quite right, but keep trying." :
+ "No está muy bien, pero sigue intentándolo."
+
+"You're close...I can feel it! Try it again." :
+ "Estás cerca ... Puedo sentirlo! Inténtelo de nuevo."
