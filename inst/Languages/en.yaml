@@ -1,8 +1,14 @@
 
-# AnswerTests.R
+# answerTests.R, answerTests2.R
 
 "That's not the expression I expected...":
  "That's not the expression I expected but it works."
+
+"I've executed the correct expression in case...":
+ "I've executed the correct expression in case the result is needed in an upcoming question."
+
+"does not exist.":
+ "does not exist."
 
 # install_courses.R
 
@@ -123,3 +129,135 @@
 
 "No, I need to change something."
  "No, I need to change something."
+
+"Yes":
+ "Yes"
+
+"No":
+ "No"
+
+"Maybe later":
+ "Maybe later"
+
+# utilities.R
+
+"Package":
+ "Package"
+
+"loaded correctly!":
+ "loaded correctly!"
+
+"This lesson requires the":
+ "This lesson requires the"
+
+"package. Would you...":
+ "package. Would you like me to install it for you now?"
+
+"Attemping to load lesson dependencies...":
+ "Attemping to load lesson dependencies..."
+
+"Trying to install package":
+ "Trying to install package"
+
+"Yes":
+ "Yes"
+
+"No":
+ "No"
+
+"now...":
+ "now..."
+
+"Could not install package":
+ "Could not install package"
+
+# menu.R
+
+"To begin, you must install a course...":
+ "To begin, you must install a course. I can install a course for you from the internet, or I can send you to a web page (https://github.com/swirldev/swirl_courses) which will provide course options and directions for installing courses yourself. (If you are not connected to the internet, type 0 to exit.)"
+
+"Don't install anything for me...":
+ "Don't install anything for me. I'll do it myself."
+
+"Sorry, but I'm unable to fetch ":
+ "Sorry, but I'm unable to fetch "
+
+"right now. Are you sure you have an internet connection?":
+ "right now. Are you sure you have an internet connection? If so, would you like to try again or visit the course repository for instructions on how to install a course manually? Type 0 to exit."
+
+"Try again!":
+ "Try again!"
+
+"Send me to the course repository...":
+ "Send me to the course repository for manual installation."
+
+"OK. I'm opening the swirl course...":
+ "OK. I'm opening the swirl course respository in your browser."
+
+"OK. I'm opening the swirl courses web page...":
+ "OK. I'm opening the swirl courses web page in your browser."
+
+"Welcome to swirl...":
+ "Welcome to swirl! Please sign in. If you've been here before, use the same name as you did then. If you are new, call yourself something unique."
+
+"What shall I call you? ":
+ "What shall I call you? "
+
+"Thanks, ":
+ "Thanks, "
+
+"Let's cover a couple of quick housekeeping...":
+ ". Let's cover a couple of quick housekeeping items before we begin our first lesson. First off, you should know that when you see '...', that means you should press Enter when you are done reading and ready to continue."
+
+"That's your cue to press Enter to continue":
+ "\n...  <-- That's your cue to press Enter to continue"
+
+"Also, when you see 'ANSWER:'...":
+ "Also, when you see 'ANSWER:', the R prompt (>), or when you are asked to select from a list, that means it's your turn to enter a response, then press Enter to continue."
+
+"Continue.":
+ "Continue."
+
+"Proceed.":
+ "Proceed."
+
+"Let's get going!":
+ "Let's get going!"
+
+"Select 1, 2, or 3...":
+ "\nSelect 1, 2, or 3 and press Enter"
+
+"You can exit swirl and return to the R prompt...":
+ "You can exit swirl and return to the R prompt (>) at any time by pressing the Esc key. If you are already at the prompt, type bye() to exit and save your progress. When you exit properly, you'll see a short message letting know you've done so."
+
+"Let's get started!":
+ "Let's get started!"
+
+"Would you like to continue with one of these lessons?":
+ "Would you like to continue with one of these lessons?"
+
+"No. Let me start something new.":
+ "No. Let me start something new."
+
+"Please choose a course, or type 0 to exit swirl.":
+ "Please choose a course, or type 0 to exit swirl."
+
+"Take me to the swirl course repository!":
+ "Take me to the swirl course repository!"
+
+"Please choose a lesson, or type 0...":
+ "Please choose a lesson, or type 0 to return to course menu."
+
+# instructionSet.R
+
+"Type nxt() to continue":
+ "Type nxt() to continue"
+
+"Yes or No? ":
+ "Yes or No? "
+
+"y":
+ "y"
+
+"yes":
+ "yes"

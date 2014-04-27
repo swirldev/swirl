@@ -5,15 +5,15 @@ courseraCheck <- function(e){
   if(is.null(modtype) || modtype != "Coursera")return()
   tt <- c(rep(letters, 3), seq(100))
   swirl_out(menuContent$"Are you currently enrolled in the Coursera...")
-  yn <- select.list(c("Yes","No"), graphics=FALSE)
-  if(yn=="No")return()
+  yn <- select.list(c(menuContent$"Yes",menuContent$"No"), graphics=FALSE)
+  if(yn==menuContent$"No")return()
   ss <- lapply(1:2, function(i) {
     paste0(sample(tt, sample(seq(400), 1), replace=TRUE), collapse="")
   })
   swirl_out(menuContent$"Would you like me to notify Coursera...",
             menuContent$"If so, I'll need to get some more info from you.")
-  choice <- select.list(c("Yes","No","Maybe later"), graphics=FALSE)
-  if(choice=="No") return()
+  choice <- select.list(c(menuContent$"Yes",menuContent$"No",menuContent$"Maybe later"), graphics=FALSE)
+  if(choice==menuContent$"No") return()
   # Begin submission loop
   ok <- FALSE
   while(!ok) {
