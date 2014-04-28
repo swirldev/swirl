@@ -184,7 +184,8 @@ welcome.default <- function(e, ...){
   choices <- dir(file.path(find.package("swirl"), "Languages"))
   choices <- gsub("[.]yaml$", "", choices)
   swirl_out("Please select your preferred language:")
-  language <- select.list(choices, preselect="English", graphics=FALSE)
+  language <- select.list(choices, graphics=FALSE)
+  if(language=="")language <- "English"
   loadNLang(language)
   swirl_out(NLang$"Welcome to swirl...", skip_after=TRUE)
   return(readline(NLang$"What shall I call you? "))
