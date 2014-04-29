@@ -130,13 +130,14 @@ mainMenu.default <- function(e){
         # reverse path cosmetics
         lesson <- ifelse(lesson_choice=="", "",
                          lessons[lesson_choice == lessons_clean])
-        # Load the lesson and intialize everything
-        e$les <- loadLesson(e, courseU, lesson)
         # Return to the course menu if the lesson failed to load
-        if(is.logical(e$les) && !isTRUE(e$les)){
+        if(lesson == ""){
           rm("les", envir=e, inherits=FALSE)
           lesson <- ""
           next()
+        } else {
+          # Load the lesson and intialize everything
+          e$les <- loadLesson(e, courseU, lesson)
         }
       }
    # Remove temp lesson name and course name vars, which were surrogates
