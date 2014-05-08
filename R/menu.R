@@ -67,7 +67,7 @@ mainMenu.default <- function(e){
                   "installing courses yourself.",
                   "(If you are not connected to the internet, type 0 to exit.)")
         choices <- c(choices, "Don't install anything for me. I'll do it myself.")
-        choice <- select.list(choices)
+        choice <- select.list(choices, graphics=FALSE)
         n <- which(choice == choices)
         if(length(n) == 0)return(FALSE)
         if(n < length(choices)){
