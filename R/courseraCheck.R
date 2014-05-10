@@ -33,8 +33,8 @@ courseraCheck <- function(e){
       submit.url <- paste("http://class.coursera.org", course_name,
                           "assignment/submit", sep = "/")
       ch <- try(getChallenge(email, challenge.url), silent=TRUE)
-      # Continue only if the challenge has worked
-      if(!is(ch, "try-error")){
+      # Check if url is valid, i.e. challenge received
+      if(!is(ch, "try-error")) {
         ch.resp <- challengeResponse(passwd, ch$ch.key)
         # If submit.url is invalid, submitSolution should return a try-error.
         # However, that is not the only way it can fail; see below.
@@ -108,6 +108,8 @@ get_courseid <- function() {
             skip_after=TRUE)
   repeat {
     courseid <- readline("Course ID: ")
+    # Remove quotes if there are any
+    courseid <- gsub("\'|\"", "", courseid)
     # Set up test cases
     is_url <- str_detect(courseid, "www[.]|http:|https:")
     is_numbers <- str_detect(courseid, "^[0-9]+$")
