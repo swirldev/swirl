@@ -34,7 +34,8 @@ courseraCheck <- function(e){
                           "assignment/submit", sep = "/")
       ch <- try(getChallenge(email, challenge.url), silent=TRUE)
       # Check if url is valid, i.e. challenge received
-      if(!is(ch, "try-error")) {
+      ch_ok <- exists("ch.key", ch) && !is.na(ch$ch.key)
+      if(!is(ch, "try-error") && ch_ok) {
         ch.resp <- challengeResponse(passwd, ch$ch.key)
         # If submit.url is invalid, submitSolution should return a try-error.
         # However, that is not the only way it can fail; see below.
