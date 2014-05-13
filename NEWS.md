@@ -1,3 +1,9 @@
+# swirl 2.2.6
+
+* Fix bug related to user entering their Coursera Course ID with quotes.
+
+* Fix bug causing swirl to fail when exiting from course menu.
+
 # swirl 2.2.5
 
 * Add `packageStartupMessage()` that detects a cluttered workspace and warns the user that this may cause swirl to run slowly.
