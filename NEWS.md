@@ -1,3 +1,7 @@
+# swirl 2.2.7
+
+* Another check that Coursera challenge url is valid
+
 # swirl 2.2.6
 
 * Fix bug related to user entering their Coursera Course ID with quotes.
