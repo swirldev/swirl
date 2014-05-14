@@ -77,7 +77,11 @@ runTest.word_many <- function(keyphrase,e){
 runTest.newVar <- function(keyphrase, e){
   # TODO: Eventually make auto-detection of new variables an option.
   # Currently it can be set in customTests.R
-  if(!customTests$AUTO_DETECT_NEWVAR)delta <- safeEval(e$expr, e)
+  delta <- if(!customTests$AUTO_DETECT_NEWVAR){
+    safeEval(e$expr, e)
+  } else {
+    e$delta
+  }
   if (length(delta)==1){
     e$newVar <- delta[[1]]
     e$newVarName <- names(delta)[1]
@@ -95,7 +99,11 @@ runTest.newVar <- function(keyphrase, e){
 runTest.correctName <- function(keyphrase, e){
   # TODO: Eventually make auto-detection of new variables an option.
   # Currently it can be set in customTests.R
-  if(!customTests$AUTO_DETECT_NEWVAR)delta <- safeEval(e$expr, e)
+  delta <- if(!customTests$AUTO_DETECT_NEWVAR){
+    safeEval(e$expr, e)
+  } else {
+    e$delta
+  }
   correctName <- rightside(keyphrase)
   if ((length(delta)==1) && (identical(names(delta)[1],correctName))) {
     e$newVar <- delta[[1]]
@@ -249,7 +257,11 @@ runTest.matches <- function(keyphrase, e) {
 runTest.creates_var <- function(keyphrase, e){
   # TODO: Eventually make auto-detection of new variables an option.
   # Currently it can be set in customTests.R
-  if(!customTests$AUTO_DETECT_NEWVAR)delta <- safeEval(e$expr, e)
+  delta <- if(!customTests$AUTO_DETECT_NEWVAR){
+    safeEval(e$expr, e)
+  } else {
+    e$delta
+  }
   correctName <- rightside(keyphrase)
   if(is.na(correctName)){
     results <- expectThat(length(delta), equals(1), 

@@ -227,7 +227,11 @@ expr_creates_var <- function(correctName=NULL){
   e <- get("e", parent.frame())
   # TODO: Eventually make auto-detection of new variables an option.
   # Currently it can be set in customTests.R
-  if(!customTests$AUTO_DETECT_NEWVAR)delta <- safeEval(e$expr, e)
+  delta <- if(!customTests$AUTO_DETECT_NEWVAR){
+    safeEval(e$expr, e)
+  } else {
+    e$delta
+  }
   if(is.null(correctName)){
     results <- expectThat(length(delta), equals(1), 
                           label=paste(deparse(e$expr), 
