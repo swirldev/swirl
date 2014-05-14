@@ -265,7 +265,7 @@ resume.default <- function(e, ...){
     #  assign variables of the same names in the global environment
     #  their "official" values, in case the user has changed them
     #  while playing.
-    xfer(as.environment(e$official), globalenv())
+    if(length(e$official)>0)xfer(as.environment(e$official), globalenv())
     swirl_out("Resuming lesson...")
     e$playing <- FALSE
     e$iptr <- 1

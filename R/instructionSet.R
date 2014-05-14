@@ -123,7 +123,7 @@ testResponse.default <- function(current.row, e){
     # instead of x <- 2*x by mistake. The hint might say to type
     # x <- 2*x, which would result in 6 times the original value
     # of x unless the original value is restored.
-    xfer(as.environment(e$official), globalenv())
+    if(length(e$official)>0)xfer(as.environment(e$official), globalenv())
     mes <- tryAgain()
     if(is(current.row, "cmd_question")) {
       mes <- paste(mes, "Or, type info() for more options.")
