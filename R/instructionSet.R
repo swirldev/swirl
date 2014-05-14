@@ -56,7 +56,12 @@ waitUser.video <- function(current.row, e){
 
 waitUser.figure <- function(current.row, e){
   file.path <- paste(e$path,current.row[,"Figure"],sep="/")
-  source(file=file.path,local=TRUE)
+  local({
+    source(file.path,local=TRUE)
+    xfer(environment(), globalenv())
+    temp <- as.list(environment())
+    e$official <- c(e$official, temp)
+  })
   readline("...")
   e$row <- 1 + e$row
   e$iptr <- 1

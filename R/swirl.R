@@ -333,7 +333,6 @@ resume.default <- function(e, ...){
        customTests$AUTO_DETECT_NEWVAR){
     e$delta <- safeEval(e$expr, e)
   }
-  
   # Execute instructions until a return to the prompt is necessary
   while(!e$prompt){
     # If the lesson is complete, save progress, remove the current
@@ -399,6 +398,14 @@ resume.default <- function(e, ...){
     
     # Execute the current instruction
     e$instr[[e$iptr]](e$current.row, e)
+    # Check if a side effect, such as a sourced file, has changed the
+    # values of any variables in the official list. If so, add them
+    # to the list of changed variables.
+    for(nm in names(e$official)){
+      if(!identical(e$official[[nm]], get(nm, globalenv()))){
+        e$delta[[nm]] <- get(nm, globalenv())
+      }
+    }
   }
   
   e$prompt <- FALSE
