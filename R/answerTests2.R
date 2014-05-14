@@ -284,7 +284,7 @@ val_has_length <- function(len){
 #' }
 func_of_newvar_equals <- function(correct_expression){
   e <- get("e", parent.frame())
-  e1 <- cleanEnv(e$snapshot)
+  e1 <- cleanEnv(e$official)
   assign(e$newVarName, e$newVar, e1)
   correctExpr <- gsub("newVar", e$newVarName, correct_expression)
   ans <- eval(parse(text=correctExpr), e1)

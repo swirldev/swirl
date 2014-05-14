@@ -290,12 +290,12 @@ resume.default <- function(e, ...){
     #
     correctAns <- e$current.row[,"CorrectAnswer"]
     # In case correctAns refers to newVar, add it
-    # to the snapshot AND the global environment
+    # to the official list AND the global environment
     if(exists("newVarName",e)){
       correctAns <- gsub("newVar", e$newVarName, correctAns)
     }
     e$expr <- parse(text=correctAns)[[1]]
-    ce <- cleanEnv(e$snapshot)
+    ce <- cleanEnv(e$official)
     e$val <- suppressMessages(suppressWarnings(eval(e$expr, ce)))
     xfer(ce, globalenv())
     ce <- as.list(ce)
@@ -359,7 +359,9 @@ resume.default <- function(e, ...){
       # Coursera check
       courseraCheck(e)
       # remove the current lesson and any custom tests
-      rm("les", envir=e)
+      if(exists("les", e, inherits=FALSE)){
+        rm("les", envir=e, inherits=FALSE)
+      }
       # Reset skip count if it exists
       if(exists("skips", e)) e$skips <- 0
       clearCustomTests()
@@ -384,7 +386,6 @@ resume.default <- function(e, ...){
       #  question must have been correct or we would not be about
       #  to advance to a new row. Incorporate these in the list
       #  of swirl's "official" names and values.
-      #  It should be safe to remove the current snapshot here.
       if (!is.null(e$delta)){
         e$official <- mergeLists(e$delta,e$official)
       }
@@ -400,10 +401,6 @@ resume.default <- function(e, ...){
     e$instr[[e$iptr]](e$current.row, e)
   }
   
-  # Take a snapshot of the global environment here for
-  #  comparison after the user has responded to a question at
-  #  the command line. Store it in e.
-  e$snapshot <- as.list(globalenv())
   e$prompt <- FALSE
   esc_flag <- FALSE
   return(TRUE)
