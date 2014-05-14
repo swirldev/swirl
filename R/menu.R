@@ -261,6 +261,7 @@ loadLesson.default <- function(e, courseU, lesson){
   e$official <- list()
   # initialize course lesson, assigning lesson-specific variables
   initFile <- file.path(lesPath,"initLesson.R")
+  if(file.exists(initFile))source(initFile)
   # load any custom tests, returning FALSE if they fail to load
   clearCustomTests()
   loadCustomTests(lesPath)
