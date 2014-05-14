@@ -258,16 +258,16 @@ loadLesson.default <- function(e, courseU, lesson){
   # Handle dependencies
   if(!loadDependencies(lesPath))return(FALSE)
   # Initialize list of official variables
-  e$official <- list()
+  e$snapshot <- list()
   # initialize course lesson, assigning lesson-specific variables
   initFile <- file.path(lesPath,"initLesson.R")
   if(file.exists(initFile))local({
     source(initFile, local=TRUE)
     # NOTE: the order of the next two statements is important,
-    # since a referenct to e$official will cause e to appear in
+    # since a referenct to e$snapshot will cause e to appear in
     # local environment.
     xfer(environment(), globalenv())
-    e$official <- as.list(environment())
+    e$snapshot <- as.list(environment())
   })
   # load any custom tests, returning FALSE if they fail to load
   clearCustomTests()
@@ -296,8 +296,8 @@ restoreUserProgress.default <- function(e, selection){
   })
   # transfer swirl's "official" list of variables to the
   # global environment.
-  if(length(e$official)>0){
-    xfer(as.environment(e$official), globalenv())
+  if(length(e$snapshot)>0){
+    xfer(as.environment(e$snapshot), globalenv())
   }
   # load any custom tests
   clearCustomTests()

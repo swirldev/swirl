@@ -60,7 +60,7 @@ waitUser.figure <- function(current.row, e){
     source(file.path,local=TRUE)
     xfer(environment(), globalenv())
     temp <- as.list(environment())
-    e$official <- c(e$official, temp)
+    e$snapshot <- c(e$snapshot, temp)
   })
   readline("...")
   e$row <- 1 + e$row
@@ -128,7 +128,7 @@ testResponse.default <- function(current.row, e){
     # instead of x <- 2*x by mistake. The hint might say to type
     # x <- 2*x, which would result in 6 times the original value
     # of x unless the original value is restored.
-    if(length(e$official)>0)xfer(as.environment(e$official), globalenv())
+    if(length(e$snapshot)>0)xfer(as.environment(e$snapshot), globalenv())
     mes <- tryAgain()
     if(is(current.row, "cmd_question")) {
       mes <- paste(mes, "Or, type info() for more options.")

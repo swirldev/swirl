@@ -265,7 +265,7 @@ resume.default <- function(e, ...){
     #  assign variables of the same names in the global environment
     #  their "official" values, in case the user has changed them
     #  while playing.
-    if(length(e$official)>0)xfer(as.environment(e$official), globalenv())
+    if(length(e$snapshot)>0)xfer(as.environment(e$snapshot), globalenv())
     swirl_out("Resuming lesson...")
     e$playing <- FALSE
     e$iptr <- 1
@@ -295,7 +295,7 @@ resume.default <- function(e, ...){
       correctAns <- gsub("newVar", e$newVarName, correctAns)
     }
     e$expr <- parse(text=correctAns)[[1]]
-    ce <- cleanEnv(e$official)
+    ce <- cleanEnv(e$snapshot)
     e$val <- suppressMessages(suppressWarnings(eval(e$expr, ce)))
     xfer(ce, globalenv())
     ce <- as.list(ce)
@@ -331,7 +331,7 @@ resume.default <- function(e, ...){
        !uses_func("swirlify")(e$expr)[[1]] &&
        !uses_func("nxt")(e$expr)[[1]] &&
        customTests$AUTO_DETECT_NEWVAR){
-    e$delta <- safeEval(e$expr, e)
+    e$delta <- mergeLists(e$delta, safeEval(e$expr, e))
   }
   # Execute instructions until a return to the prompt is necessary
   while(!e$prompt){
@@ -386,7 +386,7 @@ resume.default <- function(e, ...){
       #  to advance to a new row. Incorporate these in the list
       #  of swirl's "official" names and values.
       if (!is.null(e$delta)){
-        e$official <- mergeLists(e$delta,e$official)
+        e$snapshot <- mergeLists(e$delta,e$snapshot)
       }
       e$delta <- list()
       saveProgress(e)
@@ -401,8 +401,8 @@ resume.default <- function(e, ...){
     # Check if a side effect, such as a sourced file, has changed the
     # values of any variables in the official list. If so, add them
     # to the list of changed variables.
-    for(nm in names(e$official)){
-      if(!identical(e$official[[nm]], get(nm, globalenv()))){
+    for(nm in names(e$snapshot)){
+      if(!identical(e$snapshot[[nm]], get(nm, globalenv()))){
         e$delta[[nm]] <- get(nm, globalenv())
       }
     }

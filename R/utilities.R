@@ -58,7 +58,7 @@ mergeLists <- function(sourceList, destList){
 # than that created by the user.
 #
 safeEval <- function(expr, e){
-  e1 <- cleanEnv(e$official)
+  e1 <- cleanEnv(e$snapshot)
   ans <- list()
   suppressMessages(suppressWarnings(eval(expr,e1)))
   for (x in ls(e1)){
