@@ -264,7 +264,7 @@ loadLesson.default <- function(e, courseU, lesson){
   if(file.exists(initFile))local({
     source(initFile, local=TRUE)
     # NOTE: the order of the next two statements is important,
-    # since a referenct to e$snapshot will cause e to appear in
+    # since a reference to e$snapshot will cause e to appear in
     # local environment.
     xfer(environment(), globalenv())
     e$snapshot <- as.list(environment())
