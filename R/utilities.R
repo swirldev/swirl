@@ -60,7 +60,8 @@ mergeLists <- function(sourceList, destList){
 safeEval <- function(expr, e){
   e1 <- cleanEnv(e$snapshot)
   ans <- list()
-  suppressMessages(suppressWarnings(eval(expr,e1)))
+  temp <- try(suppressMessages(suppressWarnings(eval(expr,e1))), silent=FALSE)
+  if(is(temp, "try-error"))return(ans)
   for (x in ls(e1)){
     if(exists(x,globalenv()))
       ans[[x]] <- get(x,globalenv())
@@ -103,7 +104,7 @@ cleanEnv <- function(snapshot){
   } else {
     new.env()  
   }
-  parent.env(pe) <- parent.env(globalenv())
+  parent.env(pe) <- globalenv()
   # return new environment whose parent is pe
   return(new.env(parent=pe))
 }
