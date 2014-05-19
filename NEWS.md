@@ -1,3 +1,7 @@
+# swirl 2.2.8
+
+* Alternate user progress tracking strategy without previous lag or freeze problems. Backwards compatible with existing course content. Tracks large or small lesson data sets by default, but these may be excluded by sourcing with local=FALSE from the initLesson.R file. 
+
 # swirl 2.2.7
 
 * Another check that Coursera challenge url is valid
