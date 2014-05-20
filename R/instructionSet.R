@@ -56,7 +56,12 @@ waitUser.video <- function(current.row, e){
 
 waitUser.figure <- function(current.row, e){
   file.path <- paste(e$path,current.row[,"Figure"],sep="/")
-  source(file=file.path,local=TRUE)
+  local({
+    source(file.path,local=TRUE)
+    xfer(environment(), globalenv())
+    temp <- as.list(environment())
+    e$snapshot <- c(e$snapshot, temp)
+  })
   readline("...")
   e$row <- 1 + e$row
   e$iptr <- 1
@@ -118,12 +123,12 @@ testResponse.default <- function(current.row, e){
     e$iptr <- 1
     e$row <- 1 + e$row
   } else {
-    # Restore the previous global environment from the snapshot
+    # Restore the previous global environment from the official
     # in case the user has garbled it, e.g., has typed x <- 3*x
     # instead of x <- 2*x by mistake. The hint might say to type
     # x <- 2*x, which would result in 6 times the original value
     # of x unless the original value is restored.
-    xfer(as.environment(e$snapshot), globalenv())
+    if(length(e$snapshot)>0)xfer(as.environment(e$snapshot), globalenv())
     mes <- tryAgain()
     if(is(current.row, "cmd_question")) {
       mes <- paste(mes, "Or, type info() for more options.")

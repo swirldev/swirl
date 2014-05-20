@@ -265,7 +265,7 @@ resume.default <- function(e, ...){
     #  assign variables of the same names in the global environment
     #  their "official" values, in case the user has changed them
     #  while playing.
-    xfer(as.environment(e$official), globalenv())
+    if(length(e$snapshot)>0)xfer(as.environment(e$snapshot), globalenv())
     swirl_out("Resuming lesson...")
     e$playing <- FALSE
     e$iptr <- 1
@@ -290,7 +290,7 @@ resume.default <- function(e, ...){
     #
     correctAns <- e$current.row[,"CorrectAnswer"]
     # In case correctAns refers to newVar, add it
-    # to the snapshot AND the global environment
+    # to the official list AND the global environment
     if(exists("newVarName",e)){
       correctAns <- gsub("newVar", e$newVarName, correctAns)
     }
@@ -331,9 +331,8 @@ resume.default <- function(e, ...){
        !uses_func("swirlify")(e$expr)[[1]] &&
        !uses_func("nxt")(e$expr)[[1]] &&
        customTests$AUTO_DETECT_NEWVAR){
-    e$delta <- safeEval(e$expr, e)
+    e$delta <- mergeLists(e$delta, safeEval(e$expr, e))
   }
-  
   # Execute instructions until a return to the prompt is necessary
   while(!e$prompt){
     # If the lesson is complete, save progress, remove the current
@@ -359,7 +358,9 @@ resume.default <- function(e, ...){
       # Coursera check
       courseraCheck(e)
       # remove the current lesson and any custom tests
-      rm("les", envir=e)
+      if(exists("les", e, inherits=FALSE)){
+        rm("les", envir=e, inherits=FALSE)
+      }
       # Reset skip count if it exists
       if(exists("skips", e)) e$skips <- 0
       clearCustomTests()
@@ -384,9 +385,8 @@ resume.default <- function(e, ...){
       #  question must have been correct or we would not be about
       #  to advance to a new row. Incorporate these in the list
       #  of swirl's "official" names and values.
-      #  It should be safe to remove the current snapshot here.
       if (!is.null(e$delta)){
-        e$official <- mergeLists(e$delta,e$official)
+        e$snapshot <- mergeLists(e$delta,e$snapshot)
       }
       e$delta <- list()
       saveProgress(e)
@@ -398,12 +398,16 @@ resume.default <- function(e, ...){
     
     # Execute the current instruction
     e$instr[[e$iptr]](e$current.row, e)
+    # Check if a side effect, such as a sourced file, has changed the
+    # values of any variables in the official list. If so, add them
+    # to the list of changed variables.
+    for(nm in names(e$snapshot)){
+      if(!identical(e$snapshot[[nm]], get(nm, globalenv()))){
+        e$delta[[nm]] <- get(nm, globalenv())
+      }
+    }
   }
   
-  # Take a snapshot of the global environment here for
-  #  comparison after the user has responded to a question at
-  #  the command line. Store it in e.
-  e$snapshot <- as.list(globalenv())
   e$prompt <- FALSE
   esc_flag <- FALSE
   return(TRUE)

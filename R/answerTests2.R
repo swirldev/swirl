@@ -227,13 +227,17 @@ expr_creates_var <- function(correctName=NULL){
   e <- get("e", parent.frame())
   # TODO: Eventually make auto-detection of new variables an option.
   # Currently it can be set in customTests.R
-  if(!customTests$AUTO_DETECT_NEWVAR)e$delta <- safeEval(e$expr, e)
+  delta <- if(!customTests$AUTO_DETECT_NEWVAR){
+    safeEval(e$expr, e)
+  } else {
+    e$delta
+  }
   if(is.null(correctName)){
-    results <- expectThat(length(e$delta), equals(1), 
+    results <- expectThat(length(delta), equals(1), 
                           label=paste(deparse(e$expr), 
                                       "does not create a variable."))  
   } else {
-    results <- expectThat(names(e$delta), 
+    results <- expectThat(names(delta), 
                           is_equivalent_to(correctName, label=correctName), 
                           label=paste(deparse(e$expr),
                                       "does not create a variable named",
@@ -241,7 +245,8 @@ expr_creates_var <- function(correctName=NULL){
   }
   if(results$passed){
     e$newVar <- e$val
-    e$newVarName <- names(e$delta)[1]
+    e$newVarName <- names(delta)[1]
+    e$delta <- mergeLists(delta, e$delta)
   } else if(is(e,"dev")){
     swirl_out(results$message)
   }

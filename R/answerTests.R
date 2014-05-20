@@ -74,15 +74,18 @@ runTest.word_many <- function(keyphrase,e){
 
 # Tests if the user has just created one new variable. If so, assigns 
 # e$newVar its value and returns TRUE.
-# Alter this test to use list of new variables created
-#  by snapshot strategy.
 runTest.newVar <- function(keyphrase, e){
   # TODO: Eventually make auto-detection of new variables an option.
   # Currently it can be set in customTests.R
-  if(!customTests$AUTO_DETECT_NEWVAR)e$delta <- safeEval(e$expr, e)
-  if (length(e$delta)==1){
-    e$newVar <- e$delta[[1]]
-    e$newVarName <- names(e$delta)[1]
+  delta <- if(!customTests$AUTO_DETECT_NEWVAR){
+    safeEval(e$expr, e)
+  } else {
+    e$delta
+  }
+  if (length(delta)==1){
+    e$newVar <- delta[[1]]
+    e$newVarName <- names(delta)[1]
+    e$delta <- mergeLists(delta, e$delta)
     return(TRUE)
   }
   else {
@@ -96,11 +99,16 @@ runTest.newVar <- function(keyphrase, e){
 runTest.correctName <- function(keyphrase, e){
   # TODO: Eventually make auto-detection of new variables an option.
   # Currently it can be set in customTests.R
-  if(!customTests$AUTO_DETECT_NEWVAR)e$delta <- safeEval(e$expr, e)
+  delta <- if(!customTests$AUTO_DETECT_NEWVAR){
+    safeEval(e$expr, e)
+  } else {
+    e$delta
+  }
   correctName <- rightside(keyphrase)
-  if ((length(e$delta)==1) && (identical(names(e$delta)[1],correctName))) {
-    e$newVar <- e$delta[[1]]
-    e$newVarName <- names(e$delta)[1]
+  if ((length(delta)==1) && (identical(names(delta)[1],correctName))) {
+    e$newVar <- delta[[1]]
+    e$newVarName <- names(delta)[1]
+    e$delta <- mergeLists(delta, e$delta)
     return(TRUE)
   }
   else {
@@ -249,14 +257,18 @@ runTest.matches <- function(keyphrase, e) {
 runTest.creates_var <- function(keyphrase, e){
   # TODO: Eventually make auto-detection of new variables an option.
   # Currently it can be set in customTests.R
-  if(!customTests$AUTO_DETECT_NEWVAR)e$delta <- safeEval(e$expr, e)
+  delta <- if(!customTests$AUTO_DETECT_NEWVAR){
+    safeEval(e$expr, e)
+  } else {
+    e$delta
+  }
   correctName <- rightside(keyphrase)
   if(is.na(correctName)){
-    results <- expectThat(length(e$delta), equals(1), 
+    results <- expectThat(length(delta), equals(1), 
                           label=paste(deparse(e$expr), 
                                       "does not create a variable."))
   } else {
-    results <- expectThat(names(e$delta), 
+    results <- expectThat(names(delta), 
                           is_equivalent_to(correctName, label=correctName), 
                           label=paste(deparse(e$expr),
                                       "does not create a variable named",
@@ -264,7 +276,8 @@ runTest.creates_var <- function(keyphrase, e){
   }
   if(results$passed){
     e$newVar <- e$val
-    e$newVarName <- names(e$delta)[1]
+    e$newVarName <- names(delta)[1]
+    e$delta <- mergeLists(delta, e$delta)
   } else if(is(e,"dev")){
     swirl_out(results$message)
   }

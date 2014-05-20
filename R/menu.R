@@ -140,7 +140,9 @@ mainMenu.default <- function(e){
                          lessons[lesson_choice == lessons_clean])
         # Return to the course menu if the lesson failed to load
         if(lesson == ""){
-          rm("les", envir=e, inherits=FALSE)
+          if(exists("les", e, inherits=FALSE)){
+            rm("les", envir=e, inherits=FALSE)
+          }
           lesson <- ""
           next()
         } else {
@@ -255,21 +257,18 @@ loadLesson.default <- function(e, courseU, lesson){
   dataName <- file.path(lesPath,shortname)
   # Handle dependencies
   if(!loadDependencies(lesPath))return(FALSE)
-  # Before initializing the module, take a snapshot of 
-  #  the global environment.
-  snapshot <- as.list(globalenv())
+  # Initialize list of official variables
+  e$snapshot <- list()
   # initialize course lesson, assigning lesson-specific variables
   initFile <- file.path(lesPath,"initLesson.R")
-  if (file.exists(initFile)){
-    source(initFile)
-  }
-  #  After initializing, compare a current snapshot of the 
-  #  global environment with the previous to detect any variables
-  #  created or changed by initialization. Add these to the list
-  #  of "official" swirl names and values.
-  e$snapshot <- as.list(globalenv())
-  idx <- !(e$snapshot %in% snapshot)
-  e$official <- e$snapshot[idx]
+  if(file.exists(initFile))local({
+    source(initFile, local=TRUE)
+    # NOTE: the order of the next two statements is important,
+    # since a reference to e$snapshot will cause e to appear in
+    # local environment.
+    xfer(environment(), globalenv())
+    e$snapshot <- as.list(environment())
+  })
   # load any custom tests, returning FALSE if they fail to load
   clearCustomTests()
   loadCustomTests(lesPath)
@@ -289,13 +288,17 @@ restoreUserProgress.default <- function(e, selection){
   # Since loadDepencies will have worked once, we don't
   # check for failure here. Perhaps we should.
   loadDependencies(e$path)
-  # TODO: We probably shouldn't be doing this again.
   # source the initLesson.R file if it exists
   initf <- file.path(e$path, "initLesson.R")
-  if(file.exists(initf))source(initf)
+  if(file.exists(initf))local({
+    source(initf, local=TRUE)
+    xfer(environment(), globalenv())
+  })
   # transfer swirl's "official" list of variables to the
   # global environment.
-  xfer(as.environment(e$official), globalenv())
+  if(length(e$snapshot)>0){
+    xfer(as.environment(e$snapshot), globalenv())
+  }
   # load any custom tests
   clearCustomTests()
   loadCustomTests(e$path)
