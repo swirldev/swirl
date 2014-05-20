@@ -21,4 +21,13 @@ Test the the length of e$val is that given by the first argument
 val_has_length(10)
 }
 }
+\seealso{
+Other AnswerTests: \code{\link{AnswerTests}};
+  \code{\link{expr_creates_var}};
+  \code{\link{expr_identical_to}}; \code{\link{expr_is_a}};
+  \code{\link{expr_uses_func}};
+  \code{\link{func_of_newvar_equals}};
+  \code{\link{omnitest}}; \code{\link{val_matches}};
+  \code{\link{var_is_a}}
+}
 

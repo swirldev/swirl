@@ -1,19 +1,28 @@
-# The following tests probably won't survive in their current form,
-# as we are still trying to work out a syntax which is both brief
-# and comprehensive. These tests apply to all courses except
-# Data Analysis, Mathematical Biostatistics Boot Camp, Open Intro,
-# and the the first three lessons of Intro to R.
-# 
-# The first two tests, expr_identical_to and val_matches cover
-# all questions in Intro to R except one.
-# 
-# To cover the exception, four additional tests were necessary: 
-# var_is_a, expr_uses, expr_creates_var, and val_has_length.
-# 
-# One additional test, expr_is_a, was needed for the test lessons.
-#
-# Omnitest is an aggregate of more basic tests and is meant to cover
-# many of the questions which have appeared in lessons so far.
+#' Answer Tests
+#'
+#' As a swirl instructor, you can use any combination of our standard
+#' answer tests or create your own custom answer tests to suit your
+#' specific needs. Each of the standard answer tests listed below has
+#' its own help file, for which you'll find a link at the bottom 
+#' of this page.
+#'
+#' @name AnswerTests
+#' @usage 
+#' expr_creates_var(correctName = NULL)
+#' expr_identical_to(correct_expression)
+#' expr_is_a(class)
+#' expr_uses_func(func)
+#' func_of_newvar_equals(correct_expression)
+#' omnitest(correctExpr = NULL, correctVal = NULL, strict = FALSE)
+#' val_has_length(len)
+#' val_matches(regular_expression)
+#' var_is_a(class, var_name)
+#' @section Standard Answer Tests:
+#' Here is some information about the standard answer tests.
+#' @section Custom Answer Tests:
+#' Here is some information about writing your own custom answer tests.
+#' @family AnswerTests
+NULL
  
 #' Test for a correct expression, a correct value, or both.
 #' 
@@ -57,6 +66,7 @@
 #'   # In this case, if the user enters sd(x)*sd(x) the test will fail.
 #'   
 #'   }
+#'   @family AnswerTests
 omnitest <- function(correctExpr=NULL, correctVal=NULL, strict=FALSE){
   e <- get("e", parent.frame())
   # Trivial case
@@ -108,6 +118,7 @@ omnitest <- function(correctExpr=NULL, correctVal=NULL, strict=FALSE){
 #'   #
 #'   expr_identical_to('myVar <- c(3, 5, 7)')
 #' }
+#' @family AnswerTests
 expr_identical_to <- function(correct_expression){
   e <- get("e", parent.frame())
   expr <- e$expr
@@ -132,6 +143,7 @@ expr_identical_to <- function(correct_expression){
 #'   #
 #'   val_matches('[Cc]ollege [Ss]tudents')
 #' }
+#' @family AnswerTests
 val_matches <- function(regular_expression) {
   e <- get("e", parent.frame())
   userVal <- str_trim(as.character(e$val))
@@ -153,6 +165,7 @@ val_matches <- function(regular_expression) {
 #' # Test that a variable named "x" in the global environmentis numeric.
 #' var_is_a('numeric', 'x')
 #' }
+#' @family AnswerTests
 var_is_a <- function(class, var_name) {
   e <- get("e", parent.frame())
   class <-  str_trim(class)
@@ -178,6 +191,7 @@ var_is_a <- function(class, var_name) {
 #' #
 #' expr_is_a('<-')
 #' }
+#' @family AnswerTests
 expr_is_a <- function(class) {
   e <- get("e", parent.frame())
   class <-  str_trim(class)
@@ -198,6 +212,7 @@ expr_is_a <- function(class) {
 #' #
 #' expr_uses_func('sd')
 #' }
+#' @family AnswerTests
 expr_uses_func <- function(func) {
   e <- get("e", parent.frame())
   func <- str_trim(func)
@@ -223,6 +238,7 @@ expr_uses_func <- function(func) {
 #' #
 #' expr_creates_var('myNum')
 #' }
+#' @family AnswerTests
 expr_creates_var <- function(correctName=NULL){
   e <- get("e", parent.frame())
   # TODO: Eventually make auto-detection of new variables an option.
@@ -262,6 +278,7 @@ expr_creates_var <- function(correctName=NULL){
 #' #
 #' val_has_length(10)
 #' }
+#' @family AnswerTests
 val_has_length <- function(len){
   e <- get("e", parent.frame())
   try(n <- as.integer(len), silent=TRUE)
@@ -287,6 +304,7 @@ val_has_length <- function(len){
 #' #
 #' func_of_newvar_equals('mean(newVar)')
 #' }
+#' @family AnswerTests
 func_of_newvar_equals <- function(correct_expression){
   e <- get("e", parent.frame())
   e1 <- cleanEnv(e$snapshot)
