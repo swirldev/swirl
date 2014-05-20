@@ -2,32 +2,68 @@
 \name{AnswerTests}
 \alias{AnswerTests}
 \title{Answer Tests}
-\usage{
-expr_creates_var(correctName = NULL)
-expr_identical_to(correct_expression)
-expr_is_a(class)
-expr_uses_func(func)
-func_of_newvar_equals(correct_expression)
-omnitest(correctExpr = NULL, correctVal = NULL, strict = FALSE)
-val_has_length(len)
-val_matches(regular_expression)
-var_is_a(class, var_name)
-}
 \description{
-As a swirl instructor, you can use any combination of our standard
-answer tests or create your own custom answer tests to suit your
-specific needs. Each of the standard answer tests listed below has
-its own help file, for which you'll find a link at the bottom
-of this page.
+Answer tests are how swirl determines whether a user has answered
+a question correctly or not. Each question has one or more answer
+tests associated with it, all of which must be satisfied in order for
+a user's response to be considered correct. As the instructor, you
+can specify any combination of our standard answer tests or create your
+own custom answer tests to suit your specific needs. This document will
+explain your options.
+}
+\details{
+For each question that you author as part of a swirl lesson, you
+must specify exactly one \emph{correct answer}. This is separate and
+distinct from the answer tests. This does not have to be
+the only correct answer, but it must answer the question correctly.
+If a user \code{\link{skip}}s your question, this is the answer that will be
+entered on his or her behalf.
+
+If you're using the \href{https://github.com/swirldev/swirlify}{swirlify}
+authoring tool, the correct answer will
+be automatically translated into the appropriate answer test for most
+question types. Questions that require the user to enter a valid
+command at the R prompt (which we'll refer to as \emph{command questions})
+are the only exception. Since there are often many possible ways to
+answer a command question, you must determine how you'd like swirl to
+assess the correctness of a user's response. This is where answer
+tests come in.
+
+You can specify any number of answer tests. If you use more than one, you
+must separate them with semicolons. If you do not specify any answer tests
+for a command question, then the default test will be used. The default
+test is \code{omnitest(correctExpr='<correct_answer_here>')} and will simply
+check that the user's expression matches the expression that you provided
+as a correct answer.
 }
 \section{Standard Answer Tests}{
 
-Here is some information about the standard answer tests.
+Each of the standard answer tests listed below has
+its own help file, for which you'll find a link at the bottom
+of this page.
+
+\code{\link{expr_creates_var}}: Test that a new variable has been created.
+
+\code{\link{expr_identical_to}}: Test that the user has entered a particular expression.
+
+\code{\link{expr_is_a}}: Test that the expression itself is of a specific \code{\link{class}}.
+
+\code{\link{expr_uses_func}}: Test that a particular function has been used.
+
+\code{\link{func_of_newvar_equals}}: Test the result of a computation such as \code{mean(newVar)} applied to a specific (user-named) variable created in a previous question.
+
+\code{\link{omnitest}}: Test for a correct expression, a correct value, or both.
+
+\code{\link{val_has_length}}: Test that the value of the expression has a particular \code{\link{length}}.
+
+\code{\link{val_matches}}: Test that the user's expression matches a regular expression (\code{\link{regex}}).
+
+\code{\link{var_is_a}}: Test that the \emph{value} of the expression is of a specific \code{\link{class}}.
 }
 
 \section{Custom Answer Tests}{
 
-Here is some information about writing your own custom answer tests.
+[INFO ON CUSTOM TESTS GOES HERE...]
 }
 \seealso{
 Other AnswerTests: \code{\link{expr_creates_var}};
