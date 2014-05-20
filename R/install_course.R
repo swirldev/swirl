@@ -53,8 +53,12 @@ install_from_swirl <- function(course_name){
   top_dir <- file.path(system.file(package = "swirl"), "Courses", 
                        sort(dirname(unzip_list))[1])
   dirs_to_copy <- list.files(top_dir, full.names=TRUE)
-  file.copy(dirs_to_copy, file.path(system.file(package = "swirl"), "Courses"),
-            recursive=TRUE)
+  if(file.copy(dirs_to_copy, file.path(system.file(package = "swirl"), "Courses"),
+            recursive=TRUE)){
+    swirl_out("Course installed successfully!", skip_after=TRUE)
+  } else {
+    swirl_out("Course installation failed.", skip_after=TRUE)
+  }
   
   # Delete unzipped directory
   unlink(top_dir, recursive=TRUE, force=TRUE)
@@ -65,8 +69,6 @@ install_from_swirl <- function(course_name){
   
   # Delete temp.zip
   unlink(path, force=TRUE)
-  
-  swirl_out("Course installed successfully!", skip_after=TRUE)
   
   invisible()
 }
@@ -103,7 +105,11 @@ zip_course <- function(path, dest=NULL){
   # Create directory in which to zip
   zip_dir <- paste0(dest, "/", "swirl_zip_creator_TEMP")
   dir.create(zip_dir)
-  file.copy(path, zip_dir, recursive=TRUE)
+  if(file.copy(path, zip_dir, recursive=TRUE)){
+    swirl_out("Course directory was successfully zipped!", skip_after=TRUE)
+  } else {
+    swirl_out("Course installation failed.", skip_after=TRUE)
+  }
   
   # Change directory to folder to be zipped
   setwd(zip_dir)
@@ -117,8 +123,7 @@ zip_course <- function(path, dest=NULL){
   
   # Pop the old directory
   setwd(curr_dir)
-  
-  message("Course directory was successfully zipped!")
+
   invisible()
 }
 
@@ -187,8 +192,12 @@ install_course_zip <- function(path, multi=FALSE, which_course=NULL){
       }
       dirs_to_copy <- dirs_to_copy[match_ind]
     }
-    file.copy(dirs_to_copy, file.path(system.file(package = "swirl"),
-                                      "Courses"), recursive=TRUE)
+    if(file.copy(dirs_to_copy, file.path(system.file(package = "swirl"),
+                                      "Courses"), recursive=TRUE)){
+      swirl_out("Course installed successfully!", skip_after=TRUE)
+    } else {
+      swirl_out("Course installation failed.", skip_after=TRUE)
+    }
     
     # Delete unzipped directory
     unlink(top_dir, recursive=TRUE, force=TRUE)
@@ -203,7 +212,6 @@ install_course_zip <- function(path, multi=FALSE, which_course=NULL){
   unlink(file.path(system.file(package = "swirl"), "Courses", "__MACOSX"),
          recursive=TRUE, force=TRUE)
 
-  swirl_out("Course installed successfully!", skip_after=TRUE)
   invisible()
 }
 
@@ -229,10 +237,13 @@ install_course_directory <- function(path){
   }
   
   # Copy files
-  file.copy(path, file.path(system.file(package = "swirl"), "Courses"),
-            recursive=TRUE)
+  if(file.copy(path, file.path(system.file(package = "swirl"), "Courses"),
+            recursive=TRUE)){
+    swirl_out("Course installed successfully!", skip_after=TRUE)
+  } else {
+    swirl_out("Course installation failed.", skip_after=TRUE)
+  }
   
-  swirl_out("Course installed successfully!", skip_after=TRUE)
   invisible()
 }
 
