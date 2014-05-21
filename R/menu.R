@@ -302,14 +302,6 @@ restoreUserProgress.default <- function(e, selection){
   # load any custom tests
   clearCustomTests()
   loadCustomTests(e$path)
-  # eval retrieved user expr's in global env, but don't include
-  # call to swirl (the first entry)
-  if(length(e$usrexpr) > 1){
-    for(n in 2:length(e$usrexpr)){
-      expr <- e$usrexpr[[n]]
-      eval(expr, globalenv())
-    }
-  }
   # Restore figures which precede current row (Issue #44)
   idx <- 1:(e$row - 1)
   figs <- e$les[idx,"Figure"]
