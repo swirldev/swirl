@@ -22,7 +22,12 @@ courseraCheck <- function(e){
     email <- r["email"]
     passwd <- r["passwd"]
     course_name <- r["courseid"]
-    output <- paste0(ss[[1]], substr(e$coursera, 1, 16), ss[[2]], collapse="")
+    output <- paste0(ss[[1]], substr(e$coursera, 1, 16), ss[[2]],
+                     collapse="")
+    # Name output file
+    output_filename <- paste0(course_name,"_",lesson_name,".txt")
+    # Write output to text file
+    writeLines(output, output_filename)
     # If going straight to manual submission, then exit loop.
     if(choice=="Maybe later") ok <- TRUE
     # If doing automatic submission, then give it a try.
@@ -34,7 +39,7 @@ courseraCheck <- function(e){
                           "assignment/submit", sep = "/")
       ch <- try(getChallenge(email, challenge.url), silent=TRUE)
       # Check if url is valid, i.e. challenge received
-      ch_ok <- exists("ch.key", ch) && !is.na(ch$ch.key)
+      ch_ok <- is.list(ch) && exists("ch.key", ch) && !is.na(ch$ch.key)
       if(!is(ch, "try-error") && ch_ok) {
         ch.resp <- challengeResponse(passwd, ch$ch.key)
         # If submit.url is invalid, submitSolution should return a try-error.
@@ -63,6 +68,8 @@ courseraCheck <- function(e){
           if(!str_detect(results, "[Ee]xception")){
             swirl_out(paste0("I've notified Coursera that you have completed ",
                              course_name, ", ", lesson_name,"."))
+            # Remove manual submission text file
+            unlink(output_filename)
             # Exit loop since submission successful
             return()
           }
@@ -81,9 +88,8 @@ courseraCheck <- function(e){
       }
     } # end of yes branch
   } # end of while loop
-  writeLines(output, paste0(course_name,"_",lesson_name,".txt"))
-  swirl_out("To notify Coursera that you have completed this lesson, please upload",
-            sQuote(paste0(course_name,"_",lesson_name,".txt")),
+  swirl_out("To notify Coursera that you have completed this lesson,",
+            "please upload", sQuote(output_filename),
             "to Coursera manually. You may do so by visiting the Programming",
             "Assignments page on your course website and selecting the Submit",
             "button next to the appropriate swirl lesson.",

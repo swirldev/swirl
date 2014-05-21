@@ -4,6 +4,10 @@
 
 * Make course installation success/failure messages more robust.
 
+* Add documentation for `?AnswerTests`.
+
+* Create a file for manual submission to Coursera immediately after the user enters his or her credentials. This way, no matter what happens during the submission process, manual submission is still an option. The file is deleted if automatic submission succeeds.
+
 # swirl 2.2.7
 
 * Another check that Coursera challenge url is valid
