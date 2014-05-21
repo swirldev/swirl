@@ -4,9 +4,11 @@
 #' a question correctly or not. Each question has one or more answer
 #' tests associated with it, all of which must be satisfied in order for
 #' a user's response to be considered correct. As the instructor, you 
-#' can specify any combination of our standard answer tests or create your
+#' can specify any combination of our predefined answer tests or create your
 #' own custom answer tests to suit your specific needs. This document will
 #' explain your options.
+#' 
+#' @name AnswerTests
 #' 
 #' @details
 #' For each question that you author as part of a swirl lesson, you 
@@ -29,16 +31,38 @@
 #' You can specify any number of answer tests. If you use more than one, you
 #' must separate them with semicolons. If you do not specify any answer tests
 #' for a command question, then the default test will be used. The default
-#' test is \code{omnitest(correctExpr='<correct_answer_here>')} and will simply
-#' check that the user's expression matches the expression that you provided 
-#' as a correct answer.
-#'
-#' @name AnswerTests
+#' test is \code{omnitest(correctExpr='<correct_answer_here>')}, which will 
+#' simply check that the user's expression matches the expression that you 
+#' provided as a correct answer. 
 #' 
-#' @section Standard Answer Tests:
-#' Each of the standard answer tests listed below has
-#' its own help file, for which you'll find a link at the bottom 
-#' of this page.
+#' In many cases, the default answer test will provide sufficient vetting of
+#' a user's response to a command question. While it is somewhat restrictive
+#' in the sense that it requires an exact match of expressions (ignoring 
+#' whitespace), it is liberating to the course author for two reasons.
+#' \enumerate{
+#'   \item It allows for fast prototyping of content. As you're developing
+#'   content, you may find that determining how to test for correctness
+#'   distracts you from the message you're trying to communicate. 
+#'   \item You don't have to worry about what happens if the user enters 
+#'   an incorrect response, but is allowed to proceed because of an oversight
+#'   in the answer tests. Since swirl sessions are continuous, accepting
+#'   an incorrect answer early in a lesson can cause problems later on. By
+#'   using the default answer test, you eliminate this burden by requiring an
+#'   exact match of expressions and hence not allowing the user to advance
+#'   until you are certain they've entered the correct response.
+#' }
+#'  
+#' It's important to keep in mind that as your content matures, you can always 
+#' go back and make your answer testing strategy more elaborate. The main
+#' benefit of using tests other than the default is that the user will not be
+#' required to enter an expression exactly the way you've specified it. He or
+#' she will have more freedom in terms of how they respond to a question, as
+#' long as they satify the conditions that you see as being most important.
+#' 
+#' @section Predefined Answer Tests:
+#' Each of the predefined answer tests listed below has
+#' its own help file, where you'll find more detailed explanations and
+#' examples.
 #' 
 #' \code{\link{expr_creates_var}}: Test that a new variable has been created.
 #' 
@@ -59,7 +83,35 @@
 #' \code{\link{var_is_a}}: Test that the \emph{value} of the expression is of a specific \code{\link{class}}.
 #' 
 #' @section Custom Answer Tests:
-#' [INFO ON CUSTOM TESTS GOES HERE...]
+#' Occasionally, you may want to test something that is outside the scope of
+#' our predefined answer tests. Fortunately, this is very easy to do. If you
+#' are using the swirlify authoring tool, then a file called
+#' \code{customTests.R} (case-sensitive) is automatically created in the lesson
+#' directory. If it's not there already, you can create the file manually.
+#' 
+#' In this file, you can write your own answer tests. These answer tests are 
+#' then available to you just the same as any of the standard tests. However, 
+#' the scope of a custom answer test is limited to the lesson within which 
+#' you've defined it.
+#' 
+#' Each custom answer test is simply an R function that follows a few 
+#' basic rules:
+#' \enumerate{
+#'   \item Give the function a distinct name that will help you remember what
+#'   is does (e.g. \code{creates_matrix_with_n_rows}).
+#'   \item The first line of the function body is 
+#'   \code{e <- get("e", parent.frame())}, which gives you access to the 
+#'   environment \code{e}. Any important information, such as the expression
+#'   typed by the user, will be available to you through \code{e}.
+#'   \item Access the expression entered by the user with \code{e$expr} and 
+#'   the value of the expression with \code{e$val}. 
+#'   Note that \code{e$expr} comes in
+#'   the form of an unevaluated R \code{\link{expression}}.
+#'   \item The function returns \code{TRUE} if the test is passed and
+#'   \code{FALSE} otherwise. You should be careful that no other
+#'   value could be returned (e.g. \code{NA}, \code{NULL}, etc.)
+#'   }
+#' 
 #' @family AnswerTests
 NULL
 
@@ -68,11 +120,10 @@ NULL
 #' 
 #' Omnitest can test for a correct expression, a correct value,
 #' or both. In the case of values it is limited to testing for 
-#' character or numerical vectors of length 1. For course authors
-#' only, omnitest is not exported.
+#' character or numeric vectors of length 1.
 #' @param correctExpr the correct or expected expression as a string
 #' @param correctVal the correct value (numeric or character)
-#' @param strict a logical value indicating that the expression should be as expected even if the value is correct. If FALSE (the default) a correct value will pass the test even if the expression is not as expected, but a notification will be issued.
+#' @param strict a logical value indicating that the expression should be as expected even if the value is correct. If \code{FALSE} (the default) a correct value will pass the test even if the expression is not as expected, but a notification will be issued.
 #' @examples
 #' \dontrun{
 #' 
@@ -148,10 +199,12 @@ omnitest <- function(correctExpr=NULL, correctVal=NULL, strict=FALSE){
     }
 }
 
+#' Test that the user has entered a particular expression.
+#' 
 #' Test that the user has entered an expression identical to that
 #' given as the first argument.
 #' @param correct_expression the correct or expected expression as a string
-#' @return TRUE or FALSE
+#' @return \code{TRUE} or \code{FALSE}
 #' @examples
 #' \dontrun{
 #'   # Test that a user has entered a particular command
@@ -171,10 +224,12 @@ expr_identical_to <- function(correct_expression){
   return(results$passed)
 }
 
-#' Returns TRUE if as.character(e$val) matches the regular
+#' Test that the user's expression matches a regular expression.
+#' 
+#' Returns \code{TRUE} if \code{as.character(e$val)} matches the regular
 #' expression given as the first argument.
 #' @param regular_expression a regular expression which user value should match
-#' @return TRUE or FALSE
+#' @return \code{TRUE} or \code{FALSE}
 #' @examples
 #' \dontrun{
 #'   # Test that a user has entered a value matching
@@ -195,11 +250,13 @@ val_matches <- function(regular_expression) {
 }
 
 
-#' Returns TRUE if a variable of the given name exists
+#' Test that the value of the expression is of a specific class.
+#' 
+#' Returns \code{TRUE} if a variable of the given name exists
 #' in the global environment and is of the given class.
 #' @param class expected class which the given variable
 #' @param var_name name of the variable
-#' @return TRUE or FALSE
+#' @return \code{TRUE} or \code{FALSE}
 #' @examples
 #' \dontrun{
 #' # Test that a variable named "x" in the global environmentis numeric.
@@ -222,9 +279,11 @@ var_is_a <- function(class, var_name) {
   }
 }
 
-#' Returns TRUE if e$expr is of the given class
-#' @param class expected class of the given expression
-#' @return TRUE or FALSE
+#' Test that the expression itself is of a specific \code{class}.
+#' 
+#' Returns \code{TRUE} if \code{e$expr} is of the given \code{\link{class}}.
+#' @param class expected \code{class} of the given expression
+#' @return \code{TRUE} or \code{FALSE}
 #' @examples
 #' \dontrun{
 #' # Test if the expression entered by a user is an assignment
@@ -242,10 +301,12 @@ expr_is_a <- function(class) {
   return(results$passed)
 }
 
-#' Returns TRUE if the e$expr uses the function whose
+#' Test that a particular function has been used.
+#' 
+#' Returns \code{TRUE} if the \code{e$expr} uses the function whose
 #' name is given as the first argument.
 #' @param func name of the function expected to be used
-#' @return TRUE or FALSE
+#' @return \code{TRUE} or \code{FALSE}
 #' @examples
 #' \dontrun{
 #' # Test that the user has entered an expression using sd()
@@ -263,10 +324,12 @@ expr_uses_func <- function(func) {
   return(results$passed)
 }
 
-#' Tests if the e$expr creates one new variable (of correct name
-#' if given.) If so, returns TRUE.
-#' @param correctName expected name of the new variable or NULL
-#' @return TRUE or FALSE
+#' Test that a new variable has been created.
+#' 
+#' Tests if the \code{e$expr} creates one new variable (of correct name
+#' if given.) If so, returns \code{TRUE}.
+#' @param correctName expected name of the new variable or \code{NULL}
+#' @return \code{TRUE} or \code{FALSE}
 #' @examples
 #' \dontrun{
 #' # Test if the user has entered an expression which creates
@@ -309,9 +372,12 @@ expr_creates_var <- function(correctName=NULL){
   return(results$passed)
 }
 
-#' Test the the length of e$val is that given by the first argument
+#' Test that the value of the expression has a particular \code{length}.
+#' 
+#' Test the the \code{\link{length}} of \code{e$val} is that given by the 
+#' first argument.
 #' @param len expected length of the variable created by a user
-#' @return TRUE or FALSE
+#' @return \code{TRUE} or \code{FALSE}
 #' @examples
 #' \dontrun{
 #' # Test that the user has created a varible of length 10
@@ -332,11 +398,14 @@ val_has_length <- function(len){
   return(results$passed)
 }
 
-#' Tests the result of a computation such as mean(newVar) applied
+#' Test the result of a computation applied to a specific (user-named) 
+#' variable created in a previous question.
+#' 
+#' Tests the result of a computation such as \code{mean(newVar)} applied
 #' to a specific variable created in a previous question and
-#' saved as e$newVar.
+#' saved behind the scenes as \code{e$newVar}.
 #' @param correct_expression expression expected to be applied
-#' @return TRUE or FALSE
+#' @return \code{TRUE} or \code{FALSE}
 #' @examples
 #' \dontrun{
 #' # Test if user has taken the mean of a variable created
@@ -358,7 +427,3 @@ func_of_newvar_equals <- function(correct_expression){
   if(is(e, "dev") && !results$passed)swirl_out(results$message)
   return(results$passed)
 }
-
-
-
-
