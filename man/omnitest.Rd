@@ -10,13 +10,12 @@ omnitest(correctExpr = NULL, correctVal = NULL, strict = FALSE)
 
 \item{correctVal}{the correct value (numeric or character)}
 
-\item{strict}{a logical value indicating that the expression should be as expected even if the value is correct. If FALSE (the default) a correct value will pass the test even if the expression is not as expected, but a notification will be issued.}
+\item{strict}{a logical value indicating that the expression should be as expected even if the value is correct. If \code{FALSE} (the default) a correct value will pass the test even if the expression is not as expected, but a notification will be issued.}
 }
 \description{
 Omnitest can test for a correct expression, a correct value,
 or both. In the case of values it is limited to testing for
-character or numerical vectors of length 1. For course authors
-only, omnitest is not exported.
+character or numeric vectors of length 1.
 }
 \examples{
 \dontrun{
@@ -51,5 +50,14 @@ only, omnitest is not exported.
   # In this case, if the user enters sd(x)*sd(x) the test will fail.
 
   }
+}
+\seealso{
+Other AnswerTests: \code{\link{AnswerTests}};
+  \code{\link{expr_creates_var}};
+  \code{\link{expr_identical_to}}; \code{\link{expr_is_a}};
+  \code{\link{expr_uses_func}};
+  \code{\link{func_of_newvar_equals}};
+  \code{\link{val_has_length}}; \code{\link{val_matches}};
+  \code{\link{var_is_a}}
 }
 
