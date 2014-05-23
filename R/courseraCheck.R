@@ -22,7 +22,12 @@ courseraCheck <- function(e){
     email <- r["email"]
     passwd <- r["passwd"]
     course_name <- r["courseid"]
-    output <- paste0(ss[[1]], substr(e$coursera, 1, 16), ss[[2]], collapse="")
+    output <- paste0(ss[[1]], substr(e$coursera, 1, 16), ss[[2]],
+                     collapse="")
+    # Name output file
+    output_filename <- paste0(course_name,"_",lesson_name,".txt")
+    # Write output to text file
+    writeLines(output, output_filename)
     # If going straight to manual submission, then exit loop.
     if(choice=="Maybe later") ok <- TRUE
     # If doing automatic submission, then give it a try.
@@ -34,7 +39,7 @@ courseraCheck <- function(e){
                           "assignment/submit", sep = "/")
       ch <- try(getChallenge(email, challenge.url), silent=TRUE)
       # Check if url is valid, i.e. challenge received
-      ch_ok <- exists("ch.key", ch) && !is.na(ch$ch.key)
+      ch_ok <- is.list(ch) && exists("ch.key", ch) && !is.na(ch$ch.key)
       if(!is(ch, "try-error") && ch_ok) {
         ch.resp <- challengeResponse(passwd, ch$ch.key)
         # If submit.url is invalid, submitSolution should return a try-error.
@@ -63,6 +68,8 @@ courseraCheck <- function(e){
           if(!str_detect(results, "[Ee]xception")){
             swirl_out(paste0(NLang$"I've notified Coursera...",
                              course_name, ", ", lesson_name,"."))
+            # Remove manual submission text file
+            unlink(output_filename)
             # Exit loop since submission successful
             return()
           }

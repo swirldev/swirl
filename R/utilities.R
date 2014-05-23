@@ -14,6 +14,7 @@ make_pathname <- function(name) {
 }
 
 xfer <- function(env1, env2){
+  if(length(ls(env1))==0)return()
   lapply(ls(env1), function(var)getAssign(var, env1, env2))
 }
 
@@ -35,7 +36,7 @@ mergeLists <- function(sourceList, destList){
 }
 
 # Evaluates a user's expression in a clean environment
-# whose parent is a snapshot of the previous global 
+# whose parent is a snapshot of the previous official 
 # environment, i.e., the same environment in which
 # the user entered the expression. Any values required
 # for evaluation will be found in the snapshot. Any variables
@@ -59,7 +60,8 @@ mergeLists <- function(sourceList, destList){
 safeEval <- function(expr, e){
   e1 <- cleanEnv(e$snapshot)
   ans <- list()
-  suppressMessages(suppressWarnings(eval(expr,e1)))
+  temp <- try(suppressMessages(suppressWarnings(eval(expr,e1))), silent=FALSE)
+  if(is(temp, "try-error"))return(ans)
   for (x in ls(e1)){
     if(exists(x,globalenv()))
       ans[[x]] <- get(x,globalenv())
@@ -68,7 +70,7 @@ safeEval <- function(expr, e){
 }
 
 # Creates a clean environment whose parent is
-# a snapshot of the global environment in an
+# a snapshot of the official environment in an
 # earlier state. The snapshot itself is given the
 # same parent as the global environment, which will
 # consist of loaded namespaces and packages.
@@ -96,9 +98,13 @@ safeEval <- function(expr, e){
 # hence will be the same as that found by the user. 
 #
 cleanEnv <- function(snapshot){
-  # clone of previous environment
-  pe <- as.environment(as.list(snapshot))
-  parent.env(pe) <- parent.env(globalenv())
+  # clone of snapshot
+  pe <- if(length(snapshot) > 0){
+    as.environment(as.list(snapshot))
+  } else {
+    new.env()  
+  }
+  parent.env(pe) <- globalenv()
   # return new environment whose parent is pe
   return(new.env(parent=pe))
 }
