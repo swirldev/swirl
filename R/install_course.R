@@ -18,6 +18,7 @@
 #' install_from_swirl("R Programming") # Course name
 #' }
 install_from_swirl <- function(course_name){
+  lang()
   # make pathname from course_name
   course_name <- make_pathname(course_name)
   
@@ -57,7 +58,7 @@ install_from_swirl <- function(course_name){
             recursive=TRUE)){
     swirl_out(NLang$"Course installed successfully!", skip_after=TRUE)
   } else {
-    swirl_out("Course installation failed.", skip_after=TRUE)
+    swirl_out(NLang$"Course installation failed.", skip_after=TRUE)
   }
   
   # Delete unzipped directory
@@ -88,6 +89,7 @@ install_from_swirl <- function(course_name){
 #' zip_course("~/Desktop/SNA_Tutorial", "~/tutorials")
 #' }
 zip_course <- function(path, dest=NULL){
+  lang()
   # Cleanse the path of the trailing slash
   path <- sub("/$", "", path)
   
@@ -106,9 +108,9 @@ zip_course <- function(path, dest=NULL){
   zip_dir <- paste0(dest, "/", "swirl_zip_creator_TEMP")
   dir.create(zip_dir)
   if(file.copy(path, zip_dir, recursive=TRUE)){
-    swirl_out("Course directory was successfully zipped!", skip_after=TRUE)
+    swirl_out(NLang$"Course directory was successfully zipped!", skip_after=TRUE)
   } else {
-    swirl_out("Course installation failed.", skip_after=TRUE)
+    swirl_out(NLang$"Course installation failed.", skip_after=TRUE)
   }
   
   # Change directory to folder to be zipped
@@ -137,6 +139,7 @@ zip_course <- function(path, dest=NULL){
 #' uninstall_course("Linear Regression")
 #' }
 uninstall_course <- function(course_name){
+  lang()
   path <- file.path(system.file(package = "swirl"), "Courses", 
                     make_pathname(course_name))
   if(file.exists(path)){
@@ -163,6 +166,7 @@ uninstall_course <- function(course_name){
 #'                    which_course=c("R Programming", "Data Analysis"))
 #' }
 install_course_zip <- function(path, multi=FALSE, which_course=NULL){
+  lang()
   if(!is.logical(multi) || is.na(multi)) {
     stop("Argument 'multi' must be either TRUE or FALSE.")
   }
@@ -194,9 +198,9 @@ install_course_zip <- function(path, multi=FALSE, which_course=NULL){
     }
     if(file.copy(dirs_to_copy, file.path(system.file(package = "swirl"),
                                       "Courses"), recursive=TRUE)){
-      swirl_out("Course installed successfully!", skip_after=TRUE)
+      swirl_out(NLang$"Course installed successfully!", skip_after=TRUE)
     } else {
-      swirl_out("Course installation failed.", skip_after=TRUE)
+      swirl_out(NLang$"Course installation failed.", skip_after=TRUE)
     }
     
     # Delete unzipped directory
@@ -212,10 +216,8 @@ install_course_zip <- function(path, multi=FALSE, which_course=NULL){
   unlink(file.path(system.file(package = "swirl"), "Courses", "__MACOSX"),
          recursive=TRUE, force=TRUE)
 
-<<<<<<< HEAD
   swirl_out(NLang$"Course installed successfully!", skip_after=TRUE)
-=======
->>>>>>> master
+
   invisible()
 }
 
@@ -229,6 +231,7 @@ install_course_zip <- function(path, multi=FALSE, which_course=NULL){
 #' install_course_directory("~/Desktop/my_course")
 #' }
 install_course_directory <- function(path){
+  lang()
   # Check for size of directory to prevent copying a huge directory into swirl/Courses
   garbage_result <- tryCatch(
     {setTimeLimit(elapsed=1); list.files(path, recursive=TRUE)},
@@ -243,15 +246,10 @@ install_course_directory <- function(path){
   # Copy files
   if(file.copy(path, file.path(system.file(package = "swirl"), "Courses"),
             recursive=TRUE)){
-    swirl_out("Course installed successfully!", skip_after=TRUE)
+    swirl_out(NLang$"Course installed successfully!", skip_after=TRUE)
   } else {
-    swirl_out("Course installation failed.", skip_after=TRUE)
+    swirl_out(NLang$"Course installation failed.", skip_after=TRUE)
   }
-  
-<<<<<<< HEAD
-  swirl_out(NLang$"Course installed successfully!", skip_after=TRUE)
-=======
->>>>>>> master
   invisible()
 }
 
@@ -270,7 +268,7 @@ install_course_directory <- function(path){
 #' }
 install_course_github <- function(github_username, course_name, 
                                   branch="master", multi=FALSE){
-  
+  lang()
   # Construct url to the zip file
   zip_url <- paste0("http://github.com/", github_username, "/", 
                     course_name,"/zipball/", branch)
@@ -289,6 +287,7 @@ install_course_github <- function(github_username, course_name,
 #' install_course_dropbox("https://www.dropbox.com/s/xttkmuvu7hh72vu/my_course.zip")
 #' }
 install_course_dropbox <- function(url, multi=FALSE){
+  lang()
   # Construct url to the zip file
   zip_url <- paste0(sub("www.dropbox", "dl.dropboxusercontent", url), "?dl=1")
   
@@ -306,6 +305,7 @@ install_course_dropbox <- function(url, multi=FALSE){
 #' install_course_google_drive("https://drive.google.com/file/d/F3fveiu873hfjZZj/edit?usp=sharing")
 #' }
 install_course_google_drive <- function(url, multi=FALSE){
+  lang()
   # Construct url to the zip file
   zip_url <- sub("file/d/", "uc?export=download&id=", 
                  sub("/edit\\?usp=sharing", "", url))
@@ -326,6 +326,7 @@ install_course_google_drive <- function(url, multi=FALSE){
 #' install_course_url("http://www.biostat.jhsph.edu/~rpeng/File_Hash_Course.zip")
 #' }
 install_course_url <- function(url, multi=FALSE){
+  lang()
   # Send GET request
   response <- GET(url)
   

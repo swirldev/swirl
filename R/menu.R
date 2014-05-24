@@ -184,14 +184,19 @@ welcome.test <- function(e, ...){
 
 # Default version.
 welcome.default <- function(e, ...){
+  lang()
+  swirl_out(NLang$"Welcome to swirl...", skip_after=TRUE)
+  return(readline(NLang$"What shall I call you? "))
+}
+
+lang <- function(){
   choices <- dir(file.path(find.package("swirl"), "Languages"))
   choices <- gsub("[.]yaml$", "", choices)
+  if(length(ls(NLang)) > 0)return()
   swirl_out("Please select your preferred language:")
   language <- select.list(choices, graphics=FALSE)
   if(language=="")language <- "English"
   loadNLang(language)
-  swirl_out(NLang$"Welcome to swirl...", skip_after=TRUE)
-  return(readline(NLang$"What shall I call you? "))
 }
 
 # Presents preliminary information to a new user
