@@ -249,6 +249,22 @@ val_matches <- function(regular_expression) {
   return(results$passed)
 }
 
+#' Test that the user has entered one of several possible expressions.
+#' 
+#' Returns \code{TRUE} if the expression which as user has entered
+#' matches any of the expressions given (as characters) in the argument.
+#' @param ... any number of expressions
+#' @return \code{TRUE} or \code{FALSE}
+#' @examples
+#' \dontrun{
+#' # Test that a user has entered either cor(x, y) or cor(y,x)
+#' any_of_exprs('cor(x,y)','cor(y,x)')
+#' }
+#' @family AnswerTests
+any_of_exprs <- function(...){
+  e <- get("e", parent.frame())
+  any(sapply(c(...), function(expr)omnitest(expr)))
+}
 
 #' Test that the value of the expression is of a specific class.
 #' 
