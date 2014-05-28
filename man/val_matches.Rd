@@ -25,8 +25,8 @@ expression given as the first argument.
 }
 }
 \seealso{
-Other AnswerTests: \code{\link{ANY_of_exprs}};
-  \code{\link{AnswerTests}};
+Other AnswerTests: \code{\link{AnswerTests}};
+  \code{\link{any_of_exprs}};
   \code{\link{expr_creates_var}};
   \code{\link{expr_identical_to}}; \code{\link{expr_is_a}};
   \code{\link{expr_uses_func}};

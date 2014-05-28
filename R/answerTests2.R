@@ -258,10 +258,10 @@ val_matches <- function(regular_expression) {
 #' @examples
 #' \dontrun{
 #' # Test that a user has entered either cor(x, y) or cor(y,x)
-#' ANY_of_exprs('cor(x,y)','cor(y,x)')
+#' any_of_exprs('cor(x,y)','cor(y,x)')
 #' }
 #' @family AnswerTests
-ANY_of_exprs <- function(...){
+any_of_exprs <- function(...){
   e <- get("e", parent.frame())
   any(sapply(c(...), function(expr)omnitest(expr)))
 }
