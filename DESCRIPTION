@@ -4,7 +4,7 @@ Description: swirl turns the R console into an interactive learning
     environment. Users receive immediate feedback as they are guided through
     self-paced lessons in data science and R programming.
 URL: http://swirlstats.com
-Version: 2.2.8
+Version: 2.2.9
 License: GPL-3
 Authors@R: c(
     person("Nick", "Carchedi", email = "nick.carchedi@gmail.com",
