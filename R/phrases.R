@@ -3,17 +3,18 @@ praise <- function() {
   phrases <- c("You got it!",
                "Nice work!",
                "Keep up the great work!",
-               "You are doing so well!",
+               "All that hark work is paying off!",
                "You nailed it! Good job!",
-               "You're the best!",
-               "You are amazing!",
+               "Keep working like that and you'll get there!",
+               "Perseverance, that's the answer.",
                "Great job!",
-               "You are quite good my friend!",
+               "You're dedication is inspiring!",
                "You got it right!",
                "That's correct!",
-               "You are really on a roll!",
-               "Excellent job!",
-               "That's a job well done!")
+               "All that practice is paying off!",
+               "Excellent work!",
+               "That's a job well done!",
+               "That's the answer I was looking for.")
   sample(phrases, 1)
 }
 
@@ -29,6 +30,9 @@ tryAgain <- function() {
                "Keep trying!",
                "That's not the answer I was looking for, but try again.",
                "Not quite right, but keep trying.",
-               "You're close...I can feel it! Try it again.")
+               "You're close...I can feel it! Try it again.",
+               "One more time, you can do it.",
+               "Not quite, but you're learning! Try again.",
+               "Try again, getting it right on the first try is boring anyway.")
   sample(phrases, 1)
 }
