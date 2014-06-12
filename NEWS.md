@@ -1,3 +1,7 @@
+# swirl 2.2.10
+
+* Corrected order of `mergeList` arguments in `swirl.R`.
+
 # swirl 2.2.9
 
 * Add Regression Models to recommended courses.
