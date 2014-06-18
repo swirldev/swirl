@@ -251,6 +251,8 @@ resume.default <- function(e, ...){
       e$test_lesson <- targs$test_lesson
       e$test_course <- targs$test_course
     }
+    if(!is.null(targs$from)) e$test_from <- targs$from
+    if(!is.null(targs$to)) e$test_to <- targs$to
   }
   
   esc_flag <- TRUE
@@ -336,9 +338,12 @@ resume.default <- function(e, ...){
   }
   # Execute instructions until a return to the prompt is necessary
   while(!e$prompt){
+    # Define max number of rows based on whether or not we're in 'test' mode
+    rowmax <- ifelse(is.null(e$test_to), nrow(e$les), e$test_to)
+    
     # If the lesson is complete, save progress, remove the current
     # lesson from e, and invoke the top level menu method.
-    if(e$row > nrow(e$les)){
+    if(e$row > rowmax){
       # If in test mode, we don't want to run another lesson
       if(is(e, "test")) {
         swirl_out("Lesson complete! Exiting swirl now...",
