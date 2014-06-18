@@ -329,6 +329,7 @@ resume.default <- function(e, ...){
   # Currently it can be set in customTests.R
   if(!uses_func("swirl")(e$expr)[[1]] &&
        !uses_func("swirlify")(e$expr)[[1]] &&
+       !uses_func("testit")(e$expr)[[1]] &&
        !uses_func("nxt")(e$expr)[[1]] &&
        customTests$AUTO_DETECT_NEWVAR){
     e$delta <- mergeLists(safeEval(e$expr, e), e$delta)

@@ -1,3 +1,7 @@
+# swirl 2.2.11
+
+* Add `testit()` to functions for callback to ignore, so that swirl plays nicely with swirlify.
+
 # swirl 2.2.10
 
 * Corrected order of `mergeList` arguments in `swirl.R`.
