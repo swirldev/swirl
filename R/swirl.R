@@ -379,7 +379,7 @@ resume.default <- function(e, ...){
         swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE)
         esc_flag <- FALSE # to supress double notification
         return(FALSE)
-    }
+      }
     }
     # If we are ready for a new row, prepare it
     if(e$iptr == 1){      
