@@ -251,6 +251,12 @@ resume.default <- function(e, ...){
       e$test_lesson <- targs$test_lesson
       e$test_course <- targs$test_course
     }
+    # Check that 'from' is less than 'to' if they are both provided
+    if(!is.null(targs$from) && !is.null(targs$to)) {
+      if(targs$from >= targs$to) {
+        stop("Argument 'to' must be strictly greater than argument 'from'!")
+      }
+    }
     if(is.null(targs$from)) {
       e$test_from <- 1
     } else {
