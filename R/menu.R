@@ -165,8 +165,12 @@ mainMenu.default <- function(e){
       e$pbar_seq <- seq(0, 1, length=nrow(e$les))
       
       # expr, val, ok, and vis should have been set by the callback.
-      # The lesson's current row - not 1 if in 'test' mode 
-      # with 'from' given
+      # The lesson's current row - could start after 1 if in 'test' mode
+      if(is(e, 'test')) {
+        e$row <- e$test_from
+      } else {
+        e$row <- 1
+      }
       e$row <- ifelse(is.null(e$test_from), 1, e$test_from)
       # The current row's instruction pointer
       e$iptr <- 1
