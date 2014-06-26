@@ -171,7 +171,6 @@ mainMenu.default <- function(e){
       } else {
         e$row <- 1
       }
-      e$row <- ifelse(is.null(e$test_from), 1, e$test_from)
       # The current row's instruction pointer
       e$iptr <- 1
       # A flag indicating we should return to the prompt
