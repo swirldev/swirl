@@ -66,6 +66,8 @@ Each of the predefined answer tests listed below has
 its own help file, where you'll find more detailed explanations and
 examples.
 
+\code{\link{any_of_exprs}}: Test that the user's expression matches any of several possible expressions.
+
 \code{\link{expr_creates_var}}: Test that a new variable has been created.
 
 \code{\link{expr_identical_to}}: Test that the user has entered a particular expression.

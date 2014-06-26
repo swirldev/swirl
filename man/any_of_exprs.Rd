@@ -6,19 +6,21 @@
 any_of_exprs(...)
 }
 \arguments{
-\item{...}{any number of expressions}
+\item{...}{any number of expressions, as character strings}
 }
 \value{
 \code{TRUE} or \code{FALSE}
 }
 \description{
-Returns \code{TRUE} if the expression which as user has entered
-matches any of the expressions given (as characters) in the argument.
+Returns \code{TRUE} if the expression the user has entered
+matches any of the expressions given (as character strings) in
+the argument.
 }
 \examples{
 \dontrun{
-# Test that a user has entered either cor(x, y) or cor(y,x)
-any_of_exprs('cor(x,y)','cor(y,x)')
+
+# Test that a user has entered either cor(x, y) or cor(y, x)
+any_of_exprs('cor(x, y)', 'cor(y, x)')
 }
 }
 \seealso{

@@ -64,6 +64,8 @@
 #' its own help file, where you'll find more detailed explanations and
 #' examples.
 #' 
+#' \code{\link{any_of_exprs}}: Test that the user's expression matches any of several possible expressions.
+#' 
 #' \code{\link{expr_creates_var}}: Test that a new variable has been created.
 #' 
 #' \code{\link{expr_identical_to}}: Test that the user has entered a particular expression.
@@ -251,19 +253,21 @@ val_matches <- function(regular_expression) {
 
 #' Test that the user has entered one of several possible expressions.
 #' 
-#' Returns \code{TRUE} if the expression which as user has entered
-#' matches any of the expressions given (as characters) in the argument.
-#' @param ... any number of expressions
+#' Returns \code{TRUE} if the expression the user has entered
+#' matches any of the expressions given (as character strings) in 
+#' the argument.
+#' @param ... any number of expressions, as character strings
 #' @return \code{TRUE} or \code{FALSE}
 #' @examples
 #' \dontrun{
-#' # Test that a user has entered either cor(x, y) or cor(y,x)
-#' any_of_exprs('cor(x,y)','cor(y,x)')
+#' 
+#' # Test that a user has entered either cor(x, y) or cor(y, x)
+#' any_of_exprs('cor(x, y)', 'cor(y, x)')
 #' }
 #' @family AnswerTests
 any_of_exprs <- function(...){
   e <- get("e", parent.frame())
-  any(sapply(c(...), function(expr)omnitest(expr)))
+  any(sapply(c(...), function(expr) omnitest(expr)))
 }
 
 #' Test that the value of the expression is of a specific class.
