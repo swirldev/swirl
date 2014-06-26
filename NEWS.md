@@ -1,3 +1,9 @@
+# swirl 2.2.11
+
+* Add `testit()` to functions for callback to ignore, so that swirl plays nicely with swirlify.
+
+* Add from/to feature for testing specific units of content during course authoring.
+
 # swirl 2.2.10
 
 * Corrected order of `mergeList` arguments in `swirl.R`.
