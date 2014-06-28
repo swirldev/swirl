@@ -152,3 +152,19 @@ loadDependencies <- function(lesson_dir) {
   cat("\n")
   return(TRUE)
 }
+
+# Execute correct answers for rows 1 through 'up_through' of lesson
+complete_part <- function(e) {
+  up_through <- e$test_from - 1
+  # Get rows though 'up_through' argument
+  les <- e$les[seq(up_through), ]
+  # Execute previous correct answers in global env
+  exec_cmd <- function(row) {
+    if(row['Class'] == "cmd_question") {
+      eval(parse(text = row['CorrectAnswer']), envir=globalenv())
+    }
+  }
+  message("Completing the first part of the lesson for you...\n")
+  apply(les, 1, exec_cmd)
+  invisible()
+}

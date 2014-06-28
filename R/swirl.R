@@ -251,6 +251,22 @@ resume.default <- function(e, ...){
       e$test_lesson <- targs$test_lesson
       e$test_course <- targs$test_course
     }
+    # Check that 'from' is less than 'to' if they are both provided
+    if(!is.null(targs$from) && !is.null(targs$to)) {
+      if(targs$from >= targs$to) {
+        stop("Argument 'to' must be strictly greater than argument 'from'!")
+      }
+    }
+    if(is.null(targs$from)) {
+      e$test_from <- 1
+    } else {
+      e$test_from <- targs$from
+    }
+    if(is.null(targs$to)) {
+      e$test_to <- 999 # Lesson will end naturally before this
+    } else {
+      e$test_to <- targs$to
+    }
   }
   
   esc_flag <- TRUE
@@ -329,15 +345,17 @@ resume.default <- function(e, ...){
   # Currently it can be set in customTests.R
   if(!uses_func("swirl")(e$expr)[[1]] &&
        !uses_func("swirlify")(e$expr)[[1]] &&
+       !uses_func("testit")(e$expr)[[1]] &&
        !uses_func("nxt")(e$expr)[[1]] &&
        customTests$AUTO_DETECT_NEWVAR){
-    e$delta <- mergeLists(e$delta, safeEval(e$expr, e))
+    e$delta <- mergeLists(safeEval(e$expr, e), e$delta)
   }
   # Execute instructions until a return to the prompt is necessary
   while(!e$prompt){
     # If the lesson is complete, save progress, remove the current
     # lesson from e, and invoke the top level menu method.
-    if(e$row > nrow(e$les)){
+    # Below, min() ignores e$test_to if it is NULL (i.e. not in 'test' mode)
+    if(e$row > min(nrow(e$les), e$test_to)) {
       # If in test mode, we don't want to run another lesson
       if(is(e, "test")) {
         swirl_out(NLang$"Lesson complete! Exiting swirl now...",
@@ -373,7 +391,7 @@ resume.default <- function(e, ...){
         swirl_out(NLang$"Leaving swirl now...", skip_after=TRUE)
         esc_flag <- FALSE # to supress double notification
         return(FALSE)
-    }
+      }
     }
     # If we are ready for a new row, prepare it
     if(e$iptr == 1){      

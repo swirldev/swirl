@@ -1,3 +1,17 @@
+# swirl 2.2.11
+
+* Add `testit()` to functions for callback to ignore, so that swirl plays nicely with swirlify.
+
+* Add from/to feature for testing specific units of content during course authoring.
+
+# swirl 2.2.10
+
+* Corrected order of `mergeList` arguments in `swirl.R`.
+
+# swirl 2.2.9
+
+* Add Regression Models to recommended courses.
+
 # swirl 2.2.8
 
 * Alternate user progress tracking strategy without previous lag or freeze problems. Backwards compatible with existing course content. Tracks large or small lesson data sets by default, but these may be excluded by sourcing with local=FALSE from the initLesson.R file. 
@@ -7,6 +21,8 @@
 * Add documentation for `?AnswerTests`.
 
 * Create a file for manual submission to Coursera immediately after the user enters his or her credentials. This way, no matter what happens during the submission process, manual submission is still an option. The file is deleted if automatic submission succeeds.
+
+* Add `any_of_exprs()` to library of answer tests.
 
 # swirl 2.2.7
 

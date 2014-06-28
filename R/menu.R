@@ -142,7 +142,13 @@ mainMenu.default <- function(e){
           e$les <- loadLesson(e, courseU, lesson)
         }
       }
-   # Remove temp lesson name and course name vars, which were surrogates
+      # If running in 'test' mode and starting partway through 
+      # lesson, then complete first part
+      if(is(e, "test") && e$test_from > 1) {
+        complete_part(e)
+      }
+      
+      # Remove temp lesson name and course name vars, which were surrogates
       # for csv attributes -- they've been attached via lesson() by now
       rm("temp_lesson_name", "temp_course_name", envir=e, inherits=FALSE)
       
@@ -151,8 +157,12 @@ mainMenu.default <- function(e){
       e$pbar_seq <- seq(0, 1, length=nrow(e$les))
       
       # expr, val, ok, and vis should have been set by the callback.
-      # The lesson's current row
-      e$row <- 1
+      # The lesson's current row - could start after 1 if in 'test' mode
+      if(is(e, 'test')) {
+        e$row <- e$test_from
+      } else {
+        e$row <- 1
+      }
       # The current row's instruction pointer
       e$iptr <- 1
       # A flag indicating we should return to the prompt
