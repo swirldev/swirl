@@ -92,7 +92,7 @@ swirl <- function(resume.class="default", ...){
 #' }
 bye <- function(){
   removeTaskCallback("mini")
-  swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE)
+  swirl_out(NLang$"Leaving swirl now...", skip_after=TRUE)
   invisible()
 }
 
@@ -210,18 +210,18 @@ main <- function(){invisible()}
 #' | Leaving swirl now. Type swirl() to resume.
 #' }
 info <- function(){
-  swirl_out("When you are at the R prompt (>):")
+  swirl_out(NLang$"When you are at the R prompt (>):")
   
-  swirl_out("-- Typing skip() allows you to skip the current question.", skip_before=FALSE)
+  swirl_out(NLang$"-- Typing skip()...", skip_before=FALSE)
   
-  swirl_out("-- Typing play() lets you experiment with R on your own; swirl will ignore what you do...", skip_before=FALSE)
-  swirl_out("-- UNTIL you type nxt() which will regain swirl's attention.", skip_before=FALSE)
+  swirl_out(NLang$"-- Typing play()...", skip_before=FALSE)
+  swirl_out(NLang$"-- UNTIL you type nxt()...", skip_before=FALSE)
   
-  swirl_out("-- Typing bye() causes swirl to exit. Your progress will be saved.", skip_before=FALSE)
+  swirl_out(NLang$"-- Typing bye()...", skip_before=FALSE)
   
-  swirl_out("-- Typing main() returns you to swirl's main menu.", skip_before=FALSE)
+  swirl_out(NLang$"-- Typing main()...", skip_before=FALSE)
   
-  swirl_out("-- Typing info() displays these options again.", skip_before=FALSE, skip_after=TRUE)
+  swirl_out(NLang$"-- Typing info()...", skip_before=FALSE, skip_after=TRUE)
 
   
   invisible()
@@ -270,7 +270,7 @@ resume.default <- function(e, ...){
   }
   
   esc_flag <- TRUE
-  on.exit(if(esc_flag)swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE))
+  on.exit(if(esc_flag)swirl_out(NLang$"Leaving swirl now...", skip_after=TRUE))
   # Trap special functions
   if(uses_func("info")(e$expr)[[1]]){
     esc_flag <- FALSE
@@ -282,12 +282,12 @@ resume.default <- function(e, ...){
     #  their "official" values, in case the user has changed them
     #  while playing.
     if(length(e$snapshot)>0)xfer(as.environment(e$snapshot), globalenv())
-    swirl_out("Resuming lesson...")
+    swirl_out(NLang$"Resuming lesson...")
     e$playing <- FALSE
     e$iptr <- 1
   }
   if(uses_func("play")(e$expr)[[1]]){
-    swirl_out("Entering play mode. Experiment as you please, then type nxt() when you are ready to resume the lesson.", skip_after=TRUE)
+    swirl_out(NLang$"Entering play mode...", skip_after=TRUE)
     e$playing <- TRUE
   }
   # If the user is playing, ignore console input,
@@ -316,13 +316,13 @@ resume.default <- function(e, ...){
     xfer(ce, globalenv())
     ce <- as.list(ce)
     # Inform the user, but don't expose the actual answer.    
-    swirl_out("Entering the following correct answer for you...",
+    swirl_out(NLang$"Entering the following correct answer for you...",
               skip_after=TRUE)
     message("> ", e$current.row[, "CorrectAnswer"])
   }
   # If the user want to return to the main menu, do the bookkeeping
   if(uses_func("main")(e$expr)[[1]]){
-    swirl_out("Returning to the main menu...")
+    swirl_out(NLang$"Returning to the main menu...")
     # Remove the current lesson. Progress has been saved already.
     if(exists("les", e, inherits=FALSE)){
       rm("les", envir=e, inherits=FALSE)
@@ -332,7 +332,7 @@ resume.default <- function(e, ...){
   temp <- mainMenu(e)
   # If menu returns FALSE, the user wants to exit.
   if(is.logical(temp) && !isTRUE(temp)){
-    swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE)
+    swirl_out(NLang$"Leaving swirl now...", skip_after=TRUE)
     esc_flag <- FALSE # To supress double notification
     return(FALSE)
   }
@@ -358,7 +358,7 @@ resume.default <- function(e, ...){
     if(e$row > min(nrow(e$les), e$test_to)) {
       # If in test mode, we don't want to run another lesson
       if(is(e, "test")) {
-        swirl_out("Lesson complete! Exiting swirl now...",
+        swirl_out(NLang$"Lesson complete! Exiting swirl now...",
                   skip_after=TRUE)
         esc_flag <- FALSE # to supress double notification
         return(FALSE)
@@ -383,12 +383,12 @@ resume.default <- function(e, ...){
       if(exists("skips", e)) e$skips <- 0
       clearCustomTests()
       # Let user know lesson is complete
-      swirl_out("You've reached the end of this lesson! Returning to the main menu...")
+      swirl_out(NLang$"You've reached the end of this lesson...")
       # let the user select another course lesson
       temp <- mainMenu(e)
       # if menu returns FALSE, user wants to quit.
       if(is.logical(temp) && !isTRUE(temp)){
-        swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE)
+        swirl_out(NLang$"Leaving swirl now...", skip_after=TRUE)
         esc_flag <- FALSE # to supress double notification
         return(FALSE)
       }

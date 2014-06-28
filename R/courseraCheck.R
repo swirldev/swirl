@@ -4,16 +4,16 @@ courseraCheck <- function(e){
   lesson_name <- gsub(" ", "_", attr(e$les, "lesson_name"))
   if(is.null(modtype) || modtype != "Coursera")return()
   tt <- c(rep(letters, 3), seq(100))
-  swirl_out("Are you currently enrolled in the Coursera course associated with this lesson?")
-  yn <- select.list(c("Yes","No"), graphics=FALSE)
-  if(yn=="No")return()
+  swirl_out(NLang$"Are you currently enrolled in the Coursera...")
+  yn <- select.list(c(NLang$"Yes",NLang$"No"), graphics=FALSE)
+  if(yn==NLang$"No")return()
   ss <- lapply(1:2, function(i) {
     paste0(sample(tt, sample(seq(400), 1), replace=TRUE), collapse="")
   })
-  swirl_out("Would you like me to notify Coursera that you've completed this lesson?",
-            "If so, I'll need to get some more info from you.")
-  choice <- select.list(c("Yes","No","Maybe later"), graphics=FALSE)
-  if(choice=="No") return()
+  swirl_out(NLang$"Would you like me to notify Coursera...",
+            NLang$"If so, I'll need to get some more info from you.")
+  choice <- select.list(c(NLang$"Yes",NLang$"No",NLang$"Maybe later"), graphics=FALSE)
+  if(choice==NLang$"No") return()
   # Begin submission loop
   ok <- FALSE
   while(!ok) {
@@ -32,7 +32,7 @@ courseraCheck <- function(e){
     if(choice=="Maybe later") ok <- TRUE
     # If doing automatic submission, then give it a try.
     if(choice=="Yes"){
-      swirl_out("I'll try to tell Coursera you've completed this lesson now.")
+      swirl_out(NLang$"I'll try to tell Coursera...")
       challenge.url <- paste("http://class.coursera.org", course_name,
                              "assignment/challenge", sep = "/")
       submit.url <- paste("http://class.coursera.org", course_name,
@@ -50,9 +50,9 @@ courseraCheck <- function(e){
                                   signature=ch$state)
         # If incorrect, empty string will be returned
         if(!length(results)) {
-          swirl_out("You skipped too many questions! You'll need to complete",
-                    "this lesson again if you'd like to receive credit. Please",
-                    "don't skip more than one question next time.")
+          swirl_out(NLang$"You skipped too many questions!...",
+                    NLang$"this lesson again...",
+                    NLang$"don't skip more...")
           return()
         }
         if(!is(results, "try-error")){
@@ -66,34 +66,32 @@ courseraCheck <- function(e){
           # to be set up eventually.
           swirl_out(results)
           if(!str_detect(results, "[Ee]xception")){
-            swirl_out(paste0("I've notified Coursera that you have completed ",
+            swirl_out(paste0(NLang$"I've notified Coursera...",
                              course_name, ", ", lesson_name,"."))
             # Remove manual submission text file
             unlink(output_filename)
             # Exit loop since submission successful
             return()
           }
-          swirl_out("I'm sorry, something went wrong with automatic submission.")
+          swirl_out(NLang$"I'm sorry, something went wrong with automatic submission.")
           # Exit loop if user doesn't want to retry auto submission
           ok <- !retry()
         } else {
-          swirl_out("I'm sorry, something went wrong with automatic submission.")
+          swirl_out(NLang$"I'm sorry, something went wrong with automatic submission.")
           # Exit loop if user doesn't want to retry auto submission
           ok <- !retry()
         }
       } else {
-        swirl_out("I'm sorry, something went wrong with establishing connection.")
+        swirl_out(NLang$"I'm sorry, something went wrong with establishing connection.")
         # Exit loop if user doesn't want to retry auto submission
         ok <- !retry()
       }
     } # end of yes branch
   } # end of while loop
-  swirl_out("To notify Coursera that you have completed this lesson,",
-            "please upload", sQuote(output_filename),
-            "to Coursera manually. You may do so by visiting the Programming",
-            "Assignments page on your course website and selecting the Submit",
-            "button next to the appropriate swirl lesson.",
-            "I've placed the file in the following directory:",
+  writeLines(output, paste0(course_name,"_",lesson_name,".txt"))
+  swirl_out(NLang$"To notify Coursera...please upload",
+            sQuote(paste0(course_name,"_",lesson_name,".txt")),
+            NLang$"to Coursera manually...",
             skip_after=TRUE)
   message(getwd(), "\n")
   readline("...")
@@ -101,17 +99,14 @@ courseraCheck <- function(e){
 
 # Returns TRUE if user would like to retry, FALSE if not
 retry <- function() {
-  swirl_out("Would you like to retry automatic submission or just submit manually?")
-  ans <- select.list(c("Retry automatic submission", "Submit manually"), graphics=FALSE)
+  swirl_out(NLang$"Would you like to retry automatic submission...")
+  ans <- select.list(c(NLang$"Retry automatic submission", NLang$"Submit manually"), graphics=FALSE)
   # Return TRUE if user would like to retry
-  return(ans == "Retry automatic submission")
+  return(ans == NLang$"Retry automatic submission")
 }
 
 get_courseid <- function() {
-  swirl_out("The first item I need is your Course ID. For example, if the",
-            "homepage for your Coursera course was",
-            "'https://class.coursera.org/rprog-001',",
-            "then your course ID would be 'rprog-001' (without the quotes).",
+  swirl_out(NLang$"The first item I need is your Course ID...",
             skip_after=TRUE)
   repeat {
     courseid <- readline("Course ID: ")
@@ -129,25 +124,18 @@ get_courseid <- function() {
     } else {
       # Check if courseid is a url
       if(is_url) {
-        swirl_out("It looks like you entered a web address, which is not what I'm",
-                  "looking for.")
+        swirl_out(NLang$"It looks like you entered a web address...")
       }
       # Check if courseid is all numbers
       if(is_numbers) {
-        swirl_out("It looks like you entered a numeric ID, which is not what I'm",
-                  "looking for.")
+        swirl_out(NLang$"It looks like you entered a numeric ID...")
       }
       # Check if the user stole the example courseid
       if(is_example) {
-        swirl_out("It looks like you entered the Course ID that I used as an",
-                  "example, which is not what I'm looking for.")
+        swirl_out(NLang$"It looks like you entered the Course ID...")
       }
     }
-    swirl_out("Instead, I need your Course ID, which is the last",
-              "part of the web address for your Coursera course.",
-              "For example, if the homepage for your Coursera course was",
-              "'https://class.coursera.org/rprog-001',",
-              "then your course ID would be 'rprog-001' (without the quotes).",
+    swirl_out(NLang$"Instead, I need your Course ID, which is...",
               skip_after=TRUE)
   }
   courseid
@@ -173,12 +161,12 @@ getCreds <- function(e) {
       r <- readLines(credfile, warn=FALSE)
       names(r) <- c("courseid", "email", "passwd")
     }
-    swirl_out("Is the following information correct?", skip_after=TRUE)
+    swirl_out(NLang$"Is the following information correct?", skip_after=TRUE)
     message("Course ID: ", r['courseid'],
             "\nSubmission login (email): ", r['email'], 
             "\nSubmission password: ", r['passwd'])
-    yn <- c("Yes, go ahead!", 
-            "No, I need to change something.")
+    yn <- c(NLang$"Yes, go ahead!", 
+            NLang$"No, I need to change something.")
     confirmed <- identical(select.list(yn, graphics=FALSE), yn[1])
     if(!confirmed) need2fix <- TRUE
   }

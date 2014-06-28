@@ -1,0 +1,336 @@
+# Spanish translation, provided by Google Translate, is meant only for testing and illustration.
+# This is a yaml file. Keys are abbreviated forms of English expressions and occur as first lines
+# of a pair. Second lines, always indented one space, are tranlations of full English expressions
+# as they occur under the same key in English.yaml.
+
+"That's not the expression I expected..." :
+ "Esa no es la expresión de lo que esperaba pero funciona. "
+
+"I've executed the correct expression in case..." :
+ "He ejecutado la expresión correcta en caso de que se necesita el resultado en la próxima pregunta. "
+
+"does not exist." :
+ "no existe. "
+
+"Course installed successfully!" :
+ "Curso instalado con éxito! "
+
+"Leaving swirl now..." :
+ "Dejando remolino ahora. Escribe swirl() para reanudar. "
+
+"When you are at the R prompt (>):" :
+ "Cuando esté en el símbolo R >: "
+
+"-- Typing skip()..." :
+ "- Mecanografía skip() le permite omitir la pregunta actual. "
+
+"-- Typing play()..." :
+ "- Mecanografía play() le permite experimentar con R por su cuenta; remolino ignorará lo que haces ... "
+
+"-- UNTIL you type nxt()..." :
+ "- HASTA que escriba nxt() que recuperar la atención del remolino. "
+
+"-- Typing bye()..." :
+ "- Mecanografía bye() hace girar para salir. Se guardará el progreso. "
+
+"-- Typing main()..." :
+ "- Mecanografía main() devuelve a la oferta principal del remolino. "
+
+"-- Typing info()..." :
+ "- Mecanografía info() muestra estas opciones de nuevo. "
+
+"Resuming lesson..." :
+ "Reanudación de lección ... "
+
+"Entering play mode..." :
+ "Entrar en el modo de reproducción. Experimente lo que quiera, a continuación, escriba nxt() cuando esté listo para reanudar la lección. "
+
+"Entering the following correct answer for you..." :
+ "Al entrar en la siguiente respuesta correcta para usted ... "
+
+"Returning to the main menu..." :
+ "Volviendo al menú principal ... "
+
+"Lesson complete! Exiting swirl now..." :
+ "Lección completa! Salir de remolino ahora ... "
+
+"You've reached the end of this lesson..." :
+ "Has llegado al final de esta lección! Volviendo al menú principal ... "
+
+"Are you currently enrolled in the Coursera..." :
+ "¿Está inscrito en el curso Coursera asociado con esta lección? "
+
+"Would you like me to notify Coursera..." :
+ "¿Me gustaría a notificar Coursera que ha completado esta lección? "
+
+"If so, I'll need to get some more info from you." :
+ "Si es así, voy a tener que conseguir un poco más de información de usted. "
+
+"I'll try to tell Coursera..." :
+ "Voy a tratar de decirle Coursera que haya completado esta lección ahora. "
+
+"You skipped too many questions!..." :
+ "Usted ha omitido demasiadas preguntas! Usted tendrá que completar "
+
+"this lesson again..." :
+ "esta lección de nuevo si le gustaría recibir crédito. Por favor, "
+
+"don't skip more..." :
+ "no se salte más de una pregunta la próxima vez. "
+
+"I've notified Coursera..." :
+ "He notificado Coursera que ha completado "
+
+"I'm sorry, something went wrong with automatic submission." :
+ "Lo siento, algo salió mal con la presentación automática. "
+
+"I'm sorry, something went wrong with establishing connection." :
+ "Lo siento, algo salió mal con el establecimiento de una conexión. "
+
+"To notify Coursera...please upload" :
+ "Para notificar Coursera que ha completado esta lección, por favor, subir "
+
+"to Coursera manually..." :
+ "a Coursera manualmente. Puede hacerlo visitando la página Asignaciones de programación en el sitio web del curso y seleccionar el botón Enviar al lado de la lección de turbulencia adecuado. He colocado el archivo en el directorio siguiente: "
+
+"Would you like to retry automatic submission..." :
+ "¿Quieres volver a intentar el envío automático o simplemente enviar manualmente? "
+
+"Retry automatic submission" :
+ "Vuelva a intentar el envío automático "
+
+"Submit manually" :
+ "Enviar manualmente "
+
+"The first item I need is your Course ID..." :
+ "El primer artículo que necesito es tu ID de curso. Por ejemplo, si la página de inicio de tu curso Coursera era 'https://class.coursera.org/rprog-001' entonces tu ID supuesto sería 'rprog-001' (sin las comillas). "
+
+"It looks like you entered a web address..." :
+ "Parece que has introducido una dirección web, que no es lo que estoy buscando. "
+
+"It looks like you entered a numeric ID..." :
+ "Parece que ha introducido un ID numérico, que no es lo que estoy buscando. "
+
+"It looks like you entered the Course ID..." :
+ "Parece que ha introducido el ID del curso que he usado como ejemplo, que no es lo que estoy buscando. "
+
+"Instead, I need your Course ID, which is..." :
+ "En su lugar, necesito tu ID de curso, que es la última parte de la dirección web para su curso Coursera. Por ejemplo, si la página de inicio de tu curso Coursera era 'https://class.coursera.org/rprog-001' entonces tu ID supuesto sería 'rprog-001' (sin las comillas). "
+
+"Is the following information correct?" :
+ "¿Es correcta la siguiente información? "
+
+"Yes, go ahead!" :
+ "Sí, adelante! "
+
+"No, I need to change something." :
+ "No, tengo que cambiar algo. "
+
+"Yes" :
+ "Sí"
+
+"No" :
+ "No"
+
+"Maybe later" :
+ "Tal vez más tarde"
+
+"Package" :
+ "Paquete "
+
+"loaded correctly!" :
+ "cargado correctamente! "
+
+"This lesson requires the" :
+ "Esta lección requiere la "
+
+"package. Would you..." :
+ "paquete. ¿Quiere que lo instale para usted ahora? "
+
+"Attemping to load lesson dependencies..." :
+ "Attemping para cargar las dependencias de la lección ... "
+
+"Trying to install package" :
+ "Está intentando instalar un paquete "
+
+"now..." :
+ "ahora ... "
+
+"Could not install package" :
+ "No se pudo instalar el paquete "
+
+"To begin, you must install a course..." :
+ "Para comenzar, debe instalar un curso. Puedo instalar un curso para usted a través de Internet, o me pueda enviar a una página web (https://github.com/swirldev/swirl_courses) que proporcionará opciones de cursos e instrucciones para la instalación de los cursos de ti mismo. (Si no está conectado a Internet, escriba 0 para salir.) "
+
+"Don't install anything for me..." :
+ "No instalar nada para mí. Lo haré yo mismo."
+
+"Sorry, but I'm unable to fetch " :
+ "Lo sentimos, pero no soy capaz de ir a buscar "
+
+"right now. Are you sure you have an internet connection?" :
+ "en estos momentos. ¿Estás seguro de que tiene una conexión a Internet? Si es así, ¿te gustaría probar de nuevo o visita el repositorio curso para obtener instrucciones sobre cómo instalar un curso de forma manual? Escriba 0 para salir. "
+
+"Try again!" :
+ "¡Otra vez! "
+
+"Send me to the course repository..." :
+ "Enviadme al repositorio de curso para la instalación manual."
+
+"OK. I'm opening the swirl course..." :
+ "Aceptar. Voy a abrir el repositorio supuesto remolino en su navegador. "
+
+"OK. I'm opening the swirl courses web page..." :
+ "Aceptar. Voy a abrir la página web de los cursos de remolino en su navegador. "
+
+"Welcome to swirl..." :
+ "Bienvenido a swirl! Por favor Ingresa Si usted ha estado aquí antes, utilizar el mismo nombre que lo hizo entonces. Si eres nuevo, decir que eres algo único. "
+
+"What shall I call you? " :
+ "¿Qué quieres que te llame? "
+
+"Thanks, " :
+ "Gracias, "
+
+"Let's cover a couple of quick housekeeping..." :
+ ". Vamos a cubrir un par de artículos de limpieza rápidas antes de comenzar nuestra primera lección. En primer lugar, usted debe saber que cuando vea ..., lo que significa que debe presionar Enter cuando haya terminado de leer y listo para continuar. "
+
+"That's your cue to press Enter to continue" :
+ "... <- Esa es su señal para presionar Enter para continuar "
+
+"Also, when you see 'ANSWER:'..." :
+ "Además, cuando vea 'RESPUESTA:', el símbolo R >, o cuando se le pide que seleccione de una lista, eso significa que es su turno para entrar en una respuesta, a continuación, pulse Intro para continuar. "
+
+"Continue." :
+ "Continuar."
+
+"Proceed." :
+ "Proceda."
+
+"Let's get going!" :
+ "Vamos a seguir adelante!"
+
+"Select 1, 2, or 3..." :
+ "Seleccione 1, 2 o 3 y pulse Intro "
+
+"You can exit swirl and return to the R prompt..." :
+ "Puede salir del remolino y volver al símbolo R > en cualquier momento pulsando la tecla Esc. Si ya está en el tipo, bye() prompt para salir y guardar tu progreso. Cuando salga correctamente, verá un dejar mensajes cortos se que has hecho. "
+
+"Let's get started!" :
+ "Vamos a empezar! "
+
+"Would you like to continue with one of these lessons?" :
+ "¿Le gustaría seguir con una de estas lecciones? "
+
+"No. Let me start something new." :
+ "No. Déjame empezar algo nuevo. "
+
+"Please choose a course, or type 0 to exit swirl." :
+ "Por favor, elija un curso, o escriba 0 para salir del remolino. "
+
+"Take me to the swirl course repository!" :
+ "Llévame al repositorio supuesto remolino! "
+
+"Please choose a lesson, or type 0..." :
+ "Por favor, elija una lección, o escriba 0 para volver al menú del curso. "
+
+"Type nxt() to continue" :
+ "Escriba nxt() para continuar "
+
+"Yes or No? " :
+ "Sí o No? "
+
+"y" :
+ "si"
+
+"yes" :
+ "sí"
+
+"Or, type info() for more options." :
+ "O, escribe info() para más opciones."
+
+"You got it!" :
+ "Ya lo tienes!"
+
+"Nice work!" :
+ "Buen trabajo!"
+
+"Keep up the great work!" :
+ "Sigan con el buen trabajo!"
+
+"You are doing so well!" :
+ "Lo estás haciendo muy bien!"
+
+"You nailed it! Good job!" :
+ "Usted lo clavó! ¡Buen trabajo!"
+
+"You're the best!" :
+ "¡Eres el mejor!"
+
+"You are amazing!" :
+ "Ustedes son increíbles!"
+
+"Great job!" :
+ "¡Buen trabajo!"
+
+"You are quite good my friend!" :
+ "Usted es bastante bueno mi amigo!"
+
+"You got it right!" :
+ "Usted ha hecho bien!"
+
+"That's correct!" :
+ "Eso es correcto!"
+
+"You are really on a roll!" :
+ "Usted está realmente en un rollo!"
+
+"Excellent job!" :
+ "Excelente trabajo!"
+
+"That's a job well done!" :
+ "Eso es un trabajo bien hecho!"
+
+"Almost! Try again." :
+ "¡Casi! Try Again"
+
+"You almost had it, but not quite. Try again." :
+ "Casi lo tenía, pero no del todo. Inténtalo de nuevo."
+
+"Give it another try." :
+ "Dale otra oportunidad."
+
+"Not quite! Try again." :
+ "No del todo! Try Again"
+
+"Not exactly. Give it another go." :
+ "No exactamente. Darle otra oportunidad."
+
+"That's not exactly what I'm looking for. Try again." :
+ "Eso no es exactamente lo que estoy buscando. Inténtalo de nuevo."
+
+"Nice try, but that's not exactly what I was hoping for. Try again." :
+ "Buen intento, pero eso no es exactamente lo que yo esperaba. Inténtelo de nuevo."
+
+"Keep trying!" :
+ "Sigue intentándolo!"
+
+"That's not the answer I was looking for, but try again." :
+ "Esa no es la respuesta que estaba buscando, pero vuelve a intentarlo."
+
+"Not quite right, but keep trying." :
+ "No está muy bien, pero sigue intentándolo."
+
+"You're close...I can feel it! Try it again." :
+ "Estás cerca ... Puedo sentirlo! Inténtelo de nuevo."
+
+# Addenda
+
+# Addenda
+
+"Course installation failed.":
+ "Curso de instalación falló."
+
+"Course directory was successfully zipped!":
+ "Directorio Curso se subió la cremallera con éxito!"
+

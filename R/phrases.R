@@ -14,7 +14,7 @@ praise <- function() {
                "You are really on a roll!",
                "Excellent job!",
                "That's a job well done!")
-  sample(phrases, 1)
+  get(sample(phrases, 1), NLang, inherits=FALSE)
 }
 
 # Return random "try again" message.
@@ -30,5 +30,5 @@ tryAgain <- function() {
                "That's not the answer I was looking for, but try again.",
                "Not quite right, but keep trying.",
                "You're close...I can feel it! Try it again.")
-  sample(phrases, 1)
+  get(sample(phrases, 1), NLang, inherits=FALSE)
 }

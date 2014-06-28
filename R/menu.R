@@ -60,31 +60,23 @@ mainMenu.default <- function(e){
       if(length(coursesU)==0){
         suggestions <- yaml.load_file(file.path(courseDir(e), "suggested_courses.yaml"))
         choices <- sapply(suggestions, function(x)paste0(x$Course, ": ", x$Description))
-        swirl_out("To begin, you must install a course. I can install a",
-                  "course for you from the internet, or I can send you to a web page",
-                  "(https://github.com/swirldev/swirl_courses)",
-                  "which will provide course options and directions for", 
-                  "installing courses yourself.",
-                  "(If you are not connected to the internet, type 0 to exit.)")
-        choices <- c(choices, "Don't install anything for me. I'll do it myself.")
-        choice <- select.list(choices, graphics=FALSE)
+        swirl_out(NLang$"To begin, you must install a course...")
+        choices <- c(choices, NLang$"Don't install anything for me...")
+        choice <- select.list(choices)
         n <- which(choice == choices)
         if(length(n) == 0)return(FALSE)
         if(n < length(choices)){
           repeat {
             temp <- try(eval(parse(text=suggestions[[n]]$Install)), silent=TRUE)
             if(is(temp, "try-error")){
-              swirl_out("Sorry, but I'm unable to fetch ", sQuote(choice),
-                        "right now. Are you sure you have an internet connection?",
-                        "If so, would you like to try again or visit",
-                        "the course repository for instructions on how to",
-                        "install a course manually? Type 0 to exit.")
-              ch <- c("Try again!", 
-                      "Send me to the course repository for manual installation.")
+              swirl_out(NLang$"Sorry, but I'm unable to fetch ", sQuote(choice),
+                        NLang$"right now. Are you sure you have an internet connection?")
+              ch <- c(NLang$"Try again!", 
+                      NLang$"Send me to the course repository for manual installation.")
               resp <- select.list(ch, graphics=FALSE)
               if(resp == "") return(FALSE)
               if(resp == ch[2]) {
-                swirl_out("OK. I'm opening the swirl course respository in your browser.")
+                swirl_out(NLang$"OK. I'm opening the swirl course...")
                 browseURL("https://github.com/swirldev/swirl_courses#install-and-run-a-course-manually")
                 return(FALSE)
               }
@@ -98,7 +90,7 @@ mainMenu.default <- function(e){
                                function(x)length(dir(file.path(courseDir(e),x)))>0))
           coursesU <- coursesU[idx]
         } else {
-          swirl_out("OK. I'm opening the swirl course respository in your browser.")
+          swirl_out(NLang$"OK. I'm opening the swirl course...")
           browseURL("https://github.com/swirldev/swirl_courses#swirl-courses")
           return(FALSE)
         }
@@ -109,7 +101,7 @@ mainMenu.default <- function(e){
       while(lesson == ""){
         course <- courseMenu(e, coursesR)
         if(!is.null(names(course)) && names(course)=="repo") {
-          swirl_out("OK. I'm opening the swirl courses web page in your browser.")
+          swirl_out(NLang$"OK. I'm opening the swirl courses web page...")
           browseURL("https://github.com/swirldev/swirl_courses#swirl-courses")
           return(FALSE)
         }
@@ -202,8 +194,19 @@ welcome.test <- function(e, ...){
 
 # Default version.
 welcome.default <- function(e, ...){
-  swirl_out("Welcome to swirl! Please sign in. If you've been here before, use the same name as you did then. If you are new, call yourself something unique.", skip_after=TRUE)
-  return(readline("What shall I call you? "))
+  lang()
+  swirl_out(NLang$"Welcome to swirl...", skip_after=TRUE)
+  return(readline(NLang$"What shall I call you? "))
+}
+
+lang <- function(){
+  choices <- dir(file.path(find.package("swirl"), "Languages"))
+  choices <- gsub("[.]yaml$", "", choices)
+  if(length(ls(NLang)) > 0)return()
+  swirl_out("Please select your preferred language:")
+  language <- select.list(choices, graphics=FALSE)
+  if(language=="")language <- "English"
+  loadNLang(language)
 }
 
 # Presents preliminary information to a new user
@@ -211,14 +214,14 @@ welcome.default <- function(e, ...){
 # @param e persistent environment used here only for its class attribute
 # 
 housekeeping.default <- function(e){
-  swirl_out(paste0("Thanks, ", e$usr,". Let's cover a couple of quick housekeeping items before we begin our first lesson. First off, you should know that when you see '...', that means you should press Enter when you are done reading and ready to continue."))
-  readline("\n...  <-- That's your cue to press Enter to continue")
-  swirl_out("Also, when you see 'ANSWER:', the R prompt (>), or when you are asked to select from a list, that means it's your turn to enter a response, then press Enter to continue.")
-  select.list(c("Continue.", "Proceed.", "Let's get going!"),
-              title="\nSelect 1, 2, or 3 and press Enter", graphics=FALSE)
-  swirl_out("You can exit swirl and return to the R prompt (>) at any time by pressing the Esc key. If you are already at the prompt, type bye() to exit and save your progress. When you exit properly, you'll see a short message letting know you've done so.")
+  swirl_out(paste0(NLang$"Thanks, ", e$usr, NLang$"Let's cover a couple of quick housekeeping..."), skip_after=TRUE)
+  readline(NLang$"That's your cue to press Enter to continue")
+  swirl_out(NLang$"Also, when you see 'ANSWER:'...", skip_after=TRUE)
+  select.list(c(NLang$"Continue.", NLang$"Proceed.", NLang$"Let's get going!"),
+              title=NLang$"Select 1, 2, or 3...", graphics=FALSE)
+  swirl_out(NLang$"You can exit swirl and return to the R prompt...")
   info()
-  swirl_out("Let's get started!", skip_before=FALSE)
+  swirl_out(NLang$"Let's get started!", skip_before=FALSE)
   readline("\n...")
 }
 
@@ -226,8 +229,8 @@ housekeeping.test <- function(e){}
 
 # A stub. Eventually this should be a full menu
 inProgressMenu.default <- function(e, choices){
-  nada <- "No. Let me start something new."
-  swirl_out("Would you like to continue with one of these lessons?")
+  nada <- NLang$"No. Let me start something new."
+  swirl_out(NLang$"Would you like to continue with one of these lessons?")
   selection <- select.list(c(choices, nada), graphics=FALSE)
   # return a blank if the user rejects all choices
   if(identical(selection, nada))selection <- ""
@@ -240,9 +243,9 @@ inProgressMenu.test <- function(e, choices) {
 
 # A stub. Eventually this should be a full menu
 courseMenu.default <- function(e, choices){
-  repo_option <- "Take me to the swirl course repository!"
+  repo_option <- NLang$"Take me to the swirl course repository!"
   choices <- c(choices, repo = repo_option)
-  swirl_out("Please choose a course, or type 0 to exit swirl.")
+  swirl_out(NLang$"Please choose a course, or type 0 to exit swirl.")
   return(select.list(choices, graphics=FALSE))
 }
 
@@ -252,7 +255,7 @@ courseMenu.test <- function(e, choices) {
 
 # A stub. Eventually this should be a full menu
 lessonMenu.default <- function(e, choices){
-  swirl_out("Please choose a lesson, or type 0 to return to course menu.")
+  swirl_out(NLang$"Please choose a lesson, or type 0...")
   return(select.list(choices, graphics=FALSE))
 }
 
@@ -371,3 +374,19 @@ courseDir.default <- function(e){
 # Default for determining the user
 getUser <- function()UseMethod("getUser")
 getUser.default <- function(){"swirladmin"}
+
+# Environment to hold menu content in the appropriate language
+NLang <- new.env(parent=asNamespace("swirl"))
+
+# Load menu content in the appropriate language
+#'@importFrom yaml yaml.load_file
+loadNLang <- function(lang="English"){
+  menuFile <- file.path(find.package("swirl"), "Languages", paste0(lang, ".yaml"))
+  # if the requested language file doesn't exist, load the default
+  if(!file.exists(menuFile)){
+    menuFile <- file.path(find.package("swirl"), "Languages", "en.yaml")
+  }
+  # parse the yaml file to get a named list and transfer the list items
+  # to the NLang environment.
+  xfer(as.environment(yaml.load_file(menuFile)), NLang)
+}

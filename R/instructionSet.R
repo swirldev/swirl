@@ -43,9 +43,9 @@ waitUser.text_order_question <- function(current.row, e){
 
 
 waitUser.video <- function(current.row, e){
-  response <- readline("Yes or No? ")
-  if(tolower(response) %in% c("y", "yes")){
-    swirl_out("Type nxt() to continue")
+  response <- readline(NLang$"Yes or No? ")
+  if(tolower(response) %in% c(NLang$"y", NLang$"yes")){
+    swirl_out(NLang$"Type nxt() to continue")
     e$prompt <- TRUE
     e$playing <- TRUE
     browseURL(current.row[,"VideoLink"])
@@ -66,7 +66,6 @@ waitUser.figure <- function(current.row, e){
   e$row <- 1 + e$row
   e$iptr <- 1
 } 
-
 
 waitUser.mult_question <- function(current.row, e){
   # Use strsplit with split=";" to separate the choices
@@ -131,7 +130,7 @@ testResponse.default <- function(current.row, e){
     if(length(e$snapshot)>0)xfer(as.environment(e$snapshot), globalenv())
     mes <- tryAgain()
     if(is(current.row, "cmd_question")) {
-      mes <- paste(mes, "Or, type info() for more options.")
+      mes <- paste(mes, NLang$"Or, type info() for more options.")
     }
     swirl_out(mes)
     temp <- current.row[,"Hint"]

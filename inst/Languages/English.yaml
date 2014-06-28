@@ -1,0 +1,346 @@
+
+# answerTests.R, answerTests2.R
+
+"That's not the expression I expected...":
+ "That's not the expression I expected but it works."
+
+"I've executed the correct expression in case...":
+ "I've executed the correct expression in case the result is needed in an upcoming question."
+
+"does not exist.":
+ "does not exist."
+
+# install_courses.R
+
+"Course installed successfully!":
+ "Course installed successfully!"
+
+# swirl.R
+
+"Leaving swirl now...":
+ "Leaving swirl now. Type swirl() to resume."
+
+"When you are at the R prompt (>):":
+ "When you are at the R prompt (>):"
+
+"-- Typing skip()...":
+ "-- Typing skip() allows you to skip the current question."
+
+"-- Typing play()...":
+ "-- Typing play() lets you experiment with R on your own; swirl will ignore what you do..."
+
+"-- UNTIL you type nxt()...":
+ "-- UNTIL you type nxt() which will regain swirl's attention."
+
+"-- Typing bye()...":
+ "-- Typing bye() causes swirl to exit. Your progress will be saved."
+
+"-- Typing main()...":
+ "-- Typing main() returns you to swirl's main menu."
+
+"-- Typing info()...":
+ "-- Typing info() displays these options again."
+
+"Resuming lesson...":
+ "Resuming lesson..."
+
+"Entering play mode...":
+ "Entering play mode. Experiment as you please, then type nxt() when you are ready to resume the lesson."
+
+"Entering the following correct answer for you...":
+ "Entering the following correct answer for you..."
+
+"Returning to the main menu...":
+ "Returning to the main menu..."
+
+"Lesson complete! Exiting swirl now...":
+ "Lesson complete! Exiting swirl now..."
+
+"You've reached the end of this lesson...":
+ "You've reached the end of this lesson! Returning to the main menu..."
+
+# Coursera.R
+
+"Are you currently enrolled in the Coursera...":
+ "Are you currently enrolled in the Coursera course associated with this lesson?"
+
+"Would you like me to notify Coursera...":
+ "Would you like me to notify Coursera that you've completed this lesson?"
+
+"If so, I'll need to get some more info from you.":
+ "If so, I'll need to get some more info from you."
+
+"I'll try to tell Coursera...":
+ "I'll try to tell Coursera you've completed this lesson now."
+
+"You skipped too many questions!...":
+ "You skipped too many questions! You'll need to complete"
+
+"this lesson again...":
+ "this lesson again if you'd like to receive credit. Please"
+
+"don't skip more...":
+ "don't skip more than one question next time."
+
+"I've notified Coursera...":
+ "I've notified Coursera that you have completed "
+
+"I'm sorry, something went wrong with automatic submission.":
+ "I'm sorry, something went wrong with automatic submission."
+
+"I'm sorry, something went wrong with establishing connection.":
+ "I'm sorry, something went wrong with establishing a connection."
+
+"To notify Coursera...please upload":
+ "To notify Coursera that you have completed this lesson, please upload"
+
+"to Coursera manually...":
+ "to Coursera manually. You may do so by visiting the Programming Assignments page on your course website and selecting the Submit button next to the appropriate swirl lesson. I've placed the file in the following directory:"
+
+"Would you like to retry automatic submission...":
+ "Would you like to retry automatic submission or just submit manually?"
+
+"Retry automatic submission":
+ "Retry automatic submission"
+
+"Submit manually":
+ "Submit manually"
+
+"The first item I need is your Course ID...":
+ "The first item I need is your Course ID. For example, if the homepage for your Coursera course was 'https://class.coursera.org/rprog-001' then your course ID would be 'rprog-001' (without the quotes)."
+
+"It looks like you entered a web address...":
+ "It looks like you entered a web address, which is not what I'm looking for."
+
+"It looks like you entered a numeric ID...":
+ "It looks like you entered a numeric ID, which is not what I'm looking for."
+
+"It looks like you entered the Course ID...":
+ "It looks like you entered the Course ID that I used as an example, which is not what I'm looking for."
+
+"Instead, I need your Course ID, which is...":
+ "Instead, I need your Course ID, which is the last part of the web address for your Coursera course. For example, if the homepage for your Coursera course was 'https://class.coursera.org/rprog-001' then your course ID would be 'rprog-001' (without the quotes)."
+
+"Is the following information correct?":
+ "Is the following information correct?"
+
+"Yes, go ahead!":
+ "Yes, go ahead!"
+
+"No, I need to change something.":
+ "No, I need to change something."
+
+"Yes":
+ "Yes"
+
+"No":
+ "No"
+
+"Maybe later":
+ "Maybe later"
+
+# utilities.R
+
+"Package":
+ "Package"
+
+"loaded correctly!":
+ "loaded correctly!"
+
+"This lesson requires the":
+ "This lesson requires the"
+
+"package. Would you...":
+ "package. Would you like me to install it for you now?"
+
+"Attemping to load lesson dependencies...":
+ "Attemping to load lesson dependencies..."
+
+"Trying to install package":
+ "Trying to install package"
+
+"now...":
+ "now..."
+
+"Could not install package":
+ "Could not install package"
+
+# menu.R
+
+"To begin, you must install a course...":
+ "To begin, you must install a course. I can install a course for you from the internet, or I can send you to a web page (https://github.com/swirldev/swirl_courses) which will provide course options and directions for installing courses yourself. (If you are not connected to the internet, type 0 to exit.)"
+
+"Don't install anything for me...":
+ "Don't install anything for me. I'll do it myself."
+
+"Sorry, but I'm unable to fetch ":
+ "Sorry, but I'm unable to fetch "
+
+"right now. Are you sure you have an internet connection?":
+ "right now. Are you sure you have an internet connection? If so, would you like to try again or visit the course repository for instructions on how to install a course manually? Type 0 to exit."
+
+"Try again!":
+ "Try again!"
+
+"Send me to the course repository...":
+ "Send me to the course repository for manual installation."
+
+"OK. I'm opening the swirl course...":
+ "OK. I'm opening the swirl course respository in your browser."
+
+"OK. I'm opening the swirl courses web page...":
+ "OK. I'm opening the swirl courses web page in your browser."
+
+"Welcome to swirl...":
+ "Welcome to swirl! Please sign in. If you've been here before, use the same name as you did then. If you are new, call yourself something unique."
+
+"What shall I call you? ":
+ "What shall I call you? "
+
+"Thanks, ":
+ "Thanks, "
+
+"Let's cover a couple of quick housekeeping...":
+ ". Let's cover a couple of quick housekeeping items before we begin our first lesson. First off, you should know that when you see '...', that means you should press Enter when you are done reading and ready to continue."
+
+"That's your cue to press Enter to continue":
+ "...  <-- That's your cue to press Enter to continue"
+
+"Also, when you see 'ANSWER:'...":
+ "Also, when you see 'ANSWER:', the R prompt (>), or when you are asked to select from a list, that means it's your turn to enter a response, then press Enter to continue."
+
+"Continue.":
+ "Continue."
+
+"Proceed.":
+ "Proceed."
+
+"Let's get going!":
+ "Let's get going!"
+
+"Select 1, 2, or 3...":
+ "Select 1, 2, or 3 and press Enter"
+
+"You can exit swirl and return to the R prompt...":
+ "You can exit swirl and return to the R prompt (>) at any time by pressing the Esc key. If you are already at the prompt, type bye() to exit and save your progress. When you exit properly, you'll see a short message letting know you've done so."
+
+"Let's get started!":
+ "Let's get started!"
+
+"Would you like to continue with one of these lessons?":
+ "Would you like to continue with one of these lessons?"
+
+"No. Let me start something new.":
+ "No. Let me start something new."
+
+"Please choose a course, or type 0 to exit swirl.":
+ "Please choose a course, or type 0 to exit swirl."
+
+"Take me to the swirl course repository!":
+ "Take me to the swirl course repository!"
+
+"Please choose a lesson, or type 0...":
+ "Please choose a lesson, or type 0 to return to course menu."
+
+# instructionSet.R
+
+"Type nxt() to continue":
+ "Type nxt() to continue"
+
+"Yes or No? ":
+ "Yes or No? "
+
+"y":
+ "y"
+
+"yes":
+ "yes"
+
+"Or, type info() for more options." :
+ "Or, type info() for more options."
+
+# Phrases.R
+
+"You got it!" :
+ "You got it!"
+
+"Nice work!":
+ "Nice work!"
+
+"Keep up the great work!":
+ "Keep up the great work!"
+
+"You are doing so well!":
+ "You are doing so well!"
+
+"You nailed it! Good job!":
+ "You nailed it! Good job!"
+
+"You're the best!":
+ "You're the best!"
+
+"You are amazing!":
+ "You are amazing!"
+
+"Great job!":
+ "Great job!"
+
+"You are quite good my friend!":
+ "You are quite good my friend!"
+
+"You got it right!":
+ "You got it right!"
+
+"That's correct!":
+ "That's correct!"
+
+"You are really on a roll!":
+ "You are really on a roll!"
+
+"Excellent job!":
+ "Excellent job!"
+
+"That's a job well done!":
+ "That's a job well done!"
+
+"Almost! Try again.":
+ "Almost! Try again."
+
+"You almost had it, but not quite. Try again.":
+ "You almost had it, but not quite. Try again."
+
+"Give it another try.":
+ "Give it another try."
+
+"Not quite! Try again.":
+ "Not quite! Try again."
+
+"Not exactly. Give it another go.":
+ "Not exactly. Give it another go."
+
+"That's not exactly what I'm looking for. Try again.":
+ "That's not exactly what I'm looking for. Try again."
+
+"Nice try, but that's not exactly what I was hoping for. Try again.":
+ "Nice try, but that's not exactly what I was hoping for. Try again."
+
+"Keep trying!":
+ "Keep trying!"
+
+"That's not the answer I was looking for, but try again.":
+ "That's not the answer I was looking for, but try again."
+
+"Not quite right, but keep trying.":
+ "Not quite right, but keep trying."
+
+"You're close...I can feel it! Try it again.":
+ "Not quite right, but keep trying."
+
+# Addenda
+
+"Course installation failed.":
+ "Course installation failed."
+
+"Course directory was successfully zipped!":
+ "Course directory was successfully zipped!"
+
