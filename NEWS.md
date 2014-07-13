@@ -1,3 +1,7 @@
+# swirl 2.2.12
+
+* Use `capture.output()` to avoid double printing due to second evaluation by `safeEval()` when `AUTO_DETECT_NEWVAR` is `TRUE`.
+
 # swirl 2.2.11
 
 * Add `testit()` to functions for callback to ignore, so that swirl plays nicely with swirlify.
