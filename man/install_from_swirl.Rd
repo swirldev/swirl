@@ -3,10 +3,12 @@
 \alias{install_from_swirl}
 \title{Install a course from the official course repository}
 \usage{
-install_from_swirl(course_name)
+install_from_swirl(course_name, ...)
 }
 \arguments{
 \item{course_name}{The name of the course you wish to install.}
+
+\item{...}{Other parameters like \code{proxy_settings()}.}
 }
 \description{
 We are currently maintaining a central repository of contributed

@@ -3,12 +3,14 @@
 \alias{install_course_google_drive}
 \title{Install a course from a zipped course directory shared on Google Drive}
 \usage{
-install_course_google_drive(url, multi = FALSE)
+install_course_google_drive(url, multi = FALSE, ...)
 }
 \arguments{
 \item{url}{URL of the shared file}
 
 \item{multi}{The user should set to \code{TRUE} if the zipped directory contains multiple courses. The default value is \code{FALSE}.}
+
+\item{...}{Other parameters like \code{proxy_settings()}.}
 }
 \description{
 Install a course from a zipped course directory shared on Google Drive
