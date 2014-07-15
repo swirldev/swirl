@@ -10,6 +10,8 @@ present.default <- function(current.row, e){
   is_mult <- is(e$current.row, "mult_question")
   # Present output to user
   swirl_out(current.row[, "Output"], skip_after=!is_mult)
+  # Initialize attempts counter, if necessary
+  if(!exists("attempts", e)) e$attempts <- 1
   # Increment pointer
   e$iptr <- 1 + e$iptr
 }
@@ -102,15 +104,19 @@ waitUser.cmd_question <- function(current.row, e){
 
 waitUser.script <- function(current.row, e){
   # Get file path of R script
-  fp <- file.path(e$path, current.row[,"Script"])
-  # Create temp path, so user won't overwrite the original
-  temp_path <- tempfile(fileext = '.R')
+  fp <- file.path(e$path, "scripts", current.row[,"Script"])
+  # If this is the first attempt, then create a new temp file path
+  if(e$attempts == 1) {
+    e$script_temp_path <- tempfile(fileext = '.R')
+  } 
+  # So user won't overwrite the original script
+  temp_path <- e$script_temp_path
   # Make a copy
   file.copy(fp, temp_path)
   # Have user edit the copy
   file.edit(temp_path)
   # Prompt user to press Enter
-  readline("Press Enter when you have saved your completed script...")
+  readline("\nPress Enter when you have saved your completed script...")
   # Source edited script
   source(temp_path)
   # Advance lesson
@@ -124,6 +130,9 @@ waitUser.script <- function(current.row, e){
 testResponse <- function(current.row, e)UseMethod("testResponse")
 
 testResponse.default <- function(current.row, e){
+  # Increment attempts counter
+  e$attempts <- 1 + e$attempts
+  # Get answer tests
   tests <- current.row[,"AnswerTests"]
   if(is.na(tests) || tests == ""){
     results <- is(e, "dev")
@@ -139,6 +148,8 @@ testResponse.default <- function(current.row, e){
     swirl_out(praise())
     e$iptr <- 1
     e$row <- 1 + e$row
+    # Reset attempts counter, since correct
+    e$attempts <- 1
   } else {
     # Restore the previous global environment from the official
     # in case the user has garbled it, e.g., has typed x <- 3*x
