@@ -26,7 +26,7 @@ mainMenu.default <- function(e){
   # Welcome the user if necessary and set up progress tracking
   if(!exists("usr",e,inherits = FALSE)){
     e$usr <- welcome(e)
-    udat <- file.path(find.package("swirl"), "user_data", e$usr)
+    udat <- file.path("~", ".swirl", "user_data", e$usr)
     if(!file.exists(udat)){
       housekeeping(e)
       dir.create(udat, recursive=TRUE)
