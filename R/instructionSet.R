@@ -55,9 +55,9 @@ waitUser.video <- function(current.row, e){
 }
 
 waitUser.figure <- function(current.row, e){
-  file.path <- paste(e$path,current.row[,"Figure"],sep="/")
+  fp <- file.path(e$path, current.row[,"Figure"])
   local({
-    source(file.path,local=TRUE)
+    source(fp,local=TRUE)
     xfer(environment(), globalenv())
     temp <- as.list(environment())
     e$snapshot <- c(e$snapshot, temp)
@@ -97,6 +97,23 @@ waitUser.range_question <- function(current.row, e){
 waitUser.cmd_question <- function(current.row, e){
   # Indicate a return to the prompt is necessary.
   e$prompt <- TRUE
+  e$iptr <- 1 + e$iptr
+}
+
+waitUser.script <- function(current.row, e){
+  # Get file path of R script
+  fp <- file.path(e$path, current.row[,"Script"])
+  # Create temp path, so user won't overwrite the original
+  temp_path <- tempfile(fileext = '.R')
+  # Make a copy
+  file.copy(fp, temp_path)
+  # Have user edit the copy
+  file.edit(temp_path)
+  # Prompt user to press Enter
+  readline("Press Enter when you have saved your completed script...")
+  # Source edited script
+  source(temp_path)
+  # Advance lesson
   e$iptr <- 1 + e$iptr
 }
 
