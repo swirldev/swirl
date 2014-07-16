@@ -4,7 +4,7 @@ praise <- function() {
                "Nice work!",
                "Keep up the great work!",
                "You are doing so well!",
-               "All that hark work is paying off!",
+               "All that hard work is paying off!",
                "You nailed it! Good job!",
                "You're the best!",
                "You are amazing!",
