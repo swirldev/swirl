@@ -141,6 +141,23 @@ nxt <- function(){invisible()}
 #' }
 skip <- function(){invisible()}
 
+#' Submit the active R script in response to a question.
+#' 
+#' When a swirl question requires the user to edit an R script, the
+#' \code{submit()} function allows the user to submit their response.
+#' @export
+#' @examples
+#' \dontrun{
+#' 
+#' | Create a function called f that takes one argument, x, and
+#' | returns the value of x squared.
+#' 
+#' > submit()
+#' 
+#' | You are quite good my friend!
+#' }
+submit <- function(){invisible()}
+
 #' Tell swirl to ignore console input for a while.
 #' 
 #' It is sometimes useful to play around in the R console out of
@@ -320,6 +337,13 @@ resume.default <- function(e, ...){
               skip_after=TRUE)
     message("> ", e$current.row[, "CorrectAnswer"])
   }
+  
+  # The user wants to submit their R script
+  if(uses_func("submit")(e$expr)[[1]]){
+    source(e$script_temp_path)
+    invisible()
+  }
+  
   # If the user want to return to the main menu, do the bookkeeping
   if(uses_func("main")(e$expr)[[1]]){
     swirl_out("Returning to the main menu...")

@@ -116,9 +116,10 @@ waitUser.script <- function(current.row, e){
   # Have user edit the copy
   file.edit(temp_path)
   # Prompt user to press Enter
-  readline("\nPress Enter when you have saved your completed script...")
-  # Source edited script
-  source(temp_path)
+  swirl_out("Type submit() when you have saved your completed script...",
+            skip_before = FALSE, skip_after = TRUE)
+  # Indicate a return to the prompt is necessary
+  e$prompt <- TRUE
   # Advance lesson
   e$iptr <- 1 + e$iptr
 }
