@@ -303,6 +303,13 @@ resume.default <- function(e, ...){
     e$playing <- FALSE
     e$iptr <- 1
   }
+  
+  # The user wants to submit their R script
+  if(uses_func("submit")(e$expr)[[1]]){
+    e$playing <- FALSE
+    try(source(e$script_temp_path))
+  }
+  
   if(uses_func("play")(e$expr)[[1]]){
     swirl_out("Entering play mode. Experiment as you please, then type nxt() when you are ready to resume the lesson.", skip_after=TRUE)
     e$playing <- TRUE
@@ -336,12 +343,6 @@ resume.default <- function(e, ...){
     swirl_out("Entering the following correct answer for you...",
               skip_after=TRUE)
     message("> ", e$current.row[, "CorrectAnswer"])
-  }
-  
-  # The user wants to submit their R script
-  if(uses_func("submit")(e$expr)[[1]]){
-    source(e$script_temp_path)
-    invisible()
   }
   
   # If the user want to return to the main menu, do the bookkeeping
