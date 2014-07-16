@@ -1,5 +1,11 @@
 # swirl 2.2.12
 
+* Trim leading/trailing whitespace when reading lesson dependencies from dependson.txt.
+
+* Add `dev` argument to `install_from_swirl()` to allow installation of courses in development from the [swirl_misc](http://github.com/swirldev/swirl_misc/zipball/master) repository.
+
+* Update phrases.R to include new praise and 'try again' phrases. Thanks to @sagevann for the suggestions.
+
 * Use `capture.output()` to avoid double printing due to second evaluation by `safeEval()` when `AUTO_DETECT_NEWVAR` is `TRUE`.
 
 # swirl 2.2.11
