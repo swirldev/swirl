@@ -1,11 +1,19 @@
 #' Install a course from the official course repository
 #' 
+#' @description
 #' We are currently maintaining a central repository of contributed
 #' swirl courses at \url{https://github.com/swirldev/swirl_courses}.
 #' This function provides the easiest method of installing a course
 #' form the repository.
 #' 
+#' We have another repository at 
+#' \url{https://github.com/swirldev/swirl_misc}, where we keep 
+#' experimental features and content. The \code{dev} argument allows
+#' you to access this repository. Content in the swirl_misc repository
+#' is not guaranteed to work.
+#' 
 #' @param course_name The name of the course you wish to install.
+#' @param dev Set to \code{TRUE} to install a course in development from the swirl_misc repository.
 #' @export
 #' @importFrom httr GET content
 #' @examples
@@ -16,13 +24,28 @@
 #' ### OR ###
 #' 
 #' install_from_swirl("R Programming") # Course name
+#' 
+#' # To install a course in development from the swirl_misc repository
+#' install_from_swirl("Including Data", dev = TRUE)
 #' }
-install_from_swirl <- function(course_name){
+install_from_swirl <- function(course_name, dev = FALSE){
+  # Validate arguments
+  if(!is.character(course_name)) {
+    stop("Argument 'course_name' must be surrounded by quotes (i.e. a character string)!")
+  }
+  if(!is.logical(dev)) {
+    stop("Argument 'dev' must be either TRUE or FALSE!")
+  }
+  
   # make pathname from course_name
   course_name <- make_pathname(course_name)
   
-  # Construct url to the zip file
-  url <- "http://github.com/swirldev/swirl_courses/zipball/master"
+  # Construct url to the appropriate zip file
+  if(dev) {
+    url <- "http://github.com/swirldev/swirl_misc/zipball/master"
+  } else {
+    url <- "http://github.com/swirldev/swirl_courses/zipball/master"
+  }
   
   # Send GET request
   response <- GET(url)
