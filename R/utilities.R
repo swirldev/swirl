@@ -121,6 +121,7 @@ loadDependencies <- function(lesson_dir) {
     if(length(packages_as_chars) == 0) return(TRUE)
     swirl_out("Attemping to load lesson dependencies...")
     for(p in packages_as_chars) {
+      p <- gsub("^\\s+|\\s+$", "", p) # trim leading and trailing whitespace 
       if(suppressPackageStartupMessages(
         suppressWarnings(
           suppressMessages(require(p, character.only=TRUE, quietly=TRUE))))) {
