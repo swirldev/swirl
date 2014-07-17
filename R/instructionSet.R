@@ -168,7 +168,12 @@ testResponse.default <- function(current.row, e){
     temp <- current.row[,"Hint"]
     # Suppress extra space if multiple choice
     is_mult <- is(e$current.row, "mult_question")
-    if (!is.na(temp)) swirl_out(current.row[,"Hint"], skip_after=!is_mult)
+    # If hint is specified, print it. Otherwise, just skip a line.
+    if (!is.na(temp)) {
+      swirl_out(current.row[,"Hint"], skip_after=!is_mult)
+    } else {
+      message()
+    }
     e$iptr <- e$iptr - 1
   }
 }
