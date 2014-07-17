@@ -1,3 +1,7 @@
+# swirl 2.2.13
+
+* Add a new `script` question type, which allows an instructor to present a preformatted R script to the user for editing and submission. swirl was originally designed for interactive programming at the prompt. It now accommodates multiline input, which allows for exploration of topics like writing functions and control structures, as well as more extended function calls.
+
 # swirl 2.2.12
 
 * Trim leading/trailing whitespace when reading lesson dependencies from dependson.txt.

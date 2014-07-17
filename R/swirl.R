@@ -254,7 +254,8 @@ resume <- function(...)UseMethod("resume")
 # if necessary. The three instructions are themselves S3 methods which 
 # depend on the class of the active row of the course lesson. The 
 # instruction set is thus extensible. It can be found in R/instructionSet.R. 
-# 
+
+#' @importFrom tools file_path_sans_ext
 resume.default <- function(e, ...){
   # Check that if running in test mode, all necessary args are specified
   if(is(e, "test")) {
@@ -314,24 +315,43 @@ resume.default <- function(e, ...){
     swirl_out("Entering play mode. Experiment as you please, then type nxt() when you are ready to resume the lesson.", skip_after=TRUE)
     e$playing <- TRUE
   }
-  # If the user is playing, ignore console input,
-  # but remain in operation.
-  if(exists("playing", envir=e, inherits=FALSE) && e$playing){
-    esc_flag <- FALSE
-    return(TRUE)
-  }
+  
   # If the user wants to skip the current question, do the bookkeeping.
   if(uses_func("skip")(e$expr)[[1]]){
     # Increment a skip count kept in e.
-    if(!exists("skips", e))e$skips <- 0
+    if(!exists("skips", e)) e$skips <- 0
     e$skips <- 1 + e$skips
     # Enter the correct answer for the user
     # by simulating what the user should have done
-    #
     correctAns <- e$current.row[,"CorrectAnswer"]
+    
+    # If we are on a script question, the correct answer should
+    # simply source the correct script
+    if(is(e$current.row, "script") && is.na(correctAns)) {
+      orig_script_name <- e$current.row[, "Script"]
+      correct_script_name <- paste0(tools::file_path_sans_ext(orig_script_name),
+                                    "-correct.R")
+      correct_script_path <- file.path(e$path, "scripts", 
+                                       correct_script_name)
+      if(file.exists(correct_script_path)) {
+        # Construct call to source the correct script
+        correctAns <- paste0("source('", correct_script_path, "')")
+        # Inform the user and open the correct script
+        swirl_out("I'm opening a script with one possible solution in it.",
+                  skip_after=TRUE)
+        file.edit(correct_script_path)
+        readline("Press Enter when you are ready to continue...")
+      }
+    } else {
+      # Inform the user and expose the correct answer
+      swirl_out("Entering the following correct answer for you...",
+                skip_after=TRUE)
+      message("> ", e$current.row[, "CorrectAnswer"])
+    }
+    
     # In case correctAns refers to newVar, add it
     # to the official list AND the global environment
-    if(exists("newVarName",e)){
+    if(exists("newVarName",e)) {
       correctAns <- gsub("newVar", e$newVarName, correctAns)
     }
     e$expr <- parse(text=correctAns)[[1]]
@@ -339,11 +359,16 @@ resume.default <- function(e, ...){
     e$val <- suppressMessages(suppressWarnings(eval(e$expr, ce)))
     xfer(ce, globalenv())
     ce <- as.list(ce)
-    # Inform the user, but don't expose the actual answer.    
-    swirl_out("Entering the following correct answer for you...",
-              skip_after=TRUE)
-    message("> ", e$current.row[, "CorrectAnswer"])
-  }
+    
+    # Make sure playing flag is off
+    e$playing <- FALSE
+    
+    # If the user is not trying to skip and is playing, 
+    # ignore console input, but remain in operation.
+  } else if(exists("playing", envir=e, inherits=FALSE) && e$playing) {
+    esc_flag <- FALSE
+    return(TRUE)
+  }    
   
   # If the user want to return to the main menu, do the bookkeeping
   if(uses_func("main")(e$expr)[[1]]){
