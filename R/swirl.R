@@ -334,37 +334,40 @@ resume.default <- function(e, ...){
       correct_script_path <- file.path(e$path, "scripts", 
                                        correct_script_name)
       if(file.exists(correct_script_path)) {
-        # Construct call to source the correct script
-        correctAns <- paste0("source('", correct_script_path, "')")
+        # Source the correct script
+        try(source(correct_script_path))
         # Inform the user and open the correct script
-        swirl_out("I'm opening a script with one possible solution in it.",
+        swirl_out("I just opened a script that demonstrates one possible solution.",
                   skip_after=TRUE)
         file.edit(correct_script_path)
         readline("Press Enter when you are ready to continue...")
       }
+      
+    # If this is not a script question...
     } else {
+      # In case correctAns refers to newVar, add it
+      # to the official list AND the global environment
+      if(exists("newVarName",e)) {
+        correctAns <- gsub("newVar", e$newVarName, correctAns)
+      }
+      e$expr <- parse(text=correctAns)[[1]]
+      ce <- cleanEnv(e$snapshot)
+      e$val <- suppressMessages(suppressWarnings(eval(e$expr, ce)))
+      xfer(ce, globalenv())
+      ce <- as.list(ce)
+      
       # Inform the user and expose the correct answer
       swirl_out("Entering the following correct answer for you...",
                 skip_after=TRUE)
       message("> ", e$current.row[, "CorrectAnswer"])
+      
     }
     
-    # In case correctAns refers to newVar, add it
-    # to the official list AND the global environment
-    if(exists("newVarName",e)) {
-      correctAns <- gsub("newVar", e$newVarName, correctAns)
-    }
-    e$expr <- parse(text=correctAns)[[1]]
-    ce <- cleanEnv(e$snapshot)
-    e$val <- suppressMessages(suppressWarnings(eval(e$expr, ce)))
-    xfer(ce, globalenv())
-    ce <- as.list(ce)
-    
-    # Make sure playing flag is off
+    # Make sure playing flag is off since user skipped
     e$playing <- FALSE
     
-    # If the user is not trying to skip and is playing, 
-    # ignore console input, but remain in operation.
+  # If the user is not trying to skip and is playing, 
+  # ignore console input, but remain in operation.
   } else if(exists("playing", envir=e, inherits=FALSE) && e$playing) {
     esc_flag <- FALSE
     return(TRUE)
