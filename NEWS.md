@@ -1,5 +1,7 @@
 # swirl 2.2.12
 
+* In `welcome.default()`, make sure the user doesn't put any special characters (using the `[[:punct:]]` regex) in his or her name, as this might lead to an invalid file path for their user data. Thanks to @Sarpwus for bringing this to my attention.
+
 * Trim leading/trailing whitespace when reading lesson dependencies from dependson.txt.
 
 * Add `dev` argument to `install_from_swirl()` to allow installation of courses in development from the [swirl_misc](http://github.com/swirldev/swirl_misc/zipball/master) repository.

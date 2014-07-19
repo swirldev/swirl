@@ -203,7 +203,13 @@ welcome.test <- function(e, ...){
 # Default version.
 welcome.default <- function(e, ...){
   swirl_out("Welcome to swirl! Please sign in. If you've been here before, use the same name as you did then. If you are new, call yourself something unique.", skip_after=TRUE)
-  return(readline("What shall I call you? "))
+  resp <- readline("What shall I call you? ")
+  while(str_detect(resp, '[[:punct:]]')) {
+    swirl_out("Please don't use any quotes or other punctuation in your name.",
+              skip_after = TRUE)
+    resp <- readline("What shall I call you? ")
+  }
+  return(resp)
 }
 
 # Presents preliminary information to a new user
