@@ -381,6 +381,24 @@ resume.default <- function(e, ...){
       rm("les", envir=e, inherits=FALSE)
     }
   }
+  
+  # If user is looking up a help file, ignore their input
+  # unless the correct answer involves do so
+  if(uses_func("help")(e$expr)[[1]] || 
+       uses_func("`?`")(e$expr)[[1]]){
+    # Get current correct answer
+    corrans <- e$current.row[, "CorrectAnswer"]
+    # Parse the correct answer
+    corrans_parsed <- parse(text = corrans)
+    # See if it contains ? or help
+    uses_help <- uses_func("help")(corrans_parsed)[[1]] ||
+      uses_func("`?`")(corrans_parsed)[[1]]
+    if(!uses_help) {
+      esc_flag <- FALSE
+      return(TRUE)
+    }
+  }
+  
   # Method menu initializes or reinitializes e if necessary.
   temp <- mainMenu(e)
   # If menu returns FALSE, the user wants to exit.
