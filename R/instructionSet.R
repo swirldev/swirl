@@ -10,6 +10,8 @@ present.default <- function(current.row, e){
   is_mult <- is(e$current.row, "mult_question")
   # Present output to user
   swirl_out(current.row[, "Output"], skip_after=!is_mult)
+  # Initialize attempts counter, if necessary
+  if(!exists("attempts", e)) e$attempts <- 1
   # Increment pointer
   e$iptr <- 1 + e$iptr
 }
@@ -55,9 +57,9 @@ waitUser.video <- function(current.row, e){
 }
 
 waitUser.figure <- function(current.row, e){
-  file.path <- paste(e$path,current.row[,"Figure"],sep="/")
+  fp <- file.path(e$path, current.row[,"Figure"])
   local({
-    source(file.path,local=TRUE)
+    source(fp,local=TRUE)
     xfer(environment(), globalenv())
     temp <- as.list(environment())
     e$snapshot <- c(e$snapshot, temp)
@@ -100,6 +102,30 @@ waitUser.cmd_question <- function(current.row, e){
   e$iptr <- 1 + e$iptr
 }
 
+waitUser.script <- function(current.row, e){
+  # Get file path of R script
+  fp <- file.path(e$path, "scripts", current.row[,"Script"])
+  # If this is the first attempt, then create a new temp file path
+  if(e$attempts == 1) {
+    e$script_temp_path <- tempfile(fileext = '.R')
+  } 
+  # So user won't overwrite the original script
+  temp_path <- e$script_temp_path
+  # Make a copy
+  file.copy(fp, temp_path)
+  # Have user edit the copy
+  file.edit(temp_path)
+  # Prompt user to press Enter
+  swirl_out("Edit the script and experiment in the console as much as you want. When you are ready to move on, SAVE YOUR SCRIPT and type submit() at the prompt...",
+            skip_before = FALSE, skip_after = TRUE)
+  # Indicate a return to the prompt is necessary
+  e$prompt <- TRUE
+  # Enter 'play' mode so that user can mess around in the console
+  e$playing <- TRUE
+  # Advance lesson
+  e$iptr <- 1 + e$iptr
+}
+
 # Only the question classes enter a testing loop. Testing is the
 # same in both cases. If the response is correct they indicate
 # instruction should progress. If incorrect, they publish a hint
@@ -107,6 +133,9 @@ waitUser.cmd_question <- function(current.row, e){
 testResponse <- function(current.row, e)UseMethod("testResponse")
 
 testResponse.default <- function(current.row, e){
+  # Increment attempts counter
+  e$attempts <- 1 + e$attempts
+  # Get answer tests
   tests <- current.row[,"AnswerTests"]
   if(is.na(tests) || tests == ""){
     results <- is(e, "dev")
@@ -122,6 +151,8 @@ testResponse.default <- function(current.row, e){
     swirl_out(praise())
     e$iptr <- 1
     e$row <- 1 + e$row
+    # Reset attempts counter, since correct
+    e$attempts <- 1
   } else {
     # Restore the previous global environment from the official
     # in case the user has garbled it, e.g., has typed x <- 3*x
@@ -137,7 +168,12 @@ testResponse.default <- function(current.row, e){
     temp <- current.row[,"Hint"]
     # Suppress extra space if multiple choice
     is_mult <- is(e$current.row, "mult_question")
-    if (!is.na(temp)) swirl_out(current.row[,"Hint"], skip_after=!is_mult)
+    # If hint is specified, print it. Otherwise, just skip a line.
+    if (!is.na(temp)) {
+      swirl_out(current.row[,"Hint"], skip_after=!is_mult)
+    } else {
+      message()
+    }
     e$iptr <- e$iptr - 1
   }
 }
