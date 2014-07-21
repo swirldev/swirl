@@ -301,6 +301,8 @@ resume.default <- function(e, ...){
   # The user wants to submit their R script
   if(uses_func("submit")(e$expr)[[1]]){
     e$playing <- FALSE
+    e$script_contents <- readLines(e$script_temp_path, warn = FALSE)
+    swirl_out("Sourcing your script...", skip_after = TRUE)
     try(source(e$script_temp_path))
   }
   

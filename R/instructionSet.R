@@ -116,7 +116,7 @@ waitUser.script <- function(current.row, e){
   # Have user edit the copy
   file.edit(temp_path)
   # Prompt user to press Enter
-  swirl_out("Edit the script and experiment in the console as much as you want. When you are ready to move on, SAVE YOUR SCRIPT and type submit() at the prompt...",
+  swirl_out("INSTRUCTIONS: Edit the script and experiment in the console as much as you want. When you are ready to move on, SAVE YOUR SCRIPT and type submit() at the prompt...",
             skip_before = FALSE, skip_after = TRUE)
   # Indicate a return to the prompt is necessary
   e$prompt <- TRUE
