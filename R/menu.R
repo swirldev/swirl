@@ -283,7 +283,10 @@ loadLesson.default <- function(e, courseU, lesson){
     # since a reference to e$snapshot will cause e to appear in
     # local environment.
     xfer(environment(), globalenv())
-    e$snapshot <- as.list(environment())
+    # Only add to the "official record" if are auto-detecting new variables
+    if(isTRUE(customTests$AUTO_DETECT_NEWVAR)) {
+      e$snapshot <- as.list(environment())
+    }
   })
   # load any custom tests, returning FALSE if they fail to load
   clearCustomTests()
