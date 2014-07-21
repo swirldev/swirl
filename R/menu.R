@@ -202,7 +202,8 @@ welcome.test <- function(e, ...){
 
 # Default version.
 welcome.default <- function(e, ...){
-  swirl_out("Welcome to swirl! Please sign in. If you've been here before, use the same name as you did then. If you are new, call yourself something unique.", skip_after=TRUE)
+  swirl_out("Welcome to swirl!")
+  swirl_out("Please sign in. If you've been here before, use the same name as you did then. If you are new, call yourself something unique.", skip_after=TRUE)
   resp <- readline("What shall I call you? ")
   while(str_detect(resp, '[[:punct:]]')) {
     swirl_out("Please don't use any quotes or other punctuation in your name.",
@@ -283,7 +284,10 @@ loadLesson.default <- function(e, courseU, lesson){
     # since a reference to e$snapshot will cause e to appear in
     # local environment.
     xfer(environment(), globalenv())
-    e$snapshot <- as.list(environment())
+    # Only add to the "official record" if are auto-detecting new variables
+    if(isTRUE(customTests$AUTO_DETECT_NEWVAR)) {
+      e$snapshot <- as.list(environment())
+    }
   })
   # load any custom tests, returning FALSE if they fail to load
   clearCustomTests()

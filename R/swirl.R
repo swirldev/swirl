@@ -228,19 +228,12 @@ main <- function(){invisible()}
 #' }
 info <- function(){
   swirl_out("When you are at the R prompt (>):")
-  
   swirl_out("-- Typing skip() allows you to skip the current question.", skip_before=FALSE)
-  
   swirl_out("-- Typing play() lets you experiment with R on your own; swirl will ignore what you do...", skip_before=FALSE)
   swirl_out("-- UNTIL you type nxt() which will regain swirl's attention.", skip_before=FALSE)
-  
   swirl_out("-- Typing bye() causes swirl to exit. Your progress will be saved.", skip_before=FALSE)
-  
   swirl_out("-- Typing main() returns you to swirl's main menu.", skip_before=FALSE)
-  
   swirl_out("-- Typing info() displays these options again.", skip_before=FALSE, skip_after=TRUE)
-
-  
   invisible()
 }
 
@@ -308,6 +301,8 @@ resume.default <- function(e, ...){
   # The user wants to submit their R script
   if(uses_func("submit")(e$expr)[[1]]){
     e$playing <- FALSE
+    e$script_contents <- readLines(e$script_temp_path, warn = FALSE)
+    swirl_out("Sourcing your script...", skip_after = TRUE)
     try(source(e$script_temp_path))
   }
   
@@ -418,7 +413,7 @@ resume.default <- function(e, ...){
        !uses_func("swirlify")(e$expr)[[1]] &&
        !uses_func("testit")(e$expr)[[1]] &&
        !uses_func("nxt")(e$expr)[[1]] &&
-       customTests$AUTO_DETECT_NEWVAR){
+       isTRUE(customTests$AUTO_DETECT_NEWVAR)) {
     e$delta <- mergeLists(safeEval(e$expr, e), e$delta)
   }
   # Execute instructions until a return to the prompt is necessary
