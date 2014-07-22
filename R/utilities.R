@@ -165,6 +165,17 @@ complete_part <- function(e) {
   exec_cmd <- function(row) {
     if(row['Class'] == "cmd_question") {
       eval(parse(text = row['CorrectAnswer']), envir=globalenv())
+    } else if(row['Class'] == "script") {
+      orig_script_name <- row['Script']
+      correct_script_name <- paste0(
+        tools::file_path_sans_ext(orig_script_name), "-correct.R")
+      correct_script_path <- file.path(e$path, "scripts", 
+                                       correct_script_name)
+      if(file.exists(correct_script_path)) {
+        try(source(correct_script_path))
+      } else {
+        stop("Correct script not found at ", correct_script_path)
+      }
     }
   }
   message("Completing the first part of the lesson for you...\n")

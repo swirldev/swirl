@@ -150,6 +150,8 @@ mainMenu.default <- function(e){
           e$les <- loadLesson(e, courseU, lesson)
         }
       }
+      # For sourcing files which construct figures etc
+      e$path <- file.path(courseDir(e), courseU, lesson)
       # If running in 'test' mode and starting partway through 
       # lesson, then complete first part
       if(is(e, "test") && e$test_from > 1) {
@@ -180,8 +182,6 @@ mainMenu.default <- function(e){
       loadInstructions(e)
       # An identifier for the active row
       e$current.row <- NULL
-      # For sourcing files which construct figures etc
-      e$path <- file.path(courseDir(e), courseU, lesson)
       # Set up paths and files to save user progress
       # Make file path from lesson info
       fname <- progressName(attr(e$les,"course_name"), attr(e$les,"lesson_name"))
