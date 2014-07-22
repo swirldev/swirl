@@ -301,6 +301,7 @@ resume.default <- function(e, ...){
   # The user wants to submit their R script
   if(uses_func("submit")(e$expr)[[1]]){
     e$playing <- FALSE
+    # Get contents from user's submitted script
     e$script_contents <- readLines(e$script_temp_path, warn = FALSE)
     swirl_out("Sourcing your script...", skip_after = TRUE)
     try(source(e$script_temp_path))
@@ -329,6 +330,8 @@ resume.default <- function(e, ...){
       correct_script_path <- file.path(e$path, "scripts", 
                                        correct_script_name)
       if(file.exists(correct_script_path)) {
+        # Get contents of the correct script
+        e$script_contents <- readLines(correct_script_path, warn = FALSE)
         # Source the correct script
         try(source(correct_script_path))
         # Inform the user and open the correct script
