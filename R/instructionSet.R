@@ -102,9 +102,17 @@ waitUser.cmd_question <- function(current.row, e){
   e$iptr <- 1 + e$iptr
 }
 
+#' @importFrom tools file_path_sans_ext
 waitUser.script <- function(current.row, e){
-  # Get file path of R script
-  fp <- file.path(e$path, "scripts", current.row[,"Script"])
+  # Get original script name
+  orig_script_name <- current.row[,"Script"]
+  # Get file path of original script
+  fp <- file.path(e$path, "scripts", orig_script_name)
+  # Get file path of correct script and save to e
+  correct_script_name <- paste0(
+    tools::file_path_sans_ext(orig_script_name), "-correct.R")
+  e$correct_script_path <- file.path(e$path, "scripts", 
+                                   correct_script_name)
   # If this is the first attempt, then create a new temp file path
   if(e$attempts == 1) {
     e$script_temp_path <- tempfile(fileext = '.R')
@@ -115,7 +123,7 @@ waitUser.script <- function(current.row, e){
   file.copy(fp, temp_path)
   # Have user edit the copy
   file.edit(temp_path)
-  # Prompt user to press Enter
+  # Give instructions
   swirl_out("INSTRUCTIONS: Edit the script and experiment in the console as much as you want. When you are ready to move on, SAVE YOUR SCRIPT and type submit() at the prompt. The script will remain open until you close it.",
             skip_before = FALSE, skip_after = TRUE)
   # Indicate a return to the prompt is necessary

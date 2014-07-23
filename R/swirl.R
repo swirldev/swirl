@@ -248,7 +248,6 @@ resume <- function(...)UseMethod("resume")
 # depend on the class of the active row of the course lesson. The 
 # instruction set is thus extensible. It can be found in R/instructionSet.R. 
 
-#' @importFrom tools file_path_sans_ext
 resume.default <- function(e, ...){
   # Check that if running in test mode, all necessary args are specified
   if(is(e, "test")) {
@@ -324,11 +323,7 @@ resume.default <- function(e, ...){
     # If we are on a script question, the correct answer should
     # simply source the correct script
     if(is(e$current.row, "script") && is.na(correctAns)) {
-      orig_script_name <- e$current.row[, "Script"]
-      correct_script_name <- paste0(tools::file_path_sans_ext(orig_script_name),
-                                    "-correct.R")
-      correct_script_path <- file.path(e$path, "scripts", 
-                                       correct_script_name)
+      correct_script_path <- e$correct_script_path
       if(file.exists(correct_script_path)) {
         # Get contents of the correct script
         e$script_contents <- readLines(correct_script_path, warn = FALSE)
