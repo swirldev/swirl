@@ -1,8 +1,8 @@
-# Instruction set for swirl.R's "virtual machine". 
+# Instruction set for swirl.R's "virtual machine".
 
 # All classes first Output, all in the same way, hence one method
 # suffices.
-# 
+#
 present <- function(current.row, e)UseMethod("present")
 
 present.default <- function(current.row, e){
@@ -67,7 +67,7 @@ waitUser.figure <- function(current.row, e){
   readline("...")
   e$row <- 1 + e$row
   e$iptr <- 1
-} 
+}
 
 
 waitUser.mult_question <- function(current.row, e){
@@ -75,7 +75,7 @@ waitUser.mult_question <- function(current.row, e){
   # Use select.list to get the user's choice.
   choices <- strsplit(current.row[,"AnswerChoices"],";")
   # Strsplit returns a list but we want only its first element,
-  # a vector of choices. Use str_trim (pkg stringr) to remove 
+  # a vector of choices. Use str_trim (pkg stringr) to remove
   # leading and trailing white space from the choices.
   choices <- str_trim(choices[[1]])
   # Store the choice in e$val for testing
@@ -111,18 +111,21 @@ waitUser.script <- function(current.row, e){
   # Get file path of correct script and save to e
   correct_script_name <- paste0(
     tools::file_path_sans_ext(orig_script_name), "-correct.R")
-  e$correct_script_path <- file.path(e$path, "scripts", 
+  e$correct_script_path <- file.path(e$path, "scripts",
                                    correct_script_name)
-  # If this is the first attempt, then create a new temp file path
-  if(e$attempts == 1) {
+  # If this is the first attempt or the user wants to start over, 
+  # then create a new temp file path
+  # so user won't overwrite the original script
+  if(e$attempts == 1 || isTRUE(e$reset)) {
     e$script_temp_path <- tempfile(fileext = '.R')
-  } 
-  # So user won't overwrite the original script
-  temp_path <- e$script_temp_path
-  # Make a copy
-  file.copy(fp, temp_path)
-  # Have user edit the copy
-  file.edit(temp_path)
+    # Make a copy
+    file.copy(fp, e$script_temp_path, overwrite = TRUE)
+    # Set reset flag back FALSE
+    e$reset <- FALSE
+  }
+  # Have user edit the copy. This will reopen the file if 
+  # accidentally closed
+  file.edit(e$script_temp_path)
   # Give instructions
   # swirl_out("INSTRUCTIONS: Edit the script and experiment in the console as much as you want. When you are ready to move on, SAVE YOUR SCRIPT and type submit() at the prompt. The script will remain open until you close it.",
   #          skip_before = FALSE, skip_after = TRUE)
@@ -137,7 +140,7 @@ waitUser.script <- function(current.row, e){
 # Only the question classes enter a testing loop. Testing is the
 # same in both cases. If the response is correct they indicate
 # instruction should progress. If incorrect, they publish a hint
-# and return to the previous step. 
+# and return to the previous step.
 testResponse <- function(current.row, e)UseMethod("testResponse")
 
 testResponse.default <- function(current.row, e){
@@ -188,10 +191,10 @@ testResponse.default <- function(current.row, e){
 
 testMe <- function(keyphrase, e){
   # patch to accommodate old-style tests
-  oldcourse <- attr(e$les, "course_name") %in% 
+  oldcourse <- attr(e$les, "course_name") %in%
     c("Data Analysis", "Mathematical Biostatistics Boot Camp",
       "Open Intro")
-  
+
   if(oldcourse){
     # Use old test syntax
     # Add a new class attribute to the keyphrase using
@@ -206,14 +209,14 @@ testMe <- function(keyphrase, e){
 }
 
 # CUSTOM TEST SUPPORT. An environment for custom tests is inserted
-# "between" function testMe and the swirl namespace. That is,  
+# "between" function testMe and the swirl namespace. That is,
 # an environment, customTests, is created with parent swirl
 # and child testMe. Code evaluated within testMe will thus search
 # for functions first in customTests, and then in the swirl namespace.
 #
 # Custom tests must be defined in a file named "customTests.R" in the
-# lesson directory. Tests in such files are loaded into environment 
-# customTests when a lesson is first loaded or progress is restored. 
+# lesson directory. Tests in such files are loaded into environment
+# customTests when a lesson is first loaded or progress is restored.
 # The environment is cleared between lessons.
 
 # An environment with parent swirl to hold custom tests.

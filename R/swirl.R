@@ -141,6 +141,14 @@ nxt <- function(){invisible()}
 #' }
 skip <- function(){invisible()}
 
+#' Start over on the current script question.
+#' 
+#' During a script question, this will reset the script
+#' back to its original state, which can be helpful if you
+#' get stuck.
+#' @export
+reset <- function(){invisible()}
+
 #' Submit the active R script in response to a question.
 #' 
 #' When a swirl question requires the user to edit an R script, the
@@ -297,6 +305,15 @@ resume.default <- function(e, ...){
     e$iptr <- 1
   }
   
+  # The user wants to reset their script to the original
+  if(uses_func("reset")(e$expr)[[1]]) {
+    e$playing <- FALSE
+    e$reset <- TRUE
+    e$iptr <- 2
+    swirl_out("Resetting the script to its original state...", 
+              skip_after = TRUE)
+  }
+  
   # The user wants to submit their R script
   if(uses_func("submit")(e$expr)[[1]]){
     e$playing <- FALSE
@@ -334,7 +351,7 @@ resume.default <- function(e, ...){
         # Source the correct script
         try(source(correct_script_path))
         # Inform the user and open the correct script
-        swirl_out("I just opened a script that demonstrates one possible solution.",
+        swirl_out("I just sourced the following script, which demonstrates one possible solution.",
                   skip_after=TRUE)
         file.edit(correct_script_path)
         readline("Press Enter when you are ready to continue...")
