@@ -61,7 +61,7 @@ safeEval <- function(expr, e){
   e1 <- cleanEnv(e$snapshot)
   ans <- list()
   temp <- capture.output(
-    try(suppressMessages(suppressWarnings(eval(expr,e1))), silent=FALSE)
+    try(suppressMessages(suppressWarnings(eval(expr,e1))), silent=TRUE)
     )
   if(is(temp, "try-error"))return(ans)
   for (x in ls(e1)){
