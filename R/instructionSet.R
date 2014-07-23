@@ -125,7 +125,7 @@ waitUser.script <- function(current.row, e){
   file.edit(temp_path)
   # Give instructions
   # swirl_out("INSTRUCTIONS: Edit the script and experiment in the console as much as you want. When you are ready to move on, SAVE YOUR SCRIPT and type submit() at the prompt. The script will remain open until you close it.",
-            skip_before = FALSE, skip_after = TRUE)
+  #          skip_before = FALSE, skip_after = TRUE)
   # Indicate a return to the prompt is necessary
   e$prompt <- TRUE
   # Enter 'play' mode so that user can mess around in the console
