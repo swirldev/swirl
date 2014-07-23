@@ -104,23 +104,30 @@ waitUser.cmd_question <- function(current.row, e){
 
 #' @importFrom tools file_path_sans_ext
 waitUser.script <- function(current.row, e){
-  # Get original script name
-  orig_script_name <- current.row[,"Script"]
-  # Get file path of original script
-  fp <- file.path(e$path, "scripts", orig_script_name)
-  # Get file path of correct script and save to e
-  correct_script_name <- paste0(
-    tools::file_path_sans_ext(orig_script_name), "-correct.R")
-  e$correct_script_path <- file.path(e$path, "scripts",
-                                   correct_script_name)
   # If this is the first attempt or the user wants to start over, 
-  # then create a new temp file path
-  # so user won't overwrite the original script
+  # then create temp files so nothing gets overwritten
   if(e$attempts == 1 || isTRUE(e$reset)) {
-    e$script_temp_path <- tempfile(fileext = '.R')
-    # Make a copy
-    file.copy(fp, e$script_temp_path, overwrite = TRUE)
-    # Set reset flag back FALSE
+    # Get original script name
+    orig_script_name <- current.row[,"Script"]
+    # Get file path of original script
+    orig_script_path <- file.path(e$path, "scripts", orig_script_name)
+    # Path temp copy of original script
+    e$script_temp_path <- file.path(tempdir(), orig_script_name)
+    
+    # Original correct script name
+    correct_script_name <- paste0(
+      tools::file_path_sans_ext(orig_script_name), "-correct.R")
+    # Original correct script path
+    correct_script_path <- file.path(e$path, "scripts", correct_script_name)
+    # Path of temp correct script
+    e$correct_script_temp_path <- file.path(tempdir(), correct_script_name)
+    
+    # Copy original script to temp file
+    file.copy(orig_script_path, e$script_temp_path, overwrite = TRUE)
+    # Copy original correct to temp correct
+    file.copy(correct_script_path, e$correct_script_temp_path, overwrite = TRUE)
+    
+    # Set reset flag back to FALSE
     e$reset <- FALSE
   }
   # Have user edit the copy. This will reopen the file if 

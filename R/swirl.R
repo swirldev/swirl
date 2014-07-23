@@ -310,7 +310,7 @@ resume.default <- function(e, ...){
     e$playing <- FALSE
     e$reset <- TRUE
     e$iptr <- 2
-    swirl_out("Resetting the script to its original state...", 
+    swirl_out("I just reset the script to its original state. If it doesn't refresh immediately, you may click on it.", 
               skip_after = TRUE)
   }
   
@@ -342,7 +342,7 @@ resume.default <- function(e, ...){
     # If we are on a script question, the correct answer should
     # simply source the correct script
     if(is(e$current.row, "script") && is.na(correctAns)) {
-      correct_script_path <- e$correct_script_path
+      correct_script_path <- e$correct_script_temp_path
       if(file.exists(correct_script_path)) {
         # Get contents of the correct script
         e$script_contents <- readLines(correct_script_path, warn = FALSE)
