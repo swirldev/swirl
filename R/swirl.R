@@ -310,7 +310,7 @@ resume.default <- function(e, ...){
     e$playing <- FALSE
     e$reset <- TRUE
     e$iptr <- 2
-    swirl_out("I just reset the script to its original state. If it doesn't refresh immediately, you may click on it.", 
+    swirl_out("I just reset the script to its original state. If it doesn't refresh immediately, you may need to click on it.", 
               skip_after = TRUE)
   }
   

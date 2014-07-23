@@ -60,7 +60,7 @@
 
 # swirl 2.2.4
 
-* Bug fix related to `skip()` count not reseting upon lesson completion.
+* Bug fix related to `skip()` count not resetting upon lesson completion.
 
 # swirl 2.2.3
 
