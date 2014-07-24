@@ -2,6 +2,8 @@
 
 * Add a new `script` question type, which allows an instructor to present a preformatted R script to the user for editing and submission. swirl was originally designed for interactive programming at the prompt. It now accommodates multiline input, which allows for exploration of topics like writing functions and control structures, as well as more extended function calls.
 
+* Allow user to make swirl feedback less playful with `options(swirl_is_fun = FALSE)`.
+
 # swirl 2.2.12
 
 * In `welcome.default()`, make sure the user doesn't put any special characters (using the `[[:punct:]]` regex) in his or her name, as this might lead to an invalid file path for their user data. Thanks to @Sarpwus for bringing this to my attention.
