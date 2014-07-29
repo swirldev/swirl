@@ -1,3 +1,24 @@
+#' Installing Courses
+#' 
+#' swirl is designed so that anyone can create interactive content
+#' and share it with the world or with just a few people. Users can
+#' install courses from a variety of sources using the 
+#' functions listed here. Each of these functions has its own help
+#' file, which you can consult for more details.
+#' 
+#' If you're just getting started, we recommend using 
+#' \code{\link{install_from_swirl}} to install courses
+#' from our official \href{https://github.com/swirldev/swirl_courses#swirl-courses}{course repository}. Otherwise, check out the
+#' help file for the relevant install function below.
+#' 
+#' You can uninstall a course from swirl at any time with 
+#' \code{\link{uninstall_course}}.
+#' 
+#' @name InstallCourses
+#' @family InstallCourses
+NULL
+
+
 #' Install a course from the official course repository
 #' 
 #' @description
@@ -28,6 +49,7 @@
 #' # To install a course in development from the swirl_misc repository
 #' install_from_swirl("Including Data", dev = TRUE)
 #' }
+#' @family InstallCourses
 install_from_swirl <- function(course_name, dev = FALSE){
   # Validate arguments
   if(!is.character(course_name)) {
@@ -110,6 +132,7 @@ install_from_swirl <- function(course_name, dev = FALSE){
 #' zip_course("~/Desktop/LOESS_Modeling")
 #' zip_course("~/Desktop/SNA_Tutorial", "~/tutorials")
 #' }
+#' @family InstallCourses
 zip_course <- function(path, dest=NULL){
   # Cleanse the path of the trailing slash
   path <- sub("/$", "", path)
@@ -159,6 +182,7 @@ zip_course <- function(path, dest=NULL){
 #' 
 #' uninstall_course("Linear Regression")
 #' }
+#' @family InstallCourses
 uninstall_course <- function(course_name){
   path <- file.path(system.file(package = "swirl"), "Courses", 
                     make_pathname(course_name))
@@ -185,6 +209,7 @@ uninstall_course <- function(course_name){
 #' install_course_zip("~/Downloads/swirl_courses-master.zip", multi=TRUE,
 #'                    which_course=c("R Programming", "Data Analysis"))
 #' }
+#' @family InstallCourses
 install_course_zip <- function(path, multi=FALSE, which_course=NULL){
   if(!is.logical(multi) || is.na(multi)) {
     stop("Argument 'multi' must be either TRUE or FALSE.")
@@ -247,6 +272,7 @@ install_course_zip <- function(path, multi=FALSE, which_course=NULL){
 #' 
 #' install_course_directory("~/Desktop/my_course")
 #' }
+#' @family InstallCourses
 install_course_directory <- function(path){
   # Check for size of directory to prevent copying a huge directory into swirl/Courses
   garbage_result <- tryCatch(
@@ -283,6 +309,7 @@ install_course_directory <- function(path){
 #' install_course_github("bcaffo", "Linear_Regression")
 #' install_course_github("jtleek", "Twitter_Map", "geojson")
 #' }
+#' @family InstallCourses
 install_course_github <- function(github_username, course_name, 
                                   branch="master", multi=FALSE){
   
@@ -303,6 +330,7 @@ install_course_github <- function(github_username, course_name,
 #' 
 #' install_course_dropbox("https://www.dropbox.com/s/xttkmuvu7hh72vu/my_course.zip")
 #' }
+#' @family InstallCourses
 install_course_dropbox <- function(url, multi=FALSE){
   # Construct url to the zip file
   zip_url <- paste0(sub("www.dropbox", "dl.dropboxusercontent", url), "?dl=1")
@@ -320,6 +348,7 @@ install_course_dropbox <- function(url, multi=FALSE){
 #' 
 #' install_course_google_drive("https://drive.google.com/file/d/F3fveiu873hfjZZj/edit?usp=sharing")
 #' }
+#' @family InstallCourses
 install_course_google_drive <- function(url, multi=FALSE){
   # Construct url to the zip file
   zip_url <- sub("file/d/", "uc?export=download&id=", 
@@ -340,6 +369,7 @@ install_course_google_drive <- function(url, multi=FALSE){
 #' 
 #' install_course_url("http://www.biostat.jhsph.edu/~rpeng/File_Hash_Course.zip")
 #' }
+#' @family InstallCourses
 install_course_url <- function(url, multi=FALSE){
   # Send GET request
   response <- GET(url)

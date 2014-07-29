@@ -17,4 +17,14 @@ Install a course from a course directory
 install_course_directory("~/Desktop/my_course")
 }
 }
+\seealso{
+Other InstallCourses: \code{\link{InstallCourses}};
+  \code{\link{install_course_dropbox}};
+  \code{\link{install_course_github}};
+  \code{\link{install_course_google_drive}};
+  \code{\link{install_course_url}};
+  \code{\link{install_course_zip}};
+  \code{\link{install_from_swirl}};
+  \code{\link{uninstall_course}}; \code{\link{zip_course}}
+}
 

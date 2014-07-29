@@ -19,4 +19,14 @@ Install a course from a zipped course directory shared on Dropbox
 install_course_dropbox("https://www.dropbox.com/s/xttkmuvu7hh72vu/my_course.zip")
 }
 }
+\seealso{
+Other InstallCourses: \code{\link{InstallCourses}};
+  \code{\link{install_course_directory}};
+  \code{\link{install_course_github}};
+  \code{\link{install_course_google_drive}};
+  \code{\link{install_course_url}};
+  \code{\link{install_course_zip}};
+  \code{\link{install_from_swirl}};
+  \code{\link{uninstall_course}}; \code{\link{zip_course}}
+}
 
