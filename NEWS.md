@@ -1,5 +1,7 @@
 # swirl 2.2.14
 
+* Add `email_admin()` feature, which allows the user to automatically generate an email to be sent to `info@swirlstats.com`. The email includes space for a description of the problem along with the output from `sessionInfo()`.
+
 * Clean up swirl's core function, `swirl()` in swirl.R, so that we can view the administrative environment `e` with `as.list(e)` without complaint from R.
 
 # swirl 2.2.13
