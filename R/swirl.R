@@ -53,6 +53,10 @@ swirl <- function(resume.class="default", ...){
   removeTaskCallback("mini")
   # e lives here, in the environment created when swirl() is run
   e <- new.env(globalenv())
+  # This dummy object of class resume.class "tricks" the S3 system
+  # into calling the proper resume method. We retain the "environment"
+  # class so that as.list(e) works.
+  class(e) <- c("environment", resume.class)
   # The callback also lives in the environment created when swirl()
   # is run and retains a reference to it. Because of this reference,
   # the environment which contains both e and cb() persists as
@@ -63,9 +67,9 @@ swirl <- function(resume.class="default", ...){
     e$val <- val
     e$ok <- ok
     e$vis <- vis
-    # This dummy object of class resume.class "tricks" the S3 system
-    # into calling the proper resume method.
-    return(resume(structure(e,class=resume.class), ...))
+    # The result of resume() will determine whether the callback
+    # remains active
+    return(resume(e, ...))
   }
   addTaskCallback(cb, name="mini")
   invisible()
