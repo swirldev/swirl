@@ -1,3 +1,7 @@
+# swirl 2.2.14
+
+* Clean up swirl's core function, `swirl()` in swirl.R, so that we can view the administrative environment `e` with `as.list(e)` without complaint from R.
+
 # swirl 2.2.13
 
 * Add a new `script` question type, which allows an instructor to present a preformatted R script to the user for editing and submission. swirl was originally designed for interactive programming at the prompt. It now accommodates multiline input, which allows for exploration of topics like writing functions and control structures, as well as more extended function calls.
