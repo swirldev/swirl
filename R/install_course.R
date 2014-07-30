@@ -8,7 +8,7 @@
 #' 
 #' If you're just getting started, we recommend using 
 #' \code{\link{install_from_swirl}} to install courses
-#' from our official \href{https://github.com/swirldev/swirl_courses#swirl-courses}{course repository}. Otherwise, check out the
+#' from our official \href{https://github.com/swirldev/swirl_courses}{course repository}. Otherwise, check out the
 #' help file for the relevant install function below.
 #' 
 #' You can uninstall a course from swirl at any time with 
