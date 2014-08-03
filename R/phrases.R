@@ -15,7 +15,7 @@ praise <- function() {
                  "Perseverance, that's the answer.",
                  "Great job!",
                  "You are quite good my friend!",
-                 "You're dedication is inspiring!",
+                 "Your dedication is inspiring!",
                  "You got it right!",
                  "That's correct!",
                  "You are really on a roll!",
