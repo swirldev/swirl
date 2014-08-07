@@ -1,10 +1,6 @@
-*.Rhistory
+.Rhistory
 .Rproj.user
-*.Rproj
 .RData
-data/saved.RData
+swirl.Rproj
 *.html
-^user_data/.+/rda$
-user_data/
 .DS_Store
-yamlWriter.R

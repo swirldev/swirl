@@ -1,0 +1,7 @@
+- Course: R Programming
+  Description: The basics of programming in R
+  Install: install_from_swirl('R_Programming')
+
+- Course: Regression Models
+  Description: The basics of regression modeling in R
+  Install: install_from_swirl('Regression_Models')

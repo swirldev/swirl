@@ -1,3 +1,113 @@
+# swirl 2.2.14
+
+* Add `?InstallCourses`, which gives a brief overview of installing swirl courses and includes links to all relevant help files.
+
+* Add `email_admin()` feature, which allows the user to automatically generate an email to be sent to `info@swirlstats.com`. The email includes space for a description of the problem along with the output from `sessionInfo()`.
+
+* Clean up swirl's core function, `swirl()` in swirl.R, so that we can view the administrative environment `e` with `as.list(e)` without complaint from R.
+
+* Add empty cran-comments.md to appease new devtools `release()`.
+
+# swirl 2.2.13
+
+* Add a new `script` question type, which allows an instructor to present a preformatted R script to the user for editing and submission. swirl was originally designed for interactive programming at the prompt. It now accommodates multiline input, which allows for exploration of topics like writing functions and control structures, as well as more extended function calls.
+
+* Allow user to make swirl feedback less playful with `options(swirl_is_fun = FALSE)`.
+
+# swirl 2.2.12
+
+* In `welcome.default()`, make sure the user doesn't put any special characters (using the `[[:punct:]]` regex) in his or her name, as this might lead to an invalid file path for their user data. Thanks to @Sarpwus for bringing this to my attention.
+
+* Trim leading/trailing whitespace when reading lesson dependencies from dependson.txt.
+
+* Add `dev` argument to `install_from_swirl()` to allow installation of courses in development from the [swirl_misc](http://github.com/swirldev/swirl_misc/zipball/master) repository.
+
+* Update phrases.R to include new praise and 'try again' phrases. Thanks to @sagevann for the suggestions.
+
+* Use `capture.output()` to avoid double printing due to second evaluation by `safeEval()` when `AUTO_DETECT_NEWVAR` is `TRUE`.
+
+# swirl 2.2.11
+
+* Add `testit()` to functions for callback to ignore, so that swirl plays nicely with swirlify.
+
+* Add from/to feature for testing specific units of content during course authoring.
+
+# swirl 2.2.10
+
+* Corrected order of `mergeList` arguments in `swirl.R`.
+
+# swirl 2.2.9
+
+* Add Regression Models to recommended courses.
+
+# swirl 2.2.8
+
+* Alternate user progress tracking strategy without previous lag or freeze problems. Backwards compatible with existing course content. Tracks large or small lesson data sets by default, but these may be excluded by sourcing with local=FALSE from the initLesson.R file. 
+
+* Make course installation success/failure messages more robust.
+
+* Add documentation for `?AnswerTests`.
+
+* Create a file for manual submission to Coursera immediately after the user enters his or her credentials. This way, no matter what happens during the submission process, manual submission is still an option. The file is deleted if automatic submission succeeds.
+
+* Add `any_of_exprs()` to library of answer tests.
+
+# swirl 2.2.7
+
+* Another check that Coursera challenge url is valid
+
+# swirl 2.2.6
+
+* Fix bug related to user entering their Coursera Course ID with quotes.
+
+* Fix bug causing swirl to fail when exiting from course menu.
+
+# swirl 2.2.5
+
+* Add `packageStartupMessage()` that detects a cluttered workspace and warns the user that this may cause swirl to run slowly.
+
+* Add `main()` function, which allows user to return to the main menu while a lesson is in progress.
+
+* Add `which_course` argument to `install_course_zip()` that will facilitate manual installation. In particular, if a student downloads a zip file from the swirl courses repo, it comes with all courses in it. This function will allow the user to install only those that she wants.
+
+# swirl 2.2.4
+
+* Bug fix related to `skip()` count not resetting upon lesson completion.
+
+# swirl 2.2.3
+
+* Add confirmation step to Coursera submission process.
+
+* Stash Course ID along with other Coursera creds.
+
+* Display correct answer when user `skip()`s a question.
+
+# swirl 2.2.2
+
+* Fix bug in old answer test caused by upgrade to R 3.1.0 and made evident in the Data Analysis course.
+
+# swirl 2.2.1
+
+* Check for missing entries in content YAML to prevent failure when loading a course.
+
+# swirl 2.2
+
+* Instructional content is no longer shipped with swirl. Instead, it is located in our [course repo](https://github.com/swirldev/swirl_courses). When the user starts swirl, he or she is given the option to install the R Programming course automatically or be taken to the course repo page. Courses can also be installed with the `install_from_swirl()` function.
+
+* Content authoring tools have also been removed from the swirl package. We've created a new package called [swirlify](https://github.com/swirldev/swirlify), which is a comprehensive toolbox for swirl instructors. Instructions for authoring content are on the [Instructors page](http://swirlstats.com/instructors.html) of the swirl website.
+
+* Package dependencies for a lesson are now managing by including a file called `dependson.txt` in the lesson directory, which lists required packages one line at a time. This strategy is mainly for backwards compatibility and will take a different form for new content in future releases. When the user begins a lesson with package dependencies, swirl attempts to load each package in turn and prompts the user to automatically install any packages not found.
+
+* Added help files for answer tests contained in `answerTests.R.`
+
+* Added progress bar feature using `utils::txtProgressBar()`.
+
+* Added `test` mode for compatibility with the [swirlify](https://github.com/swirldev/swirlify) package.
+
+* Integrated with Coursera API to allow enrolled students to receive credit for swirl lessons associated their Coursera course.
+
+* `rmd2df()` can finally handle `figure` and `video` units of instruction.
+
 # swirl 2.1.1
 
 * Fixed a bug in the third lesson of Intro to R.
@@ -18,7 +128,7 @@
   * `uninstall_course()`: Uninstall a course
   * `zip_course()`: Zip a course directory
   
-* Course authors can add custom tests for student repsonses.
+* Course authors can add custom tests for student responses.
   * Custom tests may be defined in the lesson directory in file named customTests.R.
   * Custom tests run in the same environment as tests provided with the package.
   

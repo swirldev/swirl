@@ -1,23 +1,26 @@
 Package: swirl
-Version: 2.1.1
-Type: Package
-Title: Statistics with Interactive R Learning
-Date: 2014-02-25
-License: GPL-2
-Author: Nick Carchedi, Bill Bauer, Gina Grdina, and Sean Kross
-Maintainer: Nick Carchedi <nick.carchedi@gmail.com>
+Title: Learn R, in R.
+Description: swirl turns the R console into an interactive learning
+    environment. Users receive immediate feedback as they are guided through
+    self-paced lessons in data science and R programming.
+URL: http://swirlstats.com
+Version: 2.2.14
+License: GPL-3
+Authors@R: c(
+    person("Nick", "Carchedi", email = "nick.carchedi@gmail.com",
+    role = c("aut", "cre")),
+    person("Bill", "Bauer", role = "aut"),
+    person("Gina", "Grdina", role = "aut"),
+    person("Sean", "Kross", role = "aut")
+    )
 Depends:
-    R (>= 2.15)
+    R (>= 3.0.2)
 Imports:
     stringr,
-    plotrix,
-    pwr,
     testthat,
-    openintro,
     httr,
-    whisker,
     yaml,
+    RCurl,
+    digest,
+    tools,
     shiny
-Description: swirl is a platform for learning (and teaching) statistics and R
-    simultaneously and interactively.
-URL: http://swirlstats.com
