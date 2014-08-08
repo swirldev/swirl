@@ -1,3 +1,7 @@
+# swirl 2.2.15
+
+* Fix annoying typo in one of the "praise" messages.
+
 # swirl 2.2.14
 
 * Add `?InstallCourses`, which gives a brief overview of installing swirl courses and includes links to all relevant help files.
