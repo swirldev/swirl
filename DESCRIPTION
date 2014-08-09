@@ -22,5 +22,6 @@ Imports:
     yaml,
     RCurl,
     digest,
-    tools
+    tools,
+    rmarkdown
 Roxygen: list(wrap = FALSE)

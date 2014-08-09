@@ -16,6 +16,14 @@ present.default <- function(current.row, e){
   e$iptr <- 1 + e$iptr
 }
 
+present.script <- function(current.row, e) {
+  display_swirl_slide(current.row[, "Output"])
+  # Initialize attempts counter, if necessary
+  if(!exists("attempts", e)) e$attempts <- 1
+  # Increment pointer
+  e$iptr <- 1 + e$iptr
+}
+
 # All classes then wait for user response, in different ways, hence
 # different methods are required. Text and video are both finished
 # at this point.

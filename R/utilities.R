@@ -7,6 +7,36 @@ swirl_out <- function(..., skip_before=TRUE, skip_after=FALSE) {
   message(mes)
 }
 
+#' @importFrom rmarkdown render
+display_swirl_slide <- function(output) {
+  # Create header for consistent style
+  header <- "---
+output:
+  html_document:
+    theme: cosmo
+---
+
+<style>
+p {
+font-size: 1.25em; 
+line-height: 1.25em;
+}
+</style>
+  
+### Directions"
+  
+  # Create path to temp rmd
+  rmd_path <- tempfile(fileext = ".rmd")
+  # Write to temp rmd
+  cat(header, output, file = rmd_path, sep = "\n")
+  # Create path to temp html
+  html_path <- tempfile(fileext = ".html")
+  # Render rmd to html
+  rmarkdown::render(rmd_path, output_file = html_path, quiet = TRUE)
+  # Open in rstudio viewer pane
+  rstudio::viewer(html_path)
+}
+
 # Takes a plain English name and turns it into a more proper 
 # file or directory name
 make_pathname <- function(name) {
