@@ -15,11 +15,11 @@ what \code{bye()} does.
 \examples{
 \dontrun{
 
-| Create a new variable called `x` that contains the number 3.
+#| Create a new variable called `x` that contains the number 3.
 
 > bye()
 
-| Leaving swirl now. Type swirl() to resume.
+#| Leaving swirl now. Type swirl() to resume.
 }
 }
 

@@ -12,12 +12,12 @@ When a swirl question requires the user to edit an R script, the
 \examples{
 \dontrun{
 
-| Create a function called f that takes one argument, x, and
-| returns the value of x squared.
+#| Create a function called f that takes one argument, x, and
+#| returns the value of x squared.
 
 > submit()
 
-| You are quite good my friend!
+#| You are quite good my friend!
 }
 }
 

@@ -11,12 +11,12 @@ Return to swirl's main menu from a lesson in progress.
 \examples{
 \dontrun{
 
-| The simplest way to create a sequence of numbers in R is by using
-| the `:` operator. Type 1:20 to see how it works.
+#| The simplest way to create a sequence of numbers in R is by using
+#| the `:` operator. Type 1:20 to see how it works.
 
 > main()
 
-| Returning to the main menu...
+#| Returning to the main menu...
 }
 }
 

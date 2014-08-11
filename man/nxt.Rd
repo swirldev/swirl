@@ -12,12 +12,12 @@ a video or \code{play()}'ing around in the console.
 \examples{
 \dontrun{
 
-| Create a new variable called `y` that contains the number 8.
+#| Create a new variable called `y` that contains the number 8.
 
 > play()
 
-| Entering play mode. Experiment as you please, then type nxt()
-| when you ready to resume the lesson.
+#| Entering play mode. Experiment as you please, then type nxt()
+#| when you ready to resume the lesson.
 
 > 10/14
 > [1] 0.7142857
@@ -26,7 +26,7 @@ a video or \code{play()}'ing around in the console.
 > [1] 99
 > nxt()
 
-| Resuming lesson...
+#| Resuming lesson...
 }
 }
 

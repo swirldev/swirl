@@ -13,13 +13,13 @@ in doing so. These may be needed for subsequent questions.
 \examples{
 \dontrun{
 
-| Create a new variable called `y` that contains the number 8.
+#| Create a new variable called `y` that contains the number 8.
 
 > skip()
 
-| I've entered the correct answer for you.
+#| I've entered the correct answer for you.
 
-| In doing so, I've created the variable(s) y, which you may need later.
+#| In doing so, I've created the variable(s) y, which you may need later.
 }
 }
 

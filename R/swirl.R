@@ -88,11 +88,11 @@ swirl <- function(resume.class="default", ...){
 #' @examples
 #' \dontrun{
 #' 
-#' | Create a new variable called `x` that contains the number 3.
+#' #| Create a new variable called `x` that contains the number 3.
 #' 
 #' > bye()
 #' 
-#' | Leaving swirl now. Type swirl() to resume.
+#' #| Leaving swirl now. Type swirl() to resume.
 #' }
 bye <- function(){
   removeTaskCallback("mini")
@@ -108,12 +108,12 @@ bye <- function(){
 #' @examples
 #' \dontrun{
 #' 
-#' | Create a new variable called `y` that contains the number 8.
+#' #| Create a new variable called `y` that contains the number 8.
 #' 
 #' > play()
 #' 
-#' | Entering play mode. Experiment as you please, then type nxt()
-#' | when you ready to resume the lesson.
+#' #| Entering play mode. Experiment as you please, then type nxt()
+#' #| when you ready to resume the lesson.
 #' 
 #' > 10/14
 #' > [1] 0.7142857
@@ -122,7 +122,7 @@ bye <- function(){
 #' > [1] 99
 #' > nxt()
 #' 
-#' | Resuming lesson...
+#' #| Resuming lesson...
 #' }
 nxt <- function(){invisible()}
 
@@ -135,13 +135,13 @@ nxt <- function(){invisible()}
 #' @examples
 #' \dontrun{
 #' 
-#' | Create a new variable called `y` that contains the number 8.
+#' #| Create a new variable called `y` that contains the number 8.
 #' 
 #' > skip()
 #' 
-#' | I've entered the correct answer for you.
+#' #| I've entered the correct answer for you.
 #' 
-#' | In doing so, I've created the variable(s) y, which you may need later.
+#' #| In doing so, I've created the variable(s) y, which you may need later.
 #' }
 skip <- function(){invisible()}
 
@@ -161,12 +161,12 @@ reset <- function(){invisible()}
 #' @examples
 #' \dontrun{
 #' 
-#' | Create a function called f that takes one argument, x, and
-#' | returns the value of x squared.
+#' #| Create a function called f that takes one argument, x, and
+#' #| returns the value of x squared.
 #' 
 #' > submit()
 #' 
-#' | You are quite good my friend!
+#' #| You are quite good my friend!
 #' }
 submit <- function(){invisible()}
 
@@ -180,12 +180,12 @@ submit <- function(){invisible()}
 #' @examples
 #' \dontrun{
 #' 
-#' | Create a new variable called `y` that contains the number 8.
+#' #| Create a new variable called `y` that contains the number 8.
 #' 
 #' > play()
 #' 
-#' | Entering play mode. Experiment as you please, then type nxt()
-#' | when you ready to resume the lesson.
+#' #| Entering play mode. Experiment as you please, then type nxt()
+#' #| when you ready to resume the lesson.
 #' 
 #' > 10/14
 #' > [1] 0.7142857
@@ -194,7 +194,7 @@ submit <- function(){invisible()}
 #' > [1] 99
 #' > nxt()
 #' 
-#' | Resuming lesson...
+#' #| Resuming lesson...
 #' }
 play <- function(){invisible()}
 
@@ -205,12 +205,12 @@ play <- function(){invisible()}
 #' @examples
 #' \dontrun{
 #' 
-#' | The simplest way to create a sequence of numbers in R is by using
-#' | the `:` operator. Type 1:20 to see how it works.
+#' #| The simplest way to create a sequence of numbers in R is by using
+#' #| the `:` operator. Type 1:20 to see how it works.
 #' 
 #' > main()
 #' 
-#' | Returning to the main menu...
+#' #| Returning to the main menu...
 #' }
 main <- function(){invisible()}
 
@@ -222,21 +222,21 @@ main <- function(){invisible()}
 #' @examples
 #' \dontrun{
 #' 
-#' | Create a new variable called `z` that contains the number 11.
+#' #| Create a new variable called `z` that contains the number 11.
 #' 
 #' > info()
 #' 
-#' | When you are at the R prompt (>):
-#' | -- Typing skip() allows you to skip the current question.
-#' | -- Typing play() lets you experiment with R on your own; swirl will ignore what
-#' | you do...
-#' | -- UNTIL you type nxt() which will regain swirl's attention.
-#' | -- Typing bye() causes swirl to exit. Your progress will be saved.
-#' | -- Typing info() displays these options again.
+#' #| When you are at the R prompt (>):
+#' #| -- Typing skip() allows you to skip the current question.
+#' #| -- Typing play() lets you experiment with R on your own; swirl will ignore what
+#' #| you do...
+#' #| -- UNTIL you type nxt() which will regain swirl's attention.
+#' #| -- Typing bye() causes swirl to exit. Your progress will be saved.
+#' #| -- Typing info() displays these options again.
 #' 
 #' > bye()
 #' 
-#' | Leaving swirl now. Type swirl() to resume.
+#' #| Leaving swirl now. Type swirl() to resume.
 #' }
 info <- function(){
   swirl_out("When you are at the R prompt (>):")
