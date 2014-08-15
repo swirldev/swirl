@@ -85,7 +85,7 @@ mainMenu.default <- function(e){
               if(resp == "") return(FALSE)
               if(resp == ch[2]) {
                 swirl_out("OK. I'm opening the swirl course respository in your browser.")
-                browseURL("https://github.com/swirldev/swirl_courses#install-and-run-a-course-manually")
+                browseURL("https://github.com/swirldev/swirl_courses")
                 return(FALSE)
               }
             } else {
@@ -99,7 +99,7 @@ mainMenu.default <- function(e){
           coursesU <- coursesU[idx]
         } else {
           swirl_out("OK. I'm opening the swirl course respository in your browser.")
-          browseURL("https://github.com/swirldev/swirl_courses#swirl-courses")
+          browseURL("https://github.com/swirldev/swirl_courses")
           return(FALSE)
         }
       }
@@ -110,7 +110,7 @@ mainMenu.default <- function(e){
         course <- courseMenu(e, coursesR)
         if(!is.null(names(course)) && names(course)=="repo") {
           swirl_out("OK. I'm opening the swirl courses web page in your browser.")
-          browseURL("https://github.com/swirldev/swirl_courses#swirl-courses")
+          browseURL("https://github.com/swirldev/swirl_courses")
           return(FALSE)
         }
         if(course=="")return(FALSE)

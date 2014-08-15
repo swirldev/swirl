@@ -1,3 +1,7 @@
+# swirl 2.2.15.99
+
+* Fix troublesome links to the swirl_courses repo.
+
 # swirl 2.2.15
 
 * Fix annoying typo in one of the "praise" messages.
