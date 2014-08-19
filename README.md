@@ -39,3 +39,9 @@ swirl()
 ## Contributing to swirl's development
 
 If you'd like to get involved, please fork this repository and submit a pull request with your proposed changes. We're happy to chat if you have any questions about the source code.
+
+## Using swirl in the classroom
+
+Instructors around the world are using swirl in their classrooms. We think this is awesome. If you're an instructor, please feel free to do the same -- free of charge. While your students may be paying to take your course or attend your institution, we simply ask that you don't charge people *directly* for the use of our software or instructional content.
+
+If you are not sure about a particular use case, don't hesitate to send us an email at info@swirlstats.com.
