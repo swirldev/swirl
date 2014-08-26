@@ -1,4 +1,6 @@
-# swirl 2.2.15.99
+# swirl 2.2.16
+
+* Fix bug in `install_from_swirl()` that was causing `install_from_swirl("R Programming")` to install both `R Programming` and `R Programming Alt`.
 
 * Fix troublesome links to the swirl_courses repo.
 
