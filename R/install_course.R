@@ -82,7 +82,10 @@ install_from_swirl <- function(course_name, dev = FALSE){
   file_names <- unzip(path, list=TRUE)$Name
   
   # Filter list
-  unzip_list <- Filter(function(x){grepl(course_name, x)}, file_names)
+  unzip_list <- Filter(function(x) 
+    {grepl(paste0("/", course_name, "/"), x)}, 
+    file_names
+  )
   
   # Check if course exists
   if(length(unzip_list) == 0) {
