@@ -23,7 +23,7 @@ getAssign <- function(var, env1, env2){
 }
 
 cleanAdmin <- function(){
-  udat <- file.path(find.package("swirl"), "user_data", "swirladmin")
+  udat <- file.path("~", ".swirl", "user_data", "swirladmin")
   file.remove(dir(udat, pattern="*[.]rda", full.names=TRUE))
   invisible()
 }
