@@ -9,6 +9,16 @@ get_content_class <- function(file_name) {
   tolower(ext)
 }
 
+
+# Parse a lesson text to generate content from R expressions defined in the Parse field
+parse_text <- function(df, marker){
+	parsed <- eval(parse(text=df$Parse))
+	df <- lapply(df, function(element) gsub(marker, parsed, element, fixed=TRUE))
+	df <- as.data.frame(df)
+	df	
+}
+
+
 ### FUNCTIONS THAT RETURN LESSON OBJECT WITH ASSOCIATED ATTRIBUTES ###
 
 parse_content <- function(file, e) UseMethod("parse_content")
@@ -34,7 +44,7 @@ parse_content.yaml <- function(file, e){
     temp <- data.frame(Class=NA, Output=NA, CorrectAnswer=NA,
                        AnswerChoices=NA, AnswerTests=NA, 
                        Hint=NA, Figure=NA, FigureType=NA, 
-                       VideoLink=NA, Script=NA)
+                       VideoLink=NA, Script=NA, Parse=NA)
     for(nm in names(element)){
       # Only replace NA with value if value is not NULL, i.e. instructor
       # provided a nonempty value
@@ -42,15 +52,25 @@ parse_content.yaml <- function(file, e){
         temp[,nm] <- element[[nm]]
       }
     }
+    
+    # Parse lesson defined content to prevent locale specific issues
+    if(any(!is.na(temp$Parse))) temp <- parse_text(df=temp, marker=meta$Parse)
+    
+    temp$Parse <- NULL
+    
     temp
   }
   raw_yaml <- yaml.load_file(file)
+  # Get metadata (including marker for text parsing)
+  meta <- raw_yaml[[1]]
+  
   temp <- lapply(raw_yaml[-1], newrow)
   df <- NULL
+  
   for(row in temp){
     df <- rbind(df, row)
   }
-  meta <- raw_yaml[[1]]
+  
   lesson(df, lesson_name=meta$Lesson, course_name=meta$Course,
          author=meta$Author, type=meta$Type, organization=meta$Organization,
          version=meta$Version)
