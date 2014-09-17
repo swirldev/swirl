@@ -62,7 +62,7 @@ parse_content.yaml <- function(file, e){
 #' @importFrom yaml yaml.load_file
 #' @importFrom whisker whisker.render
 localize_lesson <- function(file, lesPath, shortname){
-	browser()
+	
 	# Load localization file
 	locale_yaml <- yaml.load_file(file)
 	
