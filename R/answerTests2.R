@@ -126,6 +126,7 @@ NULL
 #' @param correctExpr the correct or expected expression as a string
 #' @param correctVal the correct value (numeric or character)
 #' @param strict a logical value indicating that the expression should be as expected even if the value is correct. If \code{FALSE} (the default) a correct value will pass the test even if the expression is not as expected, but a notification will be issued.
+#' @param eval_for_class a logical value. If TRUE, evaluate the first argument of an S3 method to determine its class. Default=TRUE. Global value may also be set as customTests$EVAL_FOR_CLASS.
 #' @examples
 #' \dontrun{
 #' 
@@ -160,13 +161,29 @@ NULL
 #'   
 #'   }
 #'   @family AnswerTests
-omnitest <- function(correctExpr=NULL, correctVal=NULL, strict=FALSE){
+omnitest <- function(correctExpr=NULL, correctVal=NULL, strict=FALSE, eval_for_class=as.logical(NA)){
   e <- get("e", parent.frame())
   # Trivial case
   if(is.null(correctExpr) && is.null(correctVal))return(TRUE)
+  # If eval_for_class is not specified, default to customTests$EVAL_FOR_CLASS.
+  # If the latter is not set, default to TRUE.
+  if(is.na(eval_for_class)){
+    if(exists(customTests$EVAL_FOR_CLASS)){
+       eval_for_class <- isTRUE(customTests$EVAL_FOR_CLASS)
+    } else {
+      eval_for_class <- TRUE
+    }
+  }
+  # If eval_for_class is TRUE, create a parent environment for that in
+  # in which evaluations for class are to be made.
+  eval_env <- ifelse(eval_for_class, as.environment(e$snapshot), NULL)
   # Testing for correct expression only
   if(!is.null(correctExpr) && is.null(correctVal)){
-    return(expr_identical_to(correctExpr))
+    err <- try({
+      good_expr <- parse(text=correctExpr)[[1]]
+      ans <- is_robust_match(good_expr, e$expr, eval_for_class, eval_for_class)
+    }, silent=TRUE)
+    return(ifelse(is(err, "try-error"), expr_identical_to(correctExpr)), ans)
   }
   # Testing for both correct expression and correct value
   # Value must be character or single number
@@ -188,7 +205,15 @@ omnitest <- function(correctExpr=NULL, correctVal=NULL, strict=FALSE){
       valGood <- valResults$passed
     }
   }
-  exprGood <- ifelse(is.null(correctExpr), TRUE, expr_identical_to(correctExpr))
+  # If a correct expression is given attempt a robust match with user's expression.
+  exprGood <- TRUE
+  if(!is.null(correctExpr)){
+    err <- try({
+      good_expr <- parse(text=correctExpr)[[1]]
+      ans <- is_robust_match(good_expr, e$expr, eval_for_class, eval_for_class)
+    }, silent=TRUE)
+    exprGood <- ifelse(is(err, "try-error"), expr_identical_to(correctExpr), ans)
+  }
   if(valGood && exprGood){
     return(TRUE)
   } else if (valGood && !exprGood && !strict){
