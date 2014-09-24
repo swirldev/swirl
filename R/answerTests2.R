@@ -168,7 +168,7 @@ omnitest <- function(correctExpr=NULL, correctVal=NULL, strict=FALSE, eval_for_c
   # If eval_for_class is not specified, default to customTests$EVAL_FOR_CLASS.
   # If the latter is not set, default to TRUE.
   if(is.na(eval_for_class)){
-    if(exists(customTests$EVAL_FOR_CLASS)){
+    if(exists("EVAL_FOR_CLASS", customTests)){
        eval_for_class <- isTRUE(customTests$EVAL_FOR_CLASS)
     } else {
       eval_for_class <- TRUE
@@ -176,9 +176,13 @@ omnitest <- function(correctExpr=NULL, correctVal=NULL, strict=FALSE, eval_for_c
   }
   # If eval_for_class is TRUE, create a parent environment for that in
   # in which evaluations for class are to be made.
-  eval_env <- ifelse(eval_for_class, as.environment(e$snapshot), NULL)
+  eval_env <- if(eval_for_class){
+    cleanEnv(e$snapshot)
+  } else {
+    NULL
+  }
   # Testing for correct expression only
-  if(!is.null(correctExpr) && is.null(correctVal)){
+  if(!is.null(correctExpr) && !is.null(correctVal)){
     err <- try({
       good_expr <- parse(text=correctExpr)[[1]]
       ans <- is_robust_match(good_expr, e$expr, eval_for_class, eval_for_class)
@@ -187,7 +191,7 @@ omnitest <- function(correctExpr=NULL, correctVal=NULL, strict=FALSE, eval_for_c
   }
   # Testing for both correct expression and correct value
   # Value must be character or single number
-  valGood <- NULL
+  valGood <- TRUE
   if(!is.null(correctVal)){
     if(is.character(e$val)){
       valResults <- expectThat(e$val,
