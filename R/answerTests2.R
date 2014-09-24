@@ -191,7 +191,7 @@ omnitest <- function(correctExpr=NULL, correctVal=NULL, strict=FALSE, eval_for_c
   }
   # Testing for both correct expression and correct value
   # Value must be character or single number
-  valGood <- TRUE
+  valGood <- as.logical(NA)
   if(!is.null(correctVal)){
     if(is.character(e$val)){
       valResults <- expectThat(e$val,
@@ -214,13 +214,13 @@ omnitest <- function(correctExpr=NULL, correctVal=NULL, strict=FALSE, eval_for_c
   if(!is.null(correctExpr)){
     err <- try({
       good_expr <- parse(text=correctExpr)[[1]]
-      ans <- is_robust_match(good_expr, e$expr, eval_for_class, eval_for_class)
+      ans <- is_robust_match(good_expr, e$expr, eval_for_class, eval_env)
     }, silent=TRUE)
     exprGood <- ifelse(is(err, "try-error"), expr_identical_to(correctExpr), ans)
   }
-  if(valGood && exprGood){
+  if((isTRUE(valGood) || is.na(valGood)) && exprGood){
     return(TRUE)
-  } else if (valGood && !exprGood && !strict){
+  } else if (isTRUE(valGood) && !exprGood && !strict){
       swirl_out("That's not the expression I expected but it works.")
       swirl_out("I've executed the correct expression in case the result is needed in an upcoming question.")
       eval(parse(text=correctExpr),globalenv())
