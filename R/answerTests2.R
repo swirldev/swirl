@@ -187,7 +187,11 @@ omnitest <- function(correctExpr=NULL, correctVal=NULL, strict=FALSE, eval_for_c
       good_expr <- parse(text=correctExpr)[[1]]
       ans <- is_robust_match(good_expr, e$expr, eval_for_class, eval_for_class)
     }, silent=TRUE)
-    return(ifelse(is(err, "try-error"), expr_identical_to(correctExpr)), ans)
+    if (is(err, "try-error")) {
+      return(expr_identical_to(correctExpr))
+    } else {
+      return(ans)
+    }
   }
   # Testing for both correct expression and correct value
   # Value must be character or single number
