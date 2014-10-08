@@ -55,3 +55,32 @@ parse_content.yaml <- function(file, e){
          author=meta$Author, type=meta$Type, organization=meta$Organization,
          version=meta$Version)
 }
+
+
+#' @importFrom tools file_ext
+#' @importFrom tools file_path_sans_ext
+#' @importFrom yaml yaml.load_file
+#' @importFrom whisker whisker.render
+localize_lesson <- function(file, lesPath, shortname){
+	
+	# Load localization file
+	locale_yaml <- yaml.load_file(file)
+	
+	# TO DO: Process localization. Placeholder loads first element.
+	locale_yaml <- locale_yaml[[1]]
+	
+	# Load lesson file
+	lesson <- readLines(con = file.path(lesPath, shortname))
+	
+	# Render localized lesson
+	lesson <- whisker.render(template = lesson, data = locale_yaml)
+	
+	# Save localized lesson as a temporary file
+	file <- file_path_sans_ext(shortname)
+	extension <- paste0(".", file_ext(shortname))
+	localized_lesson <- tempfile(pattern = file, fileext = extension)
+	writeLines(lesson, con = localized_lesson)
+	
+	# Return file path for localized lesson
+	return(localized_lesson)
+}

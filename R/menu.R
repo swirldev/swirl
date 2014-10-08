@@ -293,6 +293,12 @@ loadLesson.default <- function(e, courseU, lesson){
   clearCustomTests()
   loadCustomTests(lesPath)
   
+  # Check if there is a localization file
+  localization <- file.path(lesPath, "locale.yaml") 
+  if(file.exists(localization)){
+  	dataName <- localize_lesson(localization, lesPath, shortname)
+  }
+  
   # Attached class to content based on file extension
   class(dataName) <- get_content_class(dataName)
   
