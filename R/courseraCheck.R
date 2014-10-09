@@ -3,6 +3,12 @@ courseraCheck <- function(e){
   modtype <- attr(e$les, "type")
   lesson_name <- gsub(" ", "_", attr(e$les, "lesson_name"))
   if(is.null(modtype) || modtype != "Coursera")return()
+  
+  # allow use of Coursera partner sites (school.coursera.org)
+  partner <- attr(e$les, "partner")
+  partner <- ifelse(is.null(partner), "class", partner)
+  baseurl <- paste0("http://", partner, ".coursera.org/")
+
   tt <- c(rep(letters, 3), seq(100))
   swirl_out("Are you currently enrolled in the Coursera course associated with this lesson?")
   yn <- select.list(c("Yes","No"), graphics=FALSE)
@@ -33,9 +39,9 @@ courseraCheck <- function(e){
     # If doing automatic submission, then give it a try.
     if(choice=="Yes"){
       swirl_out("I'll try to tell Coursera you've completed this lesson now.")
-      challenge.url <- paste("http://class.coursera.org", course_name,
+      challenge.url <- paste(baseurl, course_name,
                              "assignment/challenge", sep = "/")
-      submit.url <- paste("http://class.coursera.org", course_name,
+      submit.url <- paste(baseurl, course_name,
                           "assignment/submit", sep = "/")
       ch <- try(getChallenge(email, challenge.url), silent=TRUE)
       # Check if url is valid, i.e. challenge received
