@@ -1,3 +1,9 @@
+# swirl 2.2.17
+
+* Use of `partner.coursera.org` websites for Coursera submission is enabled. 
+
+* `Omnitest` uses `rmatch_calls` (recursive `match.call`) to deal with legitimate variations of function and S3 method calls.
+
 # swirl 2.2.16
 
 * Fix bug in `install_from_swirl()` that was causing `install_from_swirl("R Programming")` to install both `R Programming` and `R Programming Alt`.
