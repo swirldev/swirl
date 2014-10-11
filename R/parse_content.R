@@ -53,5 +53,5 @@ parse_content.yaml <- function(file, e){
   meta <- raw_yaml[[1]]
   lesson(df, lesson_name=meta$Lesson, course_name=meta$Course,
          author=meta$Author, type=meta$Type, organization=meta$Organization,
-         version=meta$Version)
+         version=meta$Version, partner=meta$Partner)
 }
