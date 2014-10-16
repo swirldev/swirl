@@ -22,5 +22,5 @@ Imports:
     yaml,
     RCurl,
     digest,
-    tools
-Roxygen: list(wrap = FALSE)
+    tools,
+    shiny

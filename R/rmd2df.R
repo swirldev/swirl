@@ -194,7 +194,8 @@ get_unit_class <- function(unit) {
                      "cmd_question",
                      "mult_question",
                      "video",
-                     "figure")
+                     "figure",
+                     "math")
   if(!cl %in% valid_classes) stop("Invalid unit class used!")
   cl
 }

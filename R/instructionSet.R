@@ -16,6 +16,10 @@ present.default <- function(current.row, e){
   e$iptr <- 1 + e$iptr
 }
 
+present.math <- function(current.row, e) {
+  e$iptr <- 1 + e$iptr
+}
+
 # All classes then wait for user response, in different ways, hence
 # different methods are required. Text and video are both finished
 # at this point.
@@ -101,6 +105,14 @@ waitUser.cmd_question <- function(current.row, e){
   e$prompt <- TRUE
   e$iptr <- 1 + e$iptr
 }
+
+waitUser.math <- function(current.row, e){
+  swirl_out("Press the 'Continue!' button when you're ready to move on...",
+            skip_after=TRUE)
+  display_math(current.row[, "Output"])
+  e$row <- 1 + e$row
+  e$iptr <- 1
+} 
 
 #' @importFrom tools file_path_sans_ext
 waitUser.script <- function(current.row, e){
