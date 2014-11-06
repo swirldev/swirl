@@ -1,3 +1,9 @@
+# swirl 2.2.18
+
+* Fix small bug in `omnitest` due to missing exclamation point (thanks to @wilcrofter).
+
+* Add `delete_progress` function (thanks to @seankross).
+
 # swirl 2.2.17
 
 * Use of `partner.coursera.org` websites for Coursera submission is enabled. 
