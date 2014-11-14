@@ -182,3 +182,7 @@ complete_part <- function(e) {
   apply(les, 1, exec_cmd)
   invisible()
 }
+
+course_rename <- function(path){
+  
+}

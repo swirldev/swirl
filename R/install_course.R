@@ -101,11 +101,24 @@ install_from_swirl <- function(course_name, dev = FALSE){
   top_dir <- file.path(system.file(package = "swirl"), "Courses", 
                        sort(dirname(unzip_list))[1])
   dirs_to_copy <- list.files(top_dir, full.names=TRUE)
+  
+  # Check that course was installed
   if(file.copy(dirs_to_copy, file.path(system.file(package = "swirl"), "Courses"),
             recursive=TRUE)){
     swirl_out("Course installed successfully!", skip_after=TRUE)
   } else {
     swirl_out("Course installation failed.", skip_after=TRUE)
+  }
+  
+  # Check if MANIFEST contains custom course title
+  course_path <- file.path(system.file(package = "swirl"), "Courses", basename(dirs_to_copy))
+  if(file.exists(file.path(course_path, "MANIFEST"))){
+    manifest <- readLines(file.path(course_path, "MANIFEST"))
+    if(any(grepl("^#", manifest))){
+      course_title <- manifest[grep("^#", manifest)]
+      course_title <- sub("#", "", course_title)
+      course_title <- str_trim(course_title)
+    }
   }
   
   # Delete unzipped directory
