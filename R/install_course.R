@@ -14,6 +14,9 @@
 #' You can uninstall a course from swirl at any time with 
 #' \code{\link{uninstall_course}}.
 #' 
+#' Uninstall all courses with
+#' \code{\link{uninstall_all_courses}}.
+#' 
 #' @name InstallCourses
 #' @family InstallCourses
 NULL
@@ -208,6 +211,40 @@ uninstall_course <- function(course_name){
   } else {
     stop("Course not found!")
   }
+  invisible()
+}
+
+#' Uninstall all courses
+#' 
+#' @export
+#' @examples
+#' \dontrun{
+#' 
+#' uninstall_all_courses()
+#' }
+#' @family InstallCourses
+uninstall_all_courses <- function(){
+  path <- file.path(system.file(package = "swirl"), "Courses")
+  yaml_exists <- file.exists(file.path(path, "suggested_courses.yaml"))
+  if(yaml_exists){
+    temp_file <- tempfile()
+    file.copy(file.path(path, "suggested_courses.yaml"), temp_file)
+  }
+  
+  if(file.exists(path)){
+    unlink(path, recursive=TRUE, force=TRUE)
+    message("All courses uninstalled successfully!")
+  } else {
+    stop("No courses found!")
+  }
+  
+  dir.create(path, showWarnings = FALSE)
+  
+  if(yaml_exists){
+    file.copy(temp_file, path)
+    file.rename(list.files(path, full.names = TRUE), file.path(path, "suggested_courses.yaml"))
+  }
+  
   invisible()
 }
 

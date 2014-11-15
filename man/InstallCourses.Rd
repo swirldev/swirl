@@ -17,6 +17,9 @@ help file for the relevant install function below.
 
 You can uninstall a course from swirl at any time with
 \code{\link{uninstall_course}}.
+
+Uninstall all courses with
+\code{\link{uninstall_all_courses}}.
 }
 \seealso{
 Other InstallCourses: \code{\link{install_course_directory}};
@@ -26,6 +29,7 @@ Other InstallCourses: \code{\link{install_course_directory}};
   \code{\link{install_course_url}};
   \code{\link{install_course_zip}};
   \code{\link{install_from_swirl}};
+  \code{\link{uninstall_all_courses}};
   \code{\link{uninstall_course}}; \code{\link{zip_course}}
 }
 
