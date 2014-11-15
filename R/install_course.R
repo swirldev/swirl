@@ -212,7 +212,8 @@ uninstall_course <- function(course_name){
 #' @family InstallCourses
 uninstall_all_courses <- function(){
   path <- file.path(system.file(package = "swirl"), "Courses")
-  if(file.exists(file.path(path, "suggested_courses.yaml"))){
+  yaml_exists <- file.exists(file.path(path, "suggested_courses.yaml"))
+  if(yaml_exists){
     temp_file <- tempfile()
     file.copy(file.path(path, "suggested_courses.yaml"), temp_file)
   }
@@ -225,8 +226,12 @@ uninstall_all_courses <- function(){
   }
   
   dir.create(path, showWarnings = FALSE)
-  file.copy(temp_file, path)
-  file.rename(list.files(path, full.names = TRUE), file.path(path, "suggested_courses.yaml"))
+  
+  if(yaml_exists){
+    file.copy(temp_file, path)
+    file.rename(list.files(path, full.names = TRUE), file.path(path, "suggested_courses.yaml"))
+  }
+  
   invisible()
 }
 
