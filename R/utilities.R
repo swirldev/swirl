@@ -183,6 +183,19 @@ complete_part <- function(e) {
   invisible()
 }
 
-course_rename <- function(path){
-  
+#' Rename a course folder according to its MANIFEST
+#' @param course_path Internal path to course.
+#' @importFrom stringr str_trim
+course_rename <- function(course_path){
+  if(file.exists(file.path(course_path, "MANIFEST"))){
+    manifest <- readLines(file.path(course_path, "MANIFEST"))
+    if(any(grepl("^#", manifest))){
+      course_title <- manifest[grep("^#", manifest)][1]
+      course_title <- sub("#", "", course_title)
+      course_title <- str_trim(course_title)
+      course_title <- make_pathname(course_title)
+      file.rename(course_path, file.path(dirname(course_path), course_title))
+    }
+  }
+  invisible()
 }

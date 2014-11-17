@@ -361,6 +361,10 @@ completed <- function(e){
 
 get_manifest <- function(course_dir) {
   man <- readLines(file.path(course_dir, "MANIFEST"), warn=FALSE)
+  # Remove course title
+  if(sum(grepl("^#", man)) > 0){
+    man <- man[-grepl("^#", man)]
+  }
   # Remove leading and trailing whitespace
   man <- str_trim(man)
   # Remove empty lines

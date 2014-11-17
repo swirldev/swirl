@@ -1,3 +1,7 @@
+# swirl 2.2.20
+
+* The `#` character can now be used to explicitly specify a course title in the MANIFEST file of a course.
+
 # swirl 2.2.19
 
 * Add `uninstall_all_courses` function.

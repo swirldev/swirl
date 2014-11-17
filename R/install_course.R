@@ -115,14 +115,7 @@ install_from_swirl <- function(course_name, dev = FALSE){
   
   # Check if MANIFEST contains custom course title
   course_path <- file.path(system.file(package = "swirl"), "Courses", basename(dirs_to_copy))
-  if(file.exists(file.path(course_path, "MANIFEST"))){
-    manifest <- readLines(file.path(course_path, "MANIFEST"))
-    if(any(grepl("^#", manifest))){
-      course_title <- manifest[grep("^#", manifest)]
-      course_title <- sub("#", "", course_title)
-      course_title <- str_trim(course_title)
-    }
-  }
+  course_rename(course_path)
   
   # Delete unzipped directory
   unlink(top_dir, recursive=TRUE, force=TRUE)
@@ -300,6 +293,12 @@ install_course_zip <- function(path, multi=FALSE, which_course=NULL){
       swirl_out("Course installation failed.", skip_after=TRUE)
     }
     
+    # Check if MANIFEST contains custom course title
+    for(i in dirs_to_copy){
+      course_path <- file.path(system.file(package = "swirl"), "Courses", basename(i))
+      course_rename(course_path)
+    }
+    
     # Delete unzipped directory
     unlink(top_dir, recursive=TRUE, force=TRUE)
     
@@ -307,6 +306,10 @@ install_course_zip <- function(path, multi=FALSE, which_course=NULL){
     # Unzip file into courses
     file_list <- unzip(path, exdir=file.path(system.file(package = "swirl"),
                                              "Courses"))
+    
+    course_path <- sort(dirname(file_list))[1]
+    course_rename(course_path)
+    
   }
   
   # If __MACOSX exists, delete it.
@@ -345,6 +348,10 @@ install_course_directory <- function(path){
   } else {
     swirl_out("Course installation failed.", skip_after=TRUE)
   }
+  
+  # Check if MANIFEST contains custom course title
+  course_path <- file.path(system.file(package = "swirl"), "Courses", basename(path))
+  course_rename(course_path)
   
   invisible()
 }
@@ -449,10 +456,12 @@ install_course_url <- function(url, multi=FALSE){
                        str_extract(url, perl("[^/]+/{1}zipball")) )
     
     # Rename unzipped directory
-    file.rename(file.path(system.file(package = "swirl"), 
+    suppressWarnings(
+      file.rename(file.path(system.file(package = "swirl"), 
                           "Courses", old_name), 
                 file.path(system.file(package = "swirl"), 
                           "Courses", course_name))
+    )
   }
   
   # Delete downloaded zip
