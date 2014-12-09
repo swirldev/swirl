@@ -1,3 +1,7 @@
+# swirl 2.2.20
+
+* Fix troublesome bug in `omnitest` due to typo (thanks to @reginaastri).
+
 # swirl 2.2.19
 
 * Add `uninstall_all_courses` function.
