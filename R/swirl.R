@@ -378,6 +378,9 @@ resume.default <- function(e, ...){
       swirl_out("Entering the following correct answer for you...",
                 skip_after=TRUE)
       message("> ", e$current.row[, "CorrectAnswer"])
+      #if(!is.null(e$val)) {
+      #  print(e$val)
+      #}
       
     }
     
