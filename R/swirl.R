@@ -509,7 +509,8 @@ resume.default <- function(e, ...){
     # values of any variables in the official list. If so, add them
     # to the list of changed variables.
     for(nm in names(e$snapshot)){
-      if(!identical(e$snapshot[[nm]], get(nm, globalenv()))){
+      if(exists(nm, globalenv()) &&
+           !identical(e$snapshot[[nm]], get(nm, globalenv()))){
         e$delta[[nm]] <- get(nm, globalenv())
       }
     }
