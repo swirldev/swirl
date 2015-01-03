@@ -336,6 +336,31 @@ install_course_directory <- function(path){
   invisible()
 }
 
+
+#' Install a course from a Bitbucket repository
+#'
+#' @param bitbucket_username The username that owns the course repository.
+#' @param course_name The name of the repository which should be the name of the course.
+#' @param branch The branch of the repository containing the course. The default branch is \code{"master"}.
+#' @param multi The user should set to \code{TRUE} if the repository contains multiple courses. The default value is \code{FALSE}.
+#' @export
+#' @examples
+#' \dontrun{
+#'
+#' install_course_bitbucket("bcaffo", "Linear_Regression")
+#' install_course_bitbucket("jtleek", "Twitter_Map", "geojson")
+#' }#' @family InstallCourses
+
+install_course_bitbucket <- function(bitbucket_username, course_name,
+                                     branch="master", multi=FALSE){
+  # Construct url to the zip file
+  zip_url <- paste0("http://bitbucket.org/", bitbucket_username, "/",
+                    course_name,"/get/", branch, ".zip")
+
+  install_course_url(zip_url, multi=multi)
+}
+
+
 #' Install a course from a GitHub repository
 #' 
 #' @param github_username The username that owns the course repository.
