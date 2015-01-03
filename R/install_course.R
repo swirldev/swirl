@@ -36,8 +36,14 @@ NULL
 #' you to access this repository. Content in the swirl_misc repository
 #' is not guaranteed to work.
 #' 
+#' The central repository of swirl courses is mirrored at
+#' \url{https://bitbucket.org/swirldevmirror/swirl_courses}. If you cannot 
+#' access GitHub you can download swirl courses from bitbucket by using the
+#' \code{mirror = "bitbucket"} option (see below).
+#' 
 #' @param course_name The name of the course you wish to install.
 #' @param dev Set to \code{TRUE} to install a course in development from the swirl_misc repository.
+#' @param mirror Select swirl course repository mirror. Valid arguments are \code{"github"} and \code{"bitbucket"}.
 #' @export
 #' @importFrom httr GET content
 #' @examples
@@ -51,9 +57,12 @@ NULL
 #' 
 #' # To install a course in development from the swirl_misc repository
 #' install_from_swirl("Including Data", dev = TRUE)
+#' 
+#' # To install a course from the Bitbucket mirror
+#' install_from_swirl("R Programming", mirror = "bitbucket")
 #' }
 #' @family InstallCourses
-install_from_swirl <- function(course_name, dev = FALSE){
+install_from_swirl <- function(course_name, dev = FALSE, mirror = "github"){
   # Validate arguments
   if(!is.character(course_name)) {
     stop("Argument 'course_name' must be surrounded by quotes (i.e. a character string)!")
@@ -61,15 +70,25 @@ install_from_swirl <- function(course_name, dev = FALSE){
   if(!is.logical(dev)) {
     stop("Argument 'dev' must be either TRUE or FALSE!")
   }
+  if(!(mirror == "github" || mirror == "bitbucket")){
+    stop("Please enter a valid name for a mirror. ('github' or 'bitbucket')")
+  }
   
   # make pathname from course_name
   course_name <- make_pathname(course_name)
   
   # Construct url to the appropriate zip file
   if(dev) {
+    if(mirror != "github"){
+      stop("To access swirl courses in development on Bitbucket go to https://bitbucket.org/swirldevmirror/swirl_misc")
+    }
     url <- "http://github.com/swirldev/swirl_misc/zipball/master"
   } else {
-    url <- "http://github.com/swirldev/swirl_courses/zipball/master"
+    if(mirror == "bitbucket"){
+      url <- "https://bitbucket.org/swirldevmirror/swirl_courses/get/HEAD.zip"
+    } else {
+      url <- "http://github.com/swirldev/swirl_courses/zipball/master"
+    }
   }
   
   # Send GET request
