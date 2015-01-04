@@ -1,3 +1,9 @@
+# swirl 2.2.21
+
+* Add `mirror` argument to `install_from_swirl()` to accommodate installing courses from the Bitbucket mirror of our swirl-courses GitHub repository. (Prompted by India's blocking of GitHub.)
+
+* Check for existence of variable in swirl.R to address issue with using `rm()` command.
+
 # swirl 2.2.20
 
 * Fix troublesome bug in `omnitest` due to typo (thanks to @reginaastri).
