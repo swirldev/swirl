@@ -1,5 +1,5 @@
 Package: swirl
-Title: Learn R, in R.
+Title: Learn R, in R
 Description: swirl turns the R console into an interactive learning
     environment. Users receive immediate feedback as they are guided through
     self-paced lessons in data science and R programming.
