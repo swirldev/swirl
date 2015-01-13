@@ -370,7 +370,12 @@ resume.default <- function(e, ...){
       }
       e$expr <- parse(text=correctAns)[[1]]
       ce <- cleanEnv(e$snapshot)
-      e$val <- suppressMessages(suppressWarnings(eval(e$expr, ce)))
+      # evaluate e$expr keeping value and visibility information
+      # store the result in temporary object evaluation in order
+      # to avoid double potentially time consuming eval call
+      evaluation <- withVisible(eval(e$expr, ce))
+      e$vis <- evaluation$visible
+      e$val <- suppressMessages(suppressWarnings(evaluation$value))
       xfer(ce, globalenv())
       ce <- as.list(ce)
       
@@ -378,7 +383,10 @@ resume.default <- function(e, ...){
       swirl_out("Entering the following correct answer for you...",
                 skip_after=TRUE)
       message("> ", e$current.row[, "CorrectAnswer"])
-      
+
+      if(e$vis & !is.null(e$val)) {
+        print(e$val)
+      }
     }
     
     # Make sure playing flag is off since user skipped
