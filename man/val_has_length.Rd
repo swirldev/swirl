@@ -13,7 +13,7 @@ val_has_length(len)
 \code{TRUE} or \code{FALSE}
 }
 \description{
-Test the the \code{\link{length}} of \code{e$val} is that given by the
+Test the \code{\link{length}} of \code{e$val} is that given by the
 first argument.
 }
 \examples{
