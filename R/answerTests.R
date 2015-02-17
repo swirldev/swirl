@@ -351,7 +351,7 @@ runTest.expr_identical <- function(keyphrase, e){
   return(results$passed)
 }
 
-# Test the the length of e$val is that given in the keyphrase
+# Test the length of e$val is that given in the keyphrase
 # keyphrase: "val_length=<integer>"
 runTest.val_length <- function(keyphrase, e){
   try(n <- as.integer(rightside(keyphrase)), silent=TRUE)
