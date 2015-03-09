@@ -22,5 +22,6 @@ Imports:
     yaml,
     RCurl,
     digest,
-    tools
+    tools,
+    swirlcamp
 Roxygen: list(wrap = FALSE)

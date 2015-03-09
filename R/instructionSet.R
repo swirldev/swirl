@@ -6,10 +6,8 @@
 present <- function(current.row, e)UseMethod("present")
 
 present.default <- function(current.row, e){
-  # Suppress extra space if multiple choice
-  is_mult <- is(e$current.row, "mult_question")
   # Present output to user
-  swirl_out(current.row[, "Output"], skip_after=!is_mult)
+  post_exercise(e, current.row)
   # Initialize attempts counter, if necessary
   if(!exists("attempts", e)) e$attempts <- 1
   # Increment pointer
@@ -166,7 +164,7 @@ testResponse.default <- function(current.row, e){
   }
   correct <- !(FALSE %in% unlist(results))
   if(correct){
-    swirl_out(praise())
+    mes <- praise()
     e$iptr <- 1
     e$row <- 1 + e$row
     # Reset attempts counter, since correct
@@ -182,18 +180,10 @@ testResponse.default <- function(current.row, e){
     if(is(current.row, "cmd_question")) {
       mes <- paste(mes, "Or, type info() for more options.")
     }
-    swirl_out(mes)
-    temp <- current.row[,"Hint"]
-    # Suppress extra space if multiple choice
-    is_mult <- is(e$current.row, "mult_question")
-    # If hint is specified, print it. Otherwise, just skip a line.
-    if (!is.na(temp)) {
-      swirl_out(current.row[,"Hint"], skip_after=!is_mult)
-    } else {
-      message()
-    }
+    hint <- current.row[,"Hint"]
     e$iptr <- e$iptr - 1
   }
+  post_result(e, correct, e$expr, mes, if(!exists("hint")) NULL else if(is.na(hint)) NULL else hint)
 }
 
 testMe <- function(keyphrase, e){

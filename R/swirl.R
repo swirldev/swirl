@@ -291,6 +291,20 @@ resume.default <- function(e, ...){
     }
   }
   
+  if(is(e, "datacamp")) {
+    if(is.null(getOption("course")) || is.null(getOption("lesson"))) {
+      stop("Must specify 'course' and 'lesson' in the options!")
+    }
+    e$course <- getOption("course")
+    e$lesson <- getOption("lesson")
+    if(is.null(getOption("from"))) {
+      e$test_from <- 1
+    } else {
+      e$test_from <- getOption("from")
+    }
+    e$test_to <- 999
+  }
+  
   esc_flag <- TRUE
   on.exit(if(esc_flag)swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE))
   # Trap special functions
@@ -454,9 +468,8 @@ resume.default <- function(e, ...){
     # Below, min() ignores e$test_to if it is NULL (i.e. not in 'test' mode)
     if(e$row > min(nrow(e$les), e$test_to)) {
       # If in test mode, we don't want to run another lesson
-      if(is(e, "test")) {
-        swirl_out("Lesson complete! Exiting swirl now...",
-                  skip_after=TRUE)
+      if(is(e, "test") || is(e, "datacamp")) {
+        post_finished(e)
         esc_flag <- FALSE # to supress double notification
         return(FALSE)
       }
@@ -492,9 +505,8 @@ resume.default <- function(e, ...){
     }
     # If we are ready for a new row, prepare it
     if(e$iptr == 1){      
-      # Increment progress bar
-      cat("\n")
-      setTxtProgressBar(e$pbar, e$pbar_seq[e$row])
+      # Display progress
+      post_progress(e)
       
       #  Any variables changed or created during the previous
       #  question must have been correct or we would not be about
