@@ -6,6 +6,7 @@ housekeeping <- function(e, ...)UseMethod("housekeeping")
 inProgressMenu <- function(e, choices, ...)UseMethod("inProgressMenu")
 courseMenu <- function(e, courses)UseMethod("courseMenu")
 courseDir <- function(e)UseMethod("courseDir")
+progressDir <- function(e)UseMethod("progressDir")
 lessonMenu <- function(e, choices)UseMethod("lessonMenu")
 restoreUserProgress <- function(e, selection)UseMethod("restoreUserProgress")
 loadLesson <- function(e, ...)UseMethod("loadLesson")
@@ -26,7 +27,7 @@ mainMenu.default <- function(e){
   # Welcome the user if necessary and set up progress tracking
   if(!exists("usr",e,inherits = FALSE)){
     e$usr <- welcome(e)
-    udat <- file.path(find.package("swirl"), "user_data", e$usr)
+    udat <- file.path(progressDir(e), e$usr)
     if(!file.exists(udat)){
       housekeeping(e)
       dir.create(udat, recursive=TRUE)
@@ -395,6 +396,18 @@ order_lessons <- function(current_order, manifest_order) {
 courseDir.default <- function(e){
   # e's only role is to determine the method used
   file.path(find.package("swirl"), "Courses")
+}
+
+progressDir.default <- function(e) {
+  system.file("user_data", package = "swirl")  
+}
+
+courseDir.datacamp <- function(e) {
+  file.path("~","datacamp", "Courses")
+}
+
+progressDir.datacamp <- function(e) {
+  file.path("~","datacamp", "user_data")
 }
 
 # Default for determining the user

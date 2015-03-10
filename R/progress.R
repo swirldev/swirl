@@ -15,14 +15,16 @@ saveProgress.default <- function(e){
 #' 
 #' delete_progress("bill")
 #' }
-delete_progress <- function(user){
+delete_progress <- function(user, path = NULL){
   # Make sure user entered a user name
   if(nchar(user) < 1){
     stop("Please enter a valid username.")
   }
 
   # Find path to user data
-  path <- system.file("user_data", user, package = "swirl")
+  if(is.null(path)) {
+    path <- system.file("user_data", user, package = "swirl")  
+  }
   
   # Delete all files within a user folder
   if(file.exists(path)){
