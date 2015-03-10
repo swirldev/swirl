@@ -37,7 +37,7 @@ post_result.datacamp <- function(e, passed, submission, feedback, hint) {
     swirlcamp::post_result(passed, submission, feedback)
   }
   # wait for user to read the feedback
-  readLine("...")
+  readline("...")
 }
 
 post_progress.default <- function(e) {
