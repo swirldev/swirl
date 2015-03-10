@@ -15,7 +15,7 @@ post_exercise.datacamp <- function(e, current.row) {
   swirlcamp::post_exercise(current.row[, "Output"], class(current.row)[1])
 }
 
-post_result.default <- function(e, passed, submission, feedback, hint) {
+post_result.default <- function(e, passed, feedback, hint) {
   swirl_out(feedback)
   if(!passed) {
     # If hint is specified, print it. Otherwise, just skip a line.
@@ -30,14 +30,16 @@ post_result.default <- function(e, passed, submission, feedback, hint) {
 }
 
 #' @importFrom swirlcamp post_result
-post_result.datacamp <- function(e, passed, submission, feedback, hint) {
+post_result.datacamp <- function(e, passed, feedback, hint) {
+  
   if(!passed && !is.null(hint)) {
-    swirlcamp::post_result(passed, submission, paste(feedback, hint))
-  } else {
-    swirlcamp::post_result(passed, submission, feedback)
+    feedback <- paste(feedback, hint)
   }
-  # wait for user to read the feedback
-  readline("...")
+  swirlcamp::post_result(passed, e$expr, e$row, feedback)
+  if(passed) {
+    # wait for user to read the feedback
+    readline("...")
+  }
 }
 
 post_progress.default <- function(e) {

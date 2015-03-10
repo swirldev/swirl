@@ -165,6 +165,7 @@ testResponse.default <- function(current.row, e){
   correct <- !(FALSE %in% unlist(results))
   if(correct){
     mes <- praise()
+    post_result(e, correct, mes, NULL)
     e$iptr <- 1
     e$row <- 1 + e$row
     # Reset attempts counter, since correct
@@ -181,9 +182,9 @@ testResponse.default <- function(current.row, e){
       mes <- paste(mes, "Or, type info() for more options.")
     }
     hint <- current.row[,"Hint"]
+    post_result(e, correct, mes, if(is.na(hint)) NULL else hint)
     e$iptr <- e$iptr - 1
   }
-  post_result(e, correct, e$expr, mes, if(!exists("hint")) NULL else if(is.na(hint)) NULL else hint)
 }
 
 testMe <- function(keyphrase, e){
