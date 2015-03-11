@@ -10,11 +10,6 @@ post_exercise.default <- function(e, current.row) {
   swirl_out(current.row[, "Output"], skip_after = !is_mult)
 }
 
-#' @importFrom swirlcamp post_exercise
-post_exercise.datacamp <- function(e, current.row) {
-  swirlcamp::post_exercise(current.row[, "Output"], class(current.row)[1])
-}
-
 post_result.default <- function(e, passed, feedback, hint) {
   swirl_out(feedback)
   if(!passed) {
@@ -29,35 +24,11 @@ post_result.default <- function(e, passed, feedback, hint) {
   }
 }
 
-#' @importFrom swirlcamp post_result
-post_result.datacamp <- function(e, passed, feedback, hint) {
-  
-  if(!passed && !is.null(hint)) {
-    feedback <- paste(feedback, hint)
-  }
-  swirlcamp::post_result(passed, e$expr, e$row, feedback)
-  if(passed) {
-    # wait for user to read the feedback
-    readline("...")
-  }
-}
-
 post_progress.default <- function(e) {
   cat("\n")
   setTxtProgressBar(e$pbar, e$pbar_seq[e$row])
 }
 
-#' @importFrom swirlcamp post_progress
-post_progress.datacamp <- function(e) {
-  swirlcamp::post_progress(e$pbar_seq[e$row])
-}
-
 post_finished.default <- function(e) {
   swirl_out("Lesson complete! Exiting swirl now...", skip_after=TRUE)
 }
-
-#' @importFrom swirlcamp post_finished
-post_finished.datacamp <- function(e) {
-  swirlcamp::post_finished()
-}
-

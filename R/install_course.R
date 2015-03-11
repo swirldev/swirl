@@ -44,6 +44,7 @@ NULL
 #' @param course_name The name of the course you wish to install.
 #' @param dev Set to \code{TRUE} to install a course in development from the swirl_misc repository.
 #' @param mirror Select swirl course repository mirror. Valid arguments are \code{"github"} and \code{"bitbucket"}.
+#' @param coursesDir Path to the Courses directory (optional)
 #' @export
 #' @importFrom httr GET content
 #' @examples
@@ -200,6 +201,7 @@ zip_course <- function(path, dest=NULL){
 #' Uninstall a course
 #' 
 #' @param course_name Name of course to be uninstalled
+#' @param coursesDir Path to the Courses directory (optional)
 #' @export
 #' @examples
 #' \dontrun{
@@ -223,6 +225,7 @@ uninstall_course <- function(course_name, coursesDir){
 
 #' Uninstall all courses
 #' 
+#' @param coursesDir Path to the Courses directory (optional)
 #' @export
 #' @examples
 #' \dontrun{
@@ -263,6 +266,7 @@ uninstall_all_courses <- function(coursesDir = NULL){
 #' @param path The path to the zipped course.
 #' @param multi Set to \code{TRUE} if the zipped directory contains multiple courses. The default value is \code{FALSE}.
 #' @param which_course A vector of course names. Only for use when zip file contains multiple courses, but you don't want to install all of them.
+#' @param coursesDir Path to the Courses directory (optional)
 #' @export
 #' @examples
 #' \dontrun{
@@ -327,6 +331,7 @@ install_course_zip <- function(path, multi=FALSE, which_course=NULL, coursesDir 
 #' Install a course from a course directory
 #' 
 #' @param path The path to the course directory.
+#' @param coursesDir Path to the Courses directory (optional)
 #' @export
 #' @examples
 #' \dontrun{
@@ -365,6 +370,7 @@ install_course_directory <- function(path, coursesDir = NULL){
 #' @param course_name The name of the repository which should be the name of the course.
 #' @param branch The branch of the repository containing the course. The default branch is \code{"master"}.
 #' @param multi The user should set to \code{TRUE} if the repository contains multiple courses. The default value is \code{FALSE}.
+#' @param coursesDir Path to the Courses directory (optional)
 #' @export
 #' @examples
 #' \dontrun{
@@ -387,6 +393,7 @@ install_course_github <- function(github_username, course_name,
 #' 
 #' @param url URL of the shared file
 #' @param multi The user should set to \code{TRUE} if the zipped directory contains multiple courses. The default value is \code{FALSE}.
+#' @param coursesDir Path to the Courses directory (optional)
 #' @export
 #' @examples
 #' \dontrun{
@@ -405,6 +412,7 @@ install_course_dropbox <- function(url, multi=FALSE, coursesDir = NULL){
 #' 
 #' @param url URL of the shared file
 #' @param multi The user should set to \code{TRUE} if the zipped directory contains multiple courses. The default value is \code{FALSE}.
+#' @param coursesDir Path to the Courses directory (optional)
 #' @export
 #' @examples
 #' \dontrun{
@@ -424,6 +432,7 @@ install_course_google_drive <- function(url, multi=FALSE, coursesDir = NULL){
 #' 
 #' @param url URL that points to a zipped course directory
 #' @param multi The user should set to \code{TRUE} if the zipped directory contains multiple courses. The default value is \code{FALSE}.
+#' @param coursesDir Path to the Courses directory (optional)
 #' @export
 #' @importFrom httr GET content
 #' @importFrom stringr str_extract perl

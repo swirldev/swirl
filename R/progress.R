@@ -8,7 +8,7 @@ saveProgress.default <- function(e){
 #' Delete a user's progress
 #' 
 #' @param user The user name whose progress will be deleted.
-#'
+#' @param path If specified, the directory where the user_data can be found
 #' @export
 #' @examples
 #' \dontrun{
