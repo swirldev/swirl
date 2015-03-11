@@ -170,7 +170,7 @@ mainMenu.default <- function(e){
       
       # expr, val, ok, and vis should have been set by the callback.
       # The lesson's current row - could start after 1 if in 'test' mode
-      if(is(e, 'test')) {
+      if(is(e, 'test') || is(e, 'datacamp')) {
         e$row <- e$test_from
       } else {
         e$row <- 1
