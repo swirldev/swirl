@@ -399,7 +399,7 @@ courseDir.default <- function(e){
 }
 
 progressDir.default <- function(e) {
-  system.file("user_data", package = "swirl")  
+  file.path(find.package("swirl"), "user_data")
 }
 
 courseDir.datacamp <- function(e) {

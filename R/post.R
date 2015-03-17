@@ -1,4 +1,5 @@
 post_exercise <- function(e, current.row) UseMethod("post_exercise")
+post_mult_question <- function(e, choices) UseMethod("post_mult_question")
 post_result <- function(e, passed, submission, feedback, hint) UseMethod("post_result")
 post_progress <- function(e) UseMethod("post_progress")
 post_finished <- function(e) UseMethod("post_finished")
@@ -8,6 +9,10 @@ post_exercise.default <- function(e, current.row) {
   is_mult <- is(e$current.row, "mult_question")
   # Present output to user
   swirl_out(current.row[, "Output"], skip_after = !is_mult)
+}
+
+post_mult_question.default <- function(e, choices) {
+  return(select.list(choices, graphics=FALSE))
 }
 
 post_result.default <- function(e, passed, feedback, hint) {
