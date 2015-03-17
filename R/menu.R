@@ -202,10 +202,6 @@ welcome.test <- function(e, ...){
   "author"
 }
 
-welcome.datacamp <- function(e, ...){
-  "datacamp"
-}
-
 # Default version.
 welcome.default <- function(e, ...){
   swirl_out("Welcome to swirl!")
@@ -237,8 +233,6 @@ housekeeping.default <- function(e){
 
 housekeeping.test <- function(e){}
 
-housekeeping.datacamp <- function(e){}
-
 # A stub. Eventually this should be a full menu
 inProgressMenu.default <- function(e, choices){
   nada <- "No. Let me start something new."
@@ -250,10 +244,6 @@ inProgressMenu.default <- function(e, choices){
 }
 
 inProgressMenu.test <- function(e, choices) {
-  ""
-}
-
-inProgressMenu.datacamp <- function(e, choices) {
   ""
 }
 
@@ -269,10 +259,6 @@ courseMenu.test <- function(e, choices) {
   e$test_course
 }
 
-courseMenu.datacamp <- function(e, choices) {
-  e$course
-}
-
 # A stub. Eventually this should be a full menu
 lessonMenu.default <- function(e, choices){
   swirl_out("Please choose a lesson, or type 0 to return to course menu.")
@@ -281,10 +267,6 @@ lessonMenu.default <- function(e, choices){
 
 lessonMenu.test <- function(e, choices) {
   e$test_lesson
-}
-
-lessonMenu.datacamp <- function(e, choices) {
-  e$lesson
 }
 
 loadLesson.default <- function(e, courseU, lesson){
@@ -400,14 +382,6 @@ courseDir.default <- function(e){
 
 progressDir.default <- function(e) {
   file.path(find.package("swirl"), "user_data")
-}
-
-courseDir.datacamp <- function(e) {
-  file.path("~","datacamp", "Courses")
-}
-
-progressDir.datacamp <- function(e) {
-  file.path("~","datacamp", "user_data")
 }
 
 # Default for determining the user

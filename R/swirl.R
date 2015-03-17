@@ -262,47 +262,8 @@ resume <- function(...)UseMethod("resume")
 
 resume.default <- function(e, ...){
   # Check that if running in test mode, all necessary args are specified
-  if(is(e, "test")) {
-    # Capture ... args
-    targs <- list(...)
-    # Check if appropriately named args exist
-    if(is.null(targs$test_course) || is.null(targs$test_lesson)) {
-      stop("Must specify 'test_course' and 'test_lesson' to run in 'test' mode!")
-    } else {
-      # Make available for use in menu functions
-      e$test_lesson <- targs$test_lesson
-      e$test_course <- targs$test_course
-    }
-    # Check that 'from' is less than 'to' if they are both provided
-    if(!is.null(targs$from) && !is.null(targs$to)) {
-      if(targs$from >= targs$to) {
-        stop("Argument 'to' must be strictly greater than argument 'from'!")
-      }
-    }
-    if(is.null(targs$from)) {
-      e$test_from <- 1
-    } else {
-      e$test_from <- targs$from
-    }
-    if(is.null(targs$to)) {
-      e$test_to <- 999 # Lesson will end naturally before this
-    } else {
-      e$test_to <- targs$to
-    }
-  }
-  
-  if(is(e, "datacamp")) {
-    if(is.null(getOption("course")) || is.null(getOption("lesson"))) {
-      stop("Must specify 'course' and 'lesson' in the options!")
-    }
-    e$course <- getOption("course")
-    e$lesson <- getOption("lesson")
-    if(is.null(getOption("from"))) {
-      e$test_from <- 1
-    } else {
-      e$test_from <- getOption("from")
-    }
-    e$test_to <- 999
+  if(is(e, "test") || is(e, "datacamp")) {
+    args_specification(e, ...)
   }
   
   esc_flag <- TRUE
