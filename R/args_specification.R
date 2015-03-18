@@ -1,6 +1,10 @@
 args_specification <- function(e, ...)UseMethod("args_specification")
 
-args_specification.default <- function(e, ...) {
+args_specification.deafult <- function(e, ...) {
+  # in normal, interactive mode, do nothing
+}
+
+args_specification.test <- function(e, ...) {
   # Capture ... args
   targs <- list(...)
   # Check if appropriately named args exist

@@ -261,10 +261,8 @@ resume <- function(...)UseMethod("resume")
 # instruction set is thus extensible. It can be found in R/instructionSet.R. 
 
 resume.default <- function(e, ...){
-  # Check that if running in test mode, all necessary args are specified
-  if(is(e, "test") || is(e, "datacamp")) {
-    args_specification(e, ...)
-  }
+  # Specify additional arguments
+  args_specification(e, ...)
   
   esc_flag <- TRUE
   on.exit(if(esc_flag)swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE))
