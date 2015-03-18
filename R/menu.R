@@ -193,6 +193,8 @@ mainMenu.default <- function(e){
       e$playing <- FALSE
       # create the file
       suppressMessages(suppressWarnings(saveRDS(e, e$progress)))
+      # post initialization message
+      post_init(e)
     }
   }
   return(TRUE)

@@ -1,8 +1,13 @@
+post_init <- function(e) UseMethod("post_init")
 post_exercise <- function(e, current.row) UseMethod("post_exercise")
 post_mult_question <- function(e, choices) UseMethod("post_mult_question")
 post_result <- function(e, passed, submission, feedback, hint) UseMethod("post_result")
 post_progress <- function(e) UseMethod("post_progress")
 post_finished <- function(e) UseMethod("post_finished")
+
+post_init.default <- function(e) {
+  # do nothing
+}
 
 post_exercise.default <- function(e, current.row) {
   # Suppress extra space if multiple choice
