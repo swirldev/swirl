@@ -17,7 +17,7 @@ post_exercise.default <- function(e, current.row) {
 }
 
 post_mult_question.default <- function(e, choices) {
-  return(select.list(choices, graphics=FALSE))
+  return(select.list(sample(choices), graphics=FALSE))
 }
 
 post_result.default <- function(e, passed, feedback, hint) {

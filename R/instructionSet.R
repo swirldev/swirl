@@ -77,7 +77,7 @@ waitUser.mult_question <- function(current.row, e){
   # leading and trailing white space from the choices.
   choices <- str_trim(choices[[1]])
   # Store the choice in e$val for testing
-  e$val <- post_mult_question(e, sample(choices))
+  e$val <- post_mult_question(e, choices)
   
   e$iptr <- 1 + e$iptr
 }
