@@ -1,6 +1,6 @@
 args_specification <- function(e, ...)UseMethod("args_specification")
 
-args_specification.deafult <- function(e, ...) {
+args_specification.default <- function(e, ...) {
   # in normal, interactive mode, do nothing
 }
 
