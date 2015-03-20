@@ -164,8 +164,9 @@ mainMenu.default <- function(e){
       rm("temp_lesson_name", "temp_course_name", envir=e, inherits=FALSE)
       
       # Initialize the progress bar
-      if(!is(e,"datacamp"))
+      if(!is(e,"datacamp")) {
         e$pbar <- txtProgressBar(style=3)
+      }
       e$pbar_seq <- seq(0, 1, length=nrow(e$les))
       
       # expr, val, ok, and vis should have been set by the callback.

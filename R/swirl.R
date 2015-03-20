@@ -426,7 +426,7 @@ resume.default <- function(e, ...){
     # lesson from e, and invoke the top level menu method.
     # Below, min() ignores e$test_to if it is NULL (i.e. not in 'test' mode)
     if(e$row > min(nrow(e$les), e$test_to)) {
-      # If in test mode, we don't want to run another lesson
+      # If in test or datacamp mode, we don't want to run another lesson
       if(is(e, "test") || is(e, "datacamp")) {
         post_finished(e)
         esc_flag <- FALSE # to supress double notification
