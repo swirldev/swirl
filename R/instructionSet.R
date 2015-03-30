@@ -166,7 +166,7 @@ testResponse.default <- function(current.row, e){
   correct <- !(FALSE %in% unlist(results))
   if(correct){
     mes <- praise()
-    post_result(e, correct, mes, NULL)
+    post_result(e, passed = correct, feedback = mes, hint = NULL)
     e$iptr <- 1
     e$row <- 1 + e$row
     # Reset attempts counter, since correct
@@ -179,13 +179,15 @@ testResponse.default <- function(current.row, e){
     # of x unless the original value is restored.
     if(length(e$snapshot)>0)xfer(as.environment(e$snapshot), globalenv())
     mes <- tryAgain()
-    if(is(current.row, "cmd_question")) {
+    if(is(current.row, "cmd_question") && !is(e, "datacamp")) {
       mes <- paste(mes, "Or, type info() for more options.")
     }
     hint <- current.row[,"Hint"]
-    post_result(e, correct, mes, if(is.na(hint)) NULL else hint)
+    post_result(e, passed = correct, feedback = mes, hint = if(is.na(hint)) NULL else hint)
     e$iptr <- e$iptr - 1
   }
+  # reset skipped info
+  e$skipped <- FALSE
 }
 
 testMe <- function(keyphrase, e){
