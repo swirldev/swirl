@@ -4,7 +4,8 @@
 \alias{install_course_zip}
 \title{Install a course from a zipped course folder}
 \usage{
-install_course_zip(path, multi = FALSE, which_course = NULL)
+install_course_zip(path, multi = FALSE, which_course = NULL,
+  coursesDir = NULL)
 }
 \arguments{
 \item{path}{The path to the zipped course.}
@@ -12,6 +13,8 @@ install_course_zip(path, multi = FALSE, which_course = NULL)
 \item{multi}{Set to \code{TRUE} if the zipped directory contains multiple courses. The default value is \code{FALSE}.}
 
 \item{which_course}{A vector of course names. Only for use when zip file contains multiple courses, but you don't want to install all of them.}
+
+\item{coursesDir}{Path to the Courses directory (optional)}
 }
 \description{
 Install a course from a zipped course folder
