@@ -22,5 +22,6 @@ Imports:
     yaml,
     RCurl,
     digest,
-    tools
+    tools,
+    rappdirs
 Roxygen: list(wrap = FALSE)
