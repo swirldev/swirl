@@ -4,12 +4,10 @@
 \alias{install_course_directory}
 \title{Install a course from a course directory}
 \usage{
-install_course_directory(path, coursesDir = NULL)
+install_course_directory(path)
 }
 \arguments{
 \item{path}{The path to the course directory.}
-
-\item{coursesDir}{Path to the Courses directory (optional)}
 }
 \description{
 Install a course from a course directory

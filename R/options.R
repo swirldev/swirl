@@ -1,3 +1,21 @@
+#' Set global options for swirl
+#' 
+#' @description
+#' Options can be set for swirl that have an effect on swirl's behavior. Options
+#' are specified by the \code{name} of an option that corrsponds to the 
+#' \code{value} of that option.
+#' 
+#' @param ... Any options can be defined using \code{name = value}.
+#' @export
+#' @examples
+#' \dontrun{
+#' 
+#' # Install courses to the current directory
+#' set_swirl_options(courses_dir = getwd())
+#' 
+#' # Install courses in the default course directory
+#' set_swirl_options(courses_dir = file.path(system.file("Courses", package = "swirl")))
+#' }
 set_swirl_options <- function(...){
   args <- list(...)
   if(length(args) == 0){
@@ -27,6 +45,18 @@ set_swirl_options <- function(...){
   invisible()
 }
 
+#' Get a global swirl option
+#' 
+#' @description
+#' Returns the \code{value} of a swirl option by providing its \code{name}.
+#' 
+#' @param name The \code{name} of the swirl option.
+#' @export
+#' @examples
+#' \dontrun{
+#' 
+#' get_swirl_option("courses_dir")
+#' }
 get_swirl_option <- function(name){
   opts <- read.csv(opts_path(), stringsAsFactors = FALSE, 
                        header = TRUE)
@@ -37,6 +67,19 @@ get_swirl_option <- function(name){
   }
 }
 
+#' Delete a global swirl option
+#' 
+#' @description
+#' Deletes the \code{name} and \code{value} of a swirl option by providing 
+#' its \code{name}.
+#' 
+#' @param name The \code{name} of the swirl option to be deleted.
+#' @export
+#' @examples
+#' \dontrun{
+#' 
+#' delete_swirl_option("Brians_phone_number")
+#' }
 delete_swirl_option <- function(name){
   opts <- read.csv(opts_path(), stringsAsFactors = FALSE, 
                    header = TRUE)
@@ -50,11 +93,16 @@ delete_swirl_option <- function(name){
   invisible()
 }
 
-#' Get the options file path
+# Get the options file path
 #' @importFrom rappdirs user_data_dir
 opts_path <- function(){
   # Find user data directory
   udd <- user_data_dir(appname = "swirl", appauthor = "swirldev", roaming = TRUE)
+  
+  # If the directory doesn't exist, create it
+  if(!file.exists(udd)){
+    dir.create(udd, recursive = TRUE)
+  }
   
   # Construct path to swirl options
   file.path(udd, "swirl_options.csv")

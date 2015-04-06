@@ -4,12 +4,10 @@
 \alias{uninstall_course}
 \title{Uninstall a course}
 \usage{
-uninstall_course(course_name, coursesDir)
+uninstall_course(course_name)
 }
 \arguments{
 \item{course_name}{Name of course to be uninstalled}
-
-\item{coursesDir}{Path to the Courses directory (optional)}
 }
 \description{
 Uninstall a course

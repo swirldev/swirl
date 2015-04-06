@@ -380,7 +380,7 @@ order_lessons <- function(current_order, manifest_order) {
 
 courseDir.default <- function(e){
   # e's only role is to determine the method used
-  file.path(find.package("swirl"), "Courses")
+  get_swirl_option("courses_dir")
 }
 
 progressDir.default <- function(e) {

@@ -4,8 +4,7 @@
 \alias{install_from_swirl}
 \title{Install a course from the official course repository}
 \usage{
-install_from_swirl(course_name, dev = FALSE, mirror = "github",
-  coursesDir = NULL)
+install_from_swirl(course_name, dev = FALSE, mirror = "github")
 }
 \arguments{
 \item{course_name}{The name of the course you wish to install.}
@@ -13,8 +12,6 @@ install_from_swirl(course_name, dev = FALSE, mirror = "github",
 \item{dev}{Set to \code{TRUE} to install a course in development from the swirl_misc repository.}
 
 \item{mirror}{Select swirl course repository mirror. Valid arguments are \code{"github"} and \code{"bitbucket"}.}
-
-\item{coursesDir}{Path to the Courses directory (optional)}
 }
 \description{
 We are currently maintaining a central repository of contributed

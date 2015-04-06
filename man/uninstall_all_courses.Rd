@@ -4,10 +4,7 @@
 \alias{uninstall_all_courses}
 \title{Uninstall all courses}
 \usage{
-uninstall_all_courses(coursesDir = NULL)
-}
-\arguments{
-\item{coursesDir}{Path to the Courses directory (optional)}
+uninstall_all_courses()
 }
 \description{
 Uninstall all courses
