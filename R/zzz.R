@@ -1,11 +1,5 @@
 .onLoad <- function(libname, pkgname){
-  udd <- user_data_dir(appname = "swirl", appauthor = "swirldev", roaming = TRUE)
-  if(!file.exists(udd)){
-    dir.create(udd, recursive = TRUE)
-    swirl_options <- data.frame(course_path = file.path(system.file("Courses", package = "swirl")))
-    write.csv(swirl_options, file = file.path(udd, "swirl_options.csv"), row.names = FALSE)
-  }
-  
+  set_swirl_options(courses_dir = file.path(system.file("Courses", package = "swirl")))
   invisible()
 }
 

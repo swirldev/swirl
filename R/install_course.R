@@ -44,7 +44,6 @@ NULL
 #' @param course_name The name of the course you wish to install.
 #' @param dev Set to \code{TRUE} to install a course in development from the swirl_misc repository.
 #' @param mirror Select swirl course repository mirror. Valid arguments are \code{"github"} and \code{"bitbucket"}.
-#' @param coursesDir Path to the Courses directory (optional)
 #' @export
 #' @importFrom httr GET content
 #' @examples
@@ -63,7 +62,7 @@ NULL
 #' install_from_swirl("R Programming", mirror = "bitbucket")
 #' }
 #' @family InstallCourses
-install_from_swirl <- function(course_name, dev = FALSE, mirror = "github", coursesDir = NULL){
+install_from_swirl <- function(course_name, dev = FALSE, mirror = "github"){
   # Validate arguments
   if(!is.character(course_name)) {
     stop("Argument 'course_name' must be surrounded by quotes (i.e. a character string)!")
@@ -73,9 +72,6 @@ install_from_swirl <- function(course_name, dev = FALSE, mirror = "github", cour
   }
   if(!(mirror == "github" || mirror == "bitbucket")){
     stop("Please enter a valid name for a mirror. ('github' or 'bitbucket')")
-  }
-  if(is.null(coursesDir)) {
-    coursesDir <- file.path(system.file("Courses", package = "swirl"))
   }
     
   # make pathname from course_name
@@ -99,7 +95,7 @@ install_from_swirl <- function(course_name, dev = FALSE, mirror = "github", cour
   response <- GET(url)
   
   # Construct path to Courses
-  path <- file.path(coursesDir, "temp.zip")
+  path <- file.path(get_swirl_option("courses_dir"), "temp.zip")
   
   # Write the response as a zip
   writeBin(content(response, "raw"), path)
@@ -120,12 +116,12 @@ install_from_swirl <- function(course_name, dev = FALSE, mirror = "github", cour
   }
   
   # Extract
-  unzip(path, exdir=coursesDir, files=unzip_list)
+  unzip(path, exdir=get_swirl_option("courses_dir"), files=unzip_list)
   
   # Copy files from unzipped directory into Courses
-  top_dir <- file.path(coursesDir, sort(dirname(unzip_list))[1])
+  top_dir <- file.path(get_swirl_option("courses_dir"), sort(dirname(unzip_list))[1])
   dirs_to_copy <- list.files(top_dir, full.names=TRUE)
-  if(file.copy(dirs_to_copy, coursesDir, recursive=TRUE)){
+  if(file.copy(dirs_to_copy, get_swirl_option("courses_dir"), recursive=TRUE)){
     swirl_out("Course installed successfully!", skip_after=TRUE)
   } else {
     swirl_out("Course installation failed.", skip_after=TRUE)
@@ -135,7 +131,7 @@ install_from_swirl <- function(course_name, dev = FALSE, mirror = "github", cour
   unlink(top_dir, recursive=TRUE, force=TRUE)
   
   # If __MACOSX exists, delete it.
-  unlink(file.path(coursesDir, "__MACOSX"), recursive=TRUE, force=TRUE)
+  unlink(file.path(get_swirl_option("courses_dir"), "__MACOSX"), recursive=TRUE, force=TRUE)
   
   # Delete temp.zip
   unlink(path, force=TRUE)
@@ -201,7 +197,6 @@ zip_course <- function(path, dest=NULL){
 #' Uninstall a course
 #' 
 #' @param course_name Name of course to be uninstalled
-#' @param coursesDir Path to the Courses directory (optional)
 #' @export
 #' @examples
 #' \dontrun{
@@ -209,11 +204,8 @@ zip_course <- function(path, dest=NULL){
 #' uninstall_course("Linear Regression")
 #' }
 #' @family InstallCourses
-uninstall_course <- function(course_name, coursesDir){
-  if(is.null(coursesDir)) {
-    coursesDir <- file.path(system.file(package = "swirl"), "Courses")
-  }
-  path <- file.path(coursesDir, make_pathname(course_name))
+uninstall_course <- function(course_name){
+  path <- file.path(get_swirl_option("courses_dir"), make_pathname(course_name))
   if(file.exists(path)){
     unlink(path, recursive=TRUE, force=TRUE)
     message("Course uninstalled successfully!")
@@ -225,7 +217,6 @@ uninstall_course <- function(course_name, coursesDir){
 
 #' Uninstall all courses
 #' 
-#' @param coursesDir Path to the Courses directory (optional)
 #' @export
 #' @examples
 #' \dontrun{
@@ -233,11 +224,8 @@ uninstall_course <- function(course_name, coursesDir){
 #' uninstall_all_courses()
 #' }
 #' @family InstallCourses
-uninstall_all_courses <- function(coursesDir = NULL){
-  if(is.null(coursesDir)) {
-    coursesDir <- file.path(system.file(package = "swirl"), "Courses")
-  }
-  path <- coursesDir
+uninstall_all_courses <- function(){
+  path <- get_swirl_option("courses_dir")
   yaml_exists <- file.exists(file.path(path, "suggested_courses.yaml"))
   if(yaml_exists){
     temp_file <- tempfile()
@@ -266,7 +254,6 @@ uninstall_all_courses <- function(coursesDir = NULL){
 #' @param path The path to the zipped course.
 #' @param multi Set to \code{TRUE} if the zipped directory contains multiple courses. The default value is \code{FALSE}.
 #' @param which_course A vector of course names. Only for use when zip file contains multiple courses, but you don't want to install all of them.
-#' @param coursesDir Path to the Courses directory (optional)
 #' @export
 #' @examples
 #' \dontrun{
@@ -277,15 +264,12 @@ uninstall_all_courses <- function(coursesDir = NULL){
 #'                    which_course=c("R Programming", "Data Analysis"))
 #' }
 #' @family InstallCourses
-install_course_zip <- function(path, multi=FALSE, which_course=NULL, coursesDir = NULL){
+install_course_zip <- function(path, multi=FALSE, which_course=NULL){
   if(!is.logical(multi) || is.na(multi)) {
     stop("Argument 'multi' must be either TRUE or FALSE.")
   }
   if(!multi && !is.null(which_course)) {
     stop("Argument 'which_course' should only be specified when argument 'multi' is TRUE.")
-  }
-  if(is.null(coursesDir)) {
-    coursesDir <- file.path(system.file(package = "swirl"), "Courses")
   }
   if(multi){
     # Find list of files not in top level directory
@@ -293,10 +277,10 @@ install_course_zip <- function(path, multi=FALSE, which_course=NULL, coursesDir 
     
     # Filter list and extract
     unzip_list <- Filter(function(x){grepl("/.+/", x)}, file_names)
-    unzip(path, exdir = coursesDir, files=unzip_list)
+    unzip(path, exdir = get_swirl_option("courses_dir"), files=unzip_list)
     
     # Copy files from unzipped directory into Courses
-    top_dir <- file.path(coursesDir, sort(dirname(unzip_list))[1])
+    top_dir <- file.path(get_swirl_option("courses_dir"), sort(dirname(unzip_list))[1])
     dirs_to_copy <- list.files(top_dir, full.names=TRUE)
     # Subset desired courses if specified with which_courses arg
     if(!is.null(which_course)) {
@@ -308,7 +292,7 @@ install_course_zip <- function(path, multi=FALSE, which_course=NULL, coursesDir 
       }
       dirs_to_copy <- dirs_to_copy[match_ind]
     }
-    if(file.copy(dirs_to_copy, coursesDir, recursive=TRUE)){
+    if(file.copy(dirs_to_copy, get_swirl_option("courses_dir"), recursive=TRUE)){
       swirl_out("Course installed successfully!", skip_after=TRUE)
     } else {
       swirl_out("Course installation failed.", skip_after=TRUE)
@@ -319,11 +303,11 @@ install_course_zip <- function(path, multi=FALSE, which_course=NULL, coursesDir 
     
   } else {
     # Unzip file into courses
-    file_list <- unzip(path, exdir = coursesDir)
+    file_list <- unzip(path, exdir = get_swirl_option("courses_dir"))
   }
   
   # If __MACOSX exists, delete it.
-  unlink(file.path(coursesDir, "__MACOSX"), recursive=TRUE, force=TRUE)
+  unlink(file.path(get_swirl_option("courses_dir"), "__MACOSX"), recursive=TRUE, force=TRUE)
 
   invisible()
 }
@@ -331,7 +315,6 @@ install_course_zip <- function(path, multi=FALSE, which_course=NULL, coursesDir 
 #' Install a course from a course directory
 #' 
 #' @param path The path to the course directory.
-#' @param coursesDir Path to the Courses directory (optional)
 #' @export
 #' @examples
 #' \dontrun{
@@ -339,7 +322,7 @@ install_course_zip <- function(path, multi=FALSE, which_course=NULL, coursesDir 
 #' install_course_directory("~/Desktop/my_course")
 #' }
 #' @family InstallCourses
-install_course_directory <- function(path, coursesDir = NULL){
+install_course_directory <- function(path){
   # Check for size of directory to prevent copying a huge directory into swirl/Courses
   garbage_result <- tryCatch(
     {setTimeLimit(elapsed=1); list.files(path, recursive=TRUE)},
@@ -352,10 +335,7 @@ install_course_directory <- function(path, coursesDir = NULL){
   }
   
   # Copy files
-  if(is.null(coursesDir)) {
-    coursesDir <- file.path(system.file(package = "swirl"), "Courses")
-  }
-  if(file.copy(path, coursesDir, recursive=TRUE)){
+  if(file.copy(path, get_swirl_option("courses_dir"), recursive=TRUE)){
     swirl_out("Course installed successfully!", skip_after=TRUE)
   } else {
     swirl_out("Course installation failed.", skip_after=TRUE)
@@ -370,7 +350,6 @@ install_course_directory <- function(path, coursesDir = NULL){
 #' @param course_name The name of the repository which should be the name of the course.
 #' @param branch The branch of the repository containing the course. The default branch is \code{"master"}.
 #' @param multi The user should set to \code{TRUE} if the repository contains multiple courses. The default value is \code{FALSE}.
-#' @param coursesDir Path to the Courses directory (optional)
 #' @export
 #' @examples
 #' \dontrun{
@@ -380,20 +359,19 @@ install_course_directory <- function(path, coursesDir = NULL){
 #' }
 #' @family InstallCourses
 install_course_github <- function(github_username, course_name, 
-                                  branch="master", multi=FALSE, coursesDir = NULL){
+                                  branch="master", multi=FALSE){
   
   # Construct url to the zip file
   zip_url <- paste0("http://github.com/", github_username, "/", 
                     course_name,"/zipball/", branch)
 
-  install_course_url(zip_url, multi=multi, coursesDir = coursesDir)
+  install_course_url(zip_url, multi=multi)
 }
 
 #' Install a course from a zipped course directory shared on Dropbox
 #' 
 #' @param url URL of the shared file
 #' @param multi The user should set to \code{TRUE} if the zipped directory contains multiple courses. The default value is \code{FALSE}.
-#' @param coursesDir Path to the Courses directory (optional)
 #' @export
 #' @examples
 #' \dontrun{
@@ -401,18 +379,17 @@ install_course_github <- function(github_username, course_name,
 #' install_course_dropbox("https://www.dropbox.com/s/xttkmuvu7hh72vu/my_course.zip")
 #' }
 #' @family InstallCourses
-install_course_dropbox <- function(url, multi=FALSE, coursesDir = NULL){
+install_course_dropbox <- function(url, multi=FALSE){
   # Construct url to the zip file
   zip_url <- paste0(sub("www.dropbox", "dl.dropboxusercontent", url), "?dl=1")
   
-  install_course_url(zip_url, multi=multi, coursesDir = coursesDir)
+  install_course_url(zip_url, multi=multi)
 }
 
 #' Install a course from a zipped course directory shared on Google Drive
 #' 
 #' @param url URL of the shared file
 #' @param multi The user should set to \code{TRUE} if the zipped directory contains multiple courses. The default value is \code{FALSE}.
-#' @param coursesDir Path to the Courses directory (optional)
 #' @export
 #' @examples
 #' \dontrun{
@@ -420,19 +397,18 @@ install_course_dropbox <- function(url, multi=FALSE, coursesDir = NULL){
 #' install_course_google_drive("https://drive.google.com/file/d/F3fveiu873hfjZZj/edit?usp=sharing")
 #' }
 #' @family InstallCourses
-install_course_google_drive <- function(url, multi=FALSE, coursesDir = NULL){
+install_course_google_drive <- function(url, multi=FALSE){
   # Construct url to the zip file
   zip_url <- sub("file/d/", "uc?export=download&id=", 
                  sub("/edit\\?usp=sharing", "", url))
   
-  install_course_url(zip_url, multi=multi, coursesDir = coursesDir)
+  install_course_url(zip_url, multi=multi)
 }
 
 #' Install a course from a url that points to a zip file
 #' 
 #' @param url URL that points to a zipped course directory
 #' @param multi The user should set to \code{TRUE} if the zipped directory contains multiple courses. The default value is \code{FALSE}.
-#' @param coursesDir Path to the Courses directory (optional)
 #' @export
 #' @importFrom httr GET content
 #' @importFrom stringr str_extract perl
@@ -442,22 +418,18 @@ install_course_google_drive <- function(url, multi=FALSE, coursesDir = NULL){
 #' install_course_url("http://www.biostat.jhsph.edu/~rpeng/File_Hash_Course.zip")
 #' }
 #' @family InstallCourses
-install_course_url <- function(url, multi=FALSE, coursesDir = NULL){
+install_course_url <- function(url, multi=FALSE){
   # Send GET request
   response <- GET(url)
   
-  if(is.null(coursesDir)) {
-    coursesDir <- file.path(system.file(package = "swirl"), "Courses")
-  }
-  
   # Construct path to Courses
-  path <- file.path(coursesDir, "temp.zip")
+  path <- file.path(get_swirl_option("courses_dir"), "temp.zip")
   
   # Write the response as a zip
   writeBin(content(response, "raw"), path)
   
   # Unzip downloaded file
-  install_course_zip(path, multi=multi, coursesDir = coursesDir)
+  install_course_zip(path, multi=multi)
 
   # Clean up GitHub directory name
   if(grepl("github.com", url) && !multi){
@@ -472,8 +444,8 @@ install_course_url <- function(url, multi=FALSE, coursesDir = NULL){
                        str_extract(url, perl("[^/]+/{1}zipball")) )
     
     # Rename unzipped directory
-    file.rename(file.path(coursesDir, old_name), 
-                file.path(coursesDir, course_name))
+    file.rename(file.path(get_swirl_option("courses_dir"), old_name), 
+                file.path(get_swirl_option("courses_dir"), course_name))
   }
   
   # Delete downloaded zip
