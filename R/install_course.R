@@ -73,7 +73,7 @@ install_from_swirl <- function(course_name, dev = FALSE, mirror = "github"){
   if(!(mirror == "github" || mirror == "bitbucket")){
     stop("Please enter a valid name for a mirror. ('github' or 'bitbucket')")
   }
-  
+    
   # make pathname from course_name
   course_name <- make_pathname(course_name)
   
@@ -95,7 +95,7 @@ install_from_swirl <- function(course_name, dev = FALSE, mirror = "github"){
   response <- GET(url)
   
   # Construct path to Courses
-  path <- file.path(system.file("Courses", package = "swirl"), "temp.zip")
+  path <- file.path(get_swirl_option("courses_dir"), "temp.zip")
   
   # Write the response as a zip
   writeBin(content(response, "raw"), path)
@@ -116,15 +116,12 @@ install_from_swirl <- function(course_name, dev = FALSE, mirror = "github"){
   }
   
   # Extract
-  unzip(path, exdir=file.path(system.file(package = "swirl"), "Courses"), 
-        files=unzip_list)
+  unzip(path, exdir=get_swirl_option("courses_dir"), files=unzip_list)
   
   # Copy files from unzipped directory into Courses
-  top_dir <- file.path(system.file(package = "swirl"), "Courses", 
-                       sort(dirname(unzip_list))[1])
+  top_dir <- file.path(get_swirl_option("courses_dir"), sort(dirname(unzip_list))[1])
   dirs_to_copy <- list.files(top_dir, full.names=TRUE)
-  if(file.copy(dirs_to_copy, file.path(system.file(package = "swirl"), "Courses"),
-            recursive=TRUE)){
+  if(file.copy(dirs_to_copy, get_swirl_option("courses_dir"), recursive=TRUE)){
     swirl_out("Course installed successfully!", skip_after=TRUE)
   } else {
     swirl_out("Course installation failed.", skip_after=TRUE)
@@ -134,8 +131,7 @@ install_from_swirl <- function(course_name, dev = FALSE, mirror = "github"){
   unlink(top_dir, recursive=TRUE, force=TRUE)
   
   # If __MACOSX exists, delete it.
-  unlink(file.path(system.file(package = "swirl"), "Courses", "__MACOSX"),
-         recursive=TRUE, force=TRUE)
+  unlink(file.path(get_swirl_option("courses_dir"), "__MACOSX"), recursive=TRUE, force=TRUE)
   
   # Delete temp.zip
   unlink(path, force=TRUE)
@@ -209,8 +205,7 @@ zip_course <- function(path, dest=NULL){
 #' }
 #' @family InstallCourses
 uninstall_course <- function(course_name){
-  path <- file.path(system.file(package = "swirl"), "Courses", 
-                    make_pathname(course_name))
+  path <- file.path(get_swirl_option("courses_dir"), make_pathname(course_name))
   if(file.exists(path)){
     unlink(path, recursive=TRUE, force=TRUE)
     message("Course uninstalled successfully!")
@@ -230,7 +225,7 @@ uninstall_course <- function(course_name){
 #' }
 #' @family InstallCourses
 uninstall_all_courses <- function(){
-  path <- file.path(system.file(package = "swirl"), "Courses")
+  path <- get_swirl_option("courses_dir")
   yaml_exists <- file.exists(file.path(path, "suggested_courses.yaml"))
   if(yaml_exists){
     temp_file <- tempfile()
@@ -282,12 +277,10 @@ install_course_zip <- function(path, multi=FALSE, which_course=NULL){
     
     # Filter list and extract
     unzip_list <- Filter(function(x){grepl("/.+/", x)}, file_names)
-    unzip(path, exdir=file.path(system.file(package = "swirl"), "Courses"),
-          files=unzip_list)
+    unzip(path, exdir = get_swirl_option("courses_dir"), files=unzip_list)
     
     # Copy files from unzipped directory into Courses
-    top_dir <- file.path(system.file(package = "swirl"), "Courses", 
-                         sort(dirname(unzip_list))[1])
+    top_dir <- file.path(get_swirl_option("courses_dir"), sort(dirname(unzip_list))[1])
     dirs_to_copy <- list.files(top_dir, full.names=TRUE)
     # Subset desired courses if specified with which_courses arg
     if(!is.null(which_course)) {
@@ -299,8 +292,7 @@ install_course_zip <- function(path, multi=FALSE, which_course=NULL){
       }
       dirs_to_copy <- dirs_to_copy[match_ind]
     }
-    if(file.copy(dirs_to_copy, file.path(system.file(package = "swirl"),
-                                      "Courses"), recursive=TRUE)){
+    if(file.copy(dirs_to_copy, get_swirl_option("courses_dir"), recursive=TRUE)){
       swirl_out("Course installed successfully!", skip_after=TRUE)
     } else {
       swirl_out("Course installation failed.", skip_after=TRUE)
@@ -311,13 +303,11 @@ install_course_zip <- function(path, multi=FALSE, which_course=NULL){
     
   } else {
     # Unzip file into courses
-    file_list <- unzip(path, exdir=file.path(system.file(package = "swirl"),
-                                             "Courses"))
+    file_list <- unzip(path, exdir = get_swirl_option("courses_dir"))
   }
   
   # If __MACOSX exists, delete it.
-  unlink(file.path(system.file(package = "swirl"), "Courses", "__MACOSX"),
-         recursive=TRUE, force=TRUE)
+  unlink(file.path(get_swirl_option("courses_dir"), "__MACOSX"), recursive=TRUE, force=TRUE)
 
   invisible()
 }
@@ -345,8 +335,7 @@ install_course_directory <- function(path){
   }
   
   # Copy files
-  if(file.copy(path, file.path(system.file(package = "swirl"), "Courses"),
-            recursive=TRUE)){
+  if(file.copy(path, get_swirl_option("courses_dir"), recursive=TRUE)){
     swirl_out("Course installed successfully!", skip_after=TRUE)
   } else {
     swirl_out("Course installation failed.", skip_after=TRUE)
@@ -434,7 +423,7 @@ install_course_url <- function(url, multi=FALSE){
   response <- GET(url)
   
   # Construct path to Courses
-  path <- file.path(system.file(package = "swirl"), "Courses", "temp.zip")
+  path <- file.path(get_swirl_option("courses_dir"), "temp.zip")
   
   # Write the response as a zip
   writeBin(content(response, "raw"), path)
@@ -445,7 +434,7 @@ install_course_url <- function(url, multi=FALSE){
   # Clean up GitHub directory name
   if(grepl("github.com", url) && !multi){
     # Get paths of every file in zip that will be extracted
-    file_names <- dirname(unzip(path,  list = TRUE)$Name)
+    file_names <- dirname(unzip(path, list = TRUE)$Name)
     
     # Find subset of those names which is not equal to root, then get the shortest string from that subset
     old_name <- head( sort( file_names[which(file_names != ".")] ) , 1)
@@ -455,10 +444,8 @@ install_course_url <- function(url, multi=FALSE){
                        str_extract(url, perl("[^/]+/{1}zipball")) )
     
     # Rename unzipped directory
-    file.rename(file.path(system.file(package = "swirl"), 
-                          "Courses", old_name), 
-                file.path(system.file(package = "swirl"), 
-                          "Courses", course_name))
+    file.rename(file.path(get_swirl_option("courses_dir"), old_name), 
+                file.path(get_swirl_option("courses_dir"), course_name))
   }
   
   # Delete downloaded zip

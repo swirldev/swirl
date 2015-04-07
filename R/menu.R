@@ -6,6 +6,7 @@ housekeeping <- function(e, ...)UseMethod("housekeeping")
 inProgressMenu <- function(e, choices, ...)UseMethod("inProgressMenu")
 courseMenu <- function(e, courses)UseMethod("courseMenu")
 courseDir <- function(e)UseMethod("courseDir")
+progressDir <- function(e)UseMethod("progressDir")
 lessonMenu <- function(e, choices)UseMethod("lessonMenu")
 restoreUserProgress <- function(e, selection)UseMethod("restoreUserProgress")
 loadLesson <- function(e, ...)UseMethod("loadLesson")
@@ -26,7 +27,7 @@ mainMenu.default <- function(e){
   # Welcome the user if necessary and set up progress tracking
   if(!exists("usr",e,inherits = FALSE)){
     e$usr <- welcome(e)
-    udat <- file.path(find.package("swirl"), "user_data", e$usr)
+    udat <- file.path(progressDir(e), e$usr)
     if(!file.exists(udat)){
       housekeeping(e)
       dir.create(udat, recursive=TRUE)
@@ -154,7 +155,7 @@ mainMenu.default <- function(e){
       e$path <- file.path(courseDir(e), courseU, lesson)
       # If running in 'test' mode and starting partway through 
       # lesson, then complete first part
-      if(is(e, "test") && e$test_from > 1) {
+      if((is(e, "test") || is(e, "datacamp")) && e$test_from > 1) {
         complete_part(e)
       }
       
@@ -163,12 +164,14 @@ mainMenu.default <- function(e){
       rm("temp_lesson_name", "temp_course_name", envir=e, inherits=FALSE)
       
       # Initialize the progress bar
-      e$pbar <- txtProgressBar(style=3)
+      if(!is(e,"datacamp")) {
+        e$pbar <- txtProgressBar(style=3)
+      }
       e$pbar_seq <- seq(0, 1, length=nrow(e$les))
       
       # expr, val, ok, and vis should have been set by the callback.
       # The lesson's current row - could start after 1 if in 'test' mode
-      if(is(e, 'test')) {
+      if(is(e, 'test') || is(e, 'datacamp')) {
         e$row <- e$test_from
       } else {
         e$row <- 1
@@ -191,6 +194,8 @@ mainMenu.default <- function(e){
       e$playing <- FALSE
       # create the file
       suppressMessages(suppressWarnings(saveRDS(e, e$progress)))
+      # post initialization message
+      post_init(e)
     }
   }
   return(TRUE)
@@ -375,7 +380,11 @@ order_lessons <- function(current_order, manifest_order) {
 
 courseDir.default <- function(e){
   # e's only role is to determine the method used
-  file.path(find.package("swirl"), "Courses")
+  get_swirl_option("courses_dir")
+}
+
+progressDir.default <- function(e) {
+  file.path(find.package("swirl"), "user_data")
 }
 
 # Default for determining the user

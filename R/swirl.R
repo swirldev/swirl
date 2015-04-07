@@ -214,6 +214,13 @@ play <- function(){invisible()}
 #' }
 main <- function(){invisible()}
 
+#' Restart the current swirl lesson.
+#'
+#' Restart the current swirl lesson.
+#'
+#' @export
+restart <- function(){invisible()}
+
 #' Display a list of special commands.
 #' 
 #' Display a list of the special commands, \code{bye()}, \code{play()}, 
@@ -261,35 +268,8 @@ resume <- function(...)UseMethod("resume")
 # instruction set is thus extensible. It can be found in R/instructionSet.R. 
 
 resume.default <- function(e, ...){
-  # Check that if running in test mode, all necessary args are specified
-  if(is(e, "test")) {
-    # Capture ... args
-    targs <- list(...)
-    # Check if appropriately named args exist
-    if(is.null(targs$test_course) || is.null(targs$test_lesson)) {
-      stop("Must specify 'test_course' and 'test_lesson' to run in 'test' mode!")
-    } else {
-      # Make available for use in menu functions
-      e$test_lesson <- targs$test_lesson
-      e$test_course <- targs$test_course
-    }
-    # Check that 'from' is less than 'to' if they are both provided
-    if(!is.null(targs$from) && !is.null(targs$to)) {
-      if(targs$from >= targs$to) {
-        stop("Argument 'to' must be strictly greater than argument 'from'!")
-      }
-    }
-    if(is.null(targs$from)) {
-      e$test_from <- 1
-    } else {
-      e$test_from <- targs$from
-    }
-    if(is.null(targs$to)) {
-      e$test_to <- 999 # Lesson will end naturally before this
-    } else {
-      e$test_to <- targs$to
-    }
-  }
+  # Specify additional arguments
+  args_specification(e, ...)
   
   esc_flag <- TRUE
   on.exit(if(esc_flag)swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE))
@@ -298,40 +278,23 @@ resume.default <- function(e, ...){
     esc_flag <- FALSE
     return(TRUE)
   }
-  if(uses_func("nxt")(e$expr)[[1]]){    
-    ## Using the stored list of "official" swirl variables and values,
-    #  assign variables of the same names in the global environment
-    #  their "official" values, in case the user has changed them
-    #  while playing.
-    if(length(e$snapshot)>0)xfer(as.environment(e$snapshot), globalenv())
-    swirl_out("Resuming lesson...")
-    e$playing <- FALSE
-    e$iptr <- 1
+  
+  if(uses_func("nxt")(e$expr)[[1]]){
+    do_nxt(e)
   }
   
   # The user wants to reset their script to the original
   if(uses_func("reset")(e$expr)[[1]]) {
-    e$playing <- FALSE
-    e$reset <- TRUE
-    e$iptr <- 2
-    swirl_out("I just reset the script to its original state. If it doesn't refresh immediately, you may need to click on it.", 
-              skip_after = TRUE)
+    do_reset(e)
   }
   
   # The user wants to submit their R script
   if(uses_func("submit")(e$expr)[[1]]){
-    e$playing <- FALSE
-    # Get contents from user's submitted script
-    e$script_contents <- readLines(e$script_temp_path, warn = FALSE)
-    # Save expr to e
-    e$expr <- try(parse(text = e$script_contents), silent = TRUE)
-    swirl_out("Sourcing your script...", skip_after = TRUE)
-    try(source(e$script_temp_path))
+    do_submit(e)
   }
   
   if(uses_func("play")(e$expr)[[1]]){
-    swirl_out("Entering play mode. Experiment as you please, then type nxt() when you are ready to resume the lesson.", skip_after=TRUE)
-    e$playing <- TRUE
+    do_play(e)
   }
   
   # If the user wants to skip the current question, do the bookkeeping.
@@ -339,6 +302,7 @@ resume.default <- function(e, ...){
     # Increment a skip count kept in e.
     if(!exists("skips", e)) e$skips <- 0
     e$skips <- 1 + e$skips
+    e$skipped <- TRUE
     # Enter the correct answer for the user
     # by simulating what the user should have done
     correctAns <- e$current.row[,"CorrectAnswer"]
@@ -401,11 +365,12 @@ resume.default <- function(e, ...){
   
   # If the user want to return to the main menu, do the bookkeeping
   if(uses_func("main")(e$expr)[[1]]){
-    swirl_out("Returning to the main menu...")
-    # Remove the current lesson. Progress has been saved already.
-    if(exists("les", e, inherits=FALSE)){
-      rm("les", envir=e, inherits=FALSE)
-    }
+    do_main(e)
+  }
+
+  # If the user want to restart the lesson, do the bookkeeping
+  if(uses_func("restart")(e$expr)[[1]]){
+    do_restart(e)
   }
   
   # If user is looking up a help file, ignore their input
@@ -453,10 +418,9 @@ resume.default <- function(e, ...){
     # lesson from e, and invoke the top level menu method.
     # Below, min() ignores e$test_to if it is NULL (i.e. not in 'test' mode)
     if(e$row > min(nrow(e$les), e$test_to)) {
-      # If in test mode, we don't want to run another lesson
-      if(is(e, "test")) {
-        swirl_out("Lesson complete! Exiting swirl now...",
-                  skip_after=TRUE)
+      # If in test or datacamp mode, we don't want to run another lesson
+      if(is(e, "test") || is(e, "datacamp")) {
+        post_finished(e)
         esc_flag <- FALSE # to supress double notification
         return(FALSE)
       }
@@ -492,9 +456,8 @@ resume.default <- function(e, ...){
     }
     # If we are ready for a new row, prepare it
     if(e$iptr == 1){      
-      # Increment progress bar
-      cat("\n")
-      setTxtProgressBar(e$pbar, e$pbar_seq[e$row])
+      # Display progress
+      post_progress(e)
       
       #  Any variables changed or created during the previous
       #  question must have been correct or we would not be about

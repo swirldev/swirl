@@ -4,10 +4,12 @@
 \alias{delete_progress}
 \title{Delete a user's progress}
 \usage{
-delete_progress(user)
+delete_progress(user, path = NULL)
 }
 \arguments{
 \item{user}{The user name whose progress will be deleted.}
+
+\item{path}{If specified, the directory where the user_data can be found}
 }
 \description{
 Delete a user's progress
