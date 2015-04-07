@@ -1,3 +1,9 @@
+# swirl 2.3.0
+
+* Add basic developer API to swirl, courtesy of @filipsch and @seankross.
+
+* Change license to MIT, which is slightly less restrictive than GPL-3 and will make it easy for developers to tap into the new API.
+
 # swirl 2.2.21
 
 * Add `mirror` argument to `install_from_swirl()` to accommodate installing courses from the Bitbucket mirror of our swirl-courses GitHub repository. (Prompted by India's blocking of GitHub.)
