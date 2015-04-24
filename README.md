@@ -1,7 +1,7 @@
 # swirl
 
 [![Build Status](https://travis-ci.org/swirldev/swirl.png?branch=master)](https://travis-ci.org/swirldev/swirl)
-![Downloads](http://cranlogs.r-pkg.org/badges/swirl)
+[![Downloads](http://cranlogs.r-pkg.org/badges/swirl)](http://cran-logs.rstudio.com/)
 
 ### [http://swirlstats.com](http://swirlstats.com)
 
