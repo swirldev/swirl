@@ -34,8 +34,10 @@ wrap_encoding <- function(raw_yaml) {
     attributes(retval) <- attributes(raw_yaml)
     retval
   } else {
-    if (class(raw_yaml) == "character" & Encoding(raw_yaml) == "unknown") {
-      Encoding(raw_yaml) <- "UTF-8"
+    if (class(raw_yaml) == "character") {
+      if (Encoding(raw_yaml) == "unknown") {
+        Encoding(raw_yaml) <- "UTF-8"
+      }
     }
     raw_yaml
   }
