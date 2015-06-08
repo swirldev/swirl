@@ -92,7 +92,7 @@ install_from_swirl <- function(course_name, dev = FALSE, mirror = "github"){
   }
   
   # Send GET request
-  response <- GET(url)
+  response <- GET(url,progress())
   
   # Construct path to Courses
   path <- file.path(get_swirl_option("courses_dir"), "temp.zip")
