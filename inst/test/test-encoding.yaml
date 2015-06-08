@@ -1,0 +1,43 @@
+- Class: meta
+  Course: MyCourse
+  Lesson: MyLesson
+  Author: your name goes here
+  Type: Standard
+  Organization: your organization's name goes here
+  Version: 2.3.0
+ 
+- Class: text
+  Output: put your text output here
+ 
+- Class: text
+  Output: 中文測試
+ 
+- Class: mult_question
+  Output: ask the multiple choice question here
+  AnswerChoices: ANS;2;3
+  CorrectAnswer: ANS
+  AnswerTests: omnitest(correctVal= 'ANS')
+  Hint: hint
+ 
+- Class: script
+  Output: explain what the user must do here
+  AnswerTests: custom_test_name()
+  Hint: hint
+  Script: script-name.R
+ 
+- Class: exact_question
+  Output: explain the question here
+  CorrectAnswer: n
+  AnswerTests: omnitest(correctVal=n)
+  Hint: hint
+ 
+- Class: text_question
+  Output: explain the question here
+  CorrectAnswer: answer
+  AnswerTests: omnitest(correctVal='answer')
+  Hint: hint
+ 
+- Class: figure
+  Output: explain the figure here
+  Figure: sourcefile.R
+  FigureType: new or add
