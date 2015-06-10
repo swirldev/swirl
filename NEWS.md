@@ -1,3 +1,7 @@
+# swirl 2.3.1
+
+* Add progress bar to track download progress of a course.
+
 # swirl 2.3.0
 
 * Add basic developer API to swirl, courtesy of @filipsch and @seankross.
