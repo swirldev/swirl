@@ -122,7 +122,7 @@ loadDependencies <- function(lesson_dir) {
     packages_as_chars <- setdiff(readLines(depends, warn=FALSE), "")
     # If the dependson file is empty, then proceed with lesson
     if(length(packages_as_chars) == 0) return(TRUE)
-    swirl_out("Attempting to load lesson dependencies...")
+    swirl_out("Attemping to load lesson dependencies...")
     for(p in packages_as_chars) {
       p <- gsub("^\\s+|\\s+$", "", p) # trim leading and trailing whitespace 
       if(suppressPackageStartupMessages(
