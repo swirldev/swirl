@@ -45,7 +45,7 @@ NULL
 #' @param dev Set to \code{TRUE} to install a course in development from the swirl_misc repository.
 #' @param mirror Select swirl course repository mirror. Valid arguments are \code{"github"} and \code{"bitbucket"}.
 #' @export
-#' @importFrom httr GET content
+#' @importFrom httr GET content progress
 #' @examples
 #' \dontrun{
 #' 
@@ -92,7 +92,7 @@ install_from_swirl <- function(course_name, dev = FALSE, mirror = "github"){
   }
   
   # Send GET request
-  response <- GET(url)
+  response <- GET(url, progress())
   
   # Construct path to Courses
   path <- file.path(get_swirl_option("courses_dir"), "temp.zip")
@@ -410,7 +410,7 @@ install_course_google_drive <- function(url, multi=FALSE){
 #' @param url URL that points to a zipped course directory
 #' @param multi The user should set to \code{TRUE} if the zipped directory contains multiple courses. The default value is \code{FALSE}.
 #' @export
-#' @importFrom httr GET content
+#' @importFrom httr GET content progress
 #' @importFrom stringr str_extract perl
 #' @examples
 #' \dontrun{
@@ -420,7 +420,7 @@ install_course_google_drive <- function(url, multi=FALSE){
 #' @family InstallCourses
 install_course_url <- function(url, multi=FALSE){
   # Send GET request
-  response <- GET(url)
+  response <- GET(url, progress())
   
   # Construct path to Courses
   path <- file.path(get_swirl_option("courses_dir"), "temp.zip")
