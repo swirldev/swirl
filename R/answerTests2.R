@@ -427,7 +427,7 @@ expr_creates_var <- function(correctName=NULL){
 
 #' Test that the value of the expression has a particular \code{length}.
 #' 
-#' Test the the \code{\link{length}} of \code{e$val} is that given by the 
+#' Test the \code{\link{length}} of \code{e$val} is that given by the 
 #' first argument.
 #' @param len expected length of the variable created by a user
 #' @return \code{TRUE} or \code{FALSE}
