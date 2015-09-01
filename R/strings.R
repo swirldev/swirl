@@ -1,13 +1,8 @@
 get_string <- function(filename, index){
-  strings <- list(
-    english = english_strings() #,
-    #espanol = kordos()
-  )
-  strings[[get_swirl_option("language")]][[filename]][[index]]
+  eval(parse(text = paste0(get_swirl_option("language"), "_strings")))[[filename]][[index]]
 }
 
-english_strings <- function(){
-  list(
+english_strings <- list(
     actions = list(
       "Resuming lesson...",
       "I just reset the script to its original state. If it doesn't refresh immediately, you may need to click on it.",
@@ -16,5 +11,6 @@ english_strings <- function(){
       "Returning to the main menu...",
       "This feature is not implemented yet for Swirl."
     )
-  )
-}
+)
+
+save(english_strings, file = "R/sysdata.rda")
