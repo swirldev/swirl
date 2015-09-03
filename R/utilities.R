@@ -122,28 +122,28 @@ loadDependencies <- function(lesson_dir) {
     packages_as_chars <- setdiff(readLines(depends, warn=FALSE), "")
     # If the dependson file is empty, then proceed with lesson
     if(length(packages_as_chars) == 0) return(TRUE)
-    swirl_out("Attempting to load lesson dependencies...")
+    swirl_out(get_string("utilities", 1))
     for(p in packages_as_chars) {
       p <- gsub("^\\s+|\\s+$", "", p) # trim leading and trailing whitespace 
       if(suppressPackageStartupMessages(
         suppressWarnings(
           suppressMessages(require(p, character.only=TRUE, quietly=TRUE))))) {
-        swirl_out("Package", sQuote(p), "loaded correctly!")
+        swirl_out(get_string("utilities", 2), sQuote(p), get_string("utilities", 3))
       } else {
-        swirl_out("This lesson requires the", sQuote(p), 
-                  "package. Would you like me to install it for you now?")
+        swirl_out(get_string("utilities", 4), sQuote(p), 
+                  get_string("utilities", 5))
         yn <- select.list(choices=c("Yes", "No"), graphics=FALSE)
         if(yn == "Yes") {
-          swirl_out("Trying to install package", sQuote(p), "now...")
+          swirl_out(get_string("utilities", 6), sQuote(p), get_string("utilities", 7))
           install.packages(p, quiet=TRUE)
           if(suppressPackageStartupMessages(
             suppressWarnings(
               suppressMessages(require(p, 
                                        character.only=TRUE, 
                                        quietly=TRUE))))) {
-            swirl_out("Package", sQuote(p), "loaded correctly!")
+            swirl_out(get_string("utilities", 2), sQuote(p), get_string("utilities", 3))
           } else {
-            swirl_out("Could not install package", paste0(sQuote(p), "!"))
+            swirl_out(get_string("utilities", 8), paste0(sQuote(p), "!"))
             return(FALSE)
           }
         } else {
@@ -175,11 +175,11 @@ complete_part <- function(e) {
       if(file.exists(correct_script_path)) {
         try(source(correct_script_path))
       } else {
-        stop("Correct script not found at ", correct_script_path)
+        stop(get_string("utilities", 9), correct_script_path)
       }
     }
   }
-  message("Completing the first part of the lesson for you...\n")
+  message(paste0(get_string("utilities", 10), "\n"))
   apply(les, 1, exec_cmd)
   invisible()
 }

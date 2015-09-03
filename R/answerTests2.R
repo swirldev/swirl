@@ -225,8 +225,8 @@ omnitest <- function(correctExpr=NULL, correctVal=NULL, strict=FALSE, eval_for_c
   if((isTRUE(valGood) || is.na(valGood)) && exprGood){
     return(TRUE)
   } else if (isTRUE(valGood) && !exprGood && !strict){
-      swirl_out("That's not the expression I expected but it works.")
-      swirl_out("I've executed the correct expression in case the result is needed in an upcoming question.")
+      swirl_out(get_string("answerTests2", 1))
+      swirl_out(get_string("answerTests2", 2))
       eval(parse(text=correctExpr),globalenv())
       return(TRUE)
     } else {
@@ -327,7 +327,7 @@ var_is_a <- function(class, var_name) {
     if(is(e,"dev") && !results$passed)swirl_out(results$message)
     return(results$passed)
   } else {
-    if(is(e,"dev"))swirl_out(paste(var_name, "does not exist."))
+    if(is(e,"dev"))swirl_out(paste(var_name, get_string("answerTests2", 3)))
     return(FALSE)
   }
 }

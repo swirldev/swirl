@@ -122,9 +122,9 @@ install_from_swirl <- function(course_name, dev = FALSE, mirror = "github"){
   top_dir <- file.path(get_swirl_option("courses_dir"), sort(dirname(unzip_list))[1])
   dirs_to_copy <- list.files(top_dir, full.names=TRUE)
   if(file.copy(dirs_to_copy, get_swirl_option("courses_dir"), recursive=TRUE)){
-    swirl_out("Course installed successfully!", skip_after=TRUE)
+    swirl_out(get_string("install_course", 1), skip_after=TRUE)
   } else {
-    swirl_out("Course installation failed.", skip_after=TRUE)
+    swirl_out(get_string("install_course", 2), skip_after=TRUE)
   }
   
   # Delete unzipped directory
@@ -136,61 +136,6 @@ install_from_swirl <- function(course_name, dev = FALSE, mirror = "github"){
   # Delete temp.zip
   unlink(path, force=TRUE)
   
-  invisible()
-}
-
-
-#' Zip a course directory
-#' 
-#' @param path Path to the course directory to be zipped.
-#' @param dest Path to directory in which the \code{.zip} should be saved. The
-#'    default value is \code{NULL}, which will cause the \code{.zip} to be
-#'    created one level above the directory specified in \code{path}.
-#' @export
-#' @examples
-#' \dontrun{
-#' 
-#' zip_course("~/Desktop/LOESS_Modeling")
-#' zip_course("~/Desktop/SNA_Tutorial", "~/tutorials")
-#' }
-#' @family InstallCourses
-zip_course <- function(path, dest=NULL){
-  # Cleanse the path of the trailing slash
-  path <- sub("/$", "", path)
-  
-  # Get highest directory if necessary
-  if(is.null(dest)){
-    dest <- sub(basename(path), "", path)
-  }
-  
-  # Cleanse dest of the trailing slash
-  dest <- sub("/$", "", dest)
-  
-  # Push current directory
-  curr_dir <- getwd()
-  
-  # Create directory in which to zip
-  zip_dir <- paste0(dest, "/", "swirl_zip_creator_TEMP")
-  dir.create(zip_dir)
-  if(file.copy(path, zip_dir, recursive=TRUE)){
-    swirl_out("Course directory was successfully zipped!", skip_after=TRUE)
-  } else {
-    swirl_out("Course installation failed.", skip_after=TRUE)
-  }
-  
-  # Change directory to folder to be zipped
-  setwd(zip_dir)
-  
-  # Zip-A-Dee-Doo-Dah
-  zip(paste0(dest, "/", basename(path), ".zip"), 
-      list.files(getwd(), recursive=TRUE))
-  
-  # Delete temporary directory
-  unlink(zip_dir, recursive=TRUE, force=TRUE)
-  
-  # Pop the old directory
-  setwd(curr_dir)
-
   invisible()
 }
 
@@ -293,9 +238,9 @@ install_course_zip <- function(path, multi=FALSE, which_course=NULL){
       dirs_to_copy <- dirs_to_copy[match_ind]
     }
     if(file.copy(dirs_to_copy, get_swirl_option("courses_dir"), recursive=TRUE)){
-      swirl_out("Course installed successfully!", skip_after=TRUE)
+      swirl_out(get_string("install_course", 1), skip_after=TRUE)
     } else {
-      swirl_out("Course installation failed.", skip_after=TRUE)
+      swirl_out(get_string("install_course", 2), skip_after=TRUE)
     }
     
     # Delete unzipped directory
@@ -336,9 +281,9 @@ install_course_directory <- function(path){
   
   # Copy files
   if(file.copy(path, get_swirl_option("courses_dir"), recursive=TRUE)){
-    swirl_out("Course installed successfully!", skip_after=TRUE)
+    swirl_out(get_string("install_course", 1), skip_after=TRUE)
   } else {
-    swirl_out("Course installation failed.", skip_after=TRUE)
+    swirl_out(get_string("install_course", 2), skip_after=TRUE)
   }
   
   invisible()

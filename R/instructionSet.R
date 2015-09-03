@@ -45,7 +45,7 @@ waitUser.text_order_question <- function(current.row, e){
 waitUser.video <- function(current.row, e){
   response <- readline("Yes or No? ")
   if(tolower(response) %in% c("y", "yes")){
-    swirl_out("Type nxt() to continue")
+    swirl_out(get_string("instructionSet", 1))
     e$prompt <- TRUE
     e$playing <- TRUE
     browseURL(current.row[,"VideoLink"])

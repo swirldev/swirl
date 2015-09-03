@@ -34,6 +34,6 @@ Other InstallCourses: \code{\link{InstallCourses}};
   \code{\link{install_course_url}};
   \code{\link{install_from_swirl}};
   \code{\link{uninstall_all_courses}};
-  \code{\link{uninstall_course}}; \code{\link{zip_course}}
+  \code{\link{uninstall_course}}
 }
 

@@ -1,6 +1,16 @@
+#' @import utils
 .onLoad <- function(libname, pkgname){
-  if(!file.exists(opts_path())){
-    set_swirl_options(courses_dir = file.path(system.file("Courses", package = "swirl")),
+  newly_installed_version <- as.character(packageVersion("swirl"))
+  if(file.exists(opts_path())){
+    previously_installed_version <- get_swirl_option("version")
+    if(previously_installed_version != newly_installed_version){
+      set_swirl_options(version = newly_installed_version,
+                        courses_dir = get_swirl_option("courses_dir"),
+                        language = get_swirl_option("language"))
+    }
+  } else {
+    set_swirl_options(version = newly_installed_version,
+                      courses_dir = file.path(system.file("Courses", package = "swirl")),
                       language = "english")
   }
   invisible()
@@ -9,16 +19,16 @@
 .onAttach <- function(...) {
   if(length(ls(envir=globalenv())) > 0) {
     packageStartupMessage(
-      make_pretty("Hi! I see that you have some variables saved in your",
-      "workspace. To keep things running smoothly, I recommend you clean up",
-      "before starting swirl.", skip_after=TRUE),
-      make_pretty("Type ls() to see a list of the variables in your workspace.",
-      "Then, type rm(list=ls()) to clear your workspace.", skip_after=TRUE),
-      make_pretty("Type swirl() when you are ready to begin.", skip_after=TRUE)
+      make_pretty(get_string("zzz", 1),
+                  get_string("zzz", 2),
+                  get_string("zzz", 3), skip_after=TRUE),
+      make_pretty(get_string("zzz", 4),
+                  get_string("zzz", 5), skip_after=TRUE),
+      make_pretty(get_string("zzz", 6), skip_after=TRUE)
     )
   } else {
     packageStartupMessage(
-      make_pretty("Hi! Type swirl() when you are ready to begin.",
+      make_pretty(get_string("zzz", 7),
                   skip_after=TRUE)
     )
   }

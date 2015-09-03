@@ -40,5 +40,5 @@ post_progress.default <- function(e) {
 }
 
 post_finished.default <- function(e) {
-  swirl_out("Lesson complete! Exiting swirl now...", skip_after=TRUE)
+  swirl_out(get_string("post", 1), skip_after=TRUE)
 }

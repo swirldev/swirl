@@ -19,7 +19,7 @@
 set_swirl_options <- function(...){
   args <- list(...)
   if(length(args) == 0){
-    stop("Please provide arguments so that appropriate options can be set.")
+    stop(get_string("options", 1))
   }
   
   # Create new options frame
@@ -41,7 +41,7 @@ set_swirl_options <- function(...){
     new_opts_file <- new_opts_file[order(new_opts_file$name),]
     write.csv(new_opts_file, file = opts_path(), row.names = FALSE)
   }
-  message("Options set successfully!")
+  message(get_string("options", 2))
   invisible()
 }
 
@@ -63,7 +63,7 @@ get_swirl_option <- function(name){
   if(name %in% opts$name){
     opts[name == opts$name,]$value
   } else {
-    stop(paste0("Option name '", name, "' not found."))
+    stop(paste0(get_string("options", 3), name, get_string("options", 4)))
   }
 }
 
@@ -87,9 +87,9 @@ delete_swirl_option <- function(name){
     opts <- opts[name != opts$name,]
     write.csv(opts, file = opts_path(), row.names = FALSE)
   } else {
-    stop(paste0("Option name '", name, "' not found."))
+    stop(paste0(get_string("options", 3), name, get_string("options", 4)))
   }
-  message(paste0("Option '", name, "' deleted successfully!"))
+  message(paste0(get_string("options", 5), name, get_string("options", 6)))
   invisible()
 }
 
