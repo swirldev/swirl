@@ -31,7 +31,7 @@ do_submit.default <- function(e) {
   # Save expr to e
   e$expr <- try(parse(text = e$script_contents), silent = TRUE)
   swirl_out(s()%N%"Sourcing your script...", skip_after = TRUE)
-  try(source(e$script_temp_path))
+  try(source(e$script_temp_path, encoding = "UTF-8"))
 }
 
 do_play.default <- function(e) {
