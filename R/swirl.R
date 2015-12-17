@@ -226,25 +226,6 @@ restart <- function(){invisible()}
 #' Display a list of the special commands, \code{bye()}, \code{play()}, 
 #' \code{nxt()}, \code{skip()}, and \code{info()}.
 #' @export
-#' @examples
-#' \dontrun{
-#' 
-#' | Create a new variable called `z` that contains the number 11.
-#' 
-#' > info()
-#' 
-#' | When you are at the R prompt (>):
-#' | -- Typing skip() allows you to skip the current question.
-#' | -- Typing play() lets you experiment with R on your own; swirl will ignore what
-#' | you do...
-#' | -- UNTIL you type nxt() which will regain swirl's attention.
-#' | -- Typing bye() causes swirl to exit. Your progress will be saved.
-#' | -- Typing info() displays these options again.
-#' 
-#' > bye()
-#' 
-#' | Leaving swirl now. Type swirl() to resume.
-#' }
 info <- function(){
   swirl_out("When you are at the R prompt (>):")
   swirl_out("-- Typing skip() allows you to skip the current question.", skip_before=FALSE)

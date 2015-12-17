@@ -160,7 +160,7 @@ NULL
 #'   # In this case, if the user enters sd(x)*sd(x) the test will fail.
 #'   
 #'   }
-#'   @family AnswerTests
+#' @family AnswerTests
 omnitest <- function(correctExpr=NULL, correctVal=NULL, strict=FALSE, eval_for_class=as.logical(NA)){
   e <- get("e", parent.frame())
   # Trivial case

@@ -47,24 +47,24 @@ is_robust_match <- function(expr1, expr2, eval_for_class, eval_env=NULL){
 #' \dontrun{
 #' 
 #' # Function
-#' > rmatch_calls(quote(help("print")))
+#' rmatch_calls(quote(help("print")))
 #' help(topic = "print", package = NULL, lib.loc = NULL, verbose = getOption("verbose"), 
 #' try.all.packages = getOption("help.try.all.packages"), help_type = getOption("help_type"))
 #' 
 #' # S3 method with atomic first argument
-#' > rmatch_calls(quote(seq(0, 1, by=.5)))
+#' rmatch_calls(quote(seq(0, 1, by=.5)))
 #' seq(from = 0, to = 1, by = 0.5, length.out = NULL, along.with = NULL)
 #' 
 #' # S3 method with non-atomic first argument, eval_for_class = FALSE (default)
-#' > rmatch_calls(quote(seq(as.Date("2014-02-01"), as.Date("2014-03-01"))))
-#' Error in rmatch_calls(quote(seq(as.Date("2014-02-01"), as.Date("2014-03-01")))) : 
-#'  Illegal expression, seq(as.Date(x = "2014-02-01"), as.Date(x = "2014-03-01")): 
-#'  The first argument, as.Date(x = "2014-02-01"), to S3 method 'seq', is a call, 
-#'  which (as an expression) is not atomic, hence its class can't be determined in an 
-#'  abstract syntax tree without additional information.
+#' rmatch_calls(quote(seq(as.Date("2014-02-01"), as.Date("2014-03-01"))))
+#' #Error in rmatch_calls(quote(seq(as.Date("2014-02-01"), as.Date("2014-03-01")))) : 
+#' #  Illegal expression, seq(as.Date(x = "2014-02-01"), as.Date(x = "2014-03-01")): 
+#' #  The first argument, as.Date(x = "2014-02-01"), to S3 method 'seq', is a call, 
+#' #  which (as an expression) is not atomic, hence its class can't be determined in an 
+#' #  abstract syntax tree without additional information.
 #'  
 #' # S3 method with non-atomic first argument, eval_for_class = TRUE
-#' > rmatch_calls(quote(seq(as.Date("2014-02-01"), as.Date("2014-03-01"))), eval_for_class=TRUE)
+#' rmatch_calls(quote(seq(as.Date("2014-02-01"), as.Date("2014-03-01"))), eval_for_class=TRUE)
 #' seq(from = as.Date(x = "2014-02-01"), to = as.Date(x = "2014-03-01"), 
 #'     length.out = NULL, along.with = NULL)  
 #' }

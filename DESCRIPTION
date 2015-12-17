@@ -4,15 +4,15 @@ Description: swirl turns the R console into an interactive learning
     environment. Users receive immediate feedback as they are guided through
     self-paced lessons in data science and R programming.
 URL: http://swirlstats.com
-Version: 2.3.1
-License: MIT
+Version: 2.3.1.9000
+License: MIT + file LICENSE
 Authors@R: c(
-    person("Nick", "Carchedi", email = "nick.carchedi@gmail.com", role = c("aut", "cre")),
+    person("Sean", "Kross", email = "sean@seankross.com", role = c("aut", "cre")),
+    person("Nick", "Carchedi", role = "aut"),
     person("Bill", "Bauer", role = "aut"),
     person("Gina", "Grdina", role = "aut"),
-    person("Sean", "Kross", role = "aut"),
     person("Filip", "Schouwenaars", role = "ctb"),
-    person("Alexandre", "Léonard", role = "ctb")
+    person("Wush", "Wu", role = "ctb")
     )
 Depends:
     R (>= 3.0.2)
@@ -25,4 +25,6 @@ Imports:
     digest,
     tools,
     rappdirs
+Encoding: UTF-8
 Roxygen: list(wrap = FALSE)
+RoxygenNote: 5.0.1
