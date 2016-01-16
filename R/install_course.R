@@ -355,6 +355,9 @@ install_course_directory <- function(path){
   })
   target.files <- list.files(file.path(tmp, basename(path)), pattern = "^\\.\\w+", all.files = TRUE, recursive = FALSE, full.names = TRUE)
   file.remove(target.files[basename(target.files) != ".initCourse.R"])
+  if (file.exists(file.path(get_swirl_option("courses_dir"), basename(path)))) {
+    uninstall_course(course_name = basename(path))
+  }
   if(file.copy(file.path(tmp, basename(path)), get_swirl_option("courses_dir"), recursive=TRUE)){
     swirl_out("Course installed successfully!", skip_after=TRUE)
   } else {
