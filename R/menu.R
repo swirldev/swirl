@@ -282,6 +282,21 @@ loadLesson.default <- function(e, courseU, lesson){
   # Initialize list of official variables
   e$snapshot <- list()
   # initialize course lesson, assigning lesson-specific variables
+  ## initialize course
+  initFile <- file.path(lesPath, "..", ".initCourse.R")
+  if(file.exists(initFile))local({
+    source(initFile, local=TRUE)
+    # NOTE: the order of the next two statements is important,
+    # since a reference to e$snapshot will cause e to appear in
+    # local environment.
+    xfer(environment(), globalenv())
+    # Only add to the "official record" if are auto-detecting new variables
+    if(isTRUE(customTests$AUTO_DETECT_NEWVAR)) {
+      e$snapshot <- as.list(environment())
+    }
+  })
+
+  ## initialize lesson
   initFile <- file.path(lesPath,"initLesson.R")
   if(file.exists(initFile))local({
     source(initFile, local=TRUE)
