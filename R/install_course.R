@@ -354,8 +354,7 @@ install_course_directory <- function(path){
     file.remove(file.path(tmp, basename(path), subdir))
   })
   target.files <- list.files(file.path(tmp, basename(path)), pattern = "^\\.\\w+", all.files = TRUE, recursive = FALSE, full.names = TRUE)
-  target.files <- setdiff(target.files, ".initCourse.R")
-  file.remove(target.files)
+  file.remove(target.files[basename(target.files) != ".initCourse.R"])
   if(file.copy(file.path(tmp, basename(path)), get_swirl_option("courses_dir"), recursive=TRUE)){
     swirl_out("Course installed successfully!", skip_after=TRUE)
   } else {
