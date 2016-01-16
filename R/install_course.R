@@ -341,7 +341,20 @@ install_course_directory <- function(path){
   dir.create(tmp)
   operation_result <- file.copy(path, tmp, recursive = TRUE)
   if (!operation_result) stop(err_message)
-  file.remove(dir(file.path(tmp, basename(path), ".git"), recursive = TRUE, all.files = TRUE, full.names = TRUE))
+  tmp.subdirs <- list.dirs(file.path(tmp, basename(path)), recursive = FALSE, full.names = FALSE)
+  target.subdirs <- grep("^\\..+", tmp.subdirs, value = TRUE)
+  sapply(target.subdirs, function(subdir) {
+    targets <- dir(file.path(tmp, basename(path), subdir), recursive = TRUE, all.files = TRUE, 
+                   full.names = TRUE, include.dirs = FALSE)
+    file.remove(targets)
+    targets <- dir(file.path(tmp, basename(path), subdir), recursive = TRUE, all.files = TRUE, 
+                   full.names = TRUE, include.dirs = TRUE)
+    targets.depth <- sapply(strsplit(normalizePath(targets, winslash = "/"), "/"), length)
+    file.remove(targets[order(targets.depth, decreasing = TRUE)])
+    file.remove(file.path(tmp, basename(path), subdir))
+  })
+  target.files <- list.files(file.path(tmp, basename(path)), pattern = "^\\.\\w+", all.files = TRUE, recursive = FALSE, full.names = TRUE)
+  file.remove(target.files)
   if(file.copy(file.path(tmp, basename(path)), get_swirl_option("courses_dir"), recursive=TRUE)){
     swirl_out("Course installed successfully!", skip_after=TRUE)
   } else {
