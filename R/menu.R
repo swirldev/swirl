@@ -318,9 +318,13 @@ restoreUserProgress.default <- function(e, selection){
   # check for failure here. Perhaps we should.
   loadDependencies(e$path)
   # source the initLesson.R file if it exists
-  initf <- file.path(e$path, "initLesson.R")
-  if(file.exists(initf))local({
-    source(initf, local=TRUE)
+  lesPath <- e$path
+  initCourseFile <- file.path(lesPath, "..", ".initCourse.R")
+  initLessonFile <- file.path(lesPath,"initLesson.R")
+  # initf <- file.path(e$path, "initLesson.R")
+  if(file.exists(initCourseFile) | file.exists(initLessonFile)) local({
+    if (file.exists(initCourseFile)) source(initCourseFile, local=TRUE)
+    if (file.exists(initLessonFile)) source(initLessonFile, local=TRUE)
     xfer(environment(), globalenv())
   })
   # transfer swirl's "official" list of variables to the
