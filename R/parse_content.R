@@ -28,6 +28,21 @@ parse_content.rmd <- function(file, e) {
   rmd2df(file)
 }
 
+wrap_encoding <- function(raw_yaml) {
+  if (class(raw_yaml) == "list") {
+    retval <- lapply(raw_yaml, wrap_encoding)
+    attributes(retval) <- attributes(raw_yaml)
+    retval
+  } else {
+    if (class(raw_yaml) == "character") {
+      if (Encoding(raw_yaml) == "unknown") {
+        Encoding(raw_yaml) <- "UTF-8"
+      }
+    }
+    raw_yaml
+  }
+}
+
 #' @importFrom yaml yaml.load_file
 parse_content.yaml <- function(file, e){
   newrow <- function(element){
@@ -45,6 +60,7 @@ parse_content.yaml <- function(file, e){
     temp
   }
   raw_yaml <- yaml.load_file(file)
+  raw_yaml <- wrap_encoding(raw_yaml)
   temp <- lapply(raw_yaml[-1], newrow)
   df <- NULL
   for(row in temp){

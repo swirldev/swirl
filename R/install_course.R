@@ -323,6 +323,8 @@ install_course_zip <- function(path, multi=FALSE, which_course=NULL){
 #' }
 #' @family InstallCourses
 install_course_directory <- function(path){
+  err_message <- "Course installation failed."
+
   # Check for size of directory to prevent copying a huge directory into swirl/Courses
   garbage_result <- tryCatch(
     {setTimeLimit(elapsed=1); list.files(path, recursive=TRUE)},
@@ -335,7 +337,28 @@ install_course_directory <- function(path){
   }
   
   # Copy files
-  if(file.copy(path, get_swirl_option("courses_dir"), recursive=TRUE)){
+  tmp <- tempfile()
+  dir.create(tmp)
+  operation_result <- file.copy(path, tmp, recursive = TRUE)
+  if (!operation_result) stop(err_message)
+  tmp.subdirs <- list.dirs(file.path(tmp, basename(path)), recursive = FALSE, full.names = FALSE)
+  target.subdirs <- grep("^\\..+", tmp.subdirs, value = TRUE)
+  sapply(target.subdirs, function(subdir) {
+    targets <- dir(file.path(tmp, basename(path), subdir), recursive = TRUE, all.files = TRUE, 
+                   full.names = TRUE, include.dirs = FALSE)
+    file.remove(targets)
+    targets <- dir(file.path(tmp, basename(path), subdir), recursive = TRUE, all.files = TRUE, 
+                   full.names = TRUE, include.dirs = TRUE)
+    targets.depth <- sapply(strsplit(normalizePath(targets, winslash = "/"), "/"), length)
+    file.remove(targets[order(targets.depth, decreasing = TRUE)])
+    file.remove(file.path(tmp, basename(path), subdir))
+  })
+  target.files <- list.files(file.path(tmp, basename(path)), pattern = "^\\.\\w+", all.files = TRUE, recursive = FALSE, full.names = TRUE)
+  file.remove(target.files[basename(target.files) != ".initCourse.R"])
+  if (file.exists(file.path(get_swirl_option("courses_dir"), basename(path)))) {
+    uninstall_course(course_name = basename(path))
+  }
+  if(file.copy(file.path(tmp, basename(path)), get_swirl_option("courses_dir"), recursive=TRUE)){
     swirl_out("Course installed successfully!", skip_after=TRUE)
   } else {
     swirl_out("Course installation failed.", skip_after=TRUE)
