@@ -7,7 +7,7 @@
 #' file, which you can consult for more details.
 #' 
 #' If you're just getting started, we recommend using 
-#' \code{\link{install_from_swirl}} to install courses
+#' \code{\link{install_course}} to install courses
 #' from our official \href{https://github.com/swirldev/swirl_courses}{course repository}. Otherwise, check out the
 #' help file for the relevant install function below.
 #' 
@@ -38,6 +38,7 @@ NULL
 #' their mouse.
 #' @importFrom httr GET progress content
 #' @export
+#' @family InstallCourses
 #' @examples 
 #' \dontrun{
 #' 
@@ -56,27 +57,28 @@ install_course <- function(course_name = NULL, swc_path = NULL){
   if(is.null(course_name) && is.null(swc_path)){
     swc_path <- file.choose()
   } else if(!is.null(course_name) && !is.null(swc_path)){
-    stop("Please specify a value for either course_name or swc_path but not both.")
+    stop(s()%N%"Please specify a value for either course_name or swc_path but not both.")
   } else if(!is.null(swc_path)){
     unpack_course(swc_path, swirl_courses_dir())
-    swirl_out("Course installed successfully!", skip_after=TRUE)
-  } else if(!is.null(swc_path)){
+    swirl_out(s()%N%"Course installed successfully!", skip_after=TRUE)
+  } else if(!is.null(course_name)){
     course_name <- make_pathname(course_name)
     url <- paste0("http://swirlstats.com/scn/", course_name, ".swc")
     
     # Send GET request
-    response <- GET(url, progress())
+    response <- suppressWarnings(GET(url, progress()))
     
     if(response$status_code != 200){
-      stop("It looks like your internet connection is not working.", " ", 
-           "Go to http://swirlstats.com/scn/ and download the .swc file that corresponds to the course you wish to install.", " ",
-           "After downloading the .swc run install_course() and choose the file you downloaded.")
+      swirl_out(s()%N%"It looks like your internet connection is not working.",
+                s()%N%"Go to http://swirlstats.com/scn/ and download the .swc file that corresponds to the course you wish to install.",
+                s()%N%"After downloading the .swc run install_course() and choose the file you downloaded.")
+      stop(s()%N%"Could not connect to course file.")
     }
     
     temp_swc <- tempfile()
     writeBin(content(response, "raw"), temp_swc)
     unpack_course(temp_swc, swirl_courses_dir())
-    swirl_out("Course installed successfully!", skip_after=TRUE)
+    swirl_out(s()%N%"Course installed successfully!", skip_after=TRUE)
   }
 }
 
@@ -123,13 +125,13 @@ install_course <- function(course_name = NULL, swc_path = NULL){
 install_from_swirl <- function(course_name, dev = FALSE, mirror = "github"){
   # Validate arguments
   if(!is.character(course_name)) {
-    stop("Argument 'course_name' must be surrounded by quotes (i.e. a character string)!")
+    stop(s()%N%"Argument 'course_name' must be surrounded by quotes (i.e. a character string)!")
   }
   if(!is.logical(dev)) {
-    stop("Argument 'dev' must be either TRUE or FALSE!")
+    stop(s()%N%"Argument 'dev' must be either TRUE or FALSE!")
   }
   if(!(mirror == "github" || mirror == "bitbucket")){
-    stop("Please enter a valid name for a mirror. ('github' or 'bitbucket')")
+    stop(s()%N%"Please enter a valid name for a mirror. ('github' or 'bitbucket')")
   }
     
   # make pathname from course_name
@@ -138,7 +140,7 @@ install_from_swirl <- function(course_name, dev = FALSE, mirror = "github"){
   # Construct url to the appropriate zip file
   if(dev) {
     if(mirror != "github"){
-      stop("To access swirl courses in development on Bitbucket go to https://bitbucket.org/swirldevmirror/swirl_misc")
+      stop(s()%N%"To access swirl courses in development on Bitbucket go to https://bitbucket.org/swirldevmirror/swirl_misc")
     }
     url <- "http://github.com/swirldev/swirl_misc/zipball/master"
   } else {
@@ -169,8 +171,8 @@ install_from_swirl <- function(course_name, dev = FALSE, mirror = "github"){
   
   # Check if course exists
   if(length(unzip_list) == 0) {
-    stop(paste0("Course '", course_name, "' not found in course repository! ",
-                "Make sure you've got the name exactly right, then try again."))
+    stop(paste0(s()%N%"Course '", course_name, s()%N%"' not found in course repository! ",
+                s()%N%"Make sure you've got the name exactly right, then try again."))
   }
   
   # Extract
@@ -180,9 +182,9 @@ install_from_swirl <- function(course_name, dev = FALSE, mirror = "github"){
   top_dir <- file.path(swirl_courses_dir(), sort(dirname(unzip_list))[1])
   dirs_to_copy <- list.files(top_dir, full.names=TRUE)
   if(file.copy(dirs_to_copy, swirl_courses_dir(), recursive=TRUE)){
-    swirl_out("Course installed successfully!", skip_after=TRUE)
+    swirl_out(s()%N%"Course installed successfully!", skip_after=TRUE)
   } else {
-    swirl_out("Course installation failed.", skip_after=TRUE)
+    swirl_out(s()%N%"Course installation failed.", skip_after=TRUE)
   }
   
   # Delete unzipped directory
@@ -199,6 +201,8 @@ install_from_swirl <- function(course_name, dev = FALSE, mirror = "github"){
 
 
 #' Zip a course directory
+#' 
+#' \strong{Warning:} This function will be deprecated after swirl version 2.4.
 #' 
 #' @param path Path to the course directory to be zipped.
 #' @param dest Path to directory in which the \code{.zip} should be saved. The
@@ -267,15 +271,18 @@ uninstall_course <- function(course_name){
   path <- file.path(swirl_courses_dir(), make_pathname(course_name))
   if(file.exists(path)){
     unlink(path, recursive=TRUE, force=TRUE)
-    message("Course uninstalled successfully!")
+    message(s()%N%"Course uninstalled successfully!")
   } else {
-    stop("Course not found!")
+    stop(s()%N%"Course not found!")
   }
   invisible()
 }
 
 #' Uninstall all courses
 #' 
+#' @param force If \code{TRUE} the user will not be asked if they're sure they
+#' want to delete the contents of the directory where courses are stored. The
+#' default value is \code{FALSE}
 #' @export
 #' @examples
 #' \dontrun{
@@ -283,19 +290,26 @@ uninstall_course <- function(course_name){
 #' uninstall_all_courses()
 #' }
 #' @family InstallCourses
-uninstall_all_courses <- function(){
+uninstall_all_courses <- function(force = FALSE){
   path <- swirl_courses_dir()
   yaml_exists <- file.exists(file.path(path, "suggested_courses.yaml"))
   if(yaml_exists){
     temp_file <- tempfile()
     file.copy(file.path(path, "suggested_courses.yaml"), temp_file)
   }
-  
   if(file.exists(path)){
-    unlink(path, recursive=TRUE, force=TRUE)
-    message("All courses uninstalled successfully!")
+    if(!force){
+      selection <- select.list("Yes", "No", title = "Are you sure you want to uninstall all swirl courses?")
+      if(selection == "Yes"){
+        unlink(path, recursive=TRUE, force=TRUE)
+        message(s()%N%"All courses uninstalled successfully!")
+      } else {
+        message("No courses were uninstalled.")
+        return()
+      }
+    }
   } else {
-    stop("No courses found!")
+    stop(s()%N%"No courses found!")
   }
   
   dir.create(path, showWarnings = FALSE)
@@ -325,10 +339,10 @@ uninstall_all_courses <- function(){
 #' @family InstallCourses
 install_course_zip <- function(path, multi=FALSE, which_course=NULL){
   if(!is.logical(multi) || is.na(multi)) {
-    stop("Argument 'multi' must be either TRUE or FALSE.")
+    stop(s()%N%"Argument 'multi' must be either TRUE or FALSE.")
   }
   if(!multi && !is.null(which_course)) {
-    stop("Argument 'which_course' should only be specified when argument 'multi' is TRUE.")
+    stop(s()%N%"Argument 'which_course' should only be specified when argument 'multi' is TRUE.")
   }
   if(multi){
     # Find list of files not in top level directory
@@ -347,14 +361,14 @@ install_course_zip <- function(path, multi=FALSE, which_course=NULL){
                    nomatch=-1)
       nomatch <- match_ind < 0
       if(any(nomatch)) {
-        stop("Course ", sQuote(which_course[nomatch][1]), " not in specified directory. Be careful, course names are case sensitive!")
+        stop(s()%N%"Course ", sQuote(which_course[nomatch][1]), s()%N%" not in specified directory. Be careful, course names are case sensitive!")
       }
       dirs_to_copy <- dirs_to_copy[match_ind]
     }
     if(file.copy(dirs_to_copy, swirl_courses_dir(), recursive=TRUE)){
-      swirl_out("Course installed successfully!", skip_after=TRUE)
+      swirl_out(s()%N%"Course installed successfully!", skip_after=TRUE)
     } else {
-      swirl_out("Course installation failed.", skip_after=TRUE)
+      swirl_out(s()%N%"Course installation failed.", skip_after=TRUE)
     }
     
     # Delete unzipped directory
@@ -390,14 +404,14 @@ install_course_directory <- function(path){
   
   # Check to make sure there are fewer than 1000 files in course directory
   if(length(garbage_result) > 1000){
-    stop("Course directory is too large to install")
+    stop(s()%N%"Course directory is too large to install")
   }
   
   # Copy files
   if(file.copy(path, swirl_courses_dir(), recursive=TRUE)){
-    swirl_out("Course installed successfully!", skip_after=TRUE)
+    swirl_out(s()%N%"Course installed successfully!", skip_after=TRUE)
   } else {
-    swirl_out("Course installation failed.", skip_after=TRUE)
+    swirl_out(s()%N%"Course installation failed.", skip_after=TRUE)
   }
   
   invisible()
@@ -470,7 +484,7 @@ install_course_google_drive <- function(url, multi=FALSE){
 #' @param multi The user should set to \code{TRUE} if the zipped directory contains multiple courses. The default value is \code{FALSE}.
 #' @export
 #' @importFrom httr GET content progress
-#' @importFrom stringr str_extract perl
+#' @importFrom stringr str_extract
 #' @examples
 #' \dontrun{
 #' 
@@ -500,7 +514,7 @@ install_course_url <- function(url, multi=FALSE){
     
     # Extract course name
     course_name <- sub("/zipball", "", 
-                       str_extract(url, perl("[^/]+/{1}zipball")) )
+                       str_extract(url, "[^/]+/{1}zipball") )
     
     # Rename unzipped directory
     file.rename(file.path(swirl_courses_dir(), old_name), 

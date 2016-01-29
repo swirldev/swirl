@@ -14,7 +14,7 @@ default value is \code{NULL}, which will cause the \code{.zip} to be
 created one level above the directory specified in \code{path}.}
 }
 \description{
-Zip a course directory
+\strong{Warning:} This function will be deprecated after swirl version 2.4.
 }
 \examples{
 \dontrun{
@@ -31,6 +31,7 @@ Other InstallCourses: \code{\link{InstallCourses}},
   \code{\link{install_course_google_drive}},
   \code{\link{install_course_url}},
   \code{\link{install_course_zip}},
+  \code{\link{install_course}},
   \code{\link{install_from_swirl}},
   \code{\link{uninstall_all_courses}},
   \code{\link{uninstall_course}}

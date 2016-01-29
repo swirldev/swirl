@@ -75,17 +75,17 @@ mainMenu.default <- function(e){
           repeat {
             temp <- try(eval(parse(text=suggestions[[n]]$Install)), silent=TRUE)
             if(is(temp, "try-error")){
-              swirl_out("Sorry, but I'm unable to fetch ", sQuote(choice),
-                        "right now. Are you sure you have an internet connection?",
-                        "If so, would you like to try again or visit",
-                        "the course repository for instructions on how to",
-                        "install a course manually? Type 0 to exit.")
-              ch <- c("Try again!", 
-                      "Send me to the course repository for manual installation.")
+              swirl_out(s()%N%"Sorry, but I'm unable to fetch ", sQuote(choice),
+                        s()%N%"right now. Are you sure you have an internet connection?",
+                        s()%N%"If so, would you like to try again or visit",
+                        s()%N%"the course repository for instructions on how to",
+                        s()%N%"install a course manually? Type 0 to exit.")
+              ch <- c(s()%N%"Try again!", 
+                      s()%N%"Send me to the course repository for manual installation.")
               resp <- select.list(ch, graphics=FALSE)
               if(resp == "") return(FALSE)
               if(resp == ch[2]) {
-                swirl_out("OK. I'm opening the swirl course respository in your browser.")
+                swirl_out(s()%N%"OK. I'm opening the swirl course respository in your browser.")
                 browseURL("https://github.com/swirldev/swirl_courses")
                 return(FALSE)
               }
@@ -99,7 +99,7 @@ mainMenu.default <- function(e){
                                function(x)length(dir(file.path(courseDir(e),x)))>0))
           coursesU <- coursesU[idx]
         } else {
-          swirl_out("OK. I'm opening the swirl course respository in your browser.")
+          swirl_out(s()%N%"OK. I'm opening the swirl course respository in your browser.")
           browseURL("https://github.com/swirldev/swirl_courses")
           return(FALSE)
         }
@@ -110,7 +110,7 @@ mainMenu.default <- function(e){
       while(lesson == ""){
         course <- courseMenu(e, coursesR)
         if(!is.null(names(course)) && names(course)=="repo") {
-          swirl_out("OK. I'm opening the swirl courses web page in your browser.")
+          swirl_out(s()%N%"OK. I'm opening the swirl courses web page in your browser.")
           browseURL("https://github.com/swirldev/swirl_courses")
           return(FALSE)
         }
@@ -207,13 +207,13 @@ welcome.test <- function(e, ...){
 
 # Default version.
 welcome.default <- function(e, ...){
-  swirl_out("Welcome to swirl!")
-  swirl_out("Please sign in. If you've been here before, use the same name as you did then. If you are new, call yourself something unique.", skip_after=TRUE)
-  resp <- readline("What shall I call you? ")
+  swirl_out(s()%N%"Welcome to swirl!")
+  swirl_out(s()%N%"Please sign in. If you've been here before, use the same name as you did then. If you are new, call yourself something unique.", skip_after=TRUE)
+  resp <- readline(s()%N%"What shall I call you? ")
   while(str_detect(resp, '[[:punct:]]')) {
-    swirl_out("Please don't use any quotes or other punctuation in your name.",
+    swirl_out(s()%N%"Please don't use any quotes or other punctuation in your name.",
               skip_after = TRUE)
-    resp <- readline("What shall I call you? ")
+    resp <- readline(s()%N%"What shall I call you? ")
   }
   return(resp)
 }
@@ -223,14 +223,14 @@ welcome.default <- function(e, ...){
 # @param e persistent environment used here only for its class attribute
 # 
 housekeeping.default <- function(e){
-  swirl_out(paste0("Thanks, ", e$usr,". Let's cover a few quick housekeeping items before we begin our first lesson. First of all, you should know that when you see '...', that means you should press Enter when you are done reading and ready to continue."))
-  readline("\n...  <-- That's your cue to press Enter to continue")
-  swirl_out("Also, when you see 'ANSWER:', the R prompt (>), or when you are asked to select from a list, that means it's your turn to enter a response, then press Enter to continue.")
-  select.list(c("Continue.", "Proceed.", "Let's get going!"),
-              title="\nSelect 1, 2, or 3 and press Enter", graphics=FALSE)
-  swirl_out("You can exit swirl and return to the R prompt (>) at any time by pressing the Esc key. If you are already at the prompt, type bye() to exit and save your progress. When you exit properly, you'll see a short message letting you know you've done so.")
+  swirl_out(paste0(s()%N%"Thanks, ", e$usr,s()%N%". Let's cover a few quick housekeeping items before we begin our first lesson. First of all, you should know that when you see '...', that means you should press Enter when you are done reading and ready to continue."))
+  readline(s()%N%"\n...  <-- That's your cue to press Enter to continue")
+  swirl_out(s()%N%"Also, when you see 'ANSWER:', the R prompt (>), or when you are asked to select from a list, that means it's your turn to enter a response, then press Enter to continue.")
+  select.list(c(s()%N%"Continue.", s()%N%"Proceed.", s()%N%"Let's get going!"),
+              title=s()%N%"\nSelect 1, 2, or 3 and press Enter", graphics=FALSE)
+  swirl_out(s()%N%"You can exit swirl and return to the R prompt (>) at any time by pressing the Esc key. If you are already at the prompt, type bye() to exit and save your progress. When you exit properly, you'll see a short message letting you know you've done so.")
   info()
-  swirl_out("Let's get started!", skip_before=FALSE)
+  swirl_out(s()%N%"Let's get started!", skip_before=FALSE)
   readline("\n...")
 }
 
@@ -238,8 +238,8 @@ housekeeping.test <- function(e){}
 
 # A stub. Eventually this should be a full menu
 inProgressMenu.default <- function(e, choices){
-  nada <- "No. Let me start something new."
-  swirl_out("Would you like to continue with one of these lessons?")
+  nada <- s()%N%"No. Let me start something new."
+  swirl_out(s()%N%"Would you like to continue with one of these lessons?")
   selection <- select.list(c(choices, nada), graphics=FALSE)
   # return a blank if the user rejects all choices
   if(identical(selection, nada))selection <- ""
@@ -252,9 +252,9 @@ inProgressMenu.test <- function(e, choices) {
 
 # A stub. Eventually this should be a full menu
 courseMenu.default <- function(e, choices){
-  repo_option <- "Take me to the swirl course repository!"
+  repo_option <- s()%N%"Take me to the swirl course repository!"
   choices <- c(choices, repo = repo_option)
-  swirl_out("Please choose a course, or type 0 to exit swirl.")
+  swirl_out(s()%N%"Please choose a course, or type 0 to exit swirl.")
   return(select.list(choices, graphics=FALSE))
 }
 
@@ -264,7 +264,7 @@ courseMenu.test <- function(e, choices) {
 
 # A stub. Eventually this should be a full menu
 lessonMenu.default <- function(e, choices){
-  swirl_out("Please choose a lesson, or type 0 to return to course menu.")
+  swirl_out(s()%N%"Please choose a lesson, or type 0 to return to course menu.")
   return(select.list(choices, graphics=FALSE))
 }
 

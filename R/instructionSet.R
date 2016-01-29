@@ -43,9 +43,9 @@ waitUser.text_order_question <- function(current.row, e){
 
 
 waitUser.video <- function(current.row, e){
-  response <- readline("Yes or No? ")
+  response <- readline(s()%N%"Yes or No? ")
   if(tolower(response) %in% c("y", "yes")){
-    swirl_out("Type nxt() to continue")
+    swirl_out(s()%N%"Type nxt() to continue")
     e$prompt <- TRUE
     e$playing <- TRUE
     browseURL(current.row[,"VideoLink"])
@@ -157,7 +157,7 @@ testResponse.default <- function(current.row, e){
   if(is.na(tests) || tests == ""){
     results <- is(e, "dev")
     if(!results){
-      stop("BUG: There are no tests for this question!")
+      stop(s()%N%"BUG: There are no tests for this question!")
     }
   } else {
     tests <- str_trim(unlist(strsplit(tests,";")))
@@ -180,7 +180,7 @@ testResponse.default <- function(current.row, e){
     if(length(e$snapshot)>0)xfer(as.environment(e$snapshot), globalenv())
     mes <- tryAgain()
     if(is(current.row, "cmd_question") && !is(e, "datacamp")) {
-      mes <- paste(mes, "Or, type info() for more options.")
+      mes <- paste(mes, s()%N%"Or, type info() for more options.")
     }
     hint <- current.row[,"Hint"]
     post_result(e, passed = correct, feedback = mes, hint = if(is.na(hint)) NULL else hint)

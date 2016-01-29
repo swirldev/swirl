@@ -1,10 +1,10 @@
 Package: swirl
 Title: Learn R, in R
-Description: swirl turns the R console into an interactive learning
+Description: Use the R console as an interactive learning
     environment. Users receive immediate feedback as they are guided through
     self-paced lessons in data science and R programming.
 URL: http://swirlstats.com
-Version: 2.3.1.9000
+Version: 2.3.1.9004
 License: MIT + file LICENSE
 Authors@R: c(
     person("Sean", "Kross", email = "sean@seankross.com", role = c("aut", "cre")),
@@ -26,5 +26,6 @@ Imports:
     tools,
     rappdirs
 Encoding: UTF-8
+LazyData: true
 Roxygen: list(wrap = FALSE)
 RoxygenNote: 5.0.1

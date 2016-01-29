@@ -12,7 +12,7 @@ file, which you can consult for more details.
 }
 \details{
 If you're just getting started, we recommend using 
-\code{\link{install_from_swirl}} to install courses
+\code{\link{install_course}} to install courses
 from our official \href{https://github.com/swirldev/swirl_courses}{course repository}. Otherwise, check out the
 help file for the relevant install function below.
 
@@ -29,6 +29,7 @@ Other InstallCourses: \code{\link{install_course_directory}},
   \code{\link{install_course_google_drive}},
   \code{\link{install_course_url}},
   \code{\link{install_course_zip}},
+  \code{\link{install_course}},
   \code{\link{install_from_swirl}},
   \code{\link{uninstall_all_courses}},
   \code{\link{uninstall_course}}, \code{\link{zip_course}}
