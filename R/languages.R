@@ -16,7 +16,7 @@ swirl_language <- function(){
 #' 
 #' @param append_rprofile If \code{TRUE} this command will append 
 #' \code{options(swirl_language = [selected language])} to the end of your 
-#' Rprofile. The default value is \code{FALSE}
+#' Rprofile. The default value is \code{FALSE}.
 #' 
 #' @export
 select_language <- function(append_rprofile = FALSE){

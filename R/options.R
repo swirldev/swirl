@@ -2,14 +2,7 @@
 #' @importFrom rappdirs user_data_dir
 swirl_data_dir <- function(){
   # Find user data directory
-  udd <- user_data_dir(appname = "swirl", appauthor = "swirldev", roaming = TRUE)
-  
-  # If the directory doesn't exist, create it
-  if(!file.exists(udd)){
-    dir.create(udd, recursive = TRUE, mode = "777")
-  }
-  
-  udd
+  user_data_dir(appname = "swirl", appauthor = "swirldev", roaming = TRUE)
 }
 
 # Get swirl courses dir
