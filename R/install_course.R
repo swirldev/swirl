@@ -155,7 +155,7 @@ install_from_swirl <- function(course_name, dev = FALSE, mirror = "github"){
   response <- GET(url, progress())
   
   # Construct path to Courses
-  path <- file.path(("courses_dir"), "temp.zip")
+  path <- file.path(swirl_courses_dir(), "temp.zip")
   
   # Write the response as a zip
   writeBin(content(response, "raw"), path)
