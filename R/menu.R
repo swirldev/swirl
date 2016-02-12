@@ -208,8 +208,7 @@ welcome.test <- function(e, ...){
 # Default version.
 #' @importFrom stringr str_detect str_trim
 welcome.default <- function(e, ...){
-  swirl_out(s()%N%"Welcome to swirl!")
-  swirl_out(s()%N%"Please sign in. If you've been here before, use the same name as you did then. If you are new, call yourself something unique.", skip_after=TRUE)
+  swirl_out(s()%N%"Welcome to swirl! Please sign in. If you've been here before, use the same name as you did then. If you are new, call yourself something unique.", skip_after=TRUE)
   resp <- readline(s()%N%"What shall I call you? ")
   while(str_detect(resp, '[[:punct:]]') || nchar(str_trim(resp)) < 1) {
     swirl_out(s()%N%"Please don't use any quotes or other punctuation in your name.",
