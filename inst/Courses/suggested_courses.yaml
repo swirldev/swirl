@@ -13,3 +13,4 @@
 - Course: Exploratory Data Analysis
   Description: The basics of exploring data in R
   Install: install_course('Exploratory_Data_Analysis')
+
