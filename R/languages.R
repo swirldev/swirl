@@ -72,3 +72,23 @@ s_helper <- function(x){
   cmd <- paste0(swirl_language(), "$`", x, "`")
   eval(parse(text=cmd))
 }
+
+# set working directory to swirl repo before using
+# make sure the global env is clear before using
+#' @importFrom stringr str_match
+check_strings <- function(){
+  load(file.path("R", "sysdata.rda"))
+  langs <- ls()
+  
+  for(i in list.files("R", pattern = "\\.R$")){
+    source_code <- readLines(file.path("R", i))
+    strings <- grep("s\\(\\)%N%", source_code)
+    for(j in strings){
+      for(l in langs){
+        if(!(str_match(source_code[j], '"(.+)"')[,2] %in% eval(parse(text = paste0("names(", l, ")"))))){
+          message(l, " : ", str_match(source_code[j], '"(.+)"')[,2], "\n")
+        }
+      }
+    }
+  }
+}

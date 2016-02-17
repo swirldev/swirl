@@ -299,7 +299,9 @@ uninstall_all_courses <- function(force = FALSE){
   }
   if(file.exists(path)){
     if(!force){
-      selection <- select.list("Yes", "No", title = "Are you sure you want to uninstall all swirl courses?")
+      swirl:::swirl_out(s()%N%"Are you sure you want to uninstall all swirl courses?",
+                s()%N%"This will delete all of the contents of your swirl course directory.")
+      selection <- select.list(c("Yes", "No"))
       if(selection == "Yes"){
         unlink(path, recursive=TRUE, force=TRUE)
         message(s()%N%"All courses uninstalled successfully!")
@@ -307,6 +309,9 @@ uninstall_all_courses <- function(force = FALSE){
         message("No courses were uninstalled.")
         return()
       }
+    } else {
+      unlink(path, recursive=TRUE, force=TRUE)
+      message(s()%N%"All courses uninstalled successfully!")
     }
   } else {
     stop(s()%N%"No courses found!")
