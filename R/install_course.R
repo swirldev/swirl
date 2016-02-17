@@ -299,7 +299,7 @@ uninstall_all_courses <- function(force = FALSE){
   }
   if(file.exists(path)){
     if(!force){
-      swirl:::swirl_out(s()%N%"Are you sure you want to uninstall all swirl courses?",
+      swirl_out(s()%N%"Are you sure you want to uninstall all swirl courses?",
                 s()%N%"This will delete all of the contents of your swirl course directory.")
       selection <- select.list(c("Yes", "No"))
       if(selection == "Yes"){

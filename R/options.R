@@ -26,6 +26,8 @@ swirl_courses_dir <- function(){
 #' This function is a wrapper for \code{options()} that allows the user to
 #' see the state of how certain options for swirl are set up.
 #' 
+#' @param ... any options can be defined, using name = value.
+#' 
 #' @export
 #' @examples 
 #' \dontrun{

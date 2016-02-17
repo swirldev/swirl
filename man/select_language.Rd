@@ -9,7 +9,7 @@ select_language(append_rprofile = FALSE)
 \arguments{
 \item{append_rprofile}{If \code{TRUE} this command will append 
 \code{options(swirl_language = [selected language])} to the end of your 
-Rprofile. The default value is \code{FALSE}}
+Rprofile. The default value is \code{FALSE}.}
 }
 \description{
 Select a language for swirl's menus.
