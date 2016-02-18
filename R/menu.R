@@ -187,6 +187,18 @@ mainMenu.default <- function(e){
       e$progress <- file.path(e$udat, fname)
       # indicator that swirl is not reacting to console input
       e$playing <- FALSE
+      
+      # Create log
+      if(isTRUE(getOption("swirl_logging"))){
+        e$log <- list(user = e$usr, 
+                      course_name = attr(e$les,"course_name"),
+                      lesson_name = attr(e$les,"lesson_name"),
+                      question_number = NULL,
+                      correct = NULL,
+                      attempt = NULL,
+                      datetime = NULL)
+      }
+
       # create the file
       suppressMessages(suppressWarnings(saveRDS(e, e$progress)))
       # post initialization message

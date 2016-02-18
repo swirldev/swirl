@@ -425,6 +425,12 @@ resume.default <- function(e, ...){
       # Reset skip count if it exists
       if(exists("skips", e)) e$skips <- 0
       clearCustomTests()
+      
+      # Save log
+      if(isTRUE(getOption("swirl_logging"))){
+        saveLog(e)
+      }
+      
       # Let user know lesson is complete
       swirl_out(s()%N%"You've reached the end of this lesson! Returning to the main menu...")
       # let the user select another course lesson

@@ -152,6 +152,13 @@ testResponse <- function(current.row, e)UseMethod("testResponse")
 testResponse.default <- function(current.row, e){
   # Increment attempts counter
   e$attempts <- 1 + e$attempts
+  
+  if(isTRUE(getOption("swirl_logging"))){
+    e$log$question_number <- c(e$log$question_number, e$row)
+    e$log$attempt <- c(e$log$attempt, e$attempts)
+    e$log$datetime <- c(e$log$datetime, as.numeric(Sys.time()))
+  }  
+  
   # Get answer tests
   tests <- current.row[,"AnswerTests"]
   if(is.na(tests) || tests == ""){
@@ -165,6 +172,10 @@ testResponse.default <- function(current.row, e){
   }
   correct <- !(FALSE %in% unlist(results))
   if(correct){
+    if(isTRUE(getOption("swirl_logging"))){
+      e$log$correct <- c(e$log$correct, TRUE)
+    }  
+    
     mes <- praise()
     post_result(e, passed = correct, feedback = mes, hint = NULL)
     e$iptr <- 1
@@ -172,6 +183,10 @@ testResponse.default <- function(current.row, e){
     # Reset attempts counter, since correct
     e$attempts <- 1
   } else {
+    if(isTRUE(getOption("swirl_logging"))){
+      e$log$correct <- c(e$log$correct, FALSE)
+    }
+    
     # Restore the previous global environment from the official
     # in case the user has garbled it, e.g., has typed x <- 3*x
     # instead of x <- 2*x by mistake. The hint might say to type
