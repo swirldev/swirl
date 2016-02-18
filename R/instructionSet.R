@@ -150,15 +150,15 @@ waitUser.script <- function(current.row, e){
 testResponse <- function(current.row, e)UseMethod("testResponse")
 
 testResponse.default <- function(current.row, e){
-  # Increment attempts counter
-  e$attempts <- 1 + e$attempts
-  
   if(isTRUE(getOption("swirl_logging"))){
     e$log$question_number <- c(e$log$question_number, e$row)
     e$log$attempt <- c(e$log$attempt, e$attempts)
+    e$log$skipped <- c(e$log$skipped, e$skipped)
     e$log$datetime <- c(e$log$datetime, as.numeric(Sys.time()))
-  }  
+  } 
   
+  # Increment attempts counter
+  e$attempts <- 1 + e$attempts
   # Get answer tests
   tests <- current.row[,"AnswerTests"]
   if(is.na(tests) || tests == ""){

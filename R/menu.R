@@ -196,6 +196,7 @@ mainMenu.default <- function(e){
                       question_number = NULL,
                       correct = NULL,
                       attempt = NULL,
+                      skipped = NULL,
                       datetime = NULL)
       }
 
