@@ -70,7 +70,9 @@ s <- function(){
 
 s_helper <- function(x){
   cmd <- paste0(swirl_language(), "$`", x, "`")
-  eval(parse(text=cmd))
+  tryCatch(eval(parse(text=cmd)),
+    warning = function(c) NULL
+  )
 }
 
 # set working directory to swirl repo before using

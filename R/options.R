@@ -1,10 +1,14 @@
+# Get path to a lesson
+lesson_path <- function(course_name, lesson_name){
+  file.path(swirl_courses_dir(), course_name, lesson_name)
+}
+
 # Get swirl data file path
-#' @importFrom rappdirs user_data_dir
 swirl_data_dir <- function(){
   sdd <- getOption("swirl_data_dir")
   
   if(is.null(sdd)){
-    user_data_dir(appname = "swirl", appauthor = "swirldev", roaming = TRUE)
+    file.path(find.package("swirl"), "user_data")
   } else {
     sdd
   }
@@ -41,6 +45,7 @@ swirl_options <- function(...){
   if(length(list(...)) == 0){
     list(
       swirl_courses_dir = getOption("swirl_courses_dir"),
+      swirl_data_dir = getOption("swirl_data_dir"),
       swirl_language = getOption("swirl_language"),
       swirl_logging = getOption("swirl_logging")
     )

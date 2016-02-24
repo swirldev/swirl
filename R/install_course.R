@@ -56,12 +56,14 @@ NULL
 install_course <- function(course_name = NULL, swc_path = NULL){
   if(is.null(course_name) && is.null(swc_path)){
     swc_path <- file.choose()
-  } else if(!is.null(course_name) && !is.null(swc_path)){
+  } 
+  
+  if(!is.null(course_name) && !is.null(swc_path)){
     stop(s()%N%"Please specify a value for either course_name or swc_path but not both.")
   } else if(!is.null(swc_path)){
     unpack_course(swc_path, swirl_courses_dir())
     swirl_out(s()%N%"Course installed successfully!", skip_after=TRUE)
-  } else if(!is.null(course_name)){
+  } else { # install from swirl course network
     course_name <- make_pathname(course_name)
     url <- paste0("http://swirlstats.com/scn/", course_name, ".swc")
     
@@ -541,11 +543,11 @@ unpack_course <- function(file_path, export_path){
   if(file.exists(course_path) && interactive()){
     response <- ""
     while(response != "Y"){
-      response <- select.list(c("Y", "n"), title = paste(course_path, "already exists.\nAre you sure you want to overwrite it? [Y/n]"))
+      response <- select.list(c("Y", "n"), title = paste("\n\n", course_path, "already exists.\nAre you sure you want to overwrite it? [Y/n]"))
       if(response == "n") return(invisible(course_path))
     }
   }
-  dir.create(course_path)
+  dir.create(course_path, showWarnings = FALSE)
   for(i in 1:length(pack$files)){
     
     # Make file's ultimate path

@@ -59,7 +59,7 @@ mainMenu.default <- function(e){
       
       # If no courses are available, offer to install one
       if(length(coursesU)==0){
-        suggestions <- yaml.load_file(file.path(courseDir(e), "suggested_courses.yaml"))
+        suggestions <- yaml.load_file(file.path(find.package("swirl"), "Courses", "suggested_courses.yaml"))
         choices <- sapply(suggestions, function(x)paste0(x$Course, ": ", x$Description))
         swirl_out(s()%N%"To begin, you must install a course. I can install a course for you from the internet, or I can send you to a web page (https://github.com/swirldev/swirl_courses) which will provide course options and directions for installing courses yourself. (If you are not connected to the internet, type 0 to exit.)")
         choices <- c(choices, s()%N%"Don't install anything for me. I'll do it myself.")
@@ -392,7 +392,7 @@ courseDir.default <- function(e){
 }
 
 progressDir.default <- function(e) {
-  file.path(find.package("swirl"), "user_data")
+  swirl_data_dir()
 }
 
 # Default for determining the user
