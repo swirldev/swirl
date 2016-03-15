@@ -5,7 +5,7 @@
 \title{Install a course from The swirl Course Network or install a course from a
 local .swc file.}
 \usage{
-install_course(course_name = NULL, swc_path = NULL)
+install_course(course_name = NULL, swc_path = NULL, force = FALSE)
 }
 \arguments{
 \item{course_name}{The name of the course you wish to install.}
@@ -13,6 +13,9 @@ install_course(course_name = NULL, swc_path = NULL)
 \item{swc_path}{The path to a local \code{.swc} file. By default this
 argument defaults to \code{file.choose()} so the user can select the file using
 their mouse.}
+
+\item{force}{Should course installation be forced? The 
+default value is \code{FALSE}.}
 }
 \description{
 Version 2.4 of swirl introduces a new, simple, and fast way of installing

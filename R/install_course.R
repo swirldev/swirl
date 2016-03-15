@@ -36,6 +36,8 @@ NULL
 #' @param swc_path The path to a local \code{.swc} file. By default this
 #' argument defaults to \code{file.choose()} so the user can select the file using
 #' their mouse.
+#' @param force Should course installation be forced? The 
+#'  default value is \code{FALSE}.
 #' @importFrom httr GET progress content
 #' @export
 #' @family InstallCourses
@@ -53,7 +55,7 @@ NULL
 #' install_course(swc_path = file.path("~", "Downloads", "R_Programming.swc"))
 #' 
 #' }
-install_course <- function(course_name = NULL, swc_path = NULL){
+install_course <- function(course_name = NULL, swc_path = NULL, force = FALSE){
   if(is.null(course_name) && is.null(swc_path)){
     swc_path <- file.choose()
   } 
@@ -62,7 +64,6 @@ install_course <- function(course_name = NULL, swc_path = NULL){
     stop(s()%N%"Please specify a value for either course_name or swc_path but not both.")
   } else if(!is.null(swc_path)){
     unpack_course(swc_path, swirl_courses_dir())
-    swirl_out(s()%N%"Course installed successfully!", skip_after=TRUE)
   } else { # install from swirl course network
     course_name <- make_pathname(course_name)
     url <- paste0("http://swirlstats.com/scn/", course_name, ".swc")
@@ -79,8 +80,7 @@ install_course <- function(course_name = NULL, swc_path = NULL){
     
     temp_swc <- tempfile()
     writeBin(content(response, "raw"), temp_swc)
-    unpack_course(temp_swc, swirl_courses_dir())
-    swirl_out(s()%N%"Course installed successfully!", skip_after=TRUE)
+    unpack_course(temp_swc, swirl_courses_dir(), force = force)
   }
 }
 
@@ -534,13 +534,13 @@ install_course_url <- function(url, multi=FALSE){
   invisible()
 }
 
-unpack_course <- function(file_path, export_path){
+unpack_course <- function(file_path, export_path, force = FALSE){
   # Remove trailing slash
   export_path <- sub(paste0(.Platform$file.sep, "$"), replacement = "", export_path)
   
   pack <- readRDS(file_path)
   course_path <- file.path(export_path, pack$name)
-  if(file.exists(course_path) && interactive()){
+  if(!force && file.exists(course_path) && interactive()){
     response <- ""
     while(response != "Y"){
       response <- select.list(c("Y", "n"), title = paste("\n\n", course_path, "already exists.\nAre you sure you want to overwrite it? [Y/n]"))
@@ -565,5 +565,6 @@ unpack_course <- function(file_path, export_path){
     
     writeBin(pack$files[[i]]$raw_file, file_path, endian = pack$files[[i]]$endian)
   }
+  swirl_out(s()%N%"Course installed successfully!", skip_after=TRUE)
   invisible(course_path)
 }
