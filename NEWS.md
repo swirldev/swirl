@@ -11,10 +11,13 @@ distributed in the .swc format.
 explicitly specified. These options can be set using the function 
 `swirl_options()`.
 
-* 
+* It's now possible to log and collect a student's progression
+through a swirl course. Enable logging with `swirl_options()`.
 
+* Improved support for displaying non-ASCII character sets
+through UTF-8 encoding.
 
-
+* Now compatible with `swirlify::demo_lesson()`.
 
 # swirl 2.3.1
 
