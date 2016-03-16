@@ -24,6 +24,8 @@ Imports:
     RCurl,
     digest,
     tools
+Suggests:
+    stringi
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(wrap = FALSE)
