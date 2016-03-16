@@ -122,28 +122,28 @@ loadDependencies <- function(lesson_dir) {
     packages_as_chars <- setdiff(readLines(depends, warn=FALSE), "")
     # If the dependson file is empty, then proceed with lesson
     if(length(packages_as_chars) == 0) return(TRUE)
-    swirl_out("Attempting to load lesson dependencies...")
+    swirl_out(s()%N%"Attempting to load lesson dependencies...")
     for(p in packages_as_chars) {
       p <- gsub("^\\s+|\\s+$", "", p) # trim leading and trailing whitespace 
       if(suppressPackageStartupMessages(
         suppressWarnings(
           suppressMessages(require(p, character.only=TRUE, quietly=TRUE))))) {
-        swirl_out("Package", sQuote(p), "loaded correctly!")
+        swirl_out(s()%N%"Package", sQuote(p), s()%N%"loaded correctly!")
       } else {
-        swirl_out("This lesson requires the", sQuote(p), 
-                  "package. Would you like me to install it for you now?")
-        yn <- select.list(choices=c("Yes", "No"), graphics=FALSE)
-        if(yn == "Yes") {
-          swirl_out("Trying to install package", sQuote(p), "now...")
+        swirl_out(s()%N%"This lesson requires the", sQuote(p), 
+                  s()%N%"package. Would you like me to install it for you now?")
+        yn <- select.list(choices=c(s()%N%"Yes", s()%N%"No"), graphics=FALSE)
+        if(yn == s()%N%"Yes") {
+          swirl_out(s()%N%"Trying to install package", sQuote(p), s()%N%"now...")
           install.packages(p, quiet=TRUE)
           if(suppressPackageStartupMessages(
             suppressWarnings(
               suppressMessages(require(p, 
                                        character.only=TRUE, 
                                        quietly=TRUE))))) {
-            swirl_out("Package", sQuote(p), "loaded correctly!")
+            swirl_out(s()%N%"Package", sQuote(p), s()%N%"loaded correctly!")
           } else {
-            swirl_out("Could not install package", paste0(sQuote(p), "!"))
+            swirl_out(s()%N%"Could not install package", paste0(sQuote(p), "!"))
             return(FALSE)
           }
         } else {

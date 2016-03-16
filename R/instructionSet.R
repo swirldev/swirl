@@ -43,7 +43,7 @@ waitUser.text_order_question <- function(current.row, e){
 
 
 waitUser.video <- function(current.row, e){
-  response <- readline(s()%N%"Yes or No? ")
+  response <- readline("Yes or No? ")
   if(tolower(response) %in% c("y", "yes")){
     swirl_out(s()%N%"Type nxt() to continue")
     e$prompt <- TRUE

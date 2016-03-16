@@ -89,6 +89,14 @@ mainMenu.default <- function(e){
             }
           }
           coursesU <- dir(courseDir(e))
+          if(length(coursesU) > 0){
+            for(i in 1:length(coursesU)){
+              coursesU[i] <- enc2utf8(coursesU[i])
+            }
+          }
+          if(any(is.na(coursesU))){
+            coursesU <- dir(courseDir(e))
+          }
           # Eliminate empty directories
           idx <- unlist(sapply(coursesU, 
                                function(x)length(dir(file.path(courseDir(e),x)))>0))
@@ -124,6 +132,11 @@ mainMenu.default <- function(e){
           manifest <- get_manifest(course_dir)
           lessons <- order_lessons(current_order=lessons, 
                                    manifest_order=manifest)
+          if(any(is.na(lessons))){
+            manifest <- get_manifest(course_dir, utf8 = FALSE)
+            lessons <- order_lessons(current_order=lessons,
+                                     manifest_order=manifest)
+          }
         }
         # Clean up lesson names
         lessons_clean <- gsub("_", " ", lessons)
@@ -372,8 +385,12 @@ completed <- function(e){
   return(pfiles)
 }
 
-get_manifest <- function(course_dir) {
-  man <- readLines(file.path(course_dir, "MANIFEST"), warn=FALSE)
+get_manifest <- function(course_dir, utf8 = TRUE) {
+  if(utf8){
+    man <- readLines(file.path(course_dir, "MANIFEST"), warn=FALSE, encoding = "UTF-8")
+  } else {
+    man <- readLines(file.path(course_dir, "MANIFEST"), warn=FALSE)
+  }
   # Remove leading and trailing whitespace
   man <- str_trim(man)
   # Remove empty lines

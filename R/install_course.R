@@ -303,8 +303,8 @@ uninstall_all_courses <- function(force = FALSE){
     if(!force){
       swirl_out(s()%N%"Are you sure you want to uninstall all swirl courses?",
                 s()%N%"This will delete all of the contents of your swirl course directory.")
-      selection <- select.list(c("Yes", "No"))
-      if(selection == "Yes"){
+      selection <- select.list(c(s()%N%"Yes", s()%N%"No"))
+      if(selection == s()%N%"Yes"){
         unlink(path, recursive=TRUE, force=TRUE)
         message(s()%N%"All courses uninstalled successfully!")
       } else {
