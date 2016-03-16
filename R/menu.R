@@ -231,7 +231,7 @@ welcome.default <- function(e, ...){
 # @param e persistent environment used here only for its class attribute
 # 
 housekeeping.default <- function(e){
-  swirl_out(paste0(s()%N%"Thanks, ", e$usr,s()%N%". Let's cover a few quick housekeeping items before we begin our first lesson. First of all, you should know that when you see '...', that means you should press Enter when you are done reading and ready to continue."))
+  swirl_out(paste0(s()%N%"Thanks, ", e$usr, s()%N%". Let's cover a couple of quick housekeeping items before we begin our first lesson. First of all, you should know that when you see '...', that means you should press Enter when you are done reading and ready to continue."))
   readline(s()%N%"\n...  <-- That's your cue to press Enter to continue")
   swirl_out(s()%N%"Also, when you see 'ANSWER:', the R prompt (>), or when you are asked to select from a list, that means it's your turn to enter a response, then press Enter to continue.")
   select.list(c(s()%N%"Continue.", s()%N%"Proceed.", s()%N%"Let's get going!"),

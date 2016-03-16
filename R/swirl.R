@@ -38,6 +38,8 @@
 #' @importFrom stringr str_detect str_locate fixed str_split_fixed
 #' @importFrom testthat expectation equals is_equivalent_to 
 #' @importFrom testthat is_identical_to is_a matches
+#' @import utils
+#' @importFrom methods is
 #' @examples
 #' \dontrun{
 #' 
@@ -375,7 +377,7 @@ resume.default <- function(e, ...){
   temp <- mainMenu(e)
   # If menu returns FALSE, the user wants to exit.
   if(is.logical(temp) && !isTRUE(temp)){
-    swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE)
+    swirl_out(s()%N%"Leaving swirl now. Type swirl() to resume.", skip_after=TRUE)
     esc_flag <- FALSE # To supress double notification
     return(FALSE)
   }

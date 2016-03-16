@@ -45,7 +45,7 @@ compile_languages <- function(){
   
   for(i in menus){
     lang_name <- sub(".yaml$", "", basename(i))
-    cmd <- paste0(lang_name, " <- yaml.load_file('", i, "')")
+    cmd <- paste0(lang_name, " <- wrap_encoding(yaml.load_file('", i, "'))")
     eval(parse(text=cmd))
   }
   

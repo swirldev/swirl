@@ -23,7 +23,9 @@ Imports:
     yaml,
     RCurl,
     digest,
-    tools
+    tools,
+    utils,
+    methods
 Suggests:
     stringi
 Encoding: UTF-8
