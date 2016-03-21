@@ -2,6 +2,5 @@
 ^\.Rproj\.user$
 ^.*.html$
 user_data/
-^NEWS.md$
 ^\.travis\.yml$
 ^cran-comments\.md$
