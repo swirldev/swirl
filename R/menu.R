@@ -123,6 +123,7 @@ mainMenu.default <- function(e){
         # reverse path cosmetics
         courseU <- coursesU[course == coursesR]
         course_dir <- file.path(courseDir(e), courseU)
+        
         # Get all files/folders from course dir, excluding MANIFEST
         lessons <- dir(course_dir)
         lessons <- lessons[lessons != "MANIFEST"]
@@ -132,12 +133,22 @@ mainMenu.default <- function(e){
           manifest <- get_manifest(course_dir)
           lessons <- order_lessons(current_order=lessons, 
                                    manifest_order=manifest)
-          if(any(is.na(lessons))){
-            manifest <- get_manifest(course_dir, utf8 = FALSE)
-            lessons <- order_lessons(current_order=lessons,
-                                     manifest_order=manifest)
+        }
+        # If the manifest introduced NAs, try reading without UTF-8
+        if(any(is.na(lessons))){
+          manifest <- get_manifest(course_dir, utf8 = FALSE)
+          lessons <- order_lessons(current_order=lessons,
+                                   manifest_order=manifest)
+        }
+        # If there are still NAs, throw the manifest out
+        if(any(is.na(lessons))){
+          lessons <- list.dirs(course_dir, full.names = FALSE, recursive = FALSE)
+          # Get rid of hidden folders if they exist
+          if(length(grep("^\\.", lessons)) > 0){
+            lessons <- lessons[-grep("^\\.", lessons)]
           }
         }
+        
         # Clean up lesson names
         lessons_clean <- gsub("_", " ", lessons)
         # Let user choose the lesson.

@@ -13,16 +13,28 @@ swirl_language <- function(){
 #' Select a language
 #' 
 #' Select a language for swirl's menus.
-#' 
+#' @param language The language that swirl's menus will use.
+#' This must be one of the following values: \code{"chinese_simplified"}.
+#' \code{"english"}, \code{"french"}, \code{"german"},
+#' \code{"korean"}, \code{"spanish"}, or \code{"turkish"}.
+#' If \code{NULL} the user will be asked to choose a language
+#' interactively. The default value is \code{NULL}.
 #' @param append_rprofile If \code{TRUE} this command will append 
 #' \code{options(swirl_language = [selected language])} to the end of your 
 #' Rprofile. The default value is \code{FALSE}.
 #' 
 #' @export
-select_language <- function(append_rprofile = FALSE){
+select_language <- function(language = NULL, append_rprofile = FALSE){
   langs <- c("chinese_simplified", "english", "french", "german", "korean", 
              "spanish", "turkish")
-  selection <- select.list(langs)
+  if(is.null(language)){
+    selection <- select.list(langs)
+  } else if(!(language %in% langs)){
+    stop("Invalid value for 'language.'")
+  } else {
+    selection <- language
+  }
+  
   options(swirl_language = selection)
   
   if(append_rprofile){

@@ -4,9 +4,16 @@
 \alias{select_language}
 \title{Select a language}
 \usage{
-select_language(append_rprofile = FALSE)
+select_language(language = NULL, append_rprofile = FALSE)
 }
 \arguments{
+\item{language}{The language that swirl's menus will use.
+This must be one of the following values: \code{"chinese_simplified"}.
+\code{"english"}, \code{"french"}, \code{"german"},
+\code{"korean"}, \code{"spanish"}, or \code{"turkish"}.
+If \code{NULL} the user will be asked to choose a language
+interactively. The default value is \code{NULL}.}
+
 \item{append_rprofile}{If \code{TRUE} this command will append 
 \code{options(swirl_language = [selected language])} to the end of your 
 Rprofile. The default value is \code{FALSE}.}
