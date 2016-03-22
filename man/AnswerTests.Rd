@@ -59,7 +59,7 @@ go back and make your answer testing strategy more elaborate. The main
 benefit of using tests other than the default is that the user will not be
 required to enter an expression exactly the way you've specified it. He or
 she will have more freedom in terms of how they respond to a question, as
-long as they satify the conditions that you see as being most important.
+long as they satisfy the conditions that you see as being most important.
 }
 \section{Predefined Answer Tests}{
 

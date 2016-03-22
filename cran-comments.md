@@ -1,6 +1,6 @@
 ## Release summary
 
-This is the first attempted CRAN release of swirl 2.4.*
+This is the first attempted CRAN release of swirl 2.4.0.
 
 ## Test environments
 
