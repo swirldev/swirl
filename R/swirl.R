@@ -38,6 +38,8 @@
 #' @importFrom stringr str_detect str_locate fixed str_split_fixed
 #' @importFrom testthat expectation equals is_equivalent_to 
 #' @importFrom testthat is_identical_to is_a matches
+#' @import utils
+#' @importFrom methods is
 #' @examples
 #' \dontrun{
 #' 
@@ -96,7 +98,7 @@ swirl <- function(resume.class="default", ...){
 #' }
 bye <- function(){
   removeTaskCallback("mini")
-  swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE)
+  swirl_out(s()%N%"Leaving swirl now. Type swirl() to resume.", skip_after=TRUE)
   invisible()
 }
 
@@ -226,33 +228,14 @@ restart <- function(){invisible()}
 #' Display a list of the special commands, \code{bye()}, \code{play()}, 
 #' \code{nxt()}, \code{skip()}, and \code{info()}.
 #' @export
-#' @examples
-#' \dontrun{
-#' 
-#' | Create a new variable called `z` that contains the number 11.
-#' 
-#' > info()
-#' 
-#' | When you are at the R prompt (>):
-#' | -- Typing skip() allows you to skip the current question.
-#' | -- Typing play() lets you experiment with R on your own; swirl will ignore what
-#' | you do...
-#' | -- UNTIL you type nxt() which will regain swirl's attention.
-#' | -- Typing bye() causes swirl to exit. Your progress will be saved.
-#' | -- Typing info() displays these options again.
-#' 
-#' > bye()
-#' 
-#' | Leaving swirl now. Type swirl() to resume.
-#' }
 info <- function(){
-  swirl_out("When you are at the R prompt (>):")
-  swirl_out("-- Typing skip() allows you to skip the current question.", skip_before=FALSE)
-  swirl_out("-- Typing play() lets you experiment with R on your own; swirl will ignore what you do...", skip_before=FALSE)
-  swirl_out("-- UNTIL you type nxt() which will regain swirl's attention.", skip_before=FALSE)
-  swirl_out("-- Typing bye() causes swirl to exit. Your progress will be saved.", skip_before=FALSE)
-  swirl_out("-- Typing main() returns you to swirl's main menu.", skip_before=FALSE)
-  swirl_out("-- Typing info() displays these options again.", skip_before=FALSE, skip_after=TRUE)
+  swirl_out(s()%N%"When you are at the R prompt (>):")
+  swirl_out(s()%N%"-- Typing skip() allows you to skip the current question.", skip_before=FALSE)
+  swirl_out(s()%N%"-- Typing play() lets you experiment with R on your own; swirl will ignore what you do...", skip_before=FALSE)
+  swirl_out(s()%N%"-- UNTIL you type nxt() which will regain swirl's attention.", skip_before=FALSE)
+  swirl_out(s()%N%"-- Typing bye() causes swirl to exit. Your progress will be saved.", skip_before=FALSE)
+  swirl_out(s()%N%"-- Typing main() returns you to swirl's main menu.", skip_before=FALSE)
+  swirl_out(s()%N%"-- Typing info() displays these options again.", skip_before=FALSE, skip_after=TRUE)
   invisible()
 }
 
@@ -272,7 +255,7 @@ resume.default <- function(e, ...){
   args_specification(e, ...)
   
   esc_flag <- TRUE
-  on.exit(if(esc_flag)swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE))
+  on.exit(if(esc_flag)swirl_out(s()%N%"Leaving swirl now. Type swirl() to resume.", skip_after=TRUE))
   # Trap special functions
   if(uses_func("info")(e$expr)[[1]]){
     esc_flag <- FALSE
@@ -319,10 +302,10 @@ resume.default <- function(e, ...){
         # Source the correct script
         try(source(correct_script_path))
         # Inform the user and open the correct script
-        swirl_out("I just sourced the following script, which demonstrates one possible solution.",
+        swirl_out(s()%N%"I just sourced the following script, which demonstrates one possible solution.",
                   skip_after=TRUE)
         file.edit(correct_script_path)
-        readline("Press Enter when you are ready to continue...")
+        readline(s()%N%"Press Enter when you are ready to continue...")
       }
       
     # If this is not a script question...
@@ -344,7 +327,7 @@ resume.default <- function(e, ...){
       ce <- as.list(ce)
       
       # Inform the user and expose the correct answer
-      swirl_out("Entering the following correct answer for you...",
+      swirl_out(s()%N%"Entering the following correct answer for you...",
                 skip_after=TRUE)
       message("> ", e$current.row[, "CorrectAnswer"])
 
@@ -394,7 +377,7 @@ resume.default <- function(e, ...){
   temp <- mainMenu(e)
   # If menu returns FALSE, the user wants to exit.
   if(is.logical(temp) && !isTRUE(temp)){
-    swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE)
+    swirl_out(s()%N%"Leaving swirl now. Type swirl() to resume.", skip_after=TRUE)
     esc_flag <- FALSE # To supress double notification
     return(FALSE)
   }
@@ -408,6 +391,7 @@ resume.default <- function(e, ...){
   if(!uses_func("swirl")(e$expr)[[1]] &&
        !uses_func("swirlify")(e$expr)[[1]] &&
        !uses_func("testit")(e$expr)[[1]] &&
+       !uses_func("demo_lesson")(e$expr)[[1]] &&
        !uses_func("nxt")(e$expr)[[1]] &&
        isTRUE(customTests$AUTO_DETECT_NEWVAR)) {
     e$delta <- mergeLists(safeEval(e$expr, e), e$delta)
@@ -443,13 +427,19 @@ resume.default <- function(e, ...){
       # Reset skip count if it exists
       if(exists("skips", e)) e$skips <- 0
       clearCustomTests()
+      
+      # Save log
+      if(isTRUE(getOption("swirl_logging"))){
+        saveLog(e)
+      }
+      
       # Let user know lesson is complete
-      swirl_out("You've reached the end of this lesson! Returning to the main menu...")
+      swirl_out(s()%N%"You've reached the end of this lesson! Returning to the main menu...")
       # let the user select another course lesson
       temp <- mainMenu(e)
       # if menu returns FALSE, user wants to quit.
       if(is.logical(temp) && !isTRUE(temp)){
-        swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE)
+        swirl_out(s()%N%"Leaving swirl now. Type swirl() to resume.", skip_after=TRUE)
         esc_flag <- FALSE # to supress double notification
         return(FALSE)
       }

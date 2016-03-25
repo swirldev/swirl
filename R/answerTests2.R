@@ -57,7 +57,7 @@
 #' benefit of using tests other than the default is that the user will not be
 #' required to enter an expression exactly the way you've specified it. He or
 #' she will have more freedom in terms of how they respond to a question, as
-#' long as they satify the conditions that you see as being most important.
+#' long as they satisfy the conditions that you see as being most important.
 #' 
 #' @section Predefined Answer Tests:
 #' Each of the predefined answer tests listed below has
@@ -160,7 +160,7 @@ NULL
 #'   # In this case, if the user enters sd(x)*sd(x) the test will fail.
 #'   
 #'   }
-#'   @family AnswerTests
+#' @family AnswerTests
 omnitest <- function(correctExpr=NULL, correctVal=NULL, strict=FALSE, eval_for_class=as.logical(NA)){
   e <- get("e", parent.frame())
   # Trivial case
@@ -225,8 +225,8 @@ omnitest <- function(correctExpr=NULL, correctVal=NULL, strict=FALSE, eval_for_c
   if((isTRUE(valGood) || is.na(valGood)) && exprGood){
     return(TRUE)
   } else if (isTRUE(valGood) && !exprGood && !strict){
-      swirl_out("That's not the expression I expected but it works.")
-      swirl_out("I've executed the correct expression in case the result is needed in an upcoming question.")
+      swirl_out(s()%N%"That's not the expression I expected but it works.")
+      swirl_out(s()%N%"I've executed the correct expression in case the result is needed in an upcoming question.")
       eval(parse(text=correctExpr),globalenv())
       return(TRUE)
     } else {

@@ -45,7 +45,7 @@ waitUser.text_order_question <- function(current.row, e){
 waitUser.video <- function(current.row, e){
   response <- readline("Yes or No? ")
   if(tolower(response) %in% c("y", "yes")){
-    swirl_out("Type nxt() to continue")
+    swirl_out(s()%N%"Type nxt() to continue")
     e$prompt <- TRUE
     e$playing <- TRUE
     browseURL(current.row[,"VideoLink"])
@@ -150,6 +150,13 @@ waitUser.script <- function(current.row, e){
 testResponse <- function(current.row, e)UseMethod("testResponse")
 
 testResponse.default <- function(current.row, e){
+  if(isTRUE(getOption("swirl_logging"))){
+    e$log$question_number <- c(e$log$question_number, e$row)
+    e$log$attempt <- c(e$log$attempt, e$attempts)
+    e$log$skipped <- c(e$log$skipped, e$skipped)
+    e$log$datetime <- c(e$log$datetime, as.numeric(Sys.time()))
+  } 
+  
   # Increment attempts counter
   e$attempts <- 1 + e$attempts
   # Get answer tests
@@ -157,7 +164,7 @@ testResponse.default <- function(current.row, e){
   if(is.na(tests) || tests == ""){
     results <- is(e, "dev")
     if(!results){
-      stop("BUG: There are no tests for this question!")
+      stop(s()%N%"BUG: There are no tests for this question!")
     }
   } else {
     tests <- str_trim(unlist(strsplit(tests,";")))
@@ -165,6 +172,10 @@ testResponse.default <- function(current.row, e){
   }
   correct <- !(FALSE %in% unlist(results))
   if(correct){
+    if(isTRUE(getOption("swirl_logging"))){
+      e$log$correct <- c(e$log$correct, TRUE)
+    }  
+    
     mes <- praise()
     post_result(e, passed = correct, feedback = mes, hint = NULL)
     e$iptr <- 1
@@ -172,6 +183,10 @@ testResponse.default <- function(current.row, e){
     # Reset attempts counter, since correct
     e$attempts <- 1
   } else {
+    if(isTRUE(getOption("swirl_logging"))){
+      e$log$correct <- c(e$log$correct, FALSE)
+    }
+    
     # Restore the previous global environment from the official
     # in case the user has garbled it, e.g., has typed x <- 3*x
     # instead of x <- 2*x by mistake. The hint might say to type
@@ -180,7 +195,7 @@ testResponse.default <- function(current.row, e){
     if(length(e$snapshot)>0)xfer(as.environment(e$snapshot), globalenv())
     mes <- tryAgain()
     if(is(current.row, "cmd_question") && !is(e, "datacamp")) {
-      mes <- paste(mes, "Or, type info() for more options.")
+      mes <- paste(mes, s()%N%"Or, type info() for more options.")
     }
     hint <- current.row[,"Hint"]
     post_result(e, passed = correct, feedback = mes, hint = if(is.na(hint)) NULL else hint)

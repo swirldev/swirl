@@ -29,8 +29,8 @@ delete_progress <- function(user, path = NULL){
   # Delete all files within a user folder
   if(file.exists(path)){
     invisible(file.remove(list.files(path, full.names = TRUE), recursive = TRUE))
-    message(paste0("Deleted progress for user: ", user))
+    message(paste0(s()%N%"Deleted progress for user: ", user))
   } else {
-    message(paste0("Could not find account for user: ", user))
+    message(paste0(s()%N%"Could not find account for user: ", user))
   }
 }

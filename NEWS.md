@@ -1,3 +1,24 @@
+# swirl 2.4.0
+
+* Added support for multiple languages, including Spanish, French, German,
+Turkish, Simplified Chinese, and Korean. The default language can be changed
+using the function `select_language()`.
+
+* Added `install_course()` in order to install swirl courses that are
+distributed in the .swc format.
+
+* The directories where swirl courses and where user data is stored can now be
+explicitly specified. These options can be set using the function 
+`swirl_options()`.
+
+* It's now possible to log and collect a student's progression
+through a swirl course. Enable logging with `swirl_options()`.
+
+* Improved support for displaying non-ASCII character sets
+through UTF-8 encoding.
+
+* Now compatible with `swirlify::demo_lesson()`.
+
 # swirl 2.3.1
 
 * Add progress bar to track download progress of a course.
