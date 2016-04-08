@@ -435,7 +435,7 @@ uses_func <- function(expected, label = NULL, ...){
   function(expr){
     uses <- (is.call(expr) || is.expression(expr)) && 
       expected %in% flatten(expr)
-    expectation(identical(uses, TRUE),
+    expectation_old(identical(uses, TRUE),
                 str_c("does not use ", label))
   }
 }
@@ -446,12 +446,28 @@ in_range <- function(range, label=NULL){
     isOK <- is.numeric(number) && 
       isTRUE(number >= range[1]) && 
       isTRUE(number <= range[2])
-    expectation(identical(isOK, TRUE), 
+    expectation_old(identical(isOK, TRUE), 
                 str_c("is not between ", range[1], " and ", range[2]))
   }
 }
 
-
-
-
-
+# This version of expectation() has been graciously borrowed
+# from version 0.11.0 of the testthat package by 
+# Hadley Wickham and others at RStudio. The expectation API
+# was broken in later versions of testthat and we know the
+# old version works for our purposes.
+expectation_old <- function(passed, failure_msg, 
+                            success_msg = "unknown", 
+                            srcref = NULL) {
+  structure(
+    list(
+      passed = passed,
+      error = FALSE,
+      skipped = FALSE,
+      failure_msg = failure_msg,
+      success_msg = success_msg,
+      srcref = srcref
+    ),
+    class = "expectation"
+  )
+}

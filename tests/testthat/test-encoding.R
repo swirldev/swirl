@@ -3,6 +3,11 @@ context("encoding")
 library(stringi)
 
 test_that("Trying to parse the test-encoding.yaml", {
+  locale <- Sys.getlocale()
+  if(grepl("[L|l]atin", locale)){
+    testthat::skip("Locale is Latin")
+  }
+  
   test_parse <- function(file) {
     class(file) <- get_content_class(file)
     parse_content(file)
@@ -20,6 +25,5 @@ test_that("Trying to parse the test-encoding.yaml", {
     )
   } else {
     expect_equal(stri_escape_unicode(test_phrase), stri_escape_unicode("中文測試"))
-    
   }
 })
