@@ -58,6 +58,7 @@ character or numeric vectors of length 1.
 \seealso{
 Other AnswerTests: \code{\link{AnswerTests}},
   \code{\link{any_of_exprs}},
+  \code{\link{calculates_same_value}},
   \code{\link{expr_creates_var}},
   \code{\link{expr_identical_to}}, \code{\link{expr_is_a}},
   \code{\link{expr_uses_func}},

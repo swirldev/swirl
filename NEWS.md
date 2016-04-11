@@ -1,3 +1,9 @@
+# swirl 2.4.1
+
+* Added new answer test: `calculates_same_value()`.
+
+* Now compatible with versions of testthat later than 0.11.0.
+
 # swirl 2.4.0
 
 * Added support for multiple languages, including Spanish, French, German,
