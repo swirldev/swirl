@@ -69,6 +69,8 @@ examples.
 
 \code{\link{any_of_exprs}}: Test that the user's expression matches any of several possible expressions.
 
+\code{\link{calculates_same_value}}: Test that the user's expression evaluates to a certain value.
+
 \code{\link{expr_creates_var}}: Test that a new variable has been created.
 
 \code{\link{expr_identical_to}}: Test that the user has entered a particular expression.
@@ -121,6 +123,7 @@ basic rules:
 }
 \seealso{
 Other AnswerTests: \code{\link{any_of_exprs}},
+  \code{\link{calculates_same_value}},
   \code{\link{expr_creates_var}},
   \code{\link{expr_identical_to}}, \code{\link{expr_is_a}},
   \code{\link{expr_uses_func}},
