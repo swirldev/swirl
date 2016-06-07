@@ -159,7 +159,7 @@ reset <- function(){invisible()}
 #' During a script question, this will move the pointer back to the previous 
 #' row to repeat the previous question (with new values if question templates
 #' are used. 
-
+#' @export
 rpt <- function(){invisible()}
 
 
@@ -406,6 +406,7 @@ resume.default <- function(e, ...){
        !uses_func("testit")(e$expr)[[1]] &&
        !uses_func("demo_lesson")(e$expr)[[1]] &&
        !uses_func("nxt")(e$expr)[[1]] &&
+        !uses_func("rpt")(e$expr)[[1]] &&
        isTRUE(customTests$AUTO_DETECT_NEWVAR)) {
     e$delta <- mergeLists(safeEval(e$expr, e), e$delta)
   }
