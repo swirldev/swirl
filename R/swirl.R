@@ -160,7 +160,7 @@ reset <- function(){invisible()}
 #' row to repeat the previous question (with new values if question templates
 #' are used. 
 
-repeat <- function(){invisible()}
+rpt <- function(){invisible()}
 
 
 #' Submit the active R script in response to a question.
@@ -280,7 +280,7 @@ resume.default <- function(e, ...){
   }
 
   # The user wants to repeat the previous question 
-  if(uses_func("repeat")(e$expr)[[1]]) {
+  if(uses_func("rpt")(e$expr)[[1]]) {
     do_repeat(e)
   }
  
