@@ -213,7 +213,14 @@ testResponse.default <- function(current.row, e){
     if(is(current.row, "cmd_question") && !is(e, "datacamp")) {
       mes <- paste(mes, s()%N%"Or, type info() for more options.")
     }
+
+    # get hint, possibly using hint function
     hint <- current.row[,"Hint"]
+    if (!is.na(e$current.row$HintFunction)) {
+         hf = get(e$current.row$HintFunction)
+         hint <- hf()
+    }
+
     post_result(e, passed = correct, feedback = mes, hint = if(is.na(hint)) NULL else hint)
     e$iptr <- e$iptr - 1
   }
