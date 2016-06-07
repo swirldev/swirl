@@ -179,7 +179,15 @@ testResponse.default <- function(current.row, e){
     mes <- praise()
     post_result(e, passed = correct, feedback = mes, hint = NULL)
     e$iptr <- 1
-    e$row <- 1 + e$row
+
+    #update TimesRepeated for this question and i
+    num = as.integer(e$current.row$TimesRepeated)
+    num = num + 1
+    e$les[e$row,]$TimesRepeated = num
+    # move to next row if we are done
+    if (num >= e$current.row$NumTimes) {
+       e$row <- 1 + e$row
+    }
     # Reset attempts counter, since correct
     e$attempts <- 1
   } else {
