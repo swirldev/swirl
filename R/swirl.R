@@ -153,6 +153,16 @@ skip <- function(){invisible()}
 #' @export
 reset <- function(){invisible()}
 
+
+#' Repeat the previous question
+#'
+#' During a script question, this will move the pointer back to the previous 
+#' row to repeat the previous question (with new values if question templates
+#' are used. 
+
+repeat <- function(){invisible()}
+
+
 #' Submit the active R script in response to a question.
 #' 
 #' When a swirl question requires the user to edit an R script, the
@@ -268,7 +278,12 @@ resume.default <- function(e, ...){
   if(uses_func("reset")(e$expr)[[1]]) {
     do_reset(e)
   }
-  
+
+  # The user wants to repeat the previous question 
+  if(uses_func("repeat")(e$expr)[[1]]) {
+    do_repeat(e)
+  }
+ 
   # The user wants to submit their R script
   if(uses_func("submit")(e$expr)[[1]]){
     do_submit(e)
@@ -457,6 +472,12 @@ resume.default <- function(e, ...){
       e$delta <- list()
       saveProgress(e)
       e$current.row <- e$les[e$row,]
+
+      # generate token values if necessary
+      tt = token.generate(e$current.row, e$token.list)
+      e$token.list <- tt$token.list
+      e$current.row = tt$row
+
       # Prepend the row's swirl class to its class attribute
       class(e$current.row) <- c(e$current.row[,"Class"], 
                                        class(e$current.row))

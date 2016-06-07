@@ -4,6 +4,7 @@ do_submit <- function(e)UseMethod("do_submit")
 do_play <- function(e)UseMethod("do_play")
 do_main <- function(e)UseMethod("do_main")
 do_restart <- function(e)UseMethod("do_restart")
+do_repeat <- function(e)UseMethod("do_repeat")
 
 do_nxt.default <- function(e) {
   ## Using the stored list of "official" swirl variables and values,
@@ -22,6 +23,24 @@ do_reset.default <- function(e) {
   e$iptr <- 2
   swirl_out(s()%N%"I just reset the script to its original state. If it doesn't refresh immediately, you may need to click on it.", 
             skip_after = TRUE)
+}
+
+do_repeat.default <-function(e) {
+     e$playing <- FALSE
+     e$iptr <- 1
+
+     # if current question has not been repeated yet, i
+     # then go to previous question 
+     num = as.integer(e$les[e$row,]$TimesRepeated)
+     if (num == 0) {
+        e$row <- e$row - 1
+     }
+
+     # update TimesRepeated counter in all cases 
+     num = as.integer(e$les[e$row,]$TimesRepeated)
+     num = num - 1
+     e$les[e$row,]$TimesRepeated = num
+     swirl_out("Repeating the previous question.", skip_after = TRUE)
 }
 
 do_submit.default <- function(e) {
