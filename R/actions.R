@@ -29,18 +29,31 @@ do_repeat.default <-function(e) {
      e$playing <- FALSE
      e$iptr <- 1
 
-     # if current question has not been repeated yet, i
-     # then go to previous question 
-     num = as.integer(e$les[e$row,]$TimesRepeated)
-     if (num == 0) {
-        e$row <- e$row - 1
-     }
+ 
+     go_back = TRUE
+     while(go_back) {
+	if (e$row == 1) {
+          swirl_out("This is the beginning of the lesson.", skip_after = FALSE)
+          return()
+     	}  
+     	# if current question has not been repeated yet, 
+     	# then go to previous question 
+ 	num = as.integer(e$les[e$row,]$TimesRepeated)
+  	if (num == 0) {
+     	   e$row <- e$row - 1
+  	}
+	
+  	# update TimesRepeated counter in all cases 
+   	num = as.integer(e$les[e$row,]$TimesRepeated)
+    	num = max(num - 1,0)
+   	e$les[e$row,]$TimesRepeated = num
 
-     # update TimesRepeated counter in all cases 
-     num = as.integer(e$les[e$row,]$TimesRepeated)
-     num = num - 1
-     e$les[e$row,]$TimesRepeated = num
-     swirl_out("Repeating the previous question.", skip_after = TRUE)
+	# if this is a text block, keep repeating
+	if (e$les[e$row,]$Class == "text") go_back = TRUE
+	else go_back = FALSE
+
+     }
+     swirl_out("Repeating the previous question.", skip_after = FALSE)
 }
 
 do_submit.default <- function(e) {

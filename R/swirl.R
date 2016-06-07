@@ -239,6 +239,7 @@ restart <- function(){invisible()}
 info <- function(){
   swirl_out(s()%N%"When you are at the R prompt (>):")
   swirl_out(s()%N%"-- Typing skip() allows you to skip the current question.", skip_before=FALSE)
+  swirl_out(s()%N%"-- Typing rpt() will repeat the previous question (possibly with different values", skip_before = FALSE) 
   swirl_out(s()%N%"-- Typing play() lets you experiment with R on your own; swirl will ignore what you do...", skip_before=FALSE)
   swirl_out(s()%N%"-- UNTIL you type nxt() which will regain swirl's attention.", skip_before=FALSE)
   swirl_out(s()%N%"-- Typing bye() causes swirl to exit. Your progress will be saved.", skip_before=FALSE)
@@ -486,6 +487,7 @@ resume.default <- function(e, ...){
     
     # Execute the current instruction
     e$instr[[e$iptr]](e$current.row, e)
+
     # Check if a side effect, such as a sourced file, has changed the
     # values of any variables in the official list. If so, add them
     # to the list of changed variables.
