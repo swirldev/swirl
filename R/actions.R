@@ -58,12 +58,16 @@ do_repeat.default <-function(e) {
 
 do_submit.default <- function(e) {
   e$playing <- FALSE
-  # Get contents from user's submitted script
-  e$script_contents <- readLines(e$script_temp_path, warn = FALSE)
-  # Save expr to e
-  e$expr <- try(parse(text = e$script_contents), silent = TRUE)
-  swirl_out(s()%N%"Sourcing your script...", skip_after = TRUE)
-  try(source(e$script_temp_path, encoding = "UTF-8"))
+
+  # if script question, then source the script
+  if (e$current.row$Class=="script") {
+    # Get contents from user's submitted script
+    e$script_contents <- readLines(e$script_temp_path, warn = FALSE)
+    # Save expr to e
+    e$expr <- try(parse(text = e$script_contents), silent = TRUE)
+    swirl_out(s()%N%"Sourcing your script...", skip_after = TRUE)
+    try(source(e$script_temp_path, encoding = "UTF-8"))
+  }
 }
 
 do_play.default <- function(e) {
