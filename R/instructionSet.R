@@ -101,6 +101,14 @@ waitUser.cmd_question <- function(current.row, e){
   e$iptr <- 1 + e$iptr
 }
 
+waitUser.multi_cmd_question <-function(current.row, e) {
+ e$prompt <- TRUE
+ # Enter 'play' mode so that user can mess around in the console
+ e$playing <- TRUE
+ # Advance lesson
+ e$iptr <- 1 + e$iptr
+}
+
 #' @importFrom tools file_path_sans_ext
 waitUser.script <- function(current.row, e){
   # If this is the first attempt or the user wants to start over, 
