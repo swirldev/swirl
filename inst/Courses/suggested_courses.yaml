@@ -1,7 +1,16 @@
 - Course: R Programming
   Description: The basics of programming in R
-  Install: install_from_swirl('R_Programming')
+  Install: install_course('R_Programming')
 
 - Course: Regression Models
   Description: The basics of regression modeling in R
-  Install: install_from_swirl('Regression_Models')
+  Install: install_course('Regression_Models')
+
+- Course: Statistical Inference
+  Description: The basics of statistical inference in R
+  Install: install_course('Statistical_Inference')
+
+- Course: Exploratory Data Analysis
+  Description: The basics of exploring data in R
+  Install: install_course('Exploratory_Data_Analysis')
+

@@ -1,3 +1,44 @@
+# swirl 2.4.2
+
+* Script questions behave more appropriately in RStudio. (#434, thank you @jimhester)
+
+# swirl 2.4.1
+
+* Added new answer test: `calculates_same_value()`.
+
+* Now compatible with versions of testthat later than 0.11.0.
+
+# swirl 2.4.0
+
+* Added support for multiple languages, including Spanish, French, German,
+Turkish, Simplified Chinese, and Korean. The default language can be changed
+using the function `select_language()`.
+
+* Added `install_course()` in order to install swirl courses that are
+distributed in the .swc format.
+
+* The directories where swirl courses and where user data is stored can now be
+explicitly specified. These options can be set using the function 
+`swirl_options()`.
+
+* It's now possible to log and collect a student's progression
+through a swirl course. Enable logging with `swirl_options()`.
+
+* Improved support for displaying non-ASCII character sets
+through UTF-8 encoding.
+
+* Now compatible with `swirlify::demo_lesson()`.
+
+# swirl 2.3.1
+
+* Add progress bar to track download progress of a course.
+
+# swirl 2.3.0
+
+* Add basic developer API to swirl, courtesy of @filipsch and @seankross.
+
+* Change license to MIT, which is slightly less restrictive than GPL-3 and will make it easy for developers to tap into the new API.
+
 # swirl 2.2.21
 
 * Add `mirror` argument to `install_from_swirl()` to accommodate installing courses from the Bitbucket mirror of our swirl-courses GitHub repository. (Prompted by India's blocking of GitHub.)

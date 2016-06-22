@@ -57,7 +57,7 @@
 #' benefit of using tests other than the default is that the user will not be
 #' required to enter an expression exactly the way you've specified it. He or
 #' she will have more freedom in terms of how they respond to a question, as
-#' long as they satify the conditions that you see as being most important.
+#' long as they satisfy the conditions that you see as being most important.
 #' 
 #' @section Predefined Answer Tests:
 #' Each of the predefined answer tests listed below has
@@ -65,6 +65,8 @@
 #' examples.
 #' 
 #' \code{\link{any_of_exprs}}: Test that the user's expression matches any of several possible expressions.
+#'
+#' \code{\link{calculates_same_value}}: Test that the user's expression evaluates to a certain value.
 #' 
 #' \code{\link{expr_creates_var}}: Test that a new variable has been created.
 #' 
@@ -116,7 +118,6 @@
 #' 
 #' @family AnswerTests
 NULL
-
  
 #' Test for a correct expression, a correct value, or both.
 #' 
@@ -160,7 +161,7 @@ NULL
 #'   # In this case, if the user enters sd(x)*sd(x) the test will fail.
 #'   
 #'   }
-#'   @family AnswerTests
+#' @family AnswerTests
 omnitest <- function(correctExpr=NULL, correctVal=NULL, strict=FALSE, eval_for_class=as.logical(NA)){
   e <- get("e", parent.frame())
   # Trivial case
@@ -199,7 +200,7 @@ omnitest <- function(correctExpr=NULL, correctVal=NULL, strict=FALSE, eval_for_c
   if(!is.null(correctVal)){
     if(is.character(e$val)){
       valResults <- expectThat(e$val,
-                               is_equivalent_to(correctVal, label=correctVal),
+                               is_equivalent_to_legacy(correctVal, label=correctVal),
                                label=(e$val))
       if(is(e, "dev") && !valResults$passed)swirl_out(valResults$message)
       valGood <- valResults$passed
@@ -207,7 +208,7 @@ omnitest <- function(correctExpr=NULL, correctVal=NULL, strict=FALSE, eval_for_c
     } else if(!is.na(e$val) && is.numeric(e$val) && length(e$val) == 1){
       cval <- try(as.numeric(correctVal), silent=TRUE)
       valResults <- expectThat(e$val, 
-                            equals(cval, label=correctVal),
+                            equals_legacy(cval, label=correctVal),
                             label=toString(e$val))
       if(is(e, "dev") && !valResults$passed)swirl_out(valResults$message)
       valGood <- valResults$passed
@@ -225,8 +226,8 @@ omnitest <- function(correctExpr=NULL, correctVal=NULL, strict=FALSE, eval_for_c
   if((isTRUE(valGood) || is.na(valGood)) && exprGood){
     return(TRUE)
   } else if (isTRUE(valGood) && !exprGood && !strict){
-      swirl_out("That's not the expression I expected but it works.")
-      swirl_out("I've executed the correct expression in case the result is needed in an upcoming question.")
+      swirl_out(s()%N%"That's not the expression I expected but it works.")
+      swirl_out(s()%N%"I've executed the correct expression in case the result is needed in an upcoming question.")
       eval(parse(text=correctExpr),globalenv())
       return(TRUE)
     } else {
@@ -253,10 +254,34 @@ expr_identical_to <- function(correct_expression){
   if(is.expression(expr))expr <- expr[[1]]
   correct <- parse(text=correct_expression)[[1]]
   results <- expectThat(expr, 
-                        is_identical_to(correct, label=correct_expression),
+                        is_identical_to_legacy(correct, label=correct_expression),
                         label=deparse(expr))
   if( is(e, "dev") && !results$passed)swirl_out(results$message) 
   return(results$passed)
+}
+
+#' Test that the user's expression evaluates to a certain value.
+#'
+#' Test that the value calculated by the user's expression is the same as the
+#' value calculated by the given expression.
+#' @param expression An expression whose value will be compared to the value
+#' of the user's expression.
+#' @return \code{TRUE} or \code{FALSE}
+#' @examples
+#' \dontrun{
+#'   # Test that a user's expression evaluates to a certain value
+#'   #
+#'   calculates_same_value('matrix(1:20, nrow=4, ncol=5)')
+#' }
+#' @family AnswerTests
+calculates_same_value <- function(expression){
+  e <- get("e", parent.frame())
+  # Calculate what the user should have done.
+  eSnap <- cleanEnv(e$snapshot)
+  val <- eval(parse(text=expression), eSnap)
+  passed <- isTRUE(all.equal(val, e$val))
+  if(!passed)e$delta <- list()
+  return(passed)
 }
 
 #' Test that the user's expression matches a regular expression.
@@ -278,7 +303,7 @@ val_matches <- function(regular_expression) {
   e <- get("e", parent.frame())
   userVal <- str_trim(as.character(e$val))
   results <- expectThat(userVal, 
-                        matches(regular_expression), 
+                        matches_legacy(regular_expression), 
                         label=userVal)
   if(is(e,"dev") && !results$passed)swirl_out(results$message)
   return(results$passed)
@@ -323,7 +348,7 @@ var_is_a <- function(class, var_name) {
   if(exists(var_name, globalenv())){
     val <- get(var_name, globalenv())
     label <- val
-    results <- expectThat(val, is_a(class), label=label)
+    results <- expectThat(val, is_a_legacy(class), label=label)
     if(is(e,"dev") && !results$passed)swirl_out(results$message)
     return(results$passed)
   } else {
@@ -349,7 +374,7 @@ expr_is_a <- function(class) {
   class <-  str_trim(class)
   expr <- e$expr
   label <- deparse(e$expr)
-  results <- expectThat(expr, is_a(class), label=label)
+  results <- expectThat(expr, is_a_legacy(class), label=label)
   if(is(e,"dev") && !results$passed)swirl_out(results$message)
   return(results$passed)
 }
@@ -405,12 +430,12 @@ expr_creates_var <- function(correctName=NULL){
     e$delta
   }
   if(is.null(correctName)){
-    results <- expectThat(length(delta), equals(1), 
+    results <- expectThat(length(delta), equals_legacy(1), 
                           label=paste(deparse(e$expr), 
                                       "does not create a variable."))  
   } else {
     results <- expectThat(names(delta), 
-                          is_equivalent_to(correctName, label=correctName), 
+                          is_equivalent_to_legacy(correctName, label=correctName), 
                           label=paste(deparse(e$expr),
                                       "does not create a variable named",
                                       correctName))
@@ -445,7 +470,7 @@ val_has_length <- function(len){
     stop(message=paste("BUG: specified length", len,
                                  "is not an integer."))
   }
-  results <- expectThat(length(e$val), equals(n, label=n), 
+  results <- expectThat(length(e$val), equals_legacy(n, label=n), 
                         label=paste0("length(c(", toString(e$val), "))"))                                                   
   if( is(e, "dev") && !results$passed)swirl_out(results$message) 
   return(results$passed)
@@ -474,7 +499,7 @@ func_of_newvar_equals <- function(correct_expression){
   correctExpr <- gsub("newVar", e$newVarName, correct_expression)
   ans <- eval(parse(text=correctExpr), e1)
   results <- expectThat(e$val, 
-                        equals(ans, 
+                        equals_legacy(ans, 
                                label=correctExpr), 
                         label=deparse(e$expr))
   if(is(e, "dev") && !results$passed)swirl_out(results$message)

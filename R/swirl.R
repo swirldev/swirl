@@ -36,8 +36,7 @@
 #' @export
 #' @importFrom stringr str_c str_trim str_split str_length 
 #' @importFrom stringr str_detect str_locate fixed str_split_fixed
-#' @importFrom testthat expectation equals is_equivalent_to 
-#' @importFrom testthat is_identical_to is_a matches
+#' @importFrom methods is
 #' @examples
 #' \dontrun{
 #' 
@@ -96,7 +95,7 @@ swirl <- function(resume.class="default", ...){
 #' }
 bye <- function(){
   removeTaskCallback("mini")
-  swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE)
+  swirl_out(s()%N%"Leaving swirl now. Type swirl() to resume.", skip_after=TRUE)
   invisible()
 }
 
@@ -214,38 +213,26 @@ play <- function(){invisible()}
 #' }
 main <- function(){invisible()}
 
+#' Restart the current swirl lesson.
+#'
+#' Restart the current swirl lesson.
+#'
+#' @export
+restart <- function(){invisible()}
+
 #' Display a list of special commands.
 #' 
 #' Display a list of the special commands, \code{bye()}, \code{play()}, 
 #' \code{nxt()}, \code{skip()}, and \code{info()}.
 #' @export
-#' @examples
-#' \dontrun{
-#' 
-#' | Create a new variable called `z` that contains the number 11.
-#' 
-#' > info()
-#' 
-#' | When you are at the R prompt (>):
-#' | -- Typing skip() allows you to skip the current question.
-#' | -- Typing play() lets you experiment with R on your own; swirl will ignore what
-#' | you do...
-#' | -- UNTIL you type nxt() which will regain swirl's attention.
-#' | -- Typing bye() causes swirl to exit. Your progress will be saved.
-#' | -- Typing info() displays these options again.
-#' 
-#' > bye()
-#' 
-#' | Leaving swirl now. Type swirl() to resume.
-#' }
 info <- function(){
-  swirl_out("When you are at the R prompt (>):")
-  swirl_out("-- Typing skip() allows you to skip the current question.", skip_before=FALSE)
-  swirl_out("-- Typing play() lets you experiment with R on your own; swirl will ignore what you do...", skip_before=FALSE)
-  swirl_out("-- UNTIL you type nxt() which will regain swirl's attention.", skip_before=FALSE)
-  swirl_out("-- Typing bye() causes swirl to exit. Your progress will be saved.", skip_before=FALSE)
-  swirl_out("-- Typing main() returns you to swirl's main menu.", skip_before=FALSE)
-  swirl_out("-- Typing info() displays these options again.", skip_before=FALSE, skip_after=TRUE)
+  swirl_out(s()%N%"When you are at the R prompt (>):")
+  swirl_out(s()%N%"-- Typing skip() allows you to skip the current question.", skip_before=FALSE)
+  swirl_out(s()%N%"-- Typing play() lets you experiment with R on your own; swirl will ignore what you do...", skip_before=FALSE)
+  swirl_out(s()%N%"-- UNTIL you type nxt() which will regain swirl's attention.", skip_before=FALSE)
+  swirl_out(s()%N%"-- Typing bye() causes swirl to exit. Your progress will be saved.", skip_before=FALSE)
+  swirl_out(s()%N%"-- Typing main() returns you to swirl's main menu.", skip_before=FALSE)
+  swirl_out(s()%N%"-- Typing info() displays these options again.", skip_before=FALSE, skip_after=TRUE)
   invisible()
 }
 
@@ -261,77 +248,33 @@ resume <- function(...)UseMethod("resume")
 # instruction set is thus extensible. It can be found in R/instructionSet.R. 
 
 resume.default <- function(e, ...){
-  # Check that if running in test mode, all necessary args are specified
-  if(is(e, "test")) {
-    # Capture ... args
-    targs <- list(...)
-    # Check if appropriately named args exist
-    if(is.null(targs$test_course) || is.null(targs$test_lesson)) {
-      stop("Must specify 'test_course' and 'test_lesson' to run in 'test' mode!")
-    } else {
-      # Make available for use in menu functions
-      e$test_lesson <- targs$test_lesson
-      e$test_course <- targs$test_course
-    }
-    # Check that 'from' is less than 'to' if they are both provided
-    if(!is.null(targs$from) && !is.null(targs$to)) {
-      if(targs$from >= targs$to) {
-        stop("Argument 'to' must be strictly greater than argument 'from'!")
-      }
-    }
-    if(is.null(targs$from)) {
-      e$test_from <- 1
-    } else {
-      e$test_from <- targs$from
-    }
-    if(is.null(targs$to)) {
-      e$test_to <- 999 # Lesson will end naturally before this
-    } else {
-      e$test_to <- targs$to
-    }
-  }
+  # Specify additional arguments
+  args_specification(e, ...)
   
   esc_flag <- TRUE
-  on.exit(if(esc_flag)swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE))
+  on.exit(if(esc_flag)swirl_out(s()%N%"Leaving swirl now. Type swirl() to resume.", skip_after=TRUE))
   # Trap special functions
   if(uses_func("info")(e$expr)[[1]]){
     esc_flag <- FALSE
     return(TRUE)
   }
-  if(uses_func("nxt")(e$expr)[[1]]){    
-    ## Using the stored list of "official" swirl variables and values,
-    #  assign variables of the same names in the global environment
-    #  their "official" values, in case the user has changed them
-    #  while playing.
-    if(length(e$snapshot)>0)xfer(as.environment(e$snapshot), globalenv())
-    swirl_out("Resuming lesson...")
-    e$playing <- FALSE
-    e$iptr <- 1
+  
+  if(uses_func("nxt")(e$expr)[[1]]){
+    do_nxt(e)
   }
   
   # The user wants to reset their script to the original
   if(uses_func("reset")(e$expr)[[1]]) {
-    e$playing <- FALSE
-    e$reset <- TRUE
-    e$iptr <- 2
-    swirl_out("I just reset the script to its original state. If it doesn't refresh immediately, you may need to click on it.", 
-              skip_after = TRUE)
+    do_reset(e)
   }
   
   # The user wants to submit their R script
   if(uses_func("submit")(e$expr)[[1]]){
-    e$playing <- FALSE
-    # Get contents from user's submitted script
-    e$script_contents <- readLines(e$script_temp_path, warn = FALSE)
-    # Save expr to e
-    e$expr <- try(parse(text = e$script_contents), silent = TRUE)
-    swirl_out("Sourcing your script...", skip_after = TRUE)
-    try(source(e$script_temp_path))
+    do_submit(e)
   }
   
   if(uses_func("play")(e$expr)[[1]]){
-    swirl_out("Entering play mode. Experiment as you please, then type nxt() when you are ready to resume the lesson.", skip_after=TRUE)
-    e$playing <- TRUE
+    do_play(e)
   }
   
   # If the user wants to skip the current question, do the bookkeeping.
@@ -339,6 +282,7 @@ resume.default <- function(e, ...){
     # Increment a skip count kept in e.
     if(!exists("skips", e)) e$skips <- 0
     e$skips <- 1 + e$skips
+    e$skipped <- TRUE
     # Enter the correct answer for the user
     # by simulating what the user should have done
     correctAns <- e$current.row[,"CorrectAnswer"]
@@ -355,10 +299,10 @@ resume.default <- function(e, ...){
         # Source the correct script
         try(source(correct_script_path))
         # Inform the user and open the correct script
-        swirl_out("I just sourced the following script, which demonstrates one possible solution.",
+        swirl_out(s()%N%"I just sourced the following script, which demonstrates one possible solution.",
                   skip_after=TRUE)
         file.edit(correct_script_path)
-        readline("Press Enter when you are ready to continue...")
+        readline(s()%N%"Press Enter when you are ready to continue...")
       }
       
     # If this is not a script question...
@@ -370,15 +314,23 @@ resume.default <- function(e, ...){
       }
       e$expr <- parse(text=correctAns)[[1]]
       ce <- cleanEnv(e$snapshot)
-      e$val <- suppressMessages(suppressWarnings(eval(e$expr, ce)))
+      # evaluate e$expr keeping value and visibility information
+      # store the result in temporary object evaluation in order
+      # to avoid double potentially time consuming eval call
+      evaluation <- withVisible(eval(e$expr, ce))
+      e$vis <- evaluation$visible
+      e$val <- suppressMessages(suppressWarnings(evaluation$value))
       xfer(ce, globalenv())
       ce <- as.list(ce)
       
       # Inform the user and expose the correct answer
-      swirl_out("Entering the following correct answer for you...",
+      swirl_out(s()%N%"Entering the following correct answer for you...",
                 skip_after=TRUE)
       message("> ", e$current.row[, "CorrectAnswer"])
-      
+
+      if(e$vis & !is.null(e$val)) {
+        print(e$val)
+      }
     }
     
     # Make sure playing flag is off since user skipped
@@ -393,11 +345,12 @@ resume.default <- function(e, ...){
   
   # If the user want to return to the main menu, do the bookkeeping
   if(uses_func("main")(e$expr)[[1]]){
-    swirl_out("Returning to the main menu...")
-    # Remove the current lesson. Progress has been saved already.
-    if(exists("les", e, inherits=FALSE)){
-      rm("les", envir=e, inherits=FALSE)
-    }
+    do_main(e)
+  }
+
+  # If the user want to restart the lesson, do the bookkeeping
+  if(uses_func("restart")(e$expr)[[1]]){
+    do_restart(e)
   }
   
   # If user is looking up a help file, ignore their input
@@ -421,7 +374,7 @@ resume.default <- function(e, ...){
   temp <- mainMenu(e)
   # If menu returns FALSE, the user wants to exit.
   if(is.logical(temp) && !isTRUE(temp)){
-    swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE)
+    swirl_out(s()%N%"Leaving swirl now. Type swirl() to resume.", skip_after=TRUE)
     esc_flag <- FALSE # To supress double notification
     return(FALSE)
   }
@@ -435,6 +388,7 @@ resume.default <- function(e, ...){
   if(!uses_func("swirl")(e$expr)[[1]] &&
        !uses_func("swirlify")(e$expr)[[1]] &&
        !uses_func("testit")(e$expr)[[1]] &&
+       !uses_func("demo_lesson")(e$expr)[[1]] &&
        !uses_func("nxt")(e$expr)[[1]] &&
        isTRUE(customTests$AUTO_DETECT_NEWVAR)) {
     e$delta <- mergeLists(safeEval(e$expr, e), e$delta)
@@ -445,10 +399,9 @@ resume.default <- function(e, ...){
     # lesson from e, and invoke the top level menu method.
     # Below, min() ignores e$test_to if it is NULL (i.e. not in 'test' mode)
     if(e$row > min(nrow(e$les), e$test_to)) {
-      # If in test mode, we don't want to run another lesson
-      if(is(e, "test")) {
-        swirl_out("Lesson complete! Exiting swirl now...",
-                  skip_after=TRUE)
+      # If in test or datacamp mode, we don't want to run another lesson
+      if(is(e, "test") || is(e, "datacamp")) {
+        post_finished(e)
         esc_flag <- FALSE # to supress double notification
         return(FALSE)
       }
@@ -471,22 +424,27 @@ resume.default <- function(e, ...){
       # Reset skip count if it exists
       if(exists("skips", e)) e$skips <- 0
       clearCustomTests()
+      
+      # Save log
+      if(isTRUE(getOption("swirl_logging"))){
+        saveLog(e)
+      }
+      
       # Let user know lesson is complete
-      swirl_out("You've reached the end of this lesson! Returning to the main menu...")
+      swirl_out(s()%N%"You've reached the end of this lesson! Returning to the main menu...")
       # let the user select another course lesson
       temp <- mainMenu(e)
       # if menu returns FALSE, user wants to quit.
       if(is.logical(temp) && !isTRUE(temp)){
-        swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE)
+        swirl_out(s()%N%"Leaving swirl now. Type swirl() to resume.", skip_after=TRUE)
         esc_flag <- FALSE # to supress double notification
         return(FALSE)
       }
     }
     # If we are ready for a new row, prepare it
     if(e$iptr == 1){      
-      # Increment progress bar
-      cat("\n")
-      setTxtProgressBar(e$pbar, e$pbar_seq[e$row])
+      # Display progress
+      post_progress(e)
       
       #  Any variables changed or created during the previous
       #  question must have been correct or we would not be about

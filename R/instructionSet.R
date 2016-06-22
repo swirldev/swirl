@@ -6,10 +6,8 @@
 present <- function(current.row, e)UseMethod("present")
 
 present.default <- function(current.row, e){
-  # Suppress extra space if multiple choice
-  is_mult <- is(e$current.row, "mult_question")
   # Present output to user
-  swirl_out(current.row[, "Output"], skip_after=!is_mult)
+  post_exercise(e, current.row)
   # Initialize attempts counter, if necessary
   if(!exists("attempts", e)) e$attempts <- 1
   # Increment pointer
@@ -47,7 +45,7 @@ waitUser.text_order_question <- function(current.row, e){
 waitUser.video <- function(current.row, e){
   response <- readline("Yes or No? ")
   if(tolower(response) %in% c("y", "yes")){
-    swirl_out("Type nxt() to continue")
+    swirl_out(s()%N%"Type nxt() to continue")
     e$prompt <- TRUE
     e$playing <- TRUE
     browseURL(current.row[,"VideoLink"])
@@ -79,7 +77,8 @@ waitUser.mult_question <- function(current.row, e){
   # leading and trailing white space from the choices.
   choices <- str_trim(choices[[1]])
   # Store the choice in e$val for testing
-  e$val <- select.list(sample(choices), graphics=FALSE)
+  e$val <- post_mult_question(e, choices)
+  
   e$iptr <- 1 + e$iptr
 }
 
@@ -151,6 +150,13 @@ waitUser.script <- function(current.row, e){
 testResponse <- function(current.row, e)UseMethod("testResponse")
 
 testResponse.default <- function(current.row, e){
+  if(isTRUE(getOption("swirl_logging"))){
+    e$log$question_number <- c(e$log$question_number, e$row)
+    e$log$attempt <- c(e$log$attempt, e$attempts)
+    e$log$skipped <- c(e$log$skipped, e$skipped)
+    e$log$datetime <- c(e$log$datetime, as.numeric(Sys.time()))
+  } 
+  
   # Increment attempts counter
   e$attempts <- 1 + e$attempts
   # Get answer tests
@@ -158,7 +164,7 @@ testResponse.default <- function(current.row, e){
   if(is.na(tests) || tests == ""){
     results <- is(e, "dev")
     if(!results){
-      stop("BUG: There are no tests for this question!")
+      stop(s()%N%"BUG: There are no tests for this question!")
     }
   } else {
     tests <- str_trim(unlist(strsplit(tests,";")))
@@ -166,12 +172,21 @@ testResponse.default <- function(current.row, e){
   }
   correct <- !(FALSE %in% unlist(results))
   if(correct){
-    swirl_out(praise())
+    if(isTRUE(getOption("swirl_logging"))){
+      e$log$correct <- c(e$log$correct, TRUE)
+    }  
+    
+    mes <- praise()
+    post_result(e, passed = correct, feedback = mes, hint = NULL)
     e$iptr <- 1
     e$row <- 1 + e$row
     # Reset attempts counter, since correct
     e$attempts <- 1
   } else {
+    if(isTRUE(getOption("swirl_logging"))){
+      e$log$correct <- c(e$log$correct, FALSE)
+    }
+    
     # Restore the previous global environment from the official
     # in case the user has garbled it, e.g., has typed x <- 3*x
     # instead of x <- 2*x by mistake. The hint might say to type
@@ -179,21 +194,15 @@ testResponse.default <- function(current.row, e){
     # of x unless the original value is restored.
     if(length(e$snapshot)>0)xfer(as.environment(e$snapshot), globalenv())
     mes <- tryAgain()
-    if(is(current.row, "cmd_question")) {
-      mes <- paste(mes, "Or, type info() for more options.")
+    if(is(current.row, "cmd_question") && !is(e, "datacamp")) {
+      mes <- paste(mes, s()%N%"Or, type info() for more options.")
     }
-    swirl_out(mes)
-    temp <- current.row[,"Hint"]
-    # Suppress extra space if multiple choice
-    is_mult <- is(e$current.row, "mult_question")
-    # If hint is specified, print it. Otherwise, just skip a line.
-    if (!is.na(temp)) {
-      swirl_out(current.row[,"Hint"], skip_after=!is_mult)
-    } else {
-      message()
-    }
+    hint <- current.row[,"Hint"]
+    post_result(e, passed = correct, feedback = mes, hint = if(is.na(hint)) NULL else hint)
     e$iptr <- e$iptr - 1
   }
+  # reset skipped info
+  e$skipped <- FALSE
 }
 
 testMe <- function(keyphrase, e){

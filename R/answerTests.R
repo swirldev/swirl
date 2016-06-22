@@ -153,10 +153,10 @@ runTest.newcmd <- function(keyphrase,e){
   correct.expr <- parse(text=rightside(keyphrase))[[1]]
   correct.ans  <- eval(correct.expr)
   ansResults <- expectThat(e$val,
-                               equals(correct.ans,label=correct.ans),
+                               equals_legacy(correct.ans,label=correct.ans),
                                label=e$val)
   callResults <- expectThat(as.expression(e$expr)[[1]],
-                                is_identical_to(correct.expr,label=deparse(correct.expr)),
+                                is_identical_to_legacy(correct.expr,label=deparse(correct.expr)),
                                 label=deparse(e$expr))
     
  #   identical(as.expression(e$expr)[[1]], as.expression(correct.expr)[[1]])
@@ -221,7 +221,7 @@ runTest.is_a <- function(keyphrase, e) {
     val <- e$val
   }
   label <- val
-  results <- expectThat(val, is_a(class), label=label)
+  results <- expectThat(val, is_a_legacy(class), label=label)
   if(is(e,"dev") && !results$passed)swirl_out(results$message)
   return(results$passed)
 }
@@ -245,7 +245,7 @@ runTest.matches <- function(keyphrase, e) {
   correctVal <- tolower(str_trim(rightside(keyphrase)))
   userVal <- str_trim(as.character(e$val))
   results <- expectThat(tolower(userVal), 
-                        matches(correctVal), 
+                        matches_legacy(correctVal), 
                         label=userVal)
   if(is(e,"dev") && !results$passed)swirl_out(results$message)
   return(results$passed)
@@ -264,12 +264,12 @@ runTest.creates_var <- function(keyphrase, e){
   }
   correctName <- rightside(keyphrase)
   if(is.na(correctName)){
-    results <- expectThat(length(delta), equals(1), 
+    results <- expectThat(length(delta), equals_legacy(1), 
                           label=paste(deparse(e$expr), 
                                       "does not create a variable."))
   } else {
     results <- expectThat(names(delta), 
-                          is_equivalent_to(correctName, label=correctName), 
+                          is_equivalent_to_legacy(correctName, label=correctName), 
                           label=paste(deparse(e$expr),
                                       "does not create a variable named",
                                       correctName))
@@ -295,7 +295,7 @@ runTest.equals <- function(keyphrase, e){
   correctAns <- safeEval(parse(text=correctExpr))
   if(length(correctAns) != 1)return(FALSE)
   results <- expectThat(e$var, 
-                        equals(correctAns[[1]], 
+                        equals_legacy(correctAns[[1]], 
                                label=correctExprLabel), 
                         label=deparse(e$expr))
   if(is(e, "dev") && !results$passed)swirl_out(results$message)
@@ -310,7 +310,7 @@ runTest.equivalent <- function(keyphrase,e) {
   correctExpr <- as.list(parse(text=rightside(keyphrase)))
   userExpr <- as.list(as.expression(e$expr))
   results <- expectThat(userExpr,
-                        is_equivalent_to(correctExpr,deparse(correctExpr)),
+                        is_equivalent_to_legacy(correctExpr,deparse(correctExpr)),
                         label=deparse(userExpr))
                         
   if(is(e,"dev") && !results$passed)swirl_out(results$message)
@@ -345,7 +345,7 @@ runTest.expr_identical <- function(keyphrase, e){
   expr <- e$expr
   if(is.expression(expr))expr <- expr[[1]]
   results <- expectThat(expr, 
-                        is_identical_to(correct, label=rightside(keyphrase)),
+                        is_identical_to_legacy(correct, label=rightside(keyphrase)),
                         label=deparse(expr))
   if( is(e, "dev") && !results$passed)swirl_out(results$message) 
   return(results$passed)
@@ -359,7 +359,7 @@ runTest.val_length <- function(keyphrase, e){
     stop(message=paste("BUG: right side of", keyphrase,
                                  "is not an integer."))
   }
-  results <- expectThat(length(e$val), equals(n, label=n), 
+  results <- expectThat(length(e$val), equals_legacy(n, label=n), 
                         label=paste0("length(c(", toString(e$val), "))"))                                                   
   if( is(e, "dev") && !results$passed)swirl_out(results$message) 
   return(results$passed)
@@ -435,7 +435,7 @@ uses_func <- function(expected, label = NULL, ...){
   function(expr){
     uses <- (is.call(expr) || is.expression(expr)) && 
       expected %in% flatten(expr)
-    expectation(identical(uses, TRUE),
+    expectation_legacy(identical(uses, TRUE),
                 str_c("does not use ", label))
   }
 }
@@ -446,12 +446,7 @@ in_range <- function(range, label=NULL){
     isOK <- is.numeric(number) && 
       isTRUE(number >= range[1]) && 
       isTRUE(number <= range[2])
-    expectation(identical(isOK, TRUE), 
+    expectation_legacy(identical(isOK, TRUE), 
                 str_c("is not between ", range[1], " and ", range[2]))
   }
 }
-
-
-
-
-
