@@ -4,7 +4,7 @@ Description: Use the R console as an interactive learning
     environment. Users receive immediate feedback as they are guided through
     self-paced lessons in data science and R programming.
 URL: http://swirlstats.com
-Version: 2.4.1
+Version: 2.4.2
 License: MIT + file LICENSE
 Authors@R: c(
     person("Sean", "Kross", email = "sean@seankross.com", role = c("aut", "cre")),
@@ -15,16 +15,15 @@ Authors@R: c(
     person("Wush", "Wu", role = "ctb")
     )
 Depends:
-    R (>= 3.0.2)
+    R (>= 3.1.0)
 Imports:
     stringr,
-    testthat,
+    testthat (>= 1.0.2),
     httr (>= 1.1.0),
     yaml,
     RCurl,
     digest,
     tools,
-    utils,
     methods
 Suggests:
     stringi

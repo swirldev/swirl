@@ -1,3 +1,7 @@
+# swirl 2.4.2
+
+* Script questions behave more appropriately in RStudio. (#434, thank you @jimhester)
+
 # swirl 2.4.1
 
 * Added new answer test: `calculates_same_value()`.

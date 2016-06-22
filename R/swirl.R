@@ -36,7 +36,6 @@
 #' @export
 #' @importFrom stringr str_c str_trim str_split str_length 
 #' @importFrom stringr str_detect str_locate fixed str_split_fixed
-#' @import utils
 #' @importFrom methods is
 #' @examples
 #' \dontrun{
