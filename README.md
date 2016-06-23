@@ -1,7 +1,7 @@
 # swirl
 
 [![Build Status](https://travis-ci.org/swirldev/swirl.png?branch=master)](https://travis-ci.org/swirldev/swirl)
-[![CRAN version](http://www.r-pkg.org/badges/version/swirl?color=3399ff)](https://cran.r-project.org/web/packages/swirl/index.html)
+[![CRAN version](http://www.r-pkg.org/badges/version/swirl?color=3399ff)](https://cran.r-project.org/package=swirl)
 [![Downloads](http://cranlogs.r-pkg.org/badges/swirl?color=3399ff)](http://cran-logs.rstudio.com/)
 
 ### [http://swirlstats.com](http://swirlstats.com)
