@@ -1,11 +1,31 @@
-swirl_out <- function(..., skip_before=TRUE, skip_after=FALSE) {
-  wrapped <- strwrap(str_c(..., sep = " "),
-                     width = getOption("width") - 2)
+# add typewriter effect to printed text
+typewriter <- function(txt, delay = 0.02) {
+  char_vec <- c(unlist(strsplit(txt, split = "")), "\n")
+  sapply(char_vec, function(ch) {
+    # cat(ch, append = TRUE)
+    message(ch, appendLF = FALSE)
+    Sys.sleep(delay)
+  })
+  return(invisible())
+}
+
+# primary function for formatting/outputting swirl text
+swirl_out <- function (..., skip_before = TRUE, skip_after = FALSE, typewriter = TRUE) {
+  wrapped <- strwrap(str_c(..., sep = " "), width = getOption("width") - 2)
   mes <- str_c("| ", wrapped, collapse = "\n")
-  if(skip_before) mes <- paste0("\n", mes)
-  if(skip_after) mes <- paste0(mes, "\n")
+  if (skip_before)
+    mes <- paste0("\n", mes)
+  if (skip_after)
+    mes <- paste0(mes, "\n")
   Encoding(mes) <- "UTF-8"
-  message(mes)
+  
+  # if no typewriter effect, just print and return normally
+  if(!typewriter) {
+    message(mes)
+    return(invisible())
+  }
+  
+  typewriter(mes)
 }
 
 # Takes a plain English name and turns it into a more proper 
