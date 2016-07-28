@@ -1,5 +1,5 @@
 do_nxt <- function(e)UseMethod("do_nxt")
-do_reset <- function(e)UseMethod("do_rst")
+do_reset <- function(e)UseMethod("do_reset")
 do_submit <- function(e)UseMethod("do_submit")
 do_play <- function(e)UseMethod("do_play")
 do_main <- function(e)UseMethod("do_main")
