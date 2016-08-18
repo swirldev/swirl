@@ -272,8 +272,12 @@ zip_course <- function(path, dest=NULL){
 uninstall_course <- function(course_name){
   path <- file.path(swirl_courses_dir(), make_pathname(course_name))
   if(file.exists(path)){
-    unlink(path, recursive=TRUE, force=TRUE)
-    message(s()%N%"Course uninstalled successfully!")
+    result<-unlink(path, recursive=TRUE, force=TRUE)
+    if (!result){
+      message(s()%N%"Course uninstalled successfully!")
+    } else {
+      stop(s()%N%"Uninstall failed.")
+    }
   } else {
     stop(s()%N%"Course not found!")
   }
@@ -305,15 +309,23 @@ uninstall_all_courses <- function(force = FALSE){
                 s()%N%"This will delete all of the contents of your swirl course directory.")
       selection <- select.list(c(s()%N%"Yes", s()%N%"No"))
       if(selection == s()%N%"Yes"){
-        unlink(path, recursive=TRUE, force=TRUE)
-        message(s()%N%"All courses uninstalled successfully!")
+        result<-unlink(path, recursive=TRUE, force=TRUE)
+        if (!result){
+          message(s()%N%"All courses uninstalled successfully!")
+        } else {
+          stop(s()%N%"Uninstall failed.")
+        }
       } else {
         message("No courses were uninstalled.")
         return()
       }
     } else {
-      unlink(path, recursive=TRUE, force=TRUE)
-      message(s()%N%"All courses uninstalled successfully!")
+      result<-unlink(path, recursive=TRUE, force=TRUE)
+      if (!result){
+        message(s()%N%"All courses uninstalled successfully!")
+      } else {
+        stop(s()%N%"Uninstall failed.")
+      }
     }
   } else {
     stop(s()%N%"No courses found!")
