@@ -2,11 +2,33 @@ args_specification <- function(e, ...)UseMethod("args_specification")
 
 args_specification.default <- function(e, ...) {
   # in normal, interactive mode, do nothing
+  targs <- list(...)
+  if (!is.null(targs$usr)) {
+    e$usr = targs$usr
+    udat <- file.path(progressDir(e), e$usr)
+    if (!file.exists(udat)) {
+      housekeeping(e)
+      dir.create(udat, recursive = TRUE)
+    }
+    e$udat <- udat    
+  }
+  # return(e)
+  return(invisible(NULL))
 }
 
 args_specification.test <- function(e, ...) {
   # Capture ... args
   targs <- list(...)
+  if (!is.null(targs$usr)) {
+    e$usr = targs$usr
+    udat <- file.path(progressDir(e), e$usr)
+    if (!file.exists(udat)) {
+      housekeeping(e)
+      dir.create(udat, recursive = TRUE)
+    }
+    e$udat <- udat    
+  }
+  
   # Check if appropriately named args exist
   if(is.null(targs$test_course) || is.null(targs$test_lesson)) {
     stop(s()%N%"Must specify 'test_course' and 'test_lesson' to run in 'test' mode!")
@@ -31,4 +53,5 @@ args_specification.test <- function(e, ...) {
   } else {
     e$test_to <- targs$to
   }
+  return(invisible(NULL))
 } 
