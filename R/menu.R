@@ -382,9 +382,32 @@ progressName <- function(courseName, lesName){
 }
 
 inProgress <- function(e){
-  pfiles <- dir(e$udat)[grep("[.]rda$", dir(e$udat))]
-  pfiles <- gsub("[.]rda", "", pfiles)
-  pfiles <- str_trim(gsub("_", " ", pfiles))
+  files = dir(e$udat, full.names = TRUE)
+  keep = grep("[.]rda$", files)
+  files = files[keep]
+  
+  get_progress = function(file) {
+    r = readRDS(file)
+    file = basename(file)
+    pfiles <- gsub("[.]rda", "", file)
+    pfiles <- str_trim(gsub("_", " ", pfiles))    
+    
+    # get row
+    rn = e$row
+    pbar = e$pbar_seq
+    nrows = length(pbar)
+    x = paste0(round(pbar[rn] * 100, 1), "%")
+    
+    x = paste0(pfiles, ": ", x, " (Question ", 
+               rn, " of ", nrows, ")")
+    return(x)
+  }
+  pfiles = sapply(files, get_progress)
+  names(pfiles) = NULL
+  
+  # pfiles <- dir(e$udat)[grep("[.]rda$", dir(e$udat))]
+  # pfiles <- gsub("[.]rda", "", pfiles)
+  # pfiles <- str_trim(gsub("_", " ", pfiles))
   return(pfiles)
 }
 
