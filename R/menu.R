@@ -393,13 +393,20 @@ inProgress <- function(e){
     pfiles <- str_trim(gsub("_", " ", pfiles))    
     
     # get row
-    rn = e$row
-    pbar = e$pbar_seq
+    rn = r$row
+    pbar = r$pbar_seq
     nrows = length(pbar)
+    add = paste0(" of ", nrows)
+    if (is.null(rn)) {
+      rn = 1
+      pbar = 0
+      nrows = "All"
+      add = ""
+    }
+    add = paste0(add , ")")
     x = paste0(round(pbar[rn] * 100, 1), "%")
-    
     x = paste0(pfiles, ": ", x, " (Question ", 
-               rn, " of ", nrows, ")")
+               rn, add)
     return(x)
   }
   pfiles = sapply(files, get_progress)
