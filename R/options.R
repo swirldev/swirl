@@ -42,12 +42,13 @@ swirl_courses_dir <- function(){
 #' swirl_options(swirl_logging = TRUE)
 #' }
 swirl_options <- function(...){
-  if(length(list(...)) == 0){
+  if (length(list(...)) == 0){
     list(
       swirl_courses_dir = getOption("swirl_courses_dir"),
       swirl_data_dir = getOption("swirl_data_dir"),
       swirl_language = getOption("swirl_language"),
-      swirl_logging = getOption("swirl_logging")
+      swirl_logging = getOption("swirl_logging"),
+      swirl_user = getOption("swirl_user")
     )
   } else {
     options(...)
