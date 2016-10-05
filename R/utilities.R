@@ -159,7 +159,7 @@ loadDependencies <- function(lesson_dir) {
 
 # Execute correct answers for rows 1 through 'up_through' of lesson
 complete_part <- function(e) {
-  up_through <- e$test_from - 1
+  up_through <- min(e$test_from - 1, nrow(e$les))
   # Get rows though 'up_through' argument
   les <- e$les[seq(up_through), ]
   # Execute previous correct answers in global env
