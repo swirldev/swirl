@@ -175,7 +175,11 @@ mainMenu.default <- function(e){
       # If running in 'test' mode and starting partway through 
       # lesson, then complete first part
       if((is(e, "test") || is(e, "datacamp")) && e$test_from > 1) {
-        complete_part(e)
+        if (e$test_from > nrow(e$les)) {
+          e$test_from <- 1
+        } else {
+          complete_part(e)
+        }
       }
       
       # Remove temp lesson name and course name vars, which were surrogates
