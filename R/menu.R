@@ -45,6 +45,7 @@ mainMenu.default <- function(e){
     }
     if(response != "" ){
       # If the user has chosen to continue, restore progress
+      response = gsub(": \\d*%.*", "", response)
       response <- gsub(" ", "_", response)
       response <- paste0(response,".rda")
       restoreUserProgress(e, response)
