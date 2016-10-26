@@ -23,11 +23,13 @@ post_mult_question.default <- function(e, choices) {
 post_result.default <- function(e, passed, feedback, hint) {
   swirl_out(feedback)
   if(!passed) {
-    # If hint is specified, print it. Otherwise, just skip a line.
+    # If a hint is specified, print it.
+    # If multiple hints are provided (separated by ";"), print a random hint.
+    # Otherwise, just skip a line.
     if(!is.null(hint)) {
       # Suppress extra space if multiple choice
       is_mult <- is(e$current.row, "mult_question")
-      swirl_out(hint, skip_after = !is_mult) 
+      swirl_out(sample(unlist(strsplit(hint, ";")), 1), skip_after = !is_mult) 
     } else {
       message()
     }
