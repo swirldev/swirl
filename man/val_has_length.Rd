@@ -32,6 +32,6 @@ Other AnswerTests: \code{\link{AnswerTests}},
   \code{\link{expr_uses_func}},
   \code{\link{func_of_newvar_equals}},
   \code{\link{omnitest}}, \code{\link{val_matches}},
-  \code{\link{var_is_a}}
+  \code{\link{var_has_value}}, \code{\link{var_is_a}}
 }
 
