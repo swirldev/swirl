@@ -8,8 +8,11 @@ numerical value.}
 var_has_value(var, val, eps = 0)
 }
 \arguments{
-\item{...}{var is an object name as a string, val is the 
-desired value, and eps is the error tolerance}
+\item{var}{an object name as a string}
+
+\item{val}{the desired value}
+
+\item{eps}{the error tolerance}
 }
 \value{
 \code{TRUE} or \code{FALSE}
