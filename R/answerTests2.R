@@ -333,8 +333,9 @@ any_of_exprs <- function(...){
 #' 
 #' Returns \code{TRUE} if the object with the given name 
 #' has the specified value, within a certain error tolerance
-#' @param ... var is an object name as a string, val is the 
-#'    desired value, and eps is the error tolerance  
+#' @param var an object name as a string
+#' @param val the desired value
+#' @param eps the error tolerance  
 #' @return \code{TRUE} or \code{FALSE}
 #' @note error tolerance is needed since seemingly identical numerical 
 #'    calculations may differ, such as 1-pnorm(3) and 
