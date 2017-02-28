@@ -47,7 +47,8 @@ swirl_options <- function(...){
       swirl_courses_dir = getOption("swirl_courses_dir"),
       swirl_data_dir = getOption("swirl_data_dir"),
       swirl_language = getOption("swirl_language"),
-      swirl_logging = getOption("swirl_logging")
+      swirl_logging = getOption("swirl_logging"),
+      swirl_is_fun = getOption("swirl_is_fun")
     )
   } else {
     options(...)
