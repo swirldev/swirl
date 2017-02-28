@@ -1,3 +1,9 @@
+# swirl 2.4.3
+
+* Added "swirl_is_fun" option to `swirl_options()`.
+
+* Added Portuguese menu translations.
+
 # swirl 2.4.2
 
 * Script questions behave more appropriately in RStudio. (#434, thank you @jimhester)
