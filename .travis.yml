@@ -1,4 +1,11 @@
-language: R
+language: r
+
+matrix:
+  include:
+  - r: release
+  - r: oldrel
+  - r: devel
+
 cache: packages
 sudo: false
 
