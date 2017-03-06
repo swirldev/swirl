@@ -152,6 +152,16 @@ skip <- function(){invisible()}
 #' @export
 reset <- function(){invisible()}
 
+
+#' Repeat the previous question
+#'
+#' During a script question, this will move the pointer back to the previous 
+#' row to repeat the previous question (with new values if question templates
+#' are used. 
+#' @export
+rpt <- function(){invisible()}
+
+
 #' Submit the active R script in response to a question.
 #' 
 #' When a swirl question requires the user to edit an R script, the
@@ -228,6 +238,7 @@ restart <- function(){invisible()}
 info <- function(){
   swirl_out(s()%N%"When you are at the R prompt (>):")
   swirl_out(s()%N%"-- Typing skip() allows you to skip the current question.", skip_before=FALSE)
+  swirl_out(s()%N%"-- Typing rpt() will repeat the previous question (possibly with different values", skip_before = FALSE) 
   swirl_out(s()%N%"-- Typing play() lets you experiment with R on your own; swirl will ignore what you do...", skip_before=FALSE)
   swirl_out(s()%N%"-- UNTIL you type nxt() which will regain swirl's attention.", skip_before=FALSE)
   swirl_out(s()%N%"-- Typing bye() causes swirl to exit. Your progress will be saved.", skip_before=FALSE)
@@ -267,7 +278,12 @@ resume.default <- function(e, ...){
   if(uses_func("reset")(e$expr)[[1]]) {
     do_reset(e)
   }
-  
+
+  # The user wants to repeat the previous question 
+  if(uses_func("rpt")(e$expr)[[1]]) {
+    do_repeat(e)
+  }
+ 
   # The user wants to submit their R script
   if(uses_func("submit")(e$expr)[[1]]){
     do_submit(e)
@@ -390,6 +406,7 @@ resume.default <- function(e, ...){
        !uses_func("testit")(e$expr)[[1]] &&
        !uses_func("demo_lesson")(e$expr)[[1]] &&
        !uses_func("nxt")(e$expr)[[1]] &&
+        !uses_func("rpt")(e$expr)[[1]] &&
        isTRUE(customTests$AUTO_DETECT_NEWVAR)) {
     e$delta <- mergeLists(safeEval(e$expr, e), e$delta)
   }
@@ -456,6 +473,12 @@ resume.default <- function(e, ...){
       e$delta <- list()
       saveProgress(e)
       e$current.row <- e$les[e$row,]
+
+      # generate token values if necessary
+      tt = token.generate(e$current.row, e$token.list)
+      e$token.list <- tt$token.list
+      e$current.row = tt$row
+
       # Prepend the row's swirl class to its class attribute
       class(e$current.row) <- c(e$current.row[,"Class"], 
                                        class(e$current.row))
@@ -463,6 +486,7 @@ resume.default <- function(e, ...){
     
     # Execute the current instruction
     e$instr[[e$iptr]](e$current.row, e)
+
     # Check if a side effect, such as a sourced file, has changed the
     # values of any variables in the official list. If so, add them
     # to the list of changed variables.

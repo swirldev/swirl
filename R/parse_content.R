@@ -49,7 +49,9 @@ parse_content.yaml <- function(file, e){
     temp <- data.frame(Class=NA, Output=NA, CorrectAnswer=NA,
                        AnswerChoices=NA, AnswerTests=NA, 
                        Hint=NA, Figure=NA, FigureType=NA, 
-                       VideoLink=NA, Script=NA)
+                       VideoLink=NA, Script=NA, 
+		       NumTimes = 1, TimesRepeated = 0, Token = NA,
+	               HintFunction = NA)
     for(nm in names(element)){
       # Only replace NA with value if value is not NULL, i.e. instructor
       # provided a nonempty value
