@@ -18,7 +18,7 @@ When a swirl question requires the user to edit an R script, the
 
 > submit()
 
-| You are quite good my friend!
+| You are quite good, my friend!
 }
 }
 
