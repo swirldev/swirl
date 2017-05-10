@@ -165,7 +165,7 @@ reset <- function(){invisible()}
 #' 
 #' > submit()
 #' 
-#' | You are quite good my friend!
+#' | You are quite good, my friend!
 #' }
 submit <- function(){invisible()}
 
