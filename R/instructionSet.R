@@ -214,11 +214,14 @@ testResponse.default <- function(current.row, e){
       mes <- paste(mes, s()%N%"Or, type info() for more options.")
     }
 
+    save(current.row, file = "tmp.RData")
     # get hint, possibly using hint function
     hint <- current.row[,"Hint"]
     if (!is.na(e$current.row$HintFunction)) {
-         hf = get(e$current.row$HintFunction)
-         hint <- hf()
+#         hf = get(e$current.row$HintFunction)
+         hf <- current.row[, "HintFunction"]
+         #hint <- hf()
+         hint <- eval(parse(text = hf))
     }
 
     post_result(e, passed = correct, feedback = mes, hint = if(is.na(hint)) NULL else hint)
