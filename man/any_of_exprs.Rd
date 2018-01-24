@@ -34,4 +34,3 @@ Other AnswerTests: \code{\link{AnswerTests}},
   \code{\link{omnitest}}, \code{\link{val_has_length}},
   \code{\link{val_matches}}, \code{\link{var_is_a}}
 }
-

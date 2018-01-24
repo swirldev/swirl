@@ -22,4 +22,3 @@ swirl_options()
 swirl_options(swirl_logging = TRUE)
 }
 }
-

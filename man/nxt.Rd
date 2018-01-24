@@ -30,4 +30,3 @@ a video or \code{play()}'ing around in the console.
 | Resuming lesson...
 }
 }
-

@@ -11,4 +11,3 @@ During a script question, this will reset the script
 back to its original state, which can be helpful if you
 get stuck.
 }
-

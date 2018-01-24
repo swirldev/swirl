@@ -2,7 +2,7 @@ swirl_language <- function(){
   lang <- getOption("swirl_language")
   langs <- c("chinese_simplified", "dutch", "english", 
              "french", "german", "german_formal", "korean", "portuguese", 
-             "spanish", "turkish")
+             "spanish", "turkish", "polish")
   
   if(is.null(lang) || !(lang %in% langs)){
     "english"
@@ -17,7 +17,7 @@ swirl_language <- function(){
 #' @param language The language that swirl's menus will use.
 #' This must be one of the following values: \code{"chinese_simplified"}.
 #' \code{"english"}, \code{"french"}, \code{"german"},
-#' \code{"korean"}, \code{"spanish"}, or \code{"turkish"}.
+#' \code{"korean"}, \code{"spanish"}, \code{"turkish"}, or \code{"polish"}.
 #' If \code{NULL} the user will be asked to choose a language
 #' interactively. The default value is \code{NULL}.
 #' @param append_rprofile If \code{TRUE} this command will append 
@@ -28,7 +28,7 @@ swirl_language <- function(){
 select_language <- function(language = NULL, append_rprofile = FALSE){
   langs <- c("chinese_simplified", "dutch", "english", 
              "french", "german", "german_formal", "korean", "portuguese", 
-             "spanish", "turkish")
+             "spanish", "turkish", "polish")
   if(is.null(language)){
     selection <- select.list(langs)
   } else if(!(language %in% langs)){
@@ -53,6 +53,7 @@ compile_languages <- function(){
   dir.create(clone_dir, showWarnings = FALSE)
   git_clone <- paste("git clone https://github.com/swirldev/translations.git", clone_dir)
   system(git_clone)
+  system(paste("cd ", clone_dir, "&& git checkout polish"))
   
   menus_dir <- file.path(clone_dir, "menus")
   menus <- list.files(menus_dir, pattern = "yaml$", full.names = TRUE)

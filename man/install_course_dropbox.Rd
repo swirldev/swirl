@@ -32,4 +32,3 @@ Other InstallCourses: \code{\link{InstallCourses}},
   \code{\link{uninstall_all_courses}},
   \code{\link{uninstall_course}}, \code{\link{zip_course}}
 }
-
