@@ -55,4 +55,3 @@ seq(from = as.Date(x = "2014-02-01"), to = as.Date(x = "2014-03-01"),
     length.out = NULL, along.with = NULL)  
 }
 }
-

@@ -1,3 +1,7 @@
+# swirl 2.4.4
+
+* Fixed encoding test which was failing on CRAN (debian-clang-devel).
+
 # swirl 2.4.3
 
 * Added "swirl_is_fun" option to `swirl_options()`.

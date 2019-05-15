@@ -13,4 +13,3 @@ will include space for you to describe the problem you are
 experiencing. It will also have the output from \code{sessionInfo},
 which you should not alter.
 }
-
