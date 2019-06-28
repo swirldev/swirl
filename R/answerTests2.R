@@ -328,6 +328,36 @@ any_of_exprs <- function(...){
   any(sapply(c(...), function(expr) omnitest(expr)))
 }
 
+#' Test that the user has created an object with a specific 
+#' numerical value.
+#' 
+#' Returns \code{TRUE} if the object with the given name 
+#' has the specified value, within a certain error tolerance
+#' @param var an object name as a string
+#' @param val the desired value
+#' @param eps the error tolerance  
+#' @return \code{TRUE} or \code{FALSE}
+#' @note error tolerance is needed since seemingly identical numerical 
+#'    calculations may differ, such as 1-pnorm(3) and 
+#'    pnorm(3, lower.tail = FALSE)
+#' @examples
+#' \dontrun{
+#' 
+#' # Test that a user has set X = P(Z < 1.4), where Z ~ N(0,1) 
+#'   var_has_value('X', pnorm(1.4), 1e-10)
+#' }
+#' @family AnswerTests
+var_has_value <- function(var, val, eps = 0) {
+  var <- str_trim(var)
+  if(exists(var, globalenv())){
+    var <- get(var, globalenv())
+    return (identical(abs(val-var)<=eps, TRUE))
+  } else {
+    swirl_out(paste0("Error: ", var, " does not exist. Make sure to store your answer in ", var, "."))
+    return(FALSE)
+  }
+}
+
 #' Test that the value of the expression is of a specific class.
 #' 
 #' Returns \code{TRUE} if a variable of the given name exists

@@ -101,6 +101,14 @@ waitUser.cmd_question <- function(current.row, e){
   e$iptr <- 1 + e$iptr
 }
 
+waitUser.multi_cmd_question <-function(current.row, e) {
+ e$prompt <- TRUE
+ # Enter 'play' mode so that user can mess around in the console
+ e$playing <- TRUE
+ # Advance lesson
+ e$iptr <- 1 + e$iptr
+}
+
 #' @importFrom tools file_path_sans_ext
 waitUser.script <- function(current.row, e){
   # If this is the first attempt or the user wants to start over, 
@@ -179,7 +187,15 @@ testResponse.default <- function(current.row, e){
     mes <- praise()
     post_result(e, passed = correct, feedback = mes, hint = NULL)
     e$iptr <- 1
-    e$row <- 1 + e$row
+
+    #update TimesRepeated for this question and i
+    num = as.integer(e$current.row$TimesRepeated)
+    num = num + 1
+    e$les[e$row,]$TimesRepeated = num
+    # move to next row if we are done
+    if (num >= e$current.row$NumTimes) {
+       e$row <- 1 + e$row
+    }
     # Reset attempts counter, since correct
     e$attempts <- 1
   } else {
@@ -197,7 +213,17 @@ testResponse.default <- function(current.row, e){
     if(is(current.row, "cmd_question") && !is(e, "datacamp")) {
       mes <- paste(mes, s()%N%"Or, type info() for more options.")
     }
+
+    save(current.row, file = "tmp.RData")
+    # get hint, possibly using hint function
     hint <- current.row[,"Hint"]
+    if (!is.na(e$current.row$HintFunction)) {
+#         hf = get(e$current.row$HintFunction)
+         hf <- current.row[, "HintFunction"]
+         #hint <- hf()
+         hint <- eval(parse(text = hf))
+    }
+
     post_result(e, passed = correct, feedback = mes, hint = if(is.na(hint)) NULL else hint)
     e$iptr <- e$iptr - 1
   }

@@ -1,0 +1,9 @@
+language: R
+cache: packages
+sudo: false
+
+notifications:
+  email:
+    on_success: always
+    on_failure: always
+

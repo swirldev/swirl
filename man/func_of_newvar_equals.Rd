@@ -34,6 +34,6 @@ Other AnswerTests: \code{\link{AnswerTests}},
   \code{\link{expr_identical_to}}, \code{\link{expr_is_a}},
   \code{\link{expr_uses_func}}, \code{\link{omnitest}},
   \code{\link{val_has_length}}, \code{\link{val_matches}},
-  \code{\link{var_is_a}}
+  \code{\link{var_has_value}}, \code{\link{var_is_a}}
 }
 \concept{AnswerTests}

@@ -4,6 +4,7 @@ do_submit <- function(e)UseMethod("do_submit")
 do_play <- function(e)UseMethod("do_play")
 do_main <- function(e)UseMethod("do_main")
 do_restart <- function(e)UseMethod("do_restart")
+do_repeat <- function(e)UseMethod("do_repeat")
 
 do_nxt.default <- function(e) {
   ## Using the stored list of "official" swirl variables and values,
@@ -24,14 +25,49 @@ do_reset.default <- function(e) {
             skip_after = TRUE)
 }
 
+do_repeat.default <-function(e) {
+     e$playing <- FALSE
+     e$iptr <- 1
+
+ 
+     go_back = TRUE
+     while(go_back) {
+	if (e$row == 1) {
+          swirl_out("This is the beginning of the lesson.", skip_after = FALSE)
+          return()
+     	}  
+     	# if current question has not been repeated yet, 
+     	# then go to previous question 
+ 	num = as.integer(e$les[e$row,]$TimesRepeated)
+  	if (num == 0) {
+     	   e$row <- e$row - 1
+  	}
+	
+  	# update TimesRepeated counter in all cases 
+   	num = as.integer(e$les[e$row,]$TimesRepeated)
+    	num = max(num - 1,0)
+   	e$les[e$row,]$TimesRepeated = num
+
+	# if this is a text block, keep repeating
+	if (e$les[e$row,]$Class == "text") go_back = TRUE
+	else go_back = FALSE
+
+     }
+     swirl_out("Repeating the previous question.", skip_after = FALSE)
+}
+
 do_submit.default <- function(e) {
   e$playing <- FALSE
-  # Get contents from user's submitted script
-  e$script_contents <- readLines(e$script_temp_path, warn = FALSE)
-  # Save expr to e
-  e$expr <- try(parse(text = e$script_contents), silent = TRUE)
-  swirl_out(s()%N%"Sourcing your script...", skip_after = TRUE)
-  try(source(e$script_temp_path, encoding = "UTF-8"))
+
+  # if script question, then source the script
+  if (e$current.row$Class=="script") {
+    # Get contents from user's submitted script
+    e$script_contents <- readLines(e$script_temp_path, warn = FALSE)
+    # Save expr to e
+    e$expr <- try(parse(text = e$script_contents), silent = TRUE)
+    swirl_out(s()%N%"Sourcing your script...", skip_after = TRUE)
+    try(source(e$script_temp_path, encoding = "UTF-8"))
+  }
 }
 
 do_play.default <- function(e) {
