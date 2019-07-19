@@ -9,4 +9,3 @@ restart()
 \description{
 Restart the current swirl lesson.
 }
-

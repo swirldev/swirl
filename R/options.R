@@ -49,6 +49,7 @@ swirl_options <- function(...){
       swirl_language = getOption("swirl_language"),
       swirl_logging = getOption("swirl_logging"),
       swirl_user = getOption("swirl_user")
+      swirl_is_fun = getOption("swirl_is_fun")
     )
   } else {
     options(...)

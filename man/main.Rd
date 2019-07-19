@@ -20,4 +20,3 @@ Return to swirl's main menu from a lesson in progress.
 | Returning to the main menu...
 }
 }
-

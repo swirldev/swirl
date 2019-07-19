@@ -23,4 +23,3 @@ what \code{bye()} does.
 | Leaving swirl now. Type swirl() to resume.
 }
 }
-

@@ -21,4 +21,3 @@ When a swirl question requires the user to edit an R script, the
 | You are quite good my friend!
 }
 }
-

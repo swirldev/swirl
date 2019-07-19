@@ -34,4 +34,3 @@ test for a match. CAUTION: May raise errors, as in rmatch_calls.
   }
 }
 }
-

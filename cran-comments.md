@@ -1,12 +1,12 @@
 ## Release summary
 
-This is the first attempted CRAN release of swirl 2.4.2.
+This is the first attempted CRAN release of swirl 2.4.4.
 
 ## Test environments
 
-* local OSX Yosemite install, R 3.3.0
-* Ubuntu 12.04 (on travis-ci), R 3.3.0
-* win-builder (devel and release)
+* local macOS Sierra install, R 3.6.0
+* Ubuntu 14.04 (on travis-ci), R 3.6.0, R 3.5.3, R-devel.
+* win-builder (release)
 
 ## R CMD check results
 

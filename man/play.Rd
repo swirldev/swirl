@@ -32,4 +32,3 @@ until the command \code{nxt()} is entered.
 | Resuming lesson...
 }
 }
-
