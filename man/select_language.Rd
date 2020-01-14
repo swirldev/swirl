@@ -21,4 +21,3 @@ Rprofile. The default value is \code{FALSE}.}
 \description{
 Select a language for swirl's menus.
 }
-

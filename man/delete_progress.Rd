@@ -20,4 +20,3 @@ Delete a user's progress
 delete_progress("bill")
 }
 }
-

@@ -7,6 +7,7 @@ test_that("Trying to parse the test-encoding.yaml", {
   if(grepl("[L|l]atin", locale)){
     testthat::skip("Locale is Latin")
   }
+  skip_on_os("windows")
   
   test_parse <- function(file) {
     class(file) <- get_content_class(file)
@@ -18,12 +19,12 @@ test_that("Trying to parse the test-encoding.yaml", {
   console <- capture.output(result)
   test_phrase <- strsplit(console[3], "\\s+")[[1]][3]
   
-  if(.Platform$OS.type == "windows"){
+  #if(.Platform$OS.type == "windows"){
     expect_true(
       identical(stri_escape_unicode(test_phrase), "<U+4E2D><U+6587><U+6E2C><U+8A66>") ||
         identical(stri_escape_unicode(test_phrase), stri_escape_unicode("中文測試"))
     )
-  } else {
-    expect_equal(stri_escape_unicode(test_phrase), stri_escape_unicode("中文測試"))
-  }
+  #} else {
+  #  expect_equal(stri_escape_unicode(test_phrase), stri_escape_unicode("中文測試"))
+  #}
 })
