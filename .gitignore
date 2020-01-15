@@ -5,4 +5,4 @@ swirl.Rproj
 *.html
 .DS_Store
 /revdep/library
-/revdep/check
+/revdep/checks
