@@ -5,3 +5,4 @@ user_data/
 ^\.travis\.yml$
 ^cran-comments\.md$
 ^revdep$
+^CRAN-RELEASE$
