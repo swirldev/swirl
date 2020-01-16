@@ -25,7 +25,7 @@ may quit at any time and later resume without losing work.
 There are several ways to exit swirl: by typing \code{bye()} while in the R
 console, by hitting the Esc key while not in the R console, or by
 entering 0 from the swirl course menu. swirl will print a goodbye 
-message whenever it exits.
+message whenever it exits. 
 
 While swirl is in operation, it may be controlled by entering special
 commands in the R console. One of the special commands is \code{bye()} 

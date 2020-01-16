@@ -186,7 +186,7 @@ mainMenu.default <- function(e){
       if(!is(e,"datacamp")) {
         e$pbar <- txtProgressBar(style=3)
       }
-      e$pbar_seq <- seq(0, 1, length=nrow(e$les))
+      e$pbar_seq <- seq(0, 1, length.out=nrow(e$les))
       
       # expr, val, ok, and vis should have been set by the callback.
       # The lesson's current row - could start after 1 if in 'test' mode

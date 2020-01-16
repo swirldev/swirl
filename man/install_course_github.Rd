@@ -4,8 +4,12 @@
 \alias{install_course_github}
 \title{Install a course from a GitHub repository}
 \usage{
-install_course_github(github_username, course_name, branch = "master",
-  multi = FALSE)
+install_course_github(
+  github_username,
+  course_name,
+  branch = "master",
+  multi = FALSE
+)
 }
 \arguments{
 \item{github_username}{The username that owns the course repository.}
@@ -27,15 +31,17 @@ install_course_github("jtleek", "Twitter_Map", "geojson")
 }
 }
 \seealso{
-Other InstallCourses: \code{\link{InstallCourses}},
-  \code{\link{install_course_directory}},
-  \code{\link{install_course_dropbox}},
-  \code{\link{install_course_google_drive}},
-  \code{\link{install_course_url}},
-  \code{\link{install_course_zip}},
-  \code{\link{install_course}},
-  \code{\link{install_from_swirl}},
-  \code{\link{uninstall_all_courses}},
-  \code{\link{uninstall_course}}, \code{\link{zip_course}}
+Other InstallCourses: 
+\code{\link{InstallCourses}},
+\code{\link{install_course_directory}()},
+\code{\link{install_course_dropbox}()},
+\code{\link{install_course_google_drive}()},
+\code{\link{install_course_url}()},
+\code{\link{install_course_zip}()},
+\code{\link{install_course}()},
+\code{\link{install_from_swirl}()},
+\code{\link{uninstall_all_courses}()},
+\code{\link{uninstall_course}()},
+\code{\link{zip_course}()}
 }
 \concept{InstallCourses}
