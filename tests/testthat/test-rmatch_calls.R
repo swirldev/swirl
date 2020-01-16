@@ -41,5 +41,5 @@ test_that("With default settings, S3 methods with calls as first arguments raise
 
 test_that("With eval_for_class=TRUE, S3 methods with calls as first arguments raise errors.",{
   expr <- quote(print(paste("hi", 5)))
-  expect_that(is(try(rmatch_calls(expr, eval_for_class=TRUE), silent=TRUE),"try-error"), is_false())
+  expect_false(is(try(rmatch_calls(expr, eval_for_class=TRUE), silent=TRUE), "try-error"))
 })

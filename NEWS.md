@@ -1,3 +1,8 @@
+# swirl 2.4.5
+
+* Thank you @HenrikBengtsson for fixing a warning when 
+`warnPartialMatchArgs=TRUE`. (#779)
+
 # swirl 2.4.4
 
 * Fixed encoding test which was failing on CRAN (debian-clang-devel).

@@ -19,16 +19,17 @@ uninstall_course("Linear Regression")
 }
 }
 \seealso{
-Other InstallCourses: \code{\link{InstallCourses}},
-  \code{\link{install_course_directory}},
-  \code{\link{install_course_dropbox}},
-  \code{\link{install_course_github}},
-  \code{\link{install_course_google_drive}},
-  \code{\link{install_course_url}},
-  \code{\link{install_course_zip}},
-  \code{\link{install_course}},
-  \code{\link{install_from_swirl}},
-  \code{\link{uninstall_all_courses}},
-  \code{\link{zip_course}}
+Other InstallCourses: 
+\code{\link{InstallCourses}},
+\code{\link{install_course_directory}()},
+\code{\link{install_course_dropbox}()},
+\code{\link{install_course_github}()},
+\code{\link{install_course_google_drive}()},
+\code{\link{install_course_url}()},
+\code{\link{install_course_zip}()},
+\code{\link{install_course}()},
+\code{\link{install_from_swirl}()},
+\code{\link{uninstall_all_courses}()},
+\code{\link{zip_course}()}
 }
 \concept{InstallCourses}

@@ -23,14 +23,17 @@ expr_is_a('<-')
 }
 }
 \seealso{
-Other AnswerTests: \code{\link{AnswerTests}},
-  \code{\link{any_of_exprs}},
-  \code{\link{calculates_same_value}},
-  \code{\link{expr_creates_var}},
-  \code{\link{expr_identical_to}},
-  \code{\link{expr_uses_func}},
-  \code{\link{func_of_newvar_equals}},
-  \code{\link{omnitest}}, \code{\link{val_has_length}},
-  \code{\link{val_matches}}, \code{\link{var_is_a}}
+Other AnswerTests: 
+\code{\link{AnswerTests}},
+\code{\link{any_of_exprs}()},
+\code{\link{calculates_same_value}()},
+\code{\link{expr_creates_var}()},
+\code{\link{expr_identical_to}()},
+\code{\link{expr_uses_func}()},
+\code{\link{func_of_newvar_equals}()},
+\code{\link{omnitest}()},
+\code{\link{val_has_length}()},
+\code{\link{val_matches}()},
+\code{\link{var_is_a}()}
 }
 \concept{AnswerTests}

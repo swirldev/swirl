@@ -21,15 +21,17 @@ install_course_google_drive("https://drive.google.com/file/d/F3fveiu873hfjZZj/ed
 }
 }
 \seealso{
-Other InstallCourses: \code{\link{InstallCourses}},
-  \code{\link{install_course_directory}},
-  \code{\link{install_course_dropbox}},
-  \code{\link{install_course_github}},
-  \code{\link{install_course_url}},
-  \code{\link{install_course_zip}},
-  \code{\link{install_course}},
-  \code{\link{install_from_swirl}},
-  \code{\link{uninstall_all_courses}},
-  \code{\link{uninstall_course}}, \code{\link{zip_course}}
+Other InstallCourses: 
+\code{\link{InstallCourses}},
+\code{\link{install_course_directory}()},
+\code{\link{install_course_dropbox}()},
+\code{\link{install_course_github}()},
+\code{\link{install_course_url}()},
+\code{\link{install_course_zip}()},
+\code{\link{install_course}()},
+\code{\link{install_from_swirl}()},
+\code{\link{uninstall_all_courses}()},
+\code{\link{uninstall_course}()},
+\code{\link{zip_course}()}
 }
 \concept{InstallCourses}
