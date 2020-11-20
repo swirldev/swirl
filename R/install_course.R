@@ -132,7 +132,7 @@ install_from_swirl <- function(course_name, dev = FALSE, mirror = "github"){
   if(!is.logical(dev)) {
     stop(s()%N%"Argument 'dev' must be either TRUE or FALSE!")
   }
-  if(!(mirror == "github" || mirror == "bitbucket")){
+  if(!(mirror == "github" || mirror == "bitbucket" || substr(mirror, 1, 7) == "github/")){
     stop(s()%N%"Please enter a valid name for a mirror. ('github' or 'bitbucket')")
   }
     
@@ -144,15 +144,15 @@ install_from_swirl <- function(course_name, dev = FALSE, mirror = "github"){
     if(mirror != "github"){
       stop(s()%N%"To access swirl courses in development on Bitbucket go to https://bitbucket.org/swirldevmirror/swirl_misc")
     }
-    url <- "http://github.com/swirldev/swirl_misc/zipball/master"
-  } else {
-    if(mirror == "bitbucket"){
+      url <- "http://github.com/swirldev/swirl_misc/zipball/master"
+    } else  if(mirror == "bitbucket"){
       url <- "https://bitbucket.org/swirldevmirror/swirl_courses/get/HEAD.zip"
-    } else {
+    } else if(mirror == "github") {
       url <- "http://github.com/swirldev/swirl_courses/zipball/master"
-    }
+    } else {
+      url <- paste0("http://github.com/", substr(mirror, 8, nchar(mirror)), "/swirl_courses/zipball/master")
   }
-  
+
   # Send GET request
   response <- GET(url, progress())
   
