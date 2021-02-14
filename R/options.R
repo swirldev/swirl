@@ -8,7 +8,7 @@ swirl_data_dir <- function(){
   sdd <- getOption("swirl_data_dir")
   
   if(is.null(sdd)){
-    file.path(find.package("swirl"), "user_data")
+    file.path(swirl_writeable_dir(), "user_data")
   } else {
     sdd
   }
@@ -19,9 +19,23 @@ swirl_courses_dir <- function(){
   scd <- getOption("swirl_courses_dir")
   
   if(is.null(scd)){
-    file.path(find.package("swirl"), "Courses")
+    file.path(swirl_writeable_dir(), "Courses")
   } else {
     scd
+  }
+}
+
+# Get a swirl directory that can be written to
+swirl_writeable_dir <- function(){
+  pkgDir <- find.package("swirl")
+  if (file.access(pkgDir, 2) == 0){
+    pkgDir
+  } else {
+    localDir = "swirl"
+    if (file.access(localDir, 2) != 0){
+      stop("cannot write to the current directory")
+    }
+    localDir
   }
 }
 
