@@ -205,7 +205,7 @@ omnitest <- function(correctExpr=NULL, correctVal=NULL, strict=FALSE, eval_for_c
       if(is(e, "dev") && !valResults$passed)swirl_out(valResults$message)
       valGood <- valResults$passed
       # valGood <- val_matches(correctVal)
-    } else if(!is.na(e$val) && is.numeric(e$val) && length(e$val) == 1){
+    } else if(length(e$val) == 1 && !is.na(e$val) && is.numeric(e$val) && length(e$val) == 1){
       cval <- try(as.numeric(correctVal), silent=TRUE)
       valResults <- expectThat(e$val, 
                             equals_legacy(cval, label=correctVal),
