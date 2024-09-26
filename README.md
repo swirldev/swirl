@@ -73,3 +73,21 @@ of our software or instructional content.
 
 If you are not sure about a particular use case, don't hesitate to send us an 
 email at info@swirlstats.com.
+
+
+
+
+
+
+
+
+Exercise
+1.	Log in to your GitHub account at https://github.com/.
+2.	Create a new repository either by clicking the green New button or from the dropdown menu on the top right.
+3.	Name the repository Exercise1.
+4.	Select the checkbox to Add a README file, then click Create repository.
+5.	Edit the README.md document
+6.	Add a line with some extra information.
+7.	Commit the changes.
+8.	Fork an existing repository (try this: https://github.com/seankross) and try to identify something valuable you could contribute. Make changes or additions to that repository, then open a pull request.
+
