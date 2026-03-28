@@ -7,7 +7,7 @@
 #' which you should not alter.
 #' 
 #' @export
-email_admin <- function() {
+email_admin <- function(address = 'info@swirlstats.com') {
   # Get session info and swirl package version
   si <- capture.output(sessionInfo())
   pv <- packageVersion('swirl')
