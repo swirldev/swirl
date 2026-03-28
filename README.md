@@ -73,3 +73,9 @@ of our software or instructional content.
 
 If you are not sure about a particular use case, don't hesitate to send us an 
 email at info@swirlstats.com.
+
+
+## Contribution by Menahil
+
+This project is helpful for learning R programming interactively.
+I suggest adding more beginner-friendly examples.
