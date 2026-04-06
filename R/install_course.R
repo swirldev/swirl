@@ -144,12 +144,12 @@ install_from_swirl <- function(course_name, dev = FALSE, mirror = "github"){
     if(mirror != "github"){
       stop(s()%N%"To access swirl courses in development on Bitbucket go to https://bitbucket.org/swirldevmirror/swirl_misc")
     }
-    url <- "http://github.com/swirldev/swirl_misc/zipball/master"
+    url <- "https://github.com/swirldev/swirl_misc/zipball/master"
   } else {
     if(mirror == "bitbucket"){
       url <- "https://bitbucket.org/swirldevmirror/swirl_courses/get/HEAD.zip"
     } else {
-      url <- "http://github.com/swirldev/swirl_courses/zipball/master"
+      url <- "https://github.com/swirldev/swirl_courses/zipball/master"
     }
   }
   
@@ -442,7 +442,7 @@ install_course_github <- function(github_username, course_name,
                                   branch="master", multi=FALSE){
   
   # Construct url to the zip file
-  zip_url <- paste0("http://github.com/", github_username, "/", 
+  zip_url <- paste0("https://github.com/", github_username, "/", 
                     course_name,"/zipball/", branch)
 
   install_course_url(zip_url, multi=multi)
