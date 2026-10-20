@@ -85,10 +85,10 @@ rmatch_calls <- function(expr, eval_for_class=FALSE, eval_env=NULL){
   if(is.primitive(fct)){
     return(expr)
   }
-  # If fct is an (S4) standardGeneric, match.call is likely to give a misleading result,
+  # If fct is an (S4) genericFunction, match.call is likely to give a misleading result,
   # so raise an exception. (Note that builtins were handled earlier.)
-  if(is(fct, "standardGeneric")){
-    stop(paste0("Illegal expression, ", dprs(expr), ": ", dprs(expr[[1]]), " is a standardGeneric.\n"))
+  if(is(fct, "genericFunction")){
+    stop(paste0("Illegal expression, ", dprs(expr), ": ", dprs(expr[[1]]), " is a genericFunction.\n"))
   }
   # At this point, fct should be an ordinary function or an S3 method.
   if(isS3(fct)){
